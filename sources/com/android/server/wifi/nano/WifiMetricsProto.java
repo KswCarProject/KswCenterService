@@ -12,8 +12,10 @@ import com.android.internal.logging.nano.MetricsProto;
 import com.android.internal.telephony.RILConstants;
 import java.io.IOException;
 
+/* loaded from: classes4.dex */
 public interface WifiMetricsProto {
 
+    /* loaded from: classes4.dex */
     public static final class WifiLog extends MessageNano {
         public static final int FAILURE_WIFI_DISABLED = 4;
         public static final int SCAN_FAILURE_INTERRUPTED = 2;
@@ -174,6 +176,7 @@ public interface WifiMetricsProto {
         public WifiWakeStats wifiWakeStats;
         public WpsMetrics wpsMetrics;
 
+        /* loaded from: classes4.dex */
         public static final class ScanReturnEntry extends MessageNano {
             private static volatile ScanReturnEntry[] _emptyArray;
             public int scanResultsCount;
@@ -201,6 +204,7 @@ public interface WifiMetricsProto {
                 return this;
             }
 
+            @Override // com.android.framework.protobuf.nano.MessageNano
             public void writeTo(CodedOutputByteBufferNano output) throws IOException {
                 if (this.scanReturnCode != 0) {
                     output.writeInt32(1, this.scanReturnCode);
@@ -211,8 +215,8 @@ public interface WifiMetricsProto {
                 super.writeTo(output);
             }
 
-            /* access modifiers changed from: protected */
-            public int computeSerializedSize() {
+            @Override // com.android.framework.protobuf.nano.MessageNano
+            protected int computeSerializedSize() {
                 int size = super.computeSerializedSize();
                 if (this.scanReturnCode != 0) {
                     size += CodedOutputByteBufferNano.computeInt32Size(1, this.scanReturnCode);
@@ -223,28 +227,30 @@ public interface WifiMetricsProto {
                 return size;
             }
 
+            @Override // com.android.framework.protobuf.nano.MessageNano
             public ScanReturnEntry mergeFrom(CodedInputByteBufferNano input) throws IOException {
                 while (true) {
                     int tag = input.readTag();
-                    if (tag != 0) {
-                        if (tag == 8) {
-                            int value = input.readInt32();
-                            switch (value) {
-                                case 0:
-                                case 1:
-                                case 2:
-                                case 3:
-                                case 4:
-                                    this.scanReturnCode = value;
-                                    break;
-                            }
-                        } else if (tag == 16) {
-                            this.scanResultsCount = input.readInt32();
-                        } else if (!WireFormatNano.parseUnknownField(input, tag)) {
+                    if (tag == 0) {
+                        return this;
+                    }
+                    if (tag == 8) {
+                        int value = input.readInt32();
+                        switch (value) {
+                            case 0:
+                            case 1:
+                            case 2:
+                            case 3:
+                            case 4:
+                                this.scanReturnCode = value;
+                                continue;
+                        }
+                    } else if (tag != 16) {
+                        if (!WireFormatNano.parseUnknownField(input, tag)) {
                             return this;
                         }
                     } else {
-                        return this;
+                        this.scanResultsCount = input.readInt32();
                     }
                 }
             }
@@ -258,6 +264,7 @@ public interface WifiMetricsProto {
             }
         }
 
+        /* loaded from: classes4.dex */
         public static final class WifiSystemStateEntry extends MessageNano {
             private static volatile WifiSystemStateEntry[] _emptyArray;
             public boolean isScreenOn;
@@ -287,6 +294,7 @@ public interface WifiMetricsProto {
                 return this;
             }
 
+            @Override // com.android.framework.protobuf.nano.MessageNano
             public void writeTo(CodedOutputByteBufferNano output) throws IOException {
                 if (this.wifiState != 0) {
                     output.writeInt32(1, this.wifiState);
@@ -300,8 +308,8 @@ public interface WifiMetricsProto {
                 super.writeTo(output);
             }
 
-            /* access modifiers changed from: protected */
-            public int computeSerializedSize() {
+            @Override // com.android.framework.protobuf.nano.MessageNano
+            protected int computeSerializedSize() {
                 int size = super.computeSerializedSize();
                 if (this.wifiState != 0) {
                     size += CodedOutputByteBufferNano.computeInt32Size(1, this.wifiState);
@@ -315,29 +323,31 @@ public interface WifiMetricsProto {
                 return size;
             }
 
+            @Override // com.android.framework.protobuf.nano.MessageNano
             public WifiSystemStateEntry mergeFrom(CodedInputByteBufferNano input) throws IOException {
                 while (true) {
                     int tag = input.readTag();
-                    if (tag != 0) {
-                        if (tag == 8) {
-                            int value = input.readInt32();
-                            switch (value) {
-                                case 0:
-                                case 1:
-                                case 2:
-                                case 3:
-                                    this.wifiState = value;
-                                    break;
-                            }
-                        } else if (tag == 16) {
-                            this.wifiStateCount = input.readInt32();
-                        } else if (tag == 24) {
-                            this.isScreenOn = input.readBool();
-                        } else if (!WireFormatNano.parseUnknownField(input, tag)) {
+                    if (tag == 0) {
+                        return this;
+                    }
+                    if (tag == 8) {
+                        int value = input.readInt32();
+                        switch (value) {
+                            case 0:
+                            case 1:
+                            case 2:
+                            case 3:
+                                this.wifiState = value;
+                                continue;
+                        }
+                    } else if (tag == 16) {
+                        this.wifiStateCount = input.readInt32();
+                    } else if (tag != 24) {
+                        if (!WireFormatNano.parseUnknownField(input, tag)) {
                             return this;
                         }
                     } else {
-                        return this;
+                        this.isScreenOn = input.readBool();
                     }
                 }
             }
@@ -473,8 +483,8 @@ public interface WifiMetricsProto {
             this.numExternalAppOneshotScanRequests = 0;
             this.numExternalForegroundAppOneshotScanRequestsThrottled = 0;
             this.numExternalBackgroundAppOneshotScanRequestsThrottled = 0;
-            this.watchdogTriggerToConnectionSuccessDurationMs = -1;
-            this.watchdogTotalConnectionFailureCountAfterTrigger = 0;
+            this.watchdogTriggerToConnectionSuccessDurationMs = -1L;
+            this.watchdogTotalConnectionFailureCountAfterTrigger = 0L;
             this.numOneshotHasDfsChannelScans = 0;
             this.wifiRttLog = null;
             this.isMacRandomizationOn = false;
@@ -519,16 +529,19 @@ public interface WifiMetricsProto {
             return this;
         }
 
+        @Override // com.android.framework.protobuf.nano.MessageNano
         public void writeTo(CodedOutputByteBufferNano output) throws IOException {
             int i = 0;
             if (this.connectionEvent != null && this.connectionEvent.length > 0) {
-                for (ConnectionEvent element : this.connectionEvent) {
+                for (int i2 = 0; i2 < this.connectionEvent.length; i2++) {
+                    ConnectionEvent element = this.connectionEvent[i2];
                     if (element != null) {
                         output.writeMessage(1, element);
                     }
                 }
             }
-            if (this.numSavedNetworks != 0) {
+            int i3 = this.numSavedNetworks;
+            if (i3 != 0) {
                 output.writeInt32(2, this.numSavedNetworks);
             }
             if (this.numOpenNetworks != 0) {
@@ -571,34 +584,39 @@ public interface WifiMetricsProto {
                 output.writeInt32(15, this.numBackgroundScans);
             }
             if (this.scanReturnEntries != null && this.scanReturnEntries.length > 0) {
-                for (ScanReturnEntry element2 : this.scanReturnEntries) {
+                for (int i4 = 0; i4 < this.scanReturnEntries.length; i4++) {
+                    ScanReturnEntry element2 = this.scanReturnEntries[i4];
                     if (element2 != null) {
                         output.writeMessage(16, element2);
                     }
                 }
             }
             if (this.wifiSystemStateEntries != null && this.wifiSystemStateEntries.length > 0) {
-                for (WifiSystemStateEntry element3 : this.wifiSystemStateEntries) {
+                for (int i5 = 0; i5 < this.wifiSystemStateEntries.length; i5++) {
+                    WifiSystemStateEntry element3 = this.wifiSystemStateEntries[i5];
                     if (element3 != null) {
                         output.writeMessage(17, element3);
                     }
                 }
             }
             if (this.backgroundScanReturnEntries != null && this.backgroundScanReturnEntries.length > 0) {
-                for (ScanReturnEntry element4 : this.backgroundScanReturnEntries) {
+                for (int i6 = 0; i6 < this.backgroundScanReturnEntries.length; i6++) {
+                    ScanReturnEntry element4 = this.backgroundScanReturnEntries[i6];
                     if (element4 != null) {
                         output.writeMessage(18, element4);
                     }
                 }
             }
             if (this.backgroundScanRequestState != null && this.backgroundScanRequestState.length > 0) {
-                for (WifiSystemStateEntry element5 : this.backgroundScanRequestState) {
+                for (int i7 = 0; i7 < this.backgroundScanRequestState.length; i7++) {
+                    WifiSystemStateEntry element5 = this.backgroundScanRequestState[i7];
                     if (element5 != null) {
                         output.writeMessage(19, element5);
                     }
                 }
             }
-            if (this.numLastResortWatchdogTriggers != 0) {
+            int i8 = this.numLastResortWatchdogTriggers;
+            if (i8 != 0) {
                 output.writeInt32(20, this.numLastResortWatchdogTriggers);
             }
             if (this.numLastResortWatchdogBadAssociationNetworksTotal != 0) {
@@ -644,13 +662,15 @@ public interface WifiMetricsProto {
                 output.writeInt32(34, this.recordDurationSec);
             }
             if (this.rssiPollRssiCount != null && this.rssiPollRssiCount.length > 0) {
-                for (RssiPollCount element6 : this.rssiPollRssiCount) {
+                for (int i9 = 0; i9 < this.rssiPollRssiCount.length; i9++) {
+                    RssiPollCount element6 = this.rssiPollRssiCount[i9];
                     if (element6 != null) {
                         output.writeMessage(35, element6);
                     }
                 }
             }
-            if (this.numLastResortWatchdogSuccesses != 0) {
+            int i10 = this.numLastResortWatchdogSuccesses;
+            if (i10 != 0) {
                 output.writeInt32(36, this.numLastResortWatchdogSuccesses);
             }
             if (this.numHiddenNetworks != 0) {
@@ -684,48 +704,55 @@ public interface WifiMetricsProto {
                 output.writeInt32(46, this.numScans);
             }
             if (this.alertReasonCount != null && this.alertReasonCount.length > 0) {
-                for (AlertReasonCount element7 : this.alertReasonCount) {
+                for (int i11 = 0; i11 < this.alertReasonCount.length; i11++) {
+                    AlertReasonCount element7 = this.alertReasonCount[i11];
                     if (element7 != null) {
                         output.writeMessage(47, element7);
                     }
                 }
             }
             if (this.wifiScoreCount != null && this.wifiScoreCount.length > 0) {
-                for (WifiScoreCount element8 : this.wifiScoreCount) {
+                for (int i12 = 0; i12 < this.wifiScoreCount.length; i12++) {
+                    WifiScoreCount element8 = this.wifiScoreCount[i12];
                     if (element8 != null) {
                         output.writeMessage(48, element8);
                     }
                 }
             }
             if (this.softApDuration != null && this.softApDuration.length > 0) {
-                for (SoftApDurationBucket element9 : this.softApDuration) {
+                for (int i13 = 0; i13 < this.softApDuration.length; i13++) {
+                    SoftApDurationBucket element9 = this.softApDuration[i13];
                     if (element9 != null) {
                         output.writeMessage(49, element9);
                     }
                 }
             }
             if (this.softApReturnCode != null && this.softApReturnCode.length > 0) {
-                for (SoftApReturnCodeCount element10 : this.softApReturnCode) {
+                for (int i14 = 0; i14 < this.softApReturnCode.length; i14++) {
+                    SoftApReturnCodeCount element10 = this.softApReturnCode[i14];
                     if (element10 != null) {
                         output.writeMessage(50, element10);
                     }
                 }
             }
             if (this.rssiPollDeltaCount != null && this.rssiPollDeltaCount.length > 0) {
-                for (RssiPollCount element11 : this.rssiPollDeltaCount) {
+                for (int i15 = 0; i15 < this.rssiPollDeltaCount.length; i15++) {
+                    RssiPollCount element11 = this.rssiPollDeltaCount[i15];
                     if (element11 != null) {
                         output.writeMessage(51, element11);
                     }
                 }
             }
             if (this.staEventList != null && this.staEventList.length > 0) {
-                for (StaEvent element12 : this.staEventList) {
+                for (int i16 = 0; i16 < this.staEventList.length; i16++) {
+                    StaEvent element12 = this.staEventList[i16];
                     if (element12 != null) {
                         output.writeMessage(52, element12);
                     }
                 }
             }
-            if (this.numHalCrashes != 0) {
+            int i17 = this.numHalCrashes;
+            if (i17 != 0) {
                 output.writeInt32(53, this.numHalCrashes);
             }
             if (this.numWificondCrashes != 0) {
@@ -759,76 +786,87 @@ public interface WifiMetricsProto {
                 output.writeInt32(63, this.numPasspointProvidersSuccessfullyConnected);
             }
             if (this.totalSsidsInScanHistogram != null && this.totalSsidsInScanHistogram.length > 0) {
-                for (NumConnectableNetworksBucket element13 : this.totalSsidsInScanHistogram) {
+                for (int i18 = 0; i18 < this.totalSsidsInScanHistogram.length; i18++) {
+                    NumConnectableNetworksBucket element13 = this.totalSsidsInScanHistogram[i18];
                     if (element13 != null) {
                         output.writeMessage(64, element13);
                     }
                 }
             }
             if (this.totalBssidsInScanHistogram != null && this.totalBssidsInScanHistogram.length > 0) {
-                for (NumConnectableNetworksBucket element14 : this.totalBssidsInScanHistogram) {
+                for (int i19 = 0; i19 < this.totalBssidsInScanHistogram.length; i19++) {
+                    NumConnectableNetworksBucket element14 = this.totalBssidsInScanHistogram[i19];
                     if (element14 != null) {
                         output.writeMessage(65, element14);
                     }
                 }
             }
             if (this.availableOpenSsidsInScanHistogram != null && this.availableOpenSsidsInScanHistogram.length > 0) {
-                for (NumConnectableNetworksBucket element15 : this.availableOpenSsidsInScanHistogram) {
+                for (int i20 = 0; i20 < this.availableOpenSsidsInScanHistogram.length; i20++) {
+                    NumConnectableNetworksBucket element15 = this.availableOpenSsidsInScanHistogram[i20];
                     if (element15 != null) {
                         output.writeMessage(66, element15);
                     }
                 }
             }
             if (this.availableOpenBssidsInScanHistogram != null && this.availableOpenBssidsInScanHistogram.length > 0) {
-                for (NumConnectableNetworksBucket element16 : this.availableOpenBssidsInScanHistogram) {
+                for (int i21 = 0; i21 < this.availableOpenBssidsInScanHistogram.length; i21++) {
+                    NumConnectableNetworksBucket element16 = this.availableOpenBssidsInScanHistogram[i21];
                     if (element16 != null) {
                         output.writeMessage(67, element16);
                     }
                 }
             }
             if (this.availableSavedSsidsInScanHistogram != null && this.availableSavedSsidsInScanHistogram.length > 0) {
-                for (NumConnectableNetworksBucket element17 : this.availableSavedSsidsInScanHistogram) {
+                for (int i22 = 0; i22 < this.availableSavedSsidsInScanHistogram.length; i22++) {
+                    NumConnectableNetworksBucket element17 = this.availableSavedSsidsInScanHistogram[i22];
                     if (element17 != null) {
                         output.writeMessage(68, element17);
                     }
                 }
             }
             if (this.availableSavedBssidsInScanHistogram != null && this.availableSavedBssidsInScanHistogram.length > 0) {
-                for (NumConnectableNetworksBucket element18 : this.availableSavedBssidsInScanHistogram) {
+                for (int i23 = 0; i23 < this.availableSavedBssidsInScanHistogram.length; i23++) {
+                    NumConnectableNetworksBucket element18 = this.availableSavedBssidsInScanHistogram[i23];
                     if (element18 != null) {
                         output.writeMessage(69, element18);
                     }
                 }
             }
             if (this.availableOpenOrSavedSsidsInScanHistogram != null && this.availableOpenOrSavedSsidsInScanHistogram.length > 0) {
-                for (NumConnectableNetworksBucket element19 : this.availableOpenOrSavedSsidsInScanHistogram) {
+                for (int i24 = 0; i24 < this.availableOpenOrSavedSsidsInScanHistogram.length; i24++) {
+                    NumConnectableNetworksBucket element19 = this.availableOpenOrSavedSsidsInScanHistogram[i24];
                     if (element19 != null) {
                         output.writeMessage(70, element19);
                     }
                 }
             }
             if (this.availableOpenOrSavedBssidsInScanHistogram != null && this.availableOpenOrSavedBssidsInScanHistogram.length > 0) {
-                for (NumConnectableNetworksBucket element20 : this.availableOpenOrSavedBssidsInScanHistogram) {
+                for (int i25 = 0; i25 < this.availableOpenOrSavedBssidsInScanHistogram.length; i25++) {
+                    NumConnectableNetworksBucket element20 = this.availableOpenOrSavedBssidsInScanHistogram[i25];
                     if (element20 != null) {
                         output.writeMessage(71, element20);
                     }
                 }
             }
             if (this.availableSavedPasspointProviderProfilesInScanHistogram != null && this.availableSavedPasspointProviderProfilesInScanHistogram.length > 0) {
-                for (NumConnectableNetworksBucket element21 : this.availableSavedPasspointProviderProfilesInScanHistogram) {
+                for (int i26 = 0; i26 < this.availableSavedPasspointProviderProfilesInScanHistogram.length; i26++) {
+                    NumConnectableNetworksBucket element21 = this.availableSavedPasspointProviderProfilesInScanHistogram[i26];
                     if (element21 != null) {
                         output.writeMessage(72, element21);
                     }
                 }
             }
             if (this.availableSavedPasspointProviderBssidsInScanHistogram != null && this.availableSavedPasspointProviderBssidsInScanHistogram.length > 0) {
-                for (NumConnectableNetworksBucket element22 : this.availableSavedPasspointProviderBssidsInScanHistogram) {
+                for (int i27 = 0; i27 < this.availableSavedPasspointProviderBssidsInScanHistogram.length; i27++) {
+                    NumConnectableNetworksBucket element22 = this.availableSavedPasspointProviderBssidsInScanHistogram[i27];
                     if (element22 != null) {
                         output.writeMessage(73, element22);
                     }
                 }
             }
-            if (this.fullBandAllSingleScanListenerResults != 0) {
+            int i28 = this.fullBandAllSingleScanListenerResults;
+            if (i28 != 0) {
                 output.writeInt32(74, this.fullBandAllSingleScanListenerResults);
             }
             if (this.partialAllSingleScanListenerResults != 0) {
@@ -838,20 +876,23 @@ public interface WifiMetricsProto {
                 output.writeMessage(76, this.pnoScanMetrics);
             }
             if (this.connectToNetworkNotificationCount != null && this.connectToNetworkNotificationCount.length > 0) {
-                for (ConnectToNetworkNotificationAndActionCount element23 : this.connectToNetworkNotificationCount) {
+                for (int i29 = 0; i29 < this.connectToNetworkNotificationCount.length; i29++) {
+                    ConnectToNetworkNotificationAndActionCount element23 = this.connectToNetworkNotificationCount[i29];
                     if (element23 != null) {
                         output.writeMessage(77, element23);
                     }
                 }
             }
             if (this.connectToNetworkNotificationActionCount != null && this.connectToNetworkNotificationActionCount.length > 0) {
-                for (ConnectToNetworkNotificationAndActionCount element24 : this.connectToNetworkNotificationActionCount) {
+                for (int i30 = 0; i30 < this.connectToNetworkNotificationActionCount.length; i30++) {
+                    ConnectToNetworkNotificationAndActionCount element24 = this.connectToNetworkNotificationActionCount[i30];
                     if (element24 != null) {
                         output.writeMessage(78, element24);
                     }
                 }
             }
-            if (this.openNetworkRecommenderBlacklistSize != 0) {
+            int i31 = this.openNetworkRecommenderBlacklistSize;
+            if (i31 != 0) {
                 output.writeInt32(79, this.openNetworkRecommenderBlacklistSize);
             }
             if (this.isWifiNetworksAvailableNotificationOn) {
@@ -864,56 +905,64 @@ public interface WifiMetricsProto {
                 output.writeInt32(82, this.numOpenNetworkConnectMessageFailedToSend);
             }
             if (this.observedHotspotR1ApsInScanHistogram != null && this.observedHotspotR1ApsInScanHistogram.length > 0) {
-                for (NumConnectableNetworksBucket element25 : this.observedHotspotR1ApsInScanHistogram) {
+                for (int i32 = 0; i32 < this.observedHotspotR1ApsInScanHistogram.length; i32++) {
+                    NumConnectableNetworksBucket element25 = this.observedHotspotR1ApsInScanHistogram[i32];
                     if (element25 != null) {
                         output.writeMessage(83, element25);
                     }
                 }
             }
             if (this.observedHotspotR2ApsInScanHistogram != null && this.observedHotspotR2ApsInScanHistogram.length > 0) {
-                for (NumConnectableNetworksBucket element26 : this.observedHotspotR2ApsInScanHistogram) {
+                for (int i33 = 0; i33 < this.observedHotspotR2ApsInScanHistogram.length; i33++) {
+                    NumConnectableNetworksBucket element26 = this.observedHotspotR2ApsInScanHistogram[i33];
                     if (element26 != null) {
                         output.writeMessage(84, element26);
                     }
                 }
             }
             if (this.observedHotspotR1EssInScanHistogram != null && this.observedHotspotR1EssInScanHistogram.length > 0) {
-                for (NumConnectableNetworksBucket element27 : this.observedHotspotR1EssInScanHistogram) {
+                for (int i34 = 0; i34 < this.observedHotspotR1EssInScanHistogram.length; i34++) {
+                    NumConnectableNetworksBucket element27 = this.observedHotspotR1EssInScanHistogram[i34];
                     if (element27 != null) {
                         output.writeMessage(85, element27);
                     }
                 }
             }
             if (this.observedHotspotR2EssInScanHistogram != null && this.observedHotspotR2EssInScanHistogram.length > 0) {
-                for (NumConnectableNetworksBucket element28 : this.observedHotspotR2EssInScanHistogram) {
+                for (int i35 = 0; i35 < this.observedHotspotR2EssInScanHistogram.length; i35++) {
+                    NumConnectableNetworksBucket element28 = this.observedHotspotR2EssInScanHistogram[i35];
                     if (element28 != null) {
                         output.writeMessage(86, element28);
                     }
                 }
             }
             if (this.observedHotspotR1ApsPerEssInScanHistogram != null && this.observedHotspotR1ApsPerEssInScanHistogram.length > 0) {
-                for (NumConnectableNetworksBucket element29 : this.observedHotspotR1ApsPerEssInScanHistogram) {
+                for (int i36 = 0; i36 < this.observedHotspotR1ApsPerEssInScanHistogram.length; i36++) {
+                    NumConnectableNetworksBucket element29 = this.observedHotspotR1ApsPerEssInScanHistogram[i36];
                     if (element29 != null) {
                         output.writeMessage(87, element29);
                     }
                 }
             }
             if (this.observedHotspotR2ApsPerEssInScanHistogram != null && this.observedHotspotR2ApsPerEssInScanHistogram.length > 0) {
-                for (NumConnectableNetworksBucket element30 : this.observedHotspotR2ApsPerEssInScanHistogram) {
+                for (int i37 = 0; i37 < this.observedHotspotR2ApsPerEssInScanHistogram.length; i37++) {
+                    NumConnectableNetworksBucket element30 = this.observedHotspotR2ApsPerEssInScanHistogram[i37];
                     if (element30 != null) {
                         output.writeMessage(88, element30);
                     }
                 }
             }
             if (this.softApConnectedClientsEventsTethered != null && this.softApConnectedClientsEventsTethered.length > 0) {
-                for (SoftApConnectedClientsEvent element31 : this.softApConnectedClientsEventsTethered) {
+                for (int i38 = 0; i38 < this.softApConnectedClientsEventsTethered.length; i38++) {
+                    SoftApConnectedClientsEvent element31 = this.softApConnectedClientsEventsTethered[i38];
                     if (element31 != null) {
                         output.writeMessage(89, element31);
                     }
                 }
             }
             if (this.softApConnectedClientsEventsLocalOnly != null && this.softApConnectedClientsEventsLocalOnly.length > 0) {
-                for (SoftApConnectedClientsEvent element32 : this.softApConnectedClientsEventsLocalOnly) {
+                for (int i39 = 0; i39 < this.softApConnectedClientsEventsLocalOnly.length; i39++) {
+                    SoftApConnectedClientsEvent element32 = this.softApConnectedClientsEventsLocalOnly[i39];
                     if (element32 != null) {
                         output.writeMessage(90, element32);
                     }
@@ -932,13 +981,15 @@ public interface WifiMetricsProto {
                 output.writeMessage(94, this.wifiWakeStats);
             }
             if (this.observed80211McSupportingApsInScanHistogram != null && this.observed80211McSupportingApsInScanHistogram.length > 0) {
-                for (NumConnectableNetworksBucket element33 : this.observed80211McSupportingApsInScanHistogram) {
+                for (int i40 = 0; i40 < this.observed80211McSupportingApsInScanHistogram.length; i40++) {
+                    NumConnectableNetworksBucket element33 = this.observed80211McSupportingApsInScanHistogram[i40];
                     if (element33 != null) {
                         output.writeMessage(95, element33);
                     }
                 }
             }
-            if (this.numSupplicantCrashes != 0) {
+            int i41 = this.numSupplicantCrashes;
+            if (i41 != 0) {
                 output.writeInt32(96, this.numSupplicantCrashes);
             }
             if (this.numHostapdCrashes != 0) {
@@ -1011,24 +1062,28 @@ public interface WifiMetricsProto {
                 output.writeMessage(119, this.experimentValues);
             }
             if (this.wifiIsUnusableEventList != null && this.wifiIsUnusableEventList.length > 0) {
-                for (WifiIsUnusableEvent element34 : this.wifiIsUnusableEventList) {
+                for (int i42 = 0; i42 < this.wifiIsUnusableEventList.length; i42++) {
+                    WifiIsUnusableEvent element34 = this.wifiIsUnusableEventList[i42];
                     if (element34 != null) {
                         output.writeMessage(120, element34);
                     }
                 }
             }
             if (this.linkSpeedCounts != null && this.linkSpeedCounts.length > 0) {
-                for (LinkSpeedCount element35 : this.linkSpeedCounts) {
+                for (int i43 = 0; i43 < this.linkSpeedCounts.length; i43++) {
+                    LinkSpeedCount element35 = this.linkSpeedCounts[i43];
                     if (element35 != null) {
                         output.writeMessage(121, element35);
                     }
                 }
             }
-            if (this.numSarSensorRegistrationFailures != 0) {
+            int i44 = this.numSarSensorRegistrationFailures;
+            if (i44 != 0) {
                 output.writeInt32(122, this.numSarSensorRegistrationFailures);
             }
             if (this.installedPasspointProfileTypeForR1 != null && this.installedPasspointProfileTypeForR1.length > 0) {
-                for (PasspointProfileTypeCount element36 : this.installedPasspointProfileTypeForR1) {
+                for (int i45 = 0; i45 < this.installedPasspointProfileTypeForR1.length; i45++) {
+                    PasspointProfileTypeCount element36 = this.installedPasspointProfileTypeForR1[i45];
                     if (element36 != null) {
                         output.writeMessage(123, element36);
                     }
@@ -1041,21 +1096,24 @@ public interface WifiMetricsProto {
                 output.writeMessage(125, this.wifiLinkLayerUsageStats);
             }
             if (this.wifiUsabilityStatsList != null && this.wifiUsabilityStatsList.length > 0) {
-                for (WifiUsabilityStats element37 : this.wifiUsabilityStatsList) {
+                for (int i46 = 0; i46 < this.wifiUsabilityStatsList.length; i46++) {
+                    WifiUsabilityStats element37 = this.wifiUsabilityStatsList[i46];
                     if (element37 != null) {
                         output.writeMessage(126, element37);
                     }
                 }
             }
             if (this.wifiUsabilityScoreCount != null && this.wifiUsabilityScoreCount.length > 0) {
-                for (WifiUsabilityScoreCount element38 : this.wifiUsabilityScoreCount) {
+                for (int i47 = 0; i47 < this.wifiUsabilityScoreCount.length; i47++) {
+                    WifiUsabilityScoreCount element38 = this.wifiUsabilityScoreCount[i47];
                     if (element38 != null) {
                         output.writeMessage(127, element38);
                     }
                 }
             }
             if (this.mobilityStatePnoStatsList != null && this.mobilityStatePnoStatsList.length > 0) {
-                for (DeviceMobilityStatePnoScanStats element39 : this.mobilityStatePnoStatsList) {
+                for (int i48 = 0; i48 < this.mobilityStatePnoStatsList.length; i48++) {
+                    DeviceMobilityStatePnoScanStats element39 = this.mobilityStatePnoStatsList[i48];
                     if (element39 != null) {
                         output.writeMessage(128, element39);
                     }
@@ -1095,7 +1153,8 @@ public interface WifiMetricsProto {
                 output.writeMessage(139, this.linkProbeStats);
             }
             if (this.networkSelectionExperimentDecisionsList != null && this.networkSelectionExperimentDecisionsList.length > 0) {
-                for (NetworkSelectionExperimentDecisions element40 : this.networkSelectionExperimentDecisionsList) {
+                for (int i49 = 0; i49 < this.networkSelectionExperimentDecisionsList.length; i49++) {
+                    NetworkSelectionExperimentDecisions element40 = this.networkSelectionExperimentDecisionsList[i49];
                     if (element40 != null) {
                         output.writeMessage(140, element40);
                     }
@@ -1124,34 +1183,36 @@ public interface WifiMetricsProto {
             }
             if (this.installedPasspointProfileTypeForR2 != null && this.installedPasspointProfileTypeForR2.length > 0) {
                 while (true) {
-                    int i2 = i;
-                    if (i2 >= this.installedPasspointProfileTypeForR2.length) {
+                    int i50 = i;
+                    if (i50 >= this.installedPasspointProfileTypeForR2.length) {
                         break;
                     }
-                    PasspointProfileTypeCount element41 = this.installedPasspointProfileTypeForR2[i2];
+                    PasspointProfileTypeCount element41 = this.installedPasspointProfileTypeForR2[i50];
                     if (element41 != null) {
                         output.writeMessage(148, element41);
                     }
-                    i = i2 + 1;
+                    i = i50 + 1;
                 }
             }
             super.writeTo(output);
         }
 
-        /* access modifiers changed from: protected */
-        public int computeSerializedSize() {
+        @Override // com.android.framework.protobuf.nano.MessageNano
+        protected int computeSerializedSize() {
             int i = super.computeSerializedSize();
             int i2 = 0;
             if (this.connectionEvent != null && this.connectionEvent.length > 0) {
                 int size = i;
-                for (ConnectionEvent element : this.connectionEvent) {
+                for (int size2 = 0; size2 < this.connectionEvent.length; size2++) {
+                    ConnectionEvent element = this.connectionEvent[size2];
                     if (element != null) {
                         size += CodedOutputByteBufferNano.computeMessageSize(1, element);
                     }
                 }
                 i = size;
             }
-            if (this.numSavedNetworks != 0) {
+            int size3 = this.numSavedNetworks;
+            if (size3 != 0) {
                 i += CodedOutputByteBufferNano.computeInt32Size(2, this.numSavedNetworks);
             }
             if (this.numOpenNetworks != 0) {
@@ -1194,42 +1255,47 @@ public interface WifiMetricsProto {
                 i += CodedOutputByteBufferNano.computeInt32Size(15, this.numBackgroundScans);
             }
             if (this.scanReturnEntries != null && this.scanReturnEntries.length > 0) {
-                int size2 = i;
-                for (ScanReturnEntry element2 : this.scanReturnEntries) {
-                    if (element2 != null) {
-                        size2 += CodedOutputByteBufferNano.computeMessageSize(16, element2);
-                    }
-                }
-                i = size2;
-            }
-            if (this.wifiSystemStateEntries != null && this.wifiSystemStateEntries.length > 0) {
-                int size3 = i;
-                for (WifiSystemStateEntry element3 : this.wifiSystemStateEntries) {
-                    if (element3 != null) {
-                        size3 += CodedOutputByteBufferNano.computeMessageSize(17, element3);
-                    }
-                }
-                i = size3;
-            }
-            if (this.backgroundScanReturnEntries != null && this.backgroundScanReturnEntries.length > 0) {
                 int size4 = i;
-                for (ScanReturnEntry element4 : this.backgroundScanReturnEntries) {
-                    if (element4 != null) {
-                        size4 += CodedOutputByteBufferNano.computeMessageSize(18, element4);
+                for (int size5 = 0; size5 < this.scanReturnEntries.length; size5++) {
+                    ScanReturnEntry element2 = this.scanReturnEntries[size5];
+                    if (element2 != null) {
+                        size4 += CodedOutputByteBufferNano.computeMessageSize(16, element2);
                     }
                 }
                 i = size4;
             }
-            if (this.backgroundScanRequestState != null && this.backgroundScanRequestState.length > 0) {
-                int size5 = i;
-                for (WifiSystemStateEntry element5 : this.backgroundScanRequestState) {
-                    if (element5 != null) {
-                        size5 += CodedOutputByteBufferNano.computeMessageSize(19, element5);
+            if (this.wifiSystemStateEntries != null && this.wifiSystemStateEntries.length > 0) {
+                int size6 = i;
+                for (int size7 = 0; size7 < this.wifiSystemStateEntries.length; size7++) {
+                    WifiSystemStateEntry element3 = this.wifiSystemStateEntries[size7];
+                    if (element3 != null) {
+                        size6 += CodedOutputByteBufferNano.computeMessageSize(17, element3);
                     }
                 }
-                i = size5;
+                i = size6;
             }
-            if (this.numLastResortWatchdogTriggers != 0) {
+            if (this.backgroundScanReturnEntries != null && this.backgroundScanReturnEntries.length > 0) {
+                int size8 = i;
+                for (int size9 = 0; size9 < this.backgroundScanReturnEntries.length; size9++) {
+                    ScanReturnEntry element4 = this.backgroundScanReturnEntries[size9];
+                    if (element4 != null) {
+                        size8 += CodedOutputByteBufferNano.computeMessageSize(18, element4);
+                    }
+                }
+                i = size8;
+            }
+            if (this.backgroundScanRequestState != null && this.backgroundScanRequestState.length > 0) {
+                int size10 = i;
+                for (int size11 = 0; size11 < this.backgroundScanRequestState.length; size11++) {
+                    WifiSystemStateEntry element5 = this.backgroundScanRequestState[size11];
+                    if (element5 != null) {
+                        size10 += CodedOutputByteBufferNano.computeMessageSize(19, element5);
+                    }
+                }
+                i = size10;
+            }
+            int size12 = this.numLastResortWatchdogTriggers;
+            if (size12 != 0) {
                 i += CodedOutputByteBufferNano.computeInt32Size(20, this.numLastResortWatchdogTriggers);
             }
             if (this.numLastResortWatchdogBadAssociationNetworksTotal != 0) {
@@ -1275,15 +1341,17 @@ public interface WifiMetricsProto {
                 i += CodedOutputByteBufferNano.computeInt32Size(34, this.recordDurationSec);
             }
             if (this.rssiPollRssiCount != null && this.rssiPollRssiCount.length > 0) {
-                int size6 = i;
-                for (RssiPollCount element6 : this.rssiPollRssiCount) {
+                int size13 = i;
+                for (int size14 = 0; size14 < this.rssiPollRssiCount.length; size14++) {
+                    RssiPollCount element6 = this.rssiPollRssiCount[size14];
                     if (element6 != null) {
-                        size6 += CodedOutputByteBufferNano.computeMessageSize(35, element6);
+                        size13 += CodedOutputByteBufferNano.computeMessageSize(35, element6);
                     }
                 }
-                i = size6;
+                i = size13;
             }
-            if (this.numLastResortWatchdogSuccesses != 0) {
+            int size15 = this.numLastResortWatchdogSuccesses;
+            if (size15 != 0) {
                 i += CodedOutputByteBufferNano.computeInt32Size(36, this.numLastResortWatchdogSuccesses);
             }
             if (this.numHiddenNetworks != 0) {
@@ -1317,60 +1385,67 @@ public interface WifiMetricsProto {
                 i += CodedOutputByteBufferNano.computeInt32Size(46, this.numScans);
             }
             if (this.alertReasonCount != null && this.alertReasonCount.length > 0) {
-                int size7 = i;
-                for (AlertReasonCount element7 : this.alertReasonCount) {
+                int size16 = i;
+                for (int size17 = 0; size17 < this.alertReasonCount.length; size17++) {
+                    AlertReasonCount element7 = this.alertReasonCount[size17];
                     if (element7 != null) {
-                        size7 += CodedOutputByteBufferNano.computeMessageSize(47, element7);
+                        size16 += CodedOutputByteBufferNano.computeMessageSize(47, element7);
                     }
                 }
-                i = size7;
+                i = size16;
             }
             if (this.wifiScoreCount != null && this.wifiScoreCount.length > 0) {
-                int size8 = i;
-                for (WifiScoreCount element8 : this.wifiScoreCount) {
+                int size18 = i;
+                for (int size19 = 0; size19 < this.wifiScoreCount.length; size19++) {
+                    WifiScoreCount element8 = this.wifiScoreCount[size19];
                     if (element8 != null) {
-                        size8 += CodedOutputByteBufferNano.computeMessageSize(48, element8);
+                        size18 += CodedOutputByteBufferNano.computeMessageSize(48, element8);
                     }
                 }
-                i = size8;
+                i = size18;
             }
             if (this.softApDuration != null && this.softApDuration.length > 0) {
-                int size9 = i;
-                for (SoftApDurationBucket element9 : this.softApDuration) {
+                int size20 = i;
+                for (int size21 = 0; size21 < this.softApDuration.length; size21++) {
+                    SoftApDurationBucket element9 = this.softApDuration[size21];
                     if (element9 != null) {
-                        size9 += CodedOutputByteBufferNano.computeMessageSize(49, element9);
+                        size20 += CodedOutputByteBufferNano.computeMessageSize(49, element9);
                     }
                 }
-                i = size9;
+                i = size20;
             }
             if (this.softApReturnCode != null && this.softApReturnCode.length > 0) {
-                int size10 = i;
-                for (SoftApReturnCodeCount element10 : this.softApReturnCode) {
+                int size22 = i;
+                for (int size23 = 0; size23 < this.softApReturnCode.length; size23++) {
+                    SoftApReturnCodeCount element10 = this.softApReturnCode[size23];
                     if (element10 != null) {
-                        size10 += CodedOutputByteBufferNano.computeMessageSize(50, element10);
+                        size22 += CodedOutputByteBufferNano.computeMessageSize(50, element10);
                     }
                 }
-                i = size10;
+                i = size22;
             }
             if (this.rssiPollDeltaCount != null && this.rssiPollDeltaCount.length > 0) {
-                int size11 = i;
-                for (RssiPollCount element11 : this.rssiPollDeltaCount) {
+                int size24 = i;
+                for (int size25 = 0; size25 < this.rssiPollDeltaCount.length; size25++) {
+                    RssiPollCount element11 = this.rssiPollDeltaCount[size25];
                     if (element11 != null) {
-                        size11 += CodedOutputByteBufferNano.computeMessageSize(51, element11);
+                        size24 += CodedOutputByteBufferNano.computeMessageSize(51, element11);
                     }
                 }
-                i = size11;
+                i = size24;
             }
             if (this.staEventList != null && this.staEventList.length > 0) {
-                int size12 = i;
-                for (StaEvent element12 : this.staEventList) {
+                int size26 = i;
+                for (int size27 = 0; size27 < this.staEventList.length; size27++) {
+                    StaEvent element12 = this.staEventList[size27];
                     if (element12 != null) {
-                        size12 += CodedOutputByteBufferNano.computeMessageSize(52, element12);
+                        size26 += CodedOutputByteBufferNano.computeMessageSize(52, element12);
                     }
                 }
-                i = size12;
+                i = size26;
             }
-            if (this.numHalCrashes != 0) {
+            int size28 = this.numHalCrashes;
+            if (size28 != 0) {
                 i += CodedOutputByteBufferNano.computeInt32Size(53, this.numHalCrashes);
             }
             if (this.numWificondCrashes != 0) {
@@ -1404,96 +1479,107 @@ public interface WifiMetricsProto {
                 i += CodedOutputByteBufferNano.computeInt32Size(63, this.numPasspointProvidersSuccessfullyConnected);
             }
             if (this.totalSsidsInScanHistogram != null && this.totalSsidsInScanHistogram.length > 0) {
-                int size13 = i;
-                for (NumConnectableNetworksBucket element13 : this.totalSsidsInScanHistogram) {
+                int size29 = i;
+                for (int size30 = 0; size30 < this.totalSsidsInScanHistogram.length; size30++) {
+                    NumConnectableNetworksBucket element13 = this.totalSsidsInScanHistogram[size30];
                     if (element13 != null) {
-                        size13 += CodedOutputByteBufferNano.computeMessageSize(64, element13);
+                        size29 += CodedOutputByteBufferNano.computeMessageSize(64, element13);
                     }
                 }
-                i = size13;
+                i = size29;
             }
             if (this.totalBssidsInScanHistogram != null && this.totalBssidsInScanHistogram.length > 0) {
-                int size14 = i;
-                for (NumConnectableNetworksBucket element14 : this.totalBssidsInScanHistogram) {
+                int size31 = i;
+                for (int size32 = 0; size32 < this.totalBssidsInScanHistogram.length; size32++) {
+                    NumConnectableNetworksBucket element14 = this.totalBssidsInScanHistogram[size32];
                     if (element14 != null) {
-                        size14 += CodedOutputByteBufferNano.computeMessageSize(65, element14);
+                        size31 += CodedOutputByteBufferNano.computeMessageSize(65, element14);
                     }
                 }
-                i = size14;
+                i = size31;
             }
             if (this.availableOpenSsidsInScanHistogram != null && this.availableOpenSsidsInScanHistogram.length > 0) {
-                int size15 = i;
-                for (NumConnectableNetworksBucket element15 : this.availableOpenSsidsInScanHistogram) {
+                int size33 = i;
+                for (int size34 = 0; size34 < this.availableOpenSsidsInScanHistogram.length; size34++) {
+                    NumConnectableNetworksBucket element15 = this.availableOpenSsidsInScanHistogram[size34];
                     if (element15 != null) {
-                        size15 += CodedOutputByteBufferNano.computeMessageSize(66, element15);
+                        size33 += CodedOutputByteBufferNano.computeMessageSize(66, element15);
                     }
                 }
-                i = size15;
+                i = size33;
             }
             if (this.availableOpenBssidsInScanHistogram != null && this.availableOpenBssidsInScanHistogram.length > 0) {
-                int size16 = i;
-                for (NumConnectableNetworksBucket element16 : this.availableOpenBssidsInScanHistogram) {
+                int size35 = i;
+                for (int size36 = 0; size36 < this.availableOpenBssidsInScanHistogram.length; size36++) {
+                    NumConnectableNetworksBucket element16 = this.availableOpenBssidsInScanHistogram[size36];
                     if (element16 != null) {
-                        size16 += CodedOutputByteBufferNano.computeMessageSize(67, element16);
+                        size35 += CodedOutputByteBufferNano.computeMessageSize(67, element16);
                     }
                 }
-                i = size16;
+                i = size35;
             }
             if (this.availableSavedSsidsInScanHistogram != null && this.availableSavedSsidsInScanHistogram.length > 0) {
-                int size17 = i;
-                for (NumConnectableNetworksBucket element17 : this.availableSavedSsidsInScanHistogram) {
+                int size37 = i;
+                for (int size38 = 0; size38 < this.availableSavedSsidsInScanHistogram.length; size38++) {
+                    NumConnectableNetworksBucket element17 = this.availableSavedSsidsInScanHistogram[size38];
                     if (element17 != null) {
-                        size17 += CodedOutputByteBufferNano.computeMessageSize(68, element17);
+                        size37 += CodedOutputByteBufferNano.computeMessageSize(68, element17);
                     }
                 }
-                i = size17;
+                i = size37;
             }
             if (this.availableSavedBssidsInScanHistogram != null && this.availableSavedBssidsInScanHistogram.length > 0) {
-                int size18 = i;
-                for (NumConnectableNetworksBucket element18 : this.availableSavedBssidsInScanHistogram) {
+                int size39 = i;
+                for (int size40 = 0; size40 < this.availableSavedBssidsInScanHistogram.length; size40++) {
+                    NumConnectableNetworksBucket element18 = this.availableSavedBssidsInScanHistogram[size40];
                     if (element18 != null) {
-                        size18 += CodedOutputByteBufferNano.computeMessageSize(69, element18);
+                        size39 += CodedOutputByteBufferNano.computeMessageSize(69, element18);
                     }
                 }
-                i = size18;
+                i = size39;
             }
             if (this.availableOpenOrSavedSsidsInScanHistogram != null && this.availableOpenOrSavedSsidsInScanHistogram.length > 0) {
-                int size19 = i;
-                for (NumConnectableNetworksBucket element19 : this.availableOpenOrSavedSsidsInScanHistogram) {
+                int size41 = i;
+                for (int size42 = 0; size42 < this.availableOpenOrSavedSsidsInScanHistogram.length; size42++) {
+                    NumConnectableNetworksBucket element19 = this.availableOpenOrSavedSsidsInScanHistogram[size42];
                     if (element19 != null) {
-                        size19 += CodedOutputByteBufferNano.computeMessageSize(70, element19);
+                        size41 += CodedOutputByteBufferNano.computeMessageSize(70, element19);
                     }
                 }
-                i = size19;
+                i = size41;
             }
             if (this.availableOpenOrSavedBssidsInScanHistogram != null && this.availableOpenOrSavedBssidsInScanHistogram.length > 0) {
-                int size20 = i;
-                for (NumConnectableNetworksBucket element20 : this.availableOpenOrSavedBssidsInScanHistogram) {
+                int size43 = i;
+                for (int size44 = 0; size44 < this.availableOpenOrSavedBssidsInScanHistogram.length; size44++) {
+                    NumConnectableNetworksBucket element20 = this.availableOpenOrSavedBssidsInScanHistogram[size44];
                     if (element20 != null) {
-                        size20 += CodedOutputByteBufferNano.computeMessageSize(71, element20);
+                        size43 += CodedOutputByteBufferNano.computeMessageSize(71, element20);
                     }
                 }
-                i = size20;
+                i = size43;
             }
             if (this.availableSavedPasspointProviderProfilesInScanHistogram != null && this.availableSavedPasspointProviderProfilesInScanHistogram.length > 0) {
-                int size21 = i;
-                for (NumConnectableNetworksBucket element21 : this.availableSavedPasspointProviderProfilesInScanHistogram) {
+                int size45 = i;
+                for (int size46 = 0; size46 < this.availableSavedPasspointProviderProfilesInScanHistogram.length; size46++) {
+                    NumConnectableNetworksBucket element21 = this.availableSavedPasspointProviderProfilesInScanHistogram[size46];
                     if (element21 != null) {
-                        size21 += CodedOutputByteBufferNano.computeMessageSize(72, element21);
+                        size45 += CodedOutputByteBufferNano.computeMessageSize(72, element21);
                     }
                 }
-                i = size21;
+                i = size45;
             }
             if (this.availableSavedPasspointProviderBssidsInScanHistogram != null && this.availableSavedPasspointProviderBssidsInScanHistogram.length > 0) {
-                int size22 = i;
-                for (NumConnectableNetworksBucket element22 : this.availableSavedPasspointProviderBssidsInScanHistogram) {
+                int size47 = i;
+                for (int size48 = 0; size48 < this.availableSavedPasspointProviderBssidsInScanHistogram.length; size48++) {
+                    NumConnectableNetworksBucket element22 = this.availableSavedPasspointProviderBssidsInScanHistogram[size48];
                     if (element22 != null) {
-                        size22 += CodedOutputByteBufferNano.computeMessageSize(73, element22);
+                        size47 += CodedOutputByteBufferNano.computeMessageSize(73, element22);
                     }
                 }
-                i = size22;
+                i = size47;
             }
-            if (this.fullBandAllSingleScanListenerResults != 0) {
+            int size49 = this.fullBandAllSingleScanListenerResults;
+            if (size49 != 0) {
                 i += CodedOutputByteBufferNano.computeInt32Size(74, this.fullBandAllSingleScanListenerResults);
             }
             if (this.partialAllSingleScanListenerResults != 0) {
@@ -1503,24 +1589,27 @@ public interface WifiMetricsProto {
                 i += CodedOutputByteBufferNano.computeMessageSize(76, this.pnoScanMetrics);
             }
             if (this.connectToNetworkNotificationCount != null && this.connectToNetworkNotificationCount.length > 0) {
-                int size23 = i;
-                for (ConnectToNetworkNotificationAndActionCount element23 : this.connectToNetworkNotificationCount) {
+                int size50 = i;
+                for (int size51 = 0; size51 < this.connectToNetworkNotificationCount.length; size51++) {
+                    ConnectToNetworkNotificationAndActionCount element23 = this.connectToNetworkNotificationCount[size51];
                     if (element23 != null) {
-                        size23 += CodedOutputByteBufferNano.computeMessageSize(77, element23);
+                        size50 += CodedOutputByteBufferNano.computeMessageSize(77, element23);
                     }
                 }
-                i = size23;
+                i = size50;
             }
             if (this.connectToNetworkNotificationActionCount != null && this.connectToNetworkNotificationActionCount.length > 0) {
-                int size24 = i;
-                for (ConnectToNetworkNotificationAndActionCount element24 : this.connectToNetworkNotificationActionCount) {
+                int size52 = i;
+                for (int size53 = 0; size53 < this.connectToNetworkNotificationActionCount.length; size53++) {
+                    ConnectToNetworkNotificationAndActionCount element24 = this.connectToNetworkNotificationActionCount[size53];
                     if (element24 != null) {
-                        size24 += CodedOutputByteBufferNano.computeMessageSize(78, element24);
+                        size52 += CodedOutputByteBufferNano.computeMessageSize(78, element24);
                     }
                 }
-                i = size24;
+                i = size52;
             }
-            if (this.openNetworkRecommenderBlacklistSize != 0) {
+            int size54 = this.openNetworkRecommenderBlacklistSize;
+            if (size54 != 0) {
                 i += CodedOutputByteBufferNano.computeInt32Size(79, this.openNetworkRecommenderBlacklistSize);
             }
             if (this.isWifiNetworksAvailableNotificationOn) {
@@ -1533,76 +1622,84 @@ public interface WifiMetricsProto {
                 i += CodedOutputByteBufferNano.computeInt32Size(82, this.numOpenNetworkConnectMessageFailedToSend);
             }
             if (this.observedHotspotR1ApsInScanHistogram != null && this.observedHotspotR1ApsInScanHistogram.length > 0) {
-                int size25 = i;
-                for (NumConnectableNetworksBucket element25 : this.observedHotspotR1ApsInScanHistogram) {
+                int size55 = i;
+                for (int size56 = 0; size56 < this.observedHotspotR1ApsInScanHistogram.length; size56++) {
+                    NumConnectableNetworksBucket element25 = this.observedHotspotR1ApsInScanHistogram[size56];
                     if (element25 != null) {
-                        size25 += CodedOutputByteBufferNano.computeMessageSize(83, element25);
+                        size55 += CodedOutputByteBufferNano.computeMessageSize(83, element25);
                     }
                 }
-                i = size25;
+                i = size55;
             }
             if (this.observedHotspotR2ApsInScanHistogram != null && this.observedHotspotR2ApsInScanHistogram.length > 0) {
-                int size26 = i;
-                for (NumConnectableNetworksBucket element26 : this.observedHotspotR2ApsInScanHistogram) {
+                int size57 = i;
+                for (int size58 = 0; size58 < this.observedHotspotR2ApsInScanHistogram.length; size58++) {
+                    NumConnectableNetworksBucket element26 = this.observedHotspotR2ApsInScanHistogram[size58];
                     if (element26 != null) {
-                        size26 += CodedOutputByteBufferNano.computeMessageSize(84, element26);
+                        size57 += CodedOutputByteBufferNano.computeMessageSize(84, element26);
                     }
                 }
-                i = size26;
+                i = size57;
             }
             if (this.observedHotspotR1EssInScanHistogram != null && this.observedHotspotR1EssInScanHistogram.length > 0) {
-                int size27 = i;
-                for (NumConnectableNetworksBucket element27 : this.observedHotspotR1EssInScanHistogram) {
+                int size59 = i;
+                for (int size60 = 0; size60 < this.observedHotspotR1EssInScanHistogram.length; size60++) {
+                    NumConnectableNetworksBucket element27 = this.observedHotspotR1EssInScanHistogram[size60];
                     if (element27 != null) {
-                        size27 += CodedOutputByteBufferNano.computeMessageSize(85, element27);
+                        size59 += CodedOutputByteBufferNano.computeMessageSize(85, element27);
                     }
                 }
-                i = size27;
+                i = size59;
             }
             if (this.observedHotspotR2EssInScanHistogram != null && this.observedHotspotR2EssInScanHistogram.length > 0) {
-                int size28 = i;
-                for (NumConnectableNetworksBucket element28 : this.observedHotspotR2EssInScanHistogram) {
+                int size61 = i;
+                for (int size62 = 0; size62 < this.observedHotspotR2EssInScanHistogram.length; size62++) {
+                    NumConnectableNetworksBucket element28 = this.observedHotspotR2EssInScanHistogram[size62];
                     if (element28 != null) {
-                        size28 += CodedOutputByteBufferNano.computeMessageSize(86, element28);
+                        size61 += CodedOutputByteBufferNano.computeMessageSize(86, element28);
                     }
                 }
-                i = size28;
+                i = size61;
             }
             if (this.observedHotspotR1ApsPerEssInScanHistogram != null && this.observedHotspotR1ApsPerEssInScanHistogram.length > 0) {
-                int size29 = i;
-                for (NumConnectableNetworksBucket element29 : this.observedHotspotR1ApsPerEssInScanHistogram) {
+                int size63 = i;
+                for (int size64 = 0; size64 < this.observedHotspotR1ApsPerEssInScanHistogram.length; size64++) {
+                    NumConnectableNetworksBucket element29 = this.observedHotspotR1ApsPerEssInScanHistogram[size64];
                     if (element29 != null) {
-                        size29 += CodedOutputByteBufferNano.computeMessageSize(87, element29);
+                        size63 += CodedOutputByteBufferNano.computeMessageSize(87, element29);
                     }
                 }
-                i = size29;
+                i = size63;
             }
             if (this.observedHotspotR2ApsPerEssInScanHistogram != null && this.observedHotspotR2ApsPerEssInScanHistogram.length > 0) {
-                int size30 = i;
-                for (NumConnectableNetworksBucket element30 : this.observedHotspotR2ApsPerEssInScanHistogram) {
+                int size65 = i;
+                for (int size66 = 0; size66 < this.observedHotspotR2ApsPerEssInScanHistogram.length; size66++) {
+                    NumConnectableNetworksBucket element30 = this.observedHotspotR2ApsPerEssInScanHistogram[size66];
                     if (element30 != null) {
-                        size30 += CodedOutputByteBufferNano.computeMessageSize(88, element30);
+                        size65 += CodedOutputByteBufferNano.computeMessageSize(88, element30);
                     }
                 }
-                i = size30;
+                i = size65;
             }
             if (this.softApConnectedClientsEventsTethered != null && this.softApConnectedClientsEventsTethered.length > 0) {
-                int size31 = i;
-                for (SoftApConnectedClientsEvent element31 : this.softApConnectedClientsEventsTethered) {
+                int size67 = i;
+                for (int size68 = 0; size68 < this.softApConnectedClientsEventsTethered.length; size68++) {
+                    SoftApConnectedClientsEvent element31 = this.softApConnectedClientsEventsTethered[size68];
                     if (element31 != null) {
-                        size31 += CodedOutputByteBufferNano.computeMessageSize(89, element31);
+                        size67 += CodedOutputByteBufferNano.computeMessageSize(89, element31);
                     }
                 }
-                i = size31;
+                i = size67;
             }
             if (this.softApConnectedClientsEventsLocalOnly != null && this.softApConnectedClientsEventsLocalOnly.length > 0) {
-                int size32 = i;
-                for (SoftApConnectedClientsEvent element32 : this.softApConnectedClientsEventsLocalOnly) {
+                int size69 = i;
+                for (int size70 = 0; size70 < this.softApConnectedClientsEventsLocalOnly.length; size70++) {
+                    SoftApConnectedClientsEvent element32 = this.softApConnectedClientsEventsLocalOnly[size70];
                     if (element32 != null) {
-                        size32 += CodedOutputByteBufferNano.computeMessageSize(90, element32);
+                        size69 += CodedOutputByteBufferNano.computeMessageSize(90, element32);
                     }
                 }
-                i = size32;
+                i = size69;
             }
             if (this.wpsMetrics != null) {
                 i += CodedOutputByteBufferNano.computeMessageSize(91, this.wpsMetrics);
@@ -1617,15 +1714,17 @@ public interface WifiMetricsProto {
                 i += CodedOutputByteBufferNano.computeMessageSize(94, this.wifiWakeStats);
             }
             if (this.observed80211McSupportingApsInScanHistogram != null && this.observed80211McSupportingApsInScanHistogram.length > 0) {
-                int size33 = i;
-                for (NumConnectableNetworksBucket element33 : this.observed80211McSupportingApsInScanHistogram) {
+                int size71 = i;
+                for (int size72 = 0; size72 < this.observed80211McSupportingApsInScanHistogram.length; size72++) {
+                    NumConnectableNetworksBucket element33 = this.observed80211McSupportingApsInScanHistogram[size72];
                     if (element33 != null) {
-                        size33 += CodedOutputByteBufferNano.computeMessageSize(95, element33);
+                        size71 += CodedOutputByteBufferNano.computeMessageSize(95, element33);
                     }
                 }
-                i = size33;
+                i = size71;
             }
-            if (this.numSupplicantCrashes != 0) {
+            int size73 = this.numSupplicantCrashes;
+            if (size73 != 0) {
                 i += CodedOutputByteBufferNano.computeInt32Size(96, this.numSupplicantCrashes);
             }
             if (this.numHostapdCrashes != 0) {
@@ -1698,34 +1797,38 @@ public interface WifiMetricsProto {
                 i += CodedOutputByteBufferNano.computeMessageSize(119, this.experimentValues);
             }
             if (this.wifiIsUnusableEventList != null && this.wifiIsUnusableEventList.length > 0) {
-                int size34 = i;
-                for (WifiIsUnusableEvent element34 : this.wifiIsUnusableEventList) {
+                int size74 = i;
+                for (int size75 = 0; size75 < this.wifiIsUnusableEventList.length; size75++) {
+                    WifiIsUnusableEvent element34 = this.wifiIsUnusableEventList[size75];
                     if (element34 != null) {
-                        size34 += CodedOutputByteBufferNano.computeMessageSize(120, element34);
+                        size74 += CodedOutputByteBufferNano.computeMessageSize(120, element34);
                     }
                 }
-                i = size34;
+                i = size74;
             }
             if (this.linkSpeedCounts != null && this.linkSpeedCounts.length > 0) {
-                int size35 = i;
-                for (LinkSpeedCount element35 : this.linkSpeedCounts) {
+                int size76 = i;
+                for (int size77 = 0; size77 < this.linkSpeedCounts.length; size77++) {
+                    LinkSpeedCount element35 = this.linkSpeedCounts[size77];
                     if (element35 != null) {
-                        size35 += CodedOutputByteBufferNano.computeMessageSize(121, element35);
+                        size76 += CodedOutputByteBufferNano.computeMessageSize(121, element35);
                     }
                 }
-                i = size35;
+                i = size76;
             }
-            if (this.numSarSensorRegistrationFailures != 0) {
+            int size78 = this.numSarSensorRegistrationFailures;
+            if (size78 != 0) {
                 i += CodedOutputByteBufferNano.computeInt32Size(122, this.numSarSensorRegistrationFailures);
             }
             if (this.installedPasspointProfileTypeForR1 != null && this.installedPasspointProfileTypeForR1.length > 0) {
-                int size36 = i;
-                for (PasspointProfileTypeCount element36 : this.installedPasspointProfileTypeForR1) {
+                int size79 = i;
+                for (int size80 = 0; size80 < this.installedPasspointProfileTypeForR1.length; size80++) {
+                    PasspointProfileTypeCount element36 = this.installedPasspointProfileTypeForR1[size80];
                     if (element36 != null) {
-                        size36 += CodedOutputByteBufferNano.computeMessageSize(123, element36);
+                        size79 += CodedOutputByteBufferNano.computeMessageSize(123, element36);
                     }
                 }
-                i = size36;
+                i = size79;
             }
             if (!this.hardwareRevision.equals("")) {
                 i += CodedOutputByteBufferNano.computeStringSize(124, this.hardwareRevision);
@@ -1734,31 +1837,34 @@ public interface WifiMetricsProto {
                 i += CodedOutputByteBufferNano.computeMessageSize(125, this.wifiLinkLayerUsageStats);
             }
             if (this.wifiUsabilityStatsList != null && this.wifiUsabilityStatsList.length > 0) {
-                int size37 = i;
-                for (WifiUsabilityStats element37 : this.wifiUsabilityStatsList) {
+                int size81 = i;
+                for (int size82 = 0; size82 < this.wifiUsabilityStatsList.length; size82++) {
+                    WifiUsabilityStats element37 = this.wifiUsabilityStatsList[size82];
                     if (element37 != null) {
-                        size37 += CodedOutputByteBufferNano.computeMessageSize(126, element37);
+                        size81 += CodedOutputByteBufferNano.computeMessageSize(126, element37);
                     }
                 }
-                i = size37;
+                i = size81;
             }
             if (this.wifiUsabilityScoreCount != null && this.wifiUsabilityScoreCount.length > 0) {
-                int size38 = i;
-                for (WifiUsabilityScoreCount element38 : this.wifiUsabilityScoreCount) {
+                int size83 = i;
+                for (int size84 = 0; size84 < this.wifiUsabilityScoreCount.length; size84++) {
+                    WifiUsabilityScoreCount element38 = this.wifiUsabilityScoreCount[size84];
                     if (element38 != null) {
-                        size38 += CodedOutputByteBufferNano.computeMessageSize(127, element38);
+                        size83 += CodedOutputByteBufferNano.computeMessageSize(127, element38);
                     }
                 }
-                i = size38;
+                i = size83;
             }
             if (this.mobilityStatePnoStatsList != null && this.mobilityStatePnoStatsList.length > 0) {
-                int size39 = i;
-                for (DeviceMobilityStatePnoScanStats element39 : this.mobilityStatePnoStatsList) {
+                int size85 = i;
+                for (int size86 = 0; size86 < this.mobilityStatePnoStatsList.length; size86++) {
+                    DeviceMobilityStatePnoScanStats element39 = this.mobilityStatePnoStatsList[size86];
                     if (element39 != null) {
-                        size39 += CodedOutputByteBufferNano.computeMessageSize(128, element39);
+                        size85 += CodedOutputByteBufferNano.computeMessageSize(128, element39);
                     }
                 }
-                i = size39;
+                i = size85;
             }
             if (this.wifiP2PStats != null) {
                 i += CodedOutputByteBufferNano.computeMessageSize(129, this.wifiP2PStats);
@@ -1794,13 +1900,14 @@ public interface WifiMetricsProto {
                 i += CodedOutputByteBufferNano.computeMessageSize(139, this.linkProbeStats);
             }
             if (this.networkSelectionExperimentDecisionsList != null && this.networkSelectionExperimentDecisionsList.length > 0) {
-                int size40 = i;
-                for (NetworkSelectionExperimentDecisions element40 : this.networkSelectionExperimentDecisionsList) {
+                int size87 = i;
+                for (int size88 = 0; size88 < this.networkSelectionExperimentDecisionsList.length; size88++) {
+                    NetworkSelectionExperimentDecisions element40 = this.networkSelectionExperimentDecisionsList[size88];
                     if (element40 != null) {
-                        size40 += CodedOutputByteBufferNano.computeMessageSize(140, element40);
+                        size87 += CodedOutputByteBufferNano.computeMessageSize(140, element40);
                     }
                 }
-                i = size40;
+                i = size87;
             }
             if (this.wifiNetworkRequestApiLog != null) {
                 i += CodedOutputByteBufferNano.computeMessageSize(141, this.wifiNetworkRequestApiLog);
@@ -1839,6 +1946,7 @@ public interface WifiMetricsProto {
             return i;
         }
 
+        @Override // com.android.framework.protobuf.nano.MessageNano
         public WifiLog mergeFrom(CodedInputByteBufferNano input) throws IOException {
             while (true) {
                 int tag = input.readTag();
@@ -1848,7 +1956,7 @@ public interface WifiMetricsProto {
                     case 10:
                         int arrayLength = WireFormatNano.getRepeatedFieldArrayLength(input, 10);
                         int i = this.connectionEvent == null ? 0 : this.connectionEvent.length;
-                        ConnectionEvent[] newArray = new ConnectionEvent[(i + arrayLength)];
+                        ConnectionEvent[] newArray = new ConnectionEvent[i + arrayLength];
                         if (i != 0) {
                             System.arraycopy(this.connectionEvent, 0, newArray, 0, i);
                         }
@@ -1907,7 +2015,7 @@ public interface WifiMetricsProto {
                     case 130:
                         int arrayLength2 = WireFormatNano.getRepeatedFieldArrayLength(input, 130);
                         int i2 = this.scanReturnEntries == null ? 0 : this.scanReturnEntries.length;
-                        ScanReturnEntry[] newArray2 = new ScanReturnEntry[(i2 + arrayLength2)];
+                        ScanReturnEntry[] newArray2 = new ScanReturnEntry[i2 + arrayLength2];
                         if (i2 != 0) {
                             System.arraycopy(this.scanReturnEntries, 0, newArray2, 0, i2);
                         }
@@ -1924,7 +2032,7 @@ public interface WifiMetricsProto {
                     case 138:
                         int arrayLength3 = WireFormatNano.getRepeatedFieldArrayLength(input, 138);
                         int i3 = this.wifiSystemStateEntries == null ? 0 : this.wifiSystemStateEntries.length;
-                        WifiSystemStateEntry[] newArray3 = new WifiSystemStateEntry[(i3 + arrayLength3)];
+                        WifiSystemStateEntry[] newArray3 = new WifiSystemStateEntry[i3 + arrayLength3];
                         if (i3 != 0) {
                             System.arraycopy(this.wifiSystemStateEntries, 0, newArray3, 0, i3);
                         }
@@ -1941,7 +2049,7 @@ public interface WifiMetricsProto {
                     case 146:
                         int arrayLength4 = WireFormatNano.getRepeatedFieldArrayLength(input, 146);
                         int i4 = this.backgroundScanReturnEntries == null ? 0 : this.backgroundScanReturnEntries.length;
-                        ScanReturnEntry[] newArray4 = new ScanReturnEntry[(i4 + arrayLength4)];
+                        ScanReturnEntry[] newArray4 = new ScanReturnEntry[i4 + arrayLength4];
                         if (i4 != 0) {
                             System.arraycopy(this.backgroundScanReturnEntries, 0, newArray4, 0, i4);
                         }
@@ -1958,7 +2066,7 @@ public interface WifiMetricsProto {
                     case 154:
                         int arrayLength5 = WireFormatNano.getRepeatedFieldArrayLength(input, 154);
                         int i5 = this.backgroundScanRequestState == null ? 0 : this.backgroundScanRequestState.length;
-                        WifiSystemStateEntry[] newArray5 = new WifiSystemStateEntry[(i5 + arrayLength5)];
+                        WifiSystemStateEntry[] newArray5 = new WifiSystemStateEntry[i5 + arrayLength5];
                         if (i5 != 0) {
                             System.arraycopy(this.backgroundScanRequestState, 0, newArray5, 0, i5);
                         }
@@ -2020,7 +2128,7 @@ public interface WifiMetricsProto {
                     case 282:
                         int arrayLength6 = WireFormatNano.getRepeatedFieldArrayLength(input, 282);
                         int i6 = this.rssiPollRssiCount == null ? 0 : this.rssiPollRssiCount.length;
-                        RssiPollCount[] newArray6 = new RssiPollCount[(i6 + arrayLength6)];
+                        RssiPollCount[] newArray6 = new RssiPollCount[i6 + arrayLength6];
                         if (i6 != 0) {
                             System.arraycopy(this.rssiPollRssiCount, 0, newArray6, 0, i6);
                         }
@@ -2070,7 +2178,7 @@ public interface WifiMetricsProto {
                     case 378:
                         int arrayLength7 = WireFormatNano.getRepeatedFieldArrayLength(input, 378);
                         int i7 = this.alertReasonCount == null ? 0 : this.alertReasonCount.length;
-                        AlertReasonCount[] newArray7 = new AlertReasonCount[(i7 + arrayLength7)];
+                        AlertReasonCount[] newArray7 = new AlertReasonCount[i7 + arrayLength7];
                         if (i7 != 0) {
                             System.arraycopy(this.alertReasonCount, 0, newArray7, 0, i7);
                         }
@@ -2084,10 +2192,10 @@ public interface WifiMetricsProto {
                         input.readMessage(newArray7[i7]);
                         this.alertReasonCount = newArray7;
                         break;
-                    case MetricsProto.MetricsEvent.ACTION_SETTINGS_SUGGESTION:
+                    case MetricsProto.MetricsEvent.ACTION_SETTINGS_SUGGESTION /* 386 */:
                         int arrayLength8 = WireFormatNano.getRepeatedFieldArrayLength(input, MetricsProto.MetricsEvent.ACTION_SETTINGS_SUGGESTION);
                         int i8 = this.wifiScoreCount == null ? 0 : this.wifiScoreCount.length;
-                        WifiScoreCount[] newArray8 = new WifiScoreCount[(i8 + arrayLength8)];
+                        WifiScoreCount[] newArray8 = new WifiScoreCount[i8 + arrayLength8];
                         if (i8 != 0) {
                             System.arraycopy(this.wifiScoreCount, 0, newArray8, 0, i8);
                         }
@@ -2104,7 +2212,7 @@ public interface WifiMetricsProto {
                     case 394:
                         int arrayLength9 = WireFormatNano.getRepeatedFieldArrayLength(input, 394);
                         int i9 = this.softApDuration == null ? 0 : this.softApDuration.length;
-                        SoftApDurationBucket[] newArray9 = new SoftApDurationBucket[(i9 + arrayLength9)];
+                        SoftApDurationBucket[] newArray9 = new SoftApDurationBucket[i9 + arrayLength9];
                         if (i9 != 0) {
                             System.arraycopy(this.softApDuration, 0, newArray9, 0, i9);
                         }
@@ -2121,7 +2229,7 @@ public interface WifiMetricsProto {
                     case 402:
                         int arrayLength10 = WireFormatNano.getRepeatedFieldArrayLength(input, 402);
                         int i10 = this.softApReturnCode == null ? 0 : this.softApReturnCode.length;
-                        SoftApReturnCodeCount[] newArray10 = new SoftApReturnCodeCount[(i10 + arrayLength10)];
+                        SoftApReturnCodeCount[] newArray10 = new SoftApReturnCodeCount[i10 + arrayLength10];
                         if (i10 != 0) {
                             System.arraycopy(this.softApReturnCode, 0, newArray10, 0, i10);
                         }
@@ -2135,10 +2243,10 @@ public interface WifiMetricsProto {
                         input.readMessage(newArray10[i10]);
                         this.softApReturnCode = newArray10;
                         break;
-                    case MetricsProto.MetricsEvent.ACTION_NOTIFICATION_GROUP_GESTURE_EXPANDER:
+                    case MetricsProto.MetricsEvent.ACTION_NOTIFICATION_GROUP_GESTURE_EXPANDER /* 410 */:
                         int arrayLength11 = WireFormatNano.getRepeatedFieldArrayLength(input, MetricsProto.MetricsEvent.ACTION_NOTIFICATION_GROUP_GESTURE_EXPANDER);
                         int i11 = this.rssiPollDeltaCount == null ? 0 : this.rssiPollDeltaCount.length;
-                        RssiPollCount[] newArray11 = new RssiPollCount[(i11 + arrayLength11)];
+                        RssiPollCount[] newArray11 = new RssiPollCount[i11 + arrayLength11];
                         if (i11 != 0) {
                             System.arraycopy(this.rssiPollDeltaCount, 0, newArray11, 0, i11);
                         }
@@ -2155,7 +2263,7 @@ public interface WifiMetricsProto {
                     case 418:
                         int arrayLength12 = WireFormatNano.getRepeatedFieldArrayLength(input, 418);
                         int i12 = this.staEventList == null ? 0 : this.staEventList.length;
-                        StaEvent[] newArray12 = new StaEvent[(i12 + arrayLength12)];
+                        StaEvent[] newArray12 = new StaEvent[i12 + arrayLength12];
                         if (i12 != 0) {
                             System.arraycopy(this.staEventList, 0, newArray12, 0, i12);
                         }
@@ -2172,10 +2280,10 @@ public interface WifiMetricsProto {
                     case 424:
                         this.numHalCrashes = input.readInt32();
                         break;
-                    case DevicePolicyManager.PROFILE_KEYGUARD_FEATURES_AFFECT_OWNER:
+                    case DevicePolicyManager.PROFILE_KEYGUARD_FEATURES_AFFECT_OWNER /* 432 */:
                         this.numWificondCrashes = input.readInt32();
                         break;
-                    case DisplayMetrics.DENSITY_440:
+                    case DisplayMetrics.DENSITY_440 /* 440 */:
                         this.numSetupClientInterfaceFailureDueToHal = input.readInt32();
                         break;
                     case 448:
@@ -2187,10 +2295,10 @@ public interface WifiMetricsProto {
                         }
                         input.readMessage(this.wifiAwareLog);
                         break;
-                    case MetricsProto.MetricsEvent.ACTION_DELETION_APPS_COLLAPSED:
+                    case MetricsProto.MetricsEvent.ACTION_DELETION_APPS_COLLAPSED /* 464 */:
                         this.numPasspointProviders = input.readInt32();
                         break;
-                    case MetricsProto.MetricsEvent.ACTION_DELETION_HELPER_DOWNLOADS_DELETION_FAIL:
+                    case MetricsProto.MetricsEvent.ACTION_DELETION_HELPER_DOWNLOADS_DELETION_FAIL /* 472 */:
                         this.numPasspointProviderInstallation = input.readInt32();
                         break;
                     case 480:
@@ -2208,7 +2316,7 @@ public interface WifiMetricsProto {
                     case 514:
                         int arrayLength13 = WireFormatNano.getRepeatedFieldArrayLength(input, 514);
                         int i13 = this.totalSsidsInScanHistogram == null ? 0 : this.totalSsidsInScanHistogram.length;
-                        NumConnectableNetworksBucket[] newArray13 = new NumConnectableNetworksBucket[(i13 + arrayLength13)];
+                        NumConnectableNetworksBucket[] newArray13 = new NumConnectableNetworksBucket[i13 + arrayLength13];
                         if (i13 != 0) {
                             System.arraycopy(this.totalSsidsInScanHistogram, 0, newArray13, 0, i13);
                         }
@@ -2225,7 +2333,7 @@ public interface WifiMetricsProto {
                     case 522:
                         int arrayLength14 = WireFormatNano.getRepeatedFieldArrayLength(input, 522);
                         int i14 = this.totalBssidsInScanHistogram == null ? 0 : this.totalBssidsInScanHistogram.length;
-                        NumConnectableNetworksBucket[] newArray14 = new NumConnectableNetworksBucket[(i14 + arrayLength14)];
+                        NumConnectableNetworksBucket[] newArray14 = new NumConnectableNetworksBucket[i14 + arrayLength14];
                         if (i14 != 0) {
                             System.arraycopy(this.totalBssidsInScanHistogram, 0, newArray14, 0, i14);
                         }
@@ -2242,7 +2350,7 @@ public interface WifiMetricsProto {
                     case 530:
                         int arrayLength15 = WireFormatNano.getRepeatedFieldArrayLength(input, 530);
                         int i15 = this.availableOpenSsidsInScanHistogram == null ? 0 : this.availableOpenSsidsInScanHistogram.length;
-                        NumConnectableNetworksBucket[] newArray15 = new NumConnectableNetworksBucket[(i15 + arrayLength15)];
+                        NumConnectableNetworksBucket[] newArray15 = new NumConnectableNetworksBucket[i15 + arrayLength15];
                         if (i15 != 0) {
                             System.arraycopy(this.availableOpenSsidsInScanHistogram, 0, newArray15, 0, i15);
                         }
@@ -2259,7 +2367,7 @@ public interface WifiMetricsProto {
                     case 538:
                         int arrayLength16 = WireFormatNano.getRepeatedFieldArrayLength(input, 538);
                         int i16 = this.availableOpenBssidsInScanHistogram == null ? 0 : this.availableOpenBssidsInScanHistogram.length;
-                        NumConnectableNetworksBucket[] newArray16 = new NumConnectableNetworksBucket[(i16 + arrayLength16)];
+                        NumConnectableNetworksBucket[] newArray16 = new NumConnectableNetworksBucket[i16 + arrayLength16];
                         if (i16 != 0) {
                             System.arraycopy(this.availableOpenBssidsInScanHistogram, 0, newArray16, 0, i16);
                         }
@@ -2276,7 +2384,7 @@ public interface WifiMetricsProto {
                     case 546:
                         int arrayLength17 = WireFormatNano.getRepeatedFieldArrayLength(input, 546);
                         int i17 = this.availableSavedSsidsInScanHistogram == null ? 0 : this.availableSavedSsidsInScanHistogram.length;
-                        NumConnectableNetworksBucket[] newArray17 = new NumConnectableNetworksBucket[(i17 + arrayLength17)];
+                        NumConnectableNetworksBucket[] newArray17 = new NumConnectableNetworksBucket[i17 + arrayLength17];
                         if (i17 != 0) {
                             System.arraycopy(this.availableSavedSsidsInScanHistogram, 0, newArray17, 0, i17);
                         }
@@ -2293,7 +2401,7 @@ public interface WifiMetricsProto {
                     case 554:
                         int arrayLength18 = WireFormatNano.getRepeatedFieldArrayLength(input, 554);
                         int i18 = this.availableSavedBssidsInScanHistogram == null ? 0 : this.availableSavedBssidsInScanHistogram.length;
-                        NumConnectableNetworksBucket[] newArray18 = new NumConnectableNetworksBucket[(i18 + arrayLength18)];
+                        NumConnectableNetworksBucket[] newArray18 = new NumConnectableNetworksBucket[i18 + arrayLength18];
                         if (i18 != 0) {
                             System.arraycopy(this.availableSavedBssidsInScanHistogram, 0, newArray18, 0, i18);
                         }
@@ -2310,7 +2418,7 @@ public interface WifiMetricsProto {
                     case 562:
                         int arrayLength19 = WireFormatNano.getRepeatedFieldArrayLength(input, 562);
                         int i19 = this.availableOpenOrSavedSsidsInScanHistogram == null ? 0 : this.availableOpenOrSavedSsidsInScanHistogram.length;
-                        NumConnectableNetworksBucket[] newArray19 = new NumConnectableNetworksBucket[(i19 + arrayLength19)];
+                        NumConnectableNetworksBucket[] newArray19 = new NumConnectableNetworksBucket[i19 + arrayLength19];
                         if (i19 != 0) {
                             System.arraycopy(this.availableOpenOrSavedSsidsInScanHistogram, 0, newArray19, 0, i19);
                         }
@@ -2327,7 +2435,7 @@ public interface WifiMetricsProto {
                     case 570:
                         int arrayLength20 = WireFormatNano.getRepeatedFieldArrayLength(input, 570);
                         int i20 = this.availableOpenOrSavedBssidsInScanHistogram == null ? 0 : this.availableOpenOrSavedBssidsInScanHistogram.length;
-                        NumConnectableNetworksBucket[] newArray20 = new NumConnectableNetworksBucket[(i20 + arrayLength20)];
+                        NumConnectableNetworksBucket[] newArray20 = new NumConnectableNetworksBucket[i20 + arrayLength20];
                         if (i20 != 0) {
                             System.arraycopy(this.availableOpenOrSavedBssidsInScanHistogram, 0, newArray20, 0, i20);
                         }
@@ -2344,7 +2452,7 @@ public interface WifiMetricsProto {
                     case 578:
                         int arrayLength21 = WireFormatNano.getRepeatedFieldArrayLength(input, 578);
                         int i21 = this.availableSavedPasspointProviderProfilesInScanHistogram == null ? 0 : this.availableSavedPasspointProviderProfilesInScanHistogram.length;
-                        NumConnectableNetworksBucket[] newArray21 = new NumConnectableNetworksBucket[(i21 + arrayLength21)];
+                        NumConnectableNetworksBucket[] newArray21 = new NumConnectableNetworksBucket[i21 + arrayLength21];
                         if (i21 != 0) {
                             System.arraycopy(this.availableSavedPasspointProviderProfilesInScanHistogram, 0, newArray21, 0, i21);
                         }
@@ -2361,7 +2469,7 @@ public interface WifiMetricsProto {
                     case 586:
                         int arrayLength22 = WireFormatNano.getRepeatedFieldArrayLength(input, 586);
                         int i22 = this.availableSavedPasspointProviderBssidsInScanHistogram == null ? 0 : this.availableSavedPasspointProviderBssidsInScanHistogram.length;
-                        NumConnectableNetworksBucket[] newArray22 = new NumConnectableNetworksBucket[(i22 + arrayLength22)];
+                        NumConnectableNetworksBucket[] newArray22 = new NumConnectableNetworksBucket[i22 + arrayLength22];
                         if (i22 != 0) {
                             System.arraycopy(this.availableSavedPasspointProviderBssidsInScanHistogram, 0, newArray22, 0, i22);
                         }
@@ -2387,10 +2495,10 @@ public interface WifiMetricsProto {
                         }
                         input.readMessage(this.pnoScanMetrics);
                         break;
-                    case MetricsProto.MetricsEvent.PROVISIONING_ENTRY_POINT_TRUSTED_SOURCE:
+                    case MetricsProto.MetricsEvent.PROVISIONING_ENTRY_POINT_TRUSTED_SOURCE /* 618 */:
                         int arrayLength23 = WireFormatNano.getRepeatedFieldArrayLength(input, MetricsProto.MetricsEvent.PROVISIONING_ENTRY_POINT_TRUSTED_SOURCE);
                         int i23 = this.connectToNetworkNotificationCount == null ? 0 : this.connectToNetworkNotificationCount.length;
-                        ConnectToNetworkNotificationAndActionCount[] newArray23 = new ConnectToNetworkNotificationAndActionCount[(i23 + arrayLength23)];
+                        ConnectToNetworkNotificationAndActionCount[] newArray23 = new ConnectToNetworkNotificationAndActionCount[i23 + arrayLength23];
                         if (i23 != 0) {
                             System.arraycopy(this.connectToNetworkNotificationCount, 0, newArray23, 0, i23);
                         }
@@ -2404,10 +2512,10 @@ public interface WifiMetricsProto {
                         input.readMessage(newArray23[i23]);
                         this.connectToNetworkNotificationCount = newArray23;
                         break;
-                    case MetricsProto.MetricsEvent.PROVISIONING_COPY_ACCOUNT_STATUS:
+                    case MetricsProto.MetricsEvent.PROVISIONING_COPY_ACCOUNT_STATUS /* 626 */:
                         int arrayLength24 = WireFormatNano.getRepeatedFieldArrayLength(input, MetricsProto.MetricsEvent.PROVISIONING_COPY_ACCOUNT_STATUS);
                         int i24 = this.connectToNetworkNotificationActionCount == null ? 0 : this.connectToNetworkNotificationActionCount.length;
-                        ConnectToNetworkNotificationAndActionCount[] newArray24 = new ConnectToNetworkNotificationAndActionCount[(i24 + arrayLength24)];
+                        ConnectToNetworkNotificationAndActionCount[] newArray24 = new ConnectToNetworkNotificationAndActionCount[i24 + arrayLength24];
                         if (i24 != 0) {
                             System.arraycopy(this.connectToNetworkNotificationActionCount, 0, newArray24, 0, i24);
                         }
@@ -2421,22 +2529,22 @@ public interface WifiMetricsProto {
                         input.readMessage(newArray24[i24]);
                         this.connectToNetworkNotificationActionCount = newArray24;
                         break;
-                    case MetricsProto.MetricsEvent.ACTION_PERMISSION_DENIED_UNKNOWN:
+                    case MetricsProto.MetricsEvent.ACTION_PERMISSION_DENIED_UNKNOWN /* 632 */:
                         this.openNetworkRecommenderBlacklistSize = input.readInt32();
                         break;
                     case 640:
                         this.isWifiNetworksAvailableNotificationOn = input.readBool();
                         break;
-                    case MetricsProto.MetricsEvent.ACTION_PERMISSION_DENIED_READ_CONTACTS:
+                    case MetricsProto.MetricsEvent.ACTION_PERMISSION_DENIED_READ_CONTACTS /* 648 */:
                         this.numOpenNetworkRecommendationUpdates = input.readInt32();
                         break;
-                    case MetricsProto.MetricsEvent.ACTION_PERMISSION_DENIED_GET_ACCOUNTS:
+                    case MetricsProto.MetricsEvent.ACTION_PERMISSION_DENIED_GET_ACCOUNTS /* 656 */:
                         this.numOpenNetworkConnectMessageFailedToSend = input.readInt32();
                         break;
-                    case MetricsProto.MetricsEvent.ACTION_PERMISSION_REQUEST_RECORD_AUDIO:
+                    case MetricsProto.MetricsEvent.ACTION_PERMISSION_REQUEST_RECORD_AUDIO /* 666 */:
                         int arrayLength25 = WireFormatNano.getRepeatedFieldArrayLength(input, MetricsProto.MetricsEvent.ACTION_PERMISSION_REQUEST_RECORD_AUDIO);
                         int i25 = this.observedHotspotR1ApsInScanHistogram == null ? 0 : this.observedHotspotR1ApsInScanHistogram.length;
-                        NumConnectableNetworksBucket[] newArray25 = new NumConnectableNetworksBucket[(i25 + arrayLength25)];
+                        NumConnectableNetworksBucket[] newArray25 = new NumConnectableNetworksBucket[i25 + arrayLength25];
                         if (i25 != 0) {
                             System.arraycopy(this.observedHotspotR1ApsInScanHistogram, 0, newArray25, 0, i25);
                         }
@@ -2450,10 +2558,10 @@ public interface WifiMetricsProto {
                         input.readMessage(newArray25[i25]);
                         this.observedHotspotR1ApsInScanHistogram = newArray25;
                         break;
-                    case MetricsProto.MetricsEvent.ACTION_PERMISSION_REQUEST_CALL_PHONE:
+                    case MetricsProto.MetricsEvent.ACTION_PERMISSION_REQUEST_CALL_PHONE /* 674 */:
                         int arrayLength26 = WireFormatNano.getRepeatedFieldArrayLength(input, MetricsProto.MetricsEvent.ACTION_PERMISSION_REQUEST_CALL_PHONE);
                         int i26 = this.observedHotspotR2ApsInScanHistogram == null ? 0 : this.observedHotspotR2ApsInScanHistogram.length;
-                        NumConnectableNetworksBucket[] newArray26 = new NumConnectableNetworksBucket[(i26 + arrayLength26)];
+                        NumConnectableNetworksBucket[] newArray26 = new NumConnectableNetworksBucket[i26 + arrayLength26];
                         if (i26 != 0) {
                             System.arraycopy(this.observedHotspotR2ApsInScanHistogram, 0, newArray26, 0, i26);
                         }
@@ -2467,10 +2575,10 @@ public interface WifiMetricsProto {
                         input.readMessage(newArray26[i26]);
                         this.observedHotspotR2ApsInScanHistogram = newArray26;
                         break;
-                    case MetricsProto.MetricsEvent.ACTION_PERMISSION_REQUEST_WRITE_CALL_LOG:
+                    case MetricsProto.MetricsEvent.ACTION_PERMISSION_REQUEST_WRITE_CALL_LOG /* 682 */:
                         int arrayLength27 = WireFormatNano.getRepeatedFieldArrayLength(input, MetricsProto.MetricsEvent.ACTION_PERMISSION_REQUEST_WRITE_CALL_LOG);
                         int i27 = this.observedHotspotR1EssInScanHistogram == null ? 0 : this.observedHotspotR1EssInScanHistogram.length;
-                        NumConnectableNetworksBucket[] newArray27 = new NumConnectableNetworksBucket[(i27 + arrayLength27)];
+                        NumConnectableNetworksBucket[] newArray27 = new NumConnectableNetworksBucket[i27 + arrayLength27];
                         if (i27 != 0) {
                             System.arraycopy(this.observedHotspotR1EssInScanHistogram, 0, newArray27, 0, i27);
                         }
@@ -2484,10 +2592,10 @@ public interface WifiMetricsProto {
                         input.readMessage(newArray27[i27]);
                         this.observedHotspotR1EssInScanHistogram = newArray27;
                         break;
-                    case MetricsProto.MetricsEvent.ACTION_PERMISSION_REQUEST_USE_SIP:
+                    case MetricsProto.MetricsEvent.ACTION_PERMISSION_REQUEST_USE_SIP /* 690 */:
                         int arrayLength28 = WireFormatNano.getRepeatedFieldArrayLength(input, MetricsProto.MetricsEvent.ACTION_PERMISSION_REQUEST_USE_SIP);
                         int i28 = this.observedHotspotR2EssInScanHistogram == null ? 0 : this.observedHotspotR2EssInScanHistogram.length;
-                        NumConnectableNetworksBucket[] newArray28 = new NumConnectableNetworksBucket[(i28 + arrayLength28)];
+                        NumConnectableNetworksBucket[] newArray28 = new NumConnectableNetworksBucket[i28 + arrayLength28];
                         if (i28 != 0) {
                             System.arraycopy(this.observedHotspotR2EssInScanHistogram, 0, newArray28, 0, i28);
                         }
@@ -2501,10 +2609,10 @@ public interface WifiMetricsProto {
                         input.readMessage(newArray28[i28]);
                         this.observedHotspotR2EssInScanHistogram = newArray28;
                         break;
-                    case MetricsProto.MetricsEvent.ACTION_PERMISSION_REQUEST_READ_CELL_BROADCASTS:
+                    case MetricsProto.MetricsEvent.ACTION_PERMISSION_REQUEST_READ_CELL_BROADCASTS /* 698 */:
                         int arrayLength29 = WireFormatNano.getRepeatedFieldArrayLength(input, MetricsProto.MetricsEvent.ACTION_PERMISSION_REQUEST_READ_CELL_BROADCASTS);
                         int i29 = this.observedHotspotR1ApsPerEssInScanHistogram == null ? 0 : this.observedHotspotR1ApsPerEssInScanHistogram.length;
-                        NumConnectableNetworksBucket[] newArray29 = new NumConnectableNetworksBucket[(i29 + arrayLength29)];
+                        NumConnectableNetworksBucket[] newArray29 = new NumConnectableNetworksBucket[i29 + arrayLength29];
                         if (i29 != 0) {
                             System.arraycopy(this.observedHotspotR1ApsPerEssInScanHistogram, 0, newArray29, 0, i29);
                         }
@@ -2518,10 +2626,10 @@ public interface WifiMetricsProto {
                         input.readMessage(newArray29[i29]);
                         this.observedHotspotR1ApsPerEssInScanHistogram = newArray29;
                         break;
-                    case MetricsProto.MetricsEvent.ACTION_PERMISSION_REQUEST_SEND_SMS:
+                    case MetricsProto.MetricsEvent.ACTION_PERMISSION_REQUEST_SEND_SMS /* 706 */:
                         int arrayLength30 = WireFormatNano.getRepeatedFieldArrayLength(input, MetricsProto.MetricsEvent.ACTION_PERMISSION_REQUEST_SEND_SMS);
                         int i30 = this.observedHotspotR2ApsPerEssInScanHistogram == null ? 0 : this.observedHotspotR2ApsPerEssInScanHistogram.length;
-                        NumConnectableNetworksBucket[] newArray30 = new NumConnectableNetworksBucket[(i30 + arrayLength30)];
+                        NumConnectableNetworksBucket[] newArray30 = new NumConnectableNetworksBucket[i30 + arrayLength30];
                         if (i30 != 0) {
                             System.arraycopy(this.observedHotspotR2ApsPerEssInScanHistogram, 0, newArray30, 0, i30);
                         }
@@ -2535,10 +2643,10 @@ public interface WifiMetricsProto {
                         input.readMessage(newArray30[i30]);
                         this.observedHotspotR2ApsPerEssInScanHistogram = newArray30;
                         break;
-                    case MetricsProto.MetricsEvent.ACTION_PERMISSION_REQUEST_READ_SMS:
+                    case MetricsProto.MetricsEvent.ACTION_PERMISSION_REQUEST_READ_SMS /* 714 */:
                         int arrayLength31 = WireFormatNano.getRepeatedFieldArrayLength(input, MetricsProto.MetricsEvent.ACTION_PERMISSION_REQUEST_READ_SMS);
                         int i31 = this.softApConnectedClientsEventsTethered == null ? 0 : this.softApConnectedClientsEventsTethered.length;
-                        SoftApConnectedClientsEvent[] newArray31 = new SoftApConnectedClientsEvent[(i31 + arrayLength31)];
+                        SoftApConnectedClientsEvent[] newArray31 = new SoftApConnectedClientsEvent[i31 + arrayLength31];
                         if (i31 != 0) {
                             System.arraycopy(this.softApConnectedClientsEventsTethered, 0, newArray31, 0, i31);
                         }
@@ -2552,10 +2660,10 @@ public interface WifiMetricsProto {
                         input.readMessage(newArray31[i31]);
                         this.softApConnectedClientsEventsTethered = newArray31;
                         break;
-                    case MetricsProto.MetricsEvent.ACTION_PERMISSION_REQUEST_RECEIVE_MMS:
+                    case MetricsProto.MetricsEvent.ACTION_PERMISSION_REQUEST_RECEIVE_MMS /* 722 */:
                         int arrayLength32 = WireFormatNano.getRepeatedFieldArrayLength(input, MetricsProto.MetricsEvent.ACTION_PERMISSION_REQUEST_RECEIVE_MMS);
                         int i32 = this.softApConnectedClientsEventsLocalOnly == null ? 0 : this.softApConnectedClientsEventsLocalOnly.length;
-                        SoftApConnectedClientsEvent[] newArray32 = new SoftApConnectedClientsEvent[(i32 + arrayLength32)];
+                        SoftApConnectedClientsEvent[] newArray32 = new SoftApConnectedClientsEvent[i32 + arrayLength32];
                         if (i32 != 0) {
                             System.arraycopy(this.softApConnectedClientsEventsLocalOnly, 0, newArray32, 0, i32);
                         }
@@ -2569,13 +2677,13 @@ public interface WifiMetricsProto {
                         input.readMessage(newArray32[i32]);
                         this.softApConnectedClientsEventsLocalOnly = newArray32;
                         break;
-                    case MetricsProto.MetricsEvent.ACTION_PERMISSION_REQUEST_WRITE_EXTERNAL_STORAGE:
+                    case MetricsProto.MetricsEvent.ACTION_PERMISSION_REQUEST_WRITE_EXTERNAL_STORAGE /* 730 */:
                         if (this.wpsMetrics == null) {
                             this.wpsMetrics = new WpsMetrics();
                         }
                         input.readMessage(this.wpsMetrics);
                         break;
-                    case MetricsProto.MetricsEvent.ACTION_PERMISSION_DENIED_READ_PHONE_NUMBERS:
+                    case MetricsProto.MetricsEvent.ACTION_PERMISSION_DENIED_READ_PHONE_NUMBERS /* 738 */:
                         if (this.wifiPowerStats == null) {
                             this.wifiPowerStats = new WifiPowerStats();
                         }
@@ -2590,10 +2698,10 @@ public interface WifiMetricsProto {
                         }
                         input.readMessage(this.wifiWakeStats);
                         break;
-                    case MetricsProto.MetricsEvent.ACTION_LEAVE_SEARCH_RESULT_WITHOUT_QUERY:
+                    case MetricsProto.MetricsEvent.ACTION_LEAVE_SEARCH_RESULT_WITHOUT_QUERY /* 762 */:
                         int arrayLength33 = WireFormatNano.getRepeatedFieldArrayLength(input, MetricsProto.MetricsEvent.ACTION_LEAVE_SEARCH_RESULT_WITHOUT_QUERY);
                         int i33 = this.observed80211McSupportingApsInScanHistogram == null ? 0 : this.observed80211McSupportingApsInScanHistogram.length;
-                        NumConnectableNetworksBucket[] newArray33 = new NumConnectableNetworksBucket[(i33 + arrayLength33)];
+                        NumConnectableNetworksBucket[] newArray33 = new NumConnectableNetworksBucket[i33 + arrayLength33];
                         if (i33 != 0) {
                             System.arraycopy(this.observed80211McSupportingApsInScanHistogram, 0, newArray33, 0, i33);
                         }
@@ -2631,19 +2739,19 @@ public interface WifiMetricsProto {
                     case 824:
                         this.numSoftApInterfaceDown = input.readInt32();
                         break;
-                    case MetricsProto.MetricsEvent.NOTIFICATION_SNOOZED_CRITERIA:
+                    case MetricsProto.MetricsEvent.NOTIFICATION_SNOOZED_CRITERIA /* 832 */:
                         this.numExternalAppOneshotScanRequests = input.readInt32();
                         break;
                     case 840:
                         this.numExternalForegroundAppOneshotScanRequestsThrottled = input.readInt32();
                         break;
-                    case MetricsProto.MetricsEvent.FIELD_SETTINGS_BUILD_NUMBER_DEVELOPER_MODE_ENABLED:
+                    case MetricsProto.MetricsEvent.FIELD_SETTINGS_BUILD_NUMBER_DEVELOPER_MODE_ENABLED /* 848 */:
                         this.numExternalBackgroundAppOneshotScanRequestsThrottled = input.readInt32();
                         break;
-                    case MetricsProto.MetricsEvent.ACTION_NOTIFICATION_CHANNEL:
+                    case MetricsProto.MetricsEvent.ACTION_NOTIFICATION_CHANNEL /* 856 */:
                         this.watchdogTriggerToConnectionSuccessDurationMs = input.readInt64();
                         break;
-                    case MetricsProto.MetricsEvent.ACTION_GET_CONTACT:
+                    case MetricsProto.MetricsEvent.ACTION_GET_CONTACT /* 864 */:
                         this.watchdogTotalConnectionFailureCountAfterTrigger = input.readInt64();
                         break;
                     case 872:
@@ -2655,28 +2763,28 @@ public interface WifiMetricsProto {
                         }
                         input.readMessage(this.wifiRttLog);
                         break;
-                    case MetricsProto.MetricsEvent.ACTION_APPOP_GRANT_SYSTEM_ALERT_WINDOW:
+                    case MetricsProto.MetricsEvent.ACTION_APPOP_GRANT_SYSTEM_ALERT_WINDOW /* 888 */:
                         this.isMacRandomizationOn = input.readBool();
                         break;
                     case 896:
                         this.numRadioModeChangeToMcc = input.readInt32();
                         break;
-                    case MetricsProto.MetricsEvent.APP_TRANSITION_CALLING_PACKAGE_NAME:
+                    case MetricsProto.MetricsEvent.APP_TRANSITION_CALLING_PACKAGE_NAME /* 904 */:
                         this.numRadioModeChangeToScc = input.readInt32();
                         break;
-                    case MetricsProto.MetricsEvent.AUTOFILL_AUTHENTICATED:
+                    case MetricsProto.MetricsEvent.AUTOFILL_AUTHENTICATED /* 912 */:
                         this.numRadioModeChangeToSbs = input.readInt32();
                         break;
-                    case MetricsProto.MetricsEvent.METRICS_CHECKPOINT:
+                    case MetricsProto.MetricsEvent.METRICS_CHECKPOINT /* 920 */:
                         this.numRadioModeChangeToDbs = input.readInt32();
                         break;
-                    case MetricsProto.MetricsEvent.FIELD_QS_VALUE:
+                    case MetricsProto.MetricsEvent.FIELD_QS_VALUE /* 928 */:
                         this.numSoftApUserBandPreferenceUnsatisfied = input.readInt32();
                         break;
                     case 938:
                         this.scoreExperimentId = input.readString();
                         break;
-                    case MetricsProto.MetricsEvent.FIELD_NOTIFICATION_GROUP_ID:
+                    case MetricsProto.MetricsEvent.FIELD_NOTIFICATION_GROUP_ID /* 946 */:
                         if (this.wifiRadioUsage == null) {
                             this.wifiRadioUsage = new WifiRadioUsage();
                         }
@@ -2691,7 +2799,7 @@ public interface WifiMetricsProto {
                     case 962:
                         int arrayLength34 = WireFormatNano.getRepeatedFieldArrayLength(input, 962);
                         int i34 = this.wifiIsUnusableEventList == null ? 0 : this.wifiIsUnusableEventList.length;
-                        WifiIsUnusableEvent[] newArray34 = new WifiIsUnusableEvent[(i34 + arrayLength34)];
+                        WifiIsUnusableEvent[] newArray34 = new WifiIsUnusableEvent[i34 + arrayLength34];
                         if (i34 != 0) {
                             System.arraycopy(this.wifiIsUnusableEventList, 0, newArray34, 0, i34);
                         }
@@ -2708,7 +2816,7 @@ public interface WifiMetricsProto {
                     case 970:
                         int arrayLength35 = WireFormatNano.getRepeatedFieldArrayLength(input, 970);
                         int i35 = this.linkSpeedCounts == null ? 0 : this.linkSpeedCounts.length;
-                        LinkSpeedCount[] newArray35 = new LinkSpeedCount[(i35 + arrayLength35)];
+                        LinkSpeedCount[] newArray35 = new LinkSpeedCount[i35 + arrayLength35];
                         if (i35 != 0) {
                             System.arraycopy(this.linkSpeedCounts, 0, newArray35, 0, i35);
                         }
@@ -2725,10 +2833,10 @@ public interface WifiMetricsProto {
                     case 976:
                         this.numSarSensorRegistrationFailures = input.readInt32();
                         break;
-                    case MetricsProto.MetricsEvent.SETTINGS_GESTURE_CAMERA_LIFT_TRIGGER:
+                    case MetricsProto.MetricsEvent.SETTINGS_GESTURE_CAMERA_LIFT_TRIGGER /* 986 */:
                         int arrayLength36 = WireFormatNano.getRepeatedFieldArrayLength(input, MetricsProto.MetricsEvent.SETTINGS_GESTURE_CAMERA_LIFT_TRIGGER);
                         int i36 = this.installedPasspointProfileTypeForR1 == null ? 0 : this.installedPasspointProfileTypeForR1.length;
-                        PasspointProfileTypeCount[] newArray36 = new PasspointProfileTypeCount[(i36 + arrayLength36)];
+                        PasspointProfileTypeCount[] newArray36 = new PasspointProfileTypeCount[i36 + arrayLength36];
                         if (i36 != 0) {
                             System.arraycopy(this.installedPasspointProfileTypeForR1, 0, newArray36, 0, i36);
                         }
@@ -2742,7 +2850,7 @@ public interface WifiMetricsProto {
                         input.readMessage(newArray36[i36]);
                         this.installedPasspointProfileTypeForR1 = newArray36;
                         break;
-                    case MetricsProto.MetricsEvent.FIELD_SETTINGS_PREFERENCE_CHANGE_LONG_VALUE:
+                    case MetricsProto.MetricsEvent.FIELD_SETTINGS_PREFERENCE_CHANGE_LONG_VALUE /* 994 */:
                         this.hardwareRevision = input.readString();
                         break;
                     case 1002:
@@ -2754,7 +2862,7 @@ public interface WifiMetricsProto {
                     case 1010:
                         int arrayLength37 = WireFormatNano.getRepeatedFieldArrayLength(input, 1010);
                         int i37 = this.wifiUsabilityStatsList == null ? 0 : this.wifiUsabilityStatsList.length;
-                        WifiUsabilityStats[] newArray37 = new WifiUsabilityStats[(i37 + arrayLength37)];
+                        WifiUsabilityStats[] newArray37 = new WifiUsabilityStats[i37 + arrayLength37];
                         if (i37 != 0) {
                             System.arraycopy(this.wifiUsabilityStatsList, 0, newArray37, 0, i37);
                         }
@@ -2771,7 +2879,7 @@ public interface WifiMetricsProto {
                     case 1018:
                         int arrayLength38 = WireFormatNano.getRepeatedFieldArrayLength(input, 1018);
                         int i38 = this.wifiUsabilityScoreCount == null ? 0 : this.wifiUsabilityScoreCount.length;
-                        WifiUsabilityScoreCount[] newArray38 = new WifiUsabilityScoreCount[(i38 + arrayLength38)];
+                        WifiUsabilityScoreCount[] newArray38 = new WifiUsabilityScoreCount[i38 + arrayLength38];
                         if (i38 != 0) {
                             System.arraycopy(this.wifiUsabilityScoreCount, 0, newArray38, 0, i38);
                         }
@@ -2788,7 +2896,7 @@ public interface WifiMetricsProto {
                     case 1026:
                         int arrayLength39 = WireFormatNano.getRepeatedFieldArrayLength(input, 1026);
                         int i39 = this.mobilityStatePnoStatsList == null ? 0 : this.mobilityStatePnoStatsList.length;
-                        DeviceMobilityStatePnoScanStats[] newArray39 = new DeviceMobilityStatePnoScanStats[(i39 + arrayLength39)];
+                        DeviceMobilityStatePnoScanStats[] newArray39 = new DeviceMobilityStatePnoScanStats[i39 + arrayLength39];
                         if (i39 != 0) {
                             System.arraycopy(this.mobilityStatePnoStatsList, 0, newArray39, 0, i39);
                         }
@@ -2808,7 +2916,7 @@ public interface WifiMetricsProto {
                         }
                         input.readMessage(this.wifiP2PStats);
                         break;
-                    case RILConstants.RIL_UNSOL_RADIO_CAPABILITY:
+                    case RILConstants.RIL_UNSOL_RADIO_CAPABILITY /* 1042 */:
                         if (this.wifiDppLog == null) {
                             this.wifiDppLog = new WifiDppLog();
                         }
@@ -2832,25 +2940,25 @@ public interface WifiMetricsProto {
                     case 1088:
                         this.numWpa3EnterpriseNetworkScanResults = input.readInt32();
                         break;
-                    case MetricsProto.MetricsEvent.ACTION_BOOT:
+                    case MetricsProto.MetricsEvent.ACTION_BOOT /* 1098 */:
                         if (this.wifiConfigStoreIo == null) {
                             this.wifiConfigStoreIo = new WifiConfigStoreIO();
                         }
                         input.readMessage(this.wifiConfigStoreIo);
                         break;
-                    case MetricsProto.MetricsEvent.ACTION_TEXT_SELECTION_RESET:
+                    case MetricsProto.MetricsEvent.ACTION_TEXT_SELECTION_RESET /* 1104 */:
                         this.numSavedNetworksWithMacRandomization = input.readInt32();
                         break;
-                    case MetricsProto.MetricsEvent.ACTION_TEXT_SELECTION_DRAG:
+                    case MetricsProto.MetricsEvent.ACTION_TEXT_SELECTION_DRAG /* 1114 */:
                         if (this.linkProbeStats == null) {
                             this.linkProbeStats = new LinkProbeStats();
                         }
                         input.readMessage(this.linkProbeStats);
                         break;
-                    case MetricsProto.MetricsEvent.FIELD_SELECTION_RANGE:
+                    case MetricsProto.MetricsEvent.FIELD_SELECTION_RANGE /* 1122 */:
                         int arrayLength40 = WireFormatNano.getRepeatedFieldArrayLength(input, MetricsProto.MetricsEvent.FIELD_SELECTION_RANGE);
                         int i40 = this.networkSelectionExperimentDecisionsList == null ? 0 : this.networkSelectionExperimentDecisionsList.length;
-                        NetworkSelectionExperimentDecisions[] newArray40 = new NetworkSelectionExperimentDecisions[(i40 + arrayLength40)];
+                        NetworkSelectionExperimentDecisions[] newArray40 = new NetworkSelectionExperimentDecisions[i40 + arrayLength40];
                         if (i40 != 0) {
                             System.arraycopy(this.networkSelectionExperimentDecisionsList, 0, newArray40, 0, i40);
                         }
@@ -2864,13 +2972,13 @@ public interface WifiMetricsProto {
                         input.readMessage(newArray40[i40]);
                         this.networkSelectionExperimentDecisionsList = newArray40;
                         break;
-                    case MetricsProto.MetricsEvent.FIELD_AUTOFILL_SAVE_TYPE:
+                    case MetricsProto.MetricsEvent.FIELD_AUTOFILL_SAVE_TYPE /* 1130 */:
                         if (this.wifiNetworkRequestApiLog == null) {
                             this.wifiNetworkRequestApiLog = new WifiNetworkRequestApiLog();
                         }
                         input.readMessage(this.wifiNetworkRequestApiLog);
                         break;
-                    case MetricsProto.MetricsEvent.NOTIFICATION_SELECT_SNOOZE:
+                    case MetricsProto.MetricsEvent.NOTIFICATION_SELECT_SNOOZE /* 1138 */:
                         if (this.wifiNetworkSuggestionApiLog == null) {
                             this.wifiNetworkSuggestionApiLog = new WifiNetworkSuggestionApiLog();
                         }
@@ -2903,7 +3011,7 @@ public interface WifiMetricsProto {
                     case 1186:
                         int arrayLength41 = WireFormatNano.getRepeatedFieldArrayLength(input, 1186);
                         int i41 = this.installedPasspointProfileTypeForR2 == null ? 0 : this.installedPasspointProfileTypeForR2.length;
-                        PasspointProfileTypeCount[] newArray41 = new PasspointProfileTypeCount[(i41 + arrayLength41)];
+                        PasspointProfileTypeCount[] newArray41 = new PasspointProfileTypeCount[i41 + arrayLength41];
                         if (i41 != 0) {
                             System.arraycopy(this.installedPasspointProfileTypeForR2, 0, newArray41, 0, i41);
                         }
@@ -2936,6 +3044,7 @@ public interface WifiMetricsProto {
         }
     }
 
+    /* loaded from: classes4.dex */
     public static final class RouterFingerPrint extends MessageNano {
         public static final int AUTH_ENTERPRISE = 3;
         public static final int AUTH_OPEN = 1;
@@ -2990,6 +3099,7 @@ public interface WifiMetricsProto {
             return this;
         }
 
+        @Override // com.android.framework.protobuf.nano.MessageNano
         public void writeTo(CodedOutputByteBufferNano output) throws IOException {
             if (this.roamType != 0) {
                 output.writeInt32(1, this.roamType);
@@ -3018,8 +3128,8 @@ public interface WifiMetricsProto {
             super.writeTo(output);
         }
 
-        /* access modifiers changed from: protected */
-        public int computeSerializedSize() {
+        @Override // com.android.framework.protobuf.nano.MessageNano
+        protected int computeSerializedSize() {
             int size = super.computeSerializedSize();
             if (this.roamType != 0) {
                 size += CodedOutputByteBufferNano.computeInt32Size(1, this.roamType);
@@ -3048,62 +3158,60 @@ public interface WifiMetricsProto {
             return size;
         }
 
+        @Override // com.android.framework.protobuf.nano.MessageNano
         public RouterFingerPrint mergeFrom(CodedInputByteBufferNano input) throws IOException {
             while (true) {
                 int tag = input.readTag();
-                if (tag != 0) {
-                    if (tag == 8) {
-                        int value = input.readInt32();
-                        switch (value) {
-                            case 0:
-                            case 1:
-                            case 2:
-                            case 3:
-                                this.roamType = value;
-                                break;
-                        }
-                    } else if (tag == 16) {
-                        this.channelInfo = input.readInt32();
-                    } else if (tag != 24) {
-                        if (tag == 32) {
-                            int value2 = input.readInt32();
-                            switch (value2) {
-                                case 0:
-                                case 1:
-                                case 2:
-                                case 3:
-                                    this.authentication = value2;
-                                    break;
-                            }
-                        } else if (tag != 40) {
-                            if (tag == 48) {
-                                int value3 = input.readInt32();
-                                switch (value3) {
-                                    case 0:
-                                    case 1:
-                                    case 2:
-                                    case 3:
-                                    case 4:
-                                    case 5:
-                                    case 6:
-                                        this.routerTechnology = value3;
-                                        break;
-                                }
-                            } else if (tag == 56) {
-                                this.supportsIpv6 = input.readBool();
-                            } else if (tag == 64) {
-                                this.passpoint = input.readBool();
-                            } else if (!WireFormatNano.parseUnknownField(input, tag)) {
-                                return this;
-                            }
-                        } else {
-                            this.hidden = input.readBool();
-                        }
-                    } else {
-                        this.dtim = input.readInt32();
+                if (tag == 0) {
+                    return this;
+                }
+                if (tag == 8) {
+                    int value = input.readInt32();
+                    switch (value) {
+                        case 0:
+                        case 1:
+                        case 2:
+                        case 3:
+                            this.roamType = value;
+                            continue;
+                    }
+                } else if (tag == 16) {
+                    this.channelInfo = input.readInt32();
+                } else if (tag == 24) {
+                    this.dtim = input.readInt32();
+                } else if (tag == 32) {
+                    int value2 = input.readInt32();
+                    switch (value2) {
+                        case 0:
+                        case 1:
+                        case 2:
+                        case 3:
+                            this.authentication = value2;
+                            continue;
+                    }
+                } else if (tag == 40) {
+                    this.hidden = input.readBool();
+                } else if (tag == 48) {
+                    int value3 = input.readInt32();
+                    switch (value3) {
+                        case 0:
+                        case 1:
+                        case 2:
+                        case 3:
+                        case 4:
+                        case 5:
+                        case 6:
+                            this.routerTechnology = value3;
+                            continue;
+                    }
+                } else if (tag == 56) {
+                    this.supportsIpv6 = input.readBool();
+                } else if (tag != 64) {
+                    if (!WireFormatNano.parseUnknownField(input, tag)) {
+                        return this;
                     }
                 } else {
-                    return this;
+                    this.passpoint = input.readBool();
                 }
             }
         }
@@ -3117,6 +3225,7 @@ public interface WifiMetricsProto {
         }
     }
 
+    /* loaded from: classes4.dex */
     public static final class ConnectionEvent extends MessageNano {
         public static final int AUTH_FAILURE_EAP_FAILURE = 4;
         public static final int AUTH_FAILURE_NONE = 1;
@@ -3175,7 +3284,7 @@ public interface WifiMetricsProto {
         }
 
         public ConnectionEvent clear() {
-            this.startTimeMillis = 0;
+            this.startTimeMillis = 0L;
             this.durationTakenToConnectMillis = 0;
             this.routerFingerprint = null;
             this.signalStrength = 0;
@@ -3192,6 +3301,7 @@ public interface WifiMetricsProto {
             return this;
         }
 
+        @Override // com.android.framework.protobuf.nano.MessageNano
         public void writeTo(CodedOutputByteBufferNano output) throws IOException {
             if (this.startTimeMillis != 0) {
                 output.writeInt64(1, this.startTimeMillis);
@@ -3235,8 +3345,8 @@ public interface WifiMetricsProto {
             super.writeTo(output);
         }
 
-        /* access modifiers changed from: protected */
-        public int computeSerializedSize() {
+        @Override // com.android.framework.protobuf.nano.MessageNano
+        protected int computeSerializedSize() {
             int size = super.computeSerializedSize();
             if (this.startTimeMillis != 0) {
                 size += CodedOutputByteBufferNano.computeInt64Size(1, this.startTimeMillis);
@@ -3280,6 +3390,7 @@ public interface WifiMetricsProto {
             return size;
         }
 
+        @Override // com.android.framework.protobuf.nano.MessageNano
         public ConnectionEvent mergeFrom(CodedInputByteBufferNano input) throws IOException {
             while (true) {
                 int tag = input.readTag();
@@ -3311,7 +3422,7 @@ public interface WifiMetricsProto {
                             case 4:
                             case 5:
                                 this.roamType = value;
-                                break;
+                                continue;
                         }
                     case 48:
                         this.connectionResult = input.readInt32();
@@ -3328,7 +3439,7 @@ public interface WifiMetricsProto {
                             case 3:
                             case 4:
                                 this.connectivityLevelFailureCode = value2;
-                                break;
+                                continue;
                         }
                     case 72:
                         this.automaticBugReportTaken = input.readBool();
@@ -3350,7 +3461,7 @@ public interface WifiMetricsProto {
                             case 8:
                             case 9:
                                 this.connectionNominator = value3;
-                                break;
+                                continue;
                         }
                     case 96:
                         this.networkSelectorExperimentId = input.readInt32();
@@ -3364,7 +3475,7 @@ public interface WifiMetricsProto {
                             case 3:
                             case 4:
                                 this.level2FailureReason = value4;
-                                break;
+                                continue;
                         }
                     default:
                         if (WireFormatNano.parseUnknownField(input, tag)) {
@@ -3385,6 +3496,7 @@ public interface WifiMetricsProto {
         }
     }
 
+    /* loaded from: classes4.dex */
     public static final class RssiPollCount extends MessageNano {
         private static volatile RssiPollCount[] _emptyArray;
         public int count;
@@ -3414,6 +3526,7 @@ public interface WifiMetricsProto {
             return this;
         }
 
+        @Override // com.android.framework.protobuf.nano.MessageNano
         public void writeTo(CodedOutputByteBufferNano output) throws IOException {
             if (this.rssi != 0) {
                 output.writeInt32(1, this.rssi);
@@ -3427,8 +3540,8 @@ public interface WifiMetricsProto {
             super.writeTo(output);
         }
 
-        /* access modifiers changed from: protected */
-        public int computeSerializedSize() {
+        @Override // com.android.framework.protobuf.nano.MessageNano
+        protected int computeSerializedSize() {
             int size = super.computeSerializedSize();
             if (this.rssi != 0) {
                 size += CodedOutputByteBufferNano.computeInt32Size(1, this.rssi);
@@ -3442,6 +3555,7 @@ public interface WifiMetricsProto {
             return size;
         }
 
+        @Override // com.android.framework.protobuf.nano.MessageNano
         public RssiPollCount mergeFrom(CodedInputByteBufferNano input) throws IOException {
             while (true) {
                 int tag = input.readTag();
@@ -3452,10 +3566,12 @@ public interface WifiMetricsProto {
                     this.rssi = input.readInt32();
                 } else if (tag == 16) {
                     this.count = input.readInt32();
-                } else if (tag == 24) {
+                } else if (tag != 24) {
+                    if (!WireFormatNano.parseUnknownField(input, tag)) {
+                        return this;
+                    }
+                } else {
                     this.frequency = input.readInt32();
-                } else if (!WireFormatNano.parseUnknownField(input, tag)) {
-                    return this;
                 }
             }
         }
@@ -3469,6 +3585,7 @@ public interface WifiMetricsProto {
         }
     }
 
+    /* loaded from: classes4.dex */
     public static final class AlertReasonCount extends MessageNano {
         private static volatile AlertReasonCount[] _emptyArray;
         public int count;
@@ -3496,6 +3613,7 @@ public interface WifiMetricsProto {
             return this;
         }
 
+        @Override // com.android.framework.protobuf.nano.MessageNano
         public void writeTo(CodedOutputByteBufferNano output) throws IOException {
             if (this.reason != 0) {
                 output.writeInt32(1, this.reason);
@@ -3506,8 +3624,8 @@ public interface WifiMetricsProto {
             super.writeTo(output);
         }
 
-        /* access modifiers changed from: protected */
-        public int computeSerializedSize() {
+        @Override // com.android.framework.protobuf.nano.MessageNano
+        protected int computeSerializedSize() {
             int size = super.computeSerializedSize();
             if (this.reason != 0) {
                 size += CodedOutputByteBufferNano.computeInt32Size(1, this.reason);
@@ -3518,6 +3636,7 @@ public interface WifiMetricsProto {
             return size;
         }
 
+        @Override // com.android.framework.protobuf.nano.MessageNano
         public AlertReasonCount mergeFrom(CodedInputByteBufferNano input) throws IOException {
             while (true) {
                 int tag = input.readTag();
@@ -3526,10 +3645,12 @@ public interface WifiMetricsProto {
                 }
                 if (tag == 8) {
                     this.reason = input.readInt32();
-                } else if (tag == 16) {
+                } else if (tag != 16) {
+                    if (!WireFormatNano.parseUnknownField(input, tag)) {
+                        return this;
+                    }
+                } else {
                     this.count = input.readInt32();
-                } else if (!WireFormatNano.parseUnknownField(input, tag)) {
-                    return this;
                 }
             }
         }
@@ -3543,6 +3664,7 @@ public interface WifiMetricsProto {
         }
     }
 
+    /* loaded from: classes4.dex */
     public static final class WifiScoreCount extends MessageNano {
         private static volatile WifiScoreCount[] _emptyArray;
         public int count;
@@ -3570,6 +3692,7 @@ public interface WifiMetricsProto {
             return this;
         }
 
+        @Override // com.android.framework.protobuf.nano.MessageNano
         public void writeTo(CodedOutputByteBufferNano output) throws IOException {
             if (this.score != 0) {
                 output.writeInt32(1, this.score);
@@ -3580,8 +3703,8 @@ public interface WifiMetricsProto {
             super.writeTo(output);
         }
 
-        /* access modifiers changed from: protected */
-        public int computeSerializedSize() {
+        @Override // com.android.framework.protobuf.nano.MessageNano
+        protected int computeSerializedSize() {
             int size = super.computeSerializedSize();
             if (this.score != 0) {
                 size += CodedOutputByteBufferNano.computeInt32Size(1, this.score);
@@ -3592,6 +3715,7 @@ public interface WifiMetricsProto {
             return size;
         }
 
+        @Override // com.android.framework.protobuf.nano.MessageNano
         public WifiScoreCount mergeFrom(CodedInputByteBufferNano input) throws IOException {
             while (true) {
                 int tag = input.readTag();
@@ -3600,10 +3724,12 @@ public interface WifiMetricsProto {
                 }
                 if (tag == 8) {
                     this.score = input.readInt32();
-                } else if (tag == 16) {
+                } else if (tag != 16) {
+                    if (!WireFormatNano.parseUnknownField(input, tag)) {
+                        return this;
+                    }
+                } else {
                     this.count = input.readInt32();
-                } else if (!WireFormatNano.parseUnknownField(input, tag)) {
-                    return this;
                 }
             }
         }
@@ -3617,6 +3743,7 @@ public interface WifiMetricsProto {
         }
     }
 
+    /* loaded from: classes4.dex */
     public static final class WifiUsabilityScoreCount extends MessageNano {
         private static volatile WifiUsabilityScoreCount[] _emptyArray;
         public int count;
@@ -3644,6 +3771,7 @@ public interface WifiMetricsProto {
             return this;
         }
 
+        @Override // com.android.framework.protobuf.nano.MessageNano
         public void writeTo(CodedOutputByteBufferNano output) throws IOException {
             if (this.score != 0) {
                 output.writeInt32(1, this.score);
@@ -3654,8 +3782,8 @@ public interface WifiMetricsProto {
             super.writeTo(output);
         }
 
-        /* access modifiers changed from: protected */
-        public int computeSerializedSize() {
+        @Override // com.android.framework.protobuf.nano.MessageNano
+        protected int computeSerializedSize() {
             int size = super.computeSerializedSize();
             if (this.score != 0) {
                 size += CodedOutputByteBufferNano.computeInt32Size(1, this.score);
@@ -3666,6 +3794,7 @@ public interface WifiMetricsProto {
             return size;
         }
 
+        @Override // com.android.framework.protobuf.nano.MessageNano
         public WifiUsabilityScoreCount mergeFrom(CodedInputByteBufferNano input) throws IOException {
             while (true) {
                 int tag = input.readTag();
@@ -3674,10 +3803,12 @@ public interface WifiMetricsProto {
                 }
                 if (tag == 8) {
                     this.score = input.readInt32();
-                } else if (tag == 16) {
+                } else if (tag != 16) {
+                    if (!WireFormatNano.parseUnknownField(input, tag)) {
+                        return this;
+                    }
+                } else {
                     this.count = input.readInt32();
-                } else if (!WireFormatNano.parseUnknownField(input, tag)) {
-                    return this;
                 }
             }
         }
@@ -3691,6 +3822,7 @@ public interface WifiMetricsProto {
         }
     }
 
+    /* loaded from: classes4.dex */
     public static final class LinkSpeedCount extends MessageNano {
         private static volatile LinkSpeedCount[] _emptyArray;
         public int count;
@@ -3717,11 +3849,12 @@ public interface WifiMetricsProto {
             this.linkSpeedMbps = 0;
             this.count = 0;
             this.rssiSumDbm = 0;
-            this.rssiSumOfSquaresDbmSq = 0;
+            this.rssiSumOfSquaresDbmSq = 0L;
             this.cachedSize = -1;
             return this;
         }
 
+        @Override // com.android.framework.protobuf.nano.MessageNano
         public void writeTo(CodedOutputByteBufferNano output) throws IOException {
             if (this.linkSpeedMbps != 0) {
                 output.writeInt32(1, this.linkSpeedMbps);
@@ -3738,8 +3871,8 @@ public interface WifiMetricsProto {
             super.writeTo(output);
         }
 
-        /* access modifiers changed from: protected */
-        public int computeSerializedSize() {
+        @Override // com.android.framework.protobuf.nano.MessageNano
+        protected int computeSerializedSize() {
             int size = super.computeSerializedSize();
             if (this.linkSpeedMbps != 0) {
                 size += CodedOutputByteBufferNano.computeInt32Size(1, this.linkSpeedMbps);
@@ -3756,6 +3889,7 @@ public interface WifiMetricsProto {
             return size;
         }
 
+        @Override // com.android.framework.protobuf.nano.MessageNano
         public LinkSpeedCount mergeFrom(CodedInputByteBufferNano input) throws IOException {
             while (true) {
                 int tag = input.readTag();
@@ -3768,10 +3902,12 @@ public interface WifiMetricsProto {
                     this.count = input.readInt32();
                 } else if (tag == 24) {
                     this.rssiSumDbm = input.readInt32();
-                } else if (tag == 32) {
+                } else if (tag != 32) {
+                    if (!WireFormatNano.parseUnknownField(input, tag)) {
+                        return this;
+                    }
+                } else {
                     this.rssiSumOfSquaresDbmSq = input.readInt64();
-                } else if (!WireFormatNano.parseUnknownField(input, tag)) {
-                    return this;
                 }
             }
         }
@@ -3785,6 +3921,7 @@ public interface WifiMetricsProto {
         }
     }
 
+    /* loaded from: classes4.dex */
     public static final class SoftApDurationBucket extends MessageNano {
         private static volatile SoftApDurationBucket[] _emptyArray;
         public int bucketSizeSec;
@@ -3814,6 +3951,7 @@ public interface WifiMetricsProto {
             return this;
         }
 
+        @Override // com.android.framework.protobuf.nano.MessageNano
         public void writeTo(CodedOutputByteBufferNano output) throws IOException {
             if (this.durationSec != 0) {
                 output.writeInt32(1, this.durationSec);
@@ -3827,8 +3965,8 @@ public interface WifiMetricsProto {
             super.writeTo(output);
         }
 
-        /* access modifiers changed from: protected */
-        public int computeSerializedSize() {
+        @Override // com.android.framework.protobuf.nano.MessageNano
+        protected int computeSerializedSize() {
             int size = super.computeSerializedSize();
             if (this.durationSec != 0) {
                 size += CodedOutputByteBufferNano.computeInt32Size(1, this.durationSec);
@@ -3842,6 +3980,7 @@ public interface WifiMetricsProto {
             return size;
         }
 
+        @Override // com.android.framework.protobuf.nano.MessageNano
         public SoftApDurationBucket mergeFrom(CodedInputByteBufferNano input) throws IOException {
             while (true) {
                 int tag = input.readTag();
@@ -3852,10 +3991,12 @@ public interface WifiMetricsProto {
                     this.durationSec = input.readInt32();
                 } else if (tag == 16) {
                     this.bucketSizeSec = input.readInt32();
-                } else if (tag == 24) {
+                } else if (tag != 24) {
+                    if (!WireFormatNano.parseUnknownField(input, tag)) {
+                        return this;
+                    }
+                } else {
                     this.count = input.readInt32();
-                } else if (!WireFormatNano.parseUnknownField(input, tag)) {
-                    return this;
                 }
             }
         }
@@ -3869,6 +4010,7 @@ public interface WifiMetricsProto {
         }
     }
 
+    /* loaded from: classes4.dex */
     public static final class SoftApReturnCodeCount extends MessageNano {
         public static final int SOFT_AP_FAILED_GENERAL_ERROR = 2;
         public static final int SOFT_AP_FAILED_NO_CHANNEL = 3;
@@ -3902,6 +4044,7 @@ public interface WifiMetricsProto {
             return this;
         }
 
+        @Override // com.android.framework.protobuf.nano.MessageNano
         public void writeTo(CodedOutputByteBufferNano output) throws IOException {
             if (this.returnCode != 0) {
                 output.writeInt32(1, this.returnCode);
@@ -3915,8 +4058,8 @@ public interface WifiMetricsProto {
             super.writeTo(output);
         }
 
-        /* access modifiers changed from: protected */
-        public int computeSerializedSize() {
+        @Override // com.android.framework.protobuf.nano.MessageNano
+        protected int computeSerializedSize() {
             int size = super.computeSerializedSize();
             if (this.returnCode != 0) {
                 size += CodedOutputByteBufferNano.computeInt32Size(1, this.returnCode);
@@ -3930,6 +4073,7 @@ public interface WifiMetricsProto {
             return size;
         }
 
+        @Override // com.android.framework.protobuf.nano.MessageNano
         public SoftApReturnCodeCount mergeFrom(CodedInputByteBufferNano input) throws IOException {
             while (true) {
                 int tag = input.readTag();
@@ -3938,22 +4082,22 @@ public interface WifiMetricsProto {
                 }
                 if (tag == 8) {
                     this.returnCode = input.readInt32();
-                } else if (tag != 16) {
-                    if (tag == 24) {
-                        int value = input.readInt32();
-                        switch (value) {
-                            case 0:
-                            case 1:
-                            case 2:
-                            case 3:
-                                this.startResult = value;
-                                break;
-                        }
-                    } else if (!WireFormatNano.parseUnknownField(input, tag)) {
+                } else if (tag == 16) {
+                    this.count = input.readInt32();
+                } else if (tag != 24) {
+                    if (!WireFormatNano.parseUnknownField(input, tag)) {
                         return this;
                     }
                 } else {
-                    this.count = input.readInt32();
+                    int value = input.readInt32();
+                    switch (value) {
+                        case 0:
+                        case 1:
+                        case 2:
+                        case 3:
+                            this.startResult = value;
+                            continue;
+                    }
                 }
             }
         }
@@ -3967,6 +4111,7 @@ public interface WifiMetricsProto {
         }
     }
 
+    /* loaded from: classes4.dex */
     public static final class StaEvent extends MessageNano {
         public static final int AUTH_FAILURE_EAP_FAILURE = 4;
         public static final int AUTH_FAILURE_NONE = 1;
@@ -4036,6 +4181,7 @@ public interface WifiMetricsProto {
         public int supplicantStateChangesBitmask;
         public int type;
 
+        /* loaded from: classes4.dex */
         public static final class ConfigInfo extends MessageNano {
             private static volatile ConfigInfo[] _emptyArray;
             public int allowedAuthAlgorithms;
@@ -4081,6 +4227,7 @@ public interface WifiMetricsProto {
                 return this;
             }
 
+            @Override // com.android.framework.protobuf.nano.MessageNano
             public void writeTo(CodedOutputByteBufferNano output) throws IOException {
                 if (this.allowedKeyManagement != 0) {
                     output.writeUInt32(1, this.allowedKeyManagement);
@@ -4118,8 +4265,8 @@ public interface WifiMetricsProto {
                 super.writeTo(output);
             }
 
-            /* access modifiers changed from: protected */
-            public int computeSerializedSize() {
+            @Override // com.android.framework.protobuf.nano.MessageNano
+            protected int computeSerializedSize() {
                 int size = super.computeSerializedSize();
                 if (this.allowedKeyManagement != 0) {
                     size += CodedOutputByteBufferNano.computeUInt32Size(1, this.allowedKeyManagement);
@@ -4157,6 +4304,7 @@ public interface WifiMetricsProto {
                 return size;
             }
 
+            @Override // com.android.framework.protobuf.nano.MessageNano
             public ConfigInfo mergeFrom(CodedInputByteBufferNano input) throws IOException {
                 while (true) {
                     int tag = input.readTag();
@@ -4240,7 +4388,7 @@ public interface WifiMetricsProto {
             this.lastLinkSpeed = -1;
             this.lastFreq = -1;
             this.supplicantStateChangesBitmask = 0;
-            this.startTimeMillis = 0;
+            this.startTimeMillis = 0L;
             this.frameworkDisconnectReason = 0;
             this.associationTimedOut = false;
             this.authFailureReason = 0;
@@ -4254,6 +4402,7 @@ public interface WifiMetricsProto {
             return this;
         }
 
+        @Override // com.android.framework.protobuf.nano.MessageNano
         public void writeTo(CodedOutputByteBufferNano output) throws IOException {
             if (this.type != 0) {
                 output.writeInt32(1, this.type);
@@ -4315,8 +4464,8 @@ public interface WifiMetricsProto {
             super.writeTo(output);
         }
 
-        /* access modifiers changed from: protected */
-        public int computeSerializedSize() {
+        @Override // com.android.framework.protobuf.nano.MessageNano
+        protected int computeSerializedSize() {
             int size = super.computeSerializedSize();
             if (this.type != 0) {
                 size += CodedOutputByteBufferNano.computeInt32Size(1, this.type);
@@ -4378,6 +4527,7 @@ public interface WifiMetricsProto {
             return size;
         }
 
+        @Override // com.android.framework.protobuf.nano.MessageNano
         public StaEvent mergeFrom(CodedInputByteBufferNano input) throws IOException {
             while (true) {
                 int tag = input.readTag();
@@ -4410,7 +4560,7 @@ public interface WifiMetricsProto {
                             case 20:
                             case 21:
                                 this.type = value;
-                                break;
+                                continue;
                         }
                     case 16:
                         this.reason = input.readInt32();
@@ -4453,7 +4603,7 @@ public interface WifiMetricsProto {
                             case 5:
                             case 6:
                                 this.frameworkDisconnectReason = value2;
-                                break;
+                                continue;
                         }
                     case 96:
                         this.associationTimedOut = input.readBool();
@@ -4467,7 +4617,7 @@ public interface WifiMetricsProto {
                             case 3:
                             case 4:
                                 this.authFailureReason = value3;
-                                break;
+                                continue;
                         }
                     case 112:
                         this.lastScore = input.readInt32();
@@ -4493,7 +4643,7 @@ public interface WifiMetricsProto {
                             case 3:
                             case 4:
                                 this.linkProbeFailureReason = value4;
-                                break;
+                                continue;
                         }
                     default:
                         if (WireFormatNano.parseUnknownField(input, tag)) {
@@ -4514,6 +4664,7 @@ public interface WifiMetricsProto {
         }
     }
 
+    /* loaded from: classes4.dex */
     public static final class WifiAwareLog extends MessageNano {
         public static final int ALREADY_ENABLED = 11;
         public static final int FOLLOWUP_TX_QUEUE_FULL = 12;
@@ -4578,6 +4729,7 @@ public interface WifiMetricsProto {
         public int numMatchesWithoutRangingForRangingEnabledSubscribes;
         public int numSubscribesWithRanging;
 
+        /* loaded from: classes4.dex */
         public static final class HistogramBucket extends MessageNano {
             private static volatile HistogramBucket[] _emptyArray;
             public int count;
@@ -4600,13 +4752,14 @@ public interface WifiMetricsProto {
             }
 
             public HistogramBucket clear() {
-                this.start = 0;
-                this.end = 0;
+                this.start = 0L;
+                this.end = 0L;
                 this.count = 0;
                 this.cachedSize = -1;
                 return this;
             }
 
+            @Override // com.android.framework.protobuf.nano.MessageNano
             public void writeTo(CodedOutputByteBufferNano output) throws IOException {
                 if (this.start != 0) {
                     output.writeInt64(1, this.start);
@@ -4620,8 +4773,8 @@ public interface WifiMetricsProto {
                 super.writeTo(output);
             }
 
-            /* access modifiers changed from: protected */
-            public int computeSerializedSize() {
+            @Override // com.android.framework.protobuf.nano.MessageNano
+            protected int computeSerializedSize() {
                 int size = super.computeSerializedSize();
                 if (this.start != 0) {
                     size += CodedOutputByteBufferNano.computeInt64Size(1, this.start);
@@ -4635,6 +4788,7 @@ public interface WifiMetricsProto {
                 return size;
             }
 
+            @Override // com.android.framework.protobuf.nano.MessageNano
             public HistogramBucket mergeFrom(CodedInputByteBufferNano input) throws IOException {
                 while (true) {
                     int tag = input.readTag();
@@ -4645,10 +4799,12 @@ public interface WifiMetricsProto {
                         this.start = input.readInt64();
                     } else if (tag == 16) {
                         this.end = input.readInt64();
-                    } else if (tag == 24) {
+                    } else if (tag != 24) {
+                        if (!WireFormatNano.parseUnknownField(input, tag)) {
+                            return this;
+                        }
+                    } else {
                         this.count = input.readInt32();
-                    } else if (!WireFormatNano.parseUnknownField(input, tag)) {
-                        return this;
                     }
                 }
             }
@@ -4662,6 +4818,7 @@ public interface WifiMetricsProto {
             }
         }
 
+        /* loaded from: classes4.dex */
         public static final class NanStatusHistogramBucket extends MessageNano {
             private static volatile NanStatusHistogramBucket[] _emptyArray;
             public int count;
@@ -4689,6 +4846,7 @@ public interface WifiMetricsProto {
                 return this;
             }
 
+            @Override // com.android.framework.protobuf.nano.MessageNano
             public void writeTo(CodedOutputByteBufferNano output) throws IOException {
                 if (this.nanStatusType != 0) {
                     output.writeInt32(1, this.nanStatusType);
@@ -4699,8 +4857,8 @@ public interface WifiMetricsProto {
                 super.writeTo(output);
             }
 
-            /* access modifiers changed from: protected */
-            public int computeSerializedSize() {
+            @Override // com.android.framework.protobuf.nano.MessageNano
+            protected int computeSerializedSize() {
                 int size = super.computeSerializedSize();
                 if (this.nanStatusType != 0) {
                     size += CodedOutputByteBufferNano.computeInt32Size(1, this.nanStatusType);
@@ -4711,38 +4869,40 @@ public interface WifiMetricsProto {
                 return size;
             }
 
+            @Override // com.android.framework.protobuf.nano.MessageNano
             public NanStatusHistogramBucket mergeFrom(CodedInputByteBufferNano input) throws IOException {
                 while (true) {
                     int tag = input.readTag();
-                    if (tag != 0) {
-                        if (tag == 8) {
-                            int value = input.readInt32();
-                            switch (value) {
-                                case 0:
-                                case 1:
-                                case 2:
-                                case 3:
-                                case 4:
-                                case 5:
-                                case 6:
-                                case 7:
-                                case 8:
-                                case 9:
-                                case 10:
-                                case 11:
-                                case 12:
-                                case 13:
-                                case 14:
-                                    this.nanStatusType = value;
-                                    break;
-                            }
-                        } else if (tag == 16) {
-                            this.count = input.readInt32();
-                        } else if (!WireFormatNano.parseUnknownField(input, tag)) {
+                    if (tag == 0) {
+                        return this;
+                    }
+                    if (tag == 8) {
+                        int value = input.readInt32();
+                        switch (value) {
+                            case 0:
+                            case 1:
+                            case 2:
+                            case 3:
+                            case 4:
+                            case 5:
+                            case 6:
+                            case 7:
+                            case 8:
+                            case 9:
+                            case 10:
+                            case 11:
+                            case 12:
+                            case 13:
+                            case 14:
+                                this.nanStatusType = value;
+                                continue;
+                        }
+                    } else if (tag != 16) {
+                        if (!WireFormatNano.parseUnknownField(input, tag)) {
                             return this;
                         }
                     } else {
-                        return this;
+                        this.count = input.readInt32();
                     }
                 }
             }
@@ -4802,13 +4962,13 @@ public interface WifiMetricsProto {
             this.histogramNdpSessionDurationMs = HistogramBucket.emptyArray();
             this.histogramNdpSessionDataUsageMb = HistogramBucket.emptyArray();
             this.histogramNdpCreationTimeMs = HistogramBucket.emptyArray();
-            this.ndpCreationTimeMsMin = 0;
-            this.ndpCreationTimeMsMax = 0;
-            this.ndpCreationTimeMsSum = 0;
-            this.ndpCreationTimeMsSumOfSq = 0;
-            this.ndpCreationTimeMsNumSamples = 0;
-            this.availableTimeMs = 0;
-            this.enabledTimeMs = 0;
+            this.ndpCreationTimeMsMin = 0L;
+            this.ndpCreationTimeMsMax = 0L;
+            this.ndpCreationTimeMsSum = 0L;
+            this.ndpCreationTimeMsSumOfSq = 0L;
+            this.ndpCreationTimeMsNumSamples = 0L;
+            this.availableTimeMs = 0L;
+            this.enabledTimeMs = 0L;
             this.maxConcurrentPublishWithRangingInApp = 0;
             this.maxConcurrentSubscribeWithRangingInApp = 0;
             this.maxConcurrentPublishWithRangingInSystem = 0;
@@ -4822,6 +4982,7 @@ public interface WifiMetricsProto {
             return this;
         }
 
+        @Override // com.android.framework.protobuf.nano.MessageNano
         public void writeTo(CodedOutputByteBufferNano output) throws IOException {
             if (this.numApps != 0) {
                 output.writeInt32(1, this.numApps);
@@ -4834,13 +4995,15 @@ public interface WifiMetricsProto {
             }
             int i = 0;
             if (this.histogramAttachSessionStatus != null && this.histogramAttachSessionStatus.length > 0) {
-                for (NanStatusHistogramBucket element : this.histogramAttachSessionStatus) {
+                for (int i2 = 0; i2 < this.histogramAttachSessionStatus.length; i2++) {
+                    NanStatusHistogramBucket element = this.histogramAttachSessionStatus[i2];
                     if (element != null) {
                         output.writeMessage(4, element);
                     }
                 }
             }
-            if (this.maxConcurrentPublishInApp != 0) {
+            int i3 = this.maxConcurrentPublishInApp;
+            if (i3 != 0) {
                 output.writeInt32(5, this.maxConcurrentPublishInApp);
             }
             if (this.maxConcurrentSubscribeInApp != 0) {
@@ -4859,37 +5022,43 @@ public interface WifiMetricsProto {
                 output.writeInt32(10, this.maxConcurrentDiscoverySessionsInSystem);
             }
             if (this.histogramPublishStatus != null && this.histogramPublishStatus.length > 0) {
-                for (NanStatusHistogramBucket element2 : this.histogramPublishStatus) {
+                for (int i4 = 0; i4 < this.histogramPublishStatus.length; i4++) {
+                    NanStatusHistogramBucket element2 = this.histogramPublishStatus[i4];
                     if (element2 != null) {
                         output.writeMessage(11, element2);
                     }
                 }
             }
             if (this.histogramSubscribeStatus != null && this.histogramSubscribeStatus.length > 0) {
-                for (NanStatusHistogramBucket element3 : this.histogramSubscribeStatus) {
+                for (int i5 = 0; i5 < this.histogramSubscribeStatus.length; i5++) {
+                    NanStatusHistogramBucket element3 = this.histogramSubscribeStatus[i5];
                     if (element3 != null) {
                         output.writeMessage(12, element3);
                     }
                 }
             }
-            if (this.numAppsWithDiscoverySessionFailureOutOfResources != 0) {
+            int i6 = this.numAppsWithDiscoverySessionFailureOutOfResources;
+            if (i6 != 0) {
                 output.writeInt32(13, this.numAppsWithDiscoverySessionFailureOutOfResources);
             }
             if (this.histogramRequestNdpStatus != null && this.histogramRequestNdpStatus.length > 0) {
-                for (NanStatusHistogramBucket element4 : this.histogramRequestNdpStatus) {
+                for (int i7 = 0; i7 < this.histogramRequestNdpStatus.length; i7++) {
+                    NanStatusHistogramBucket element4 = this.histogramRequestNdpStatus[i7];
                     if (element4 != null) {
                         output.writeMessage(14, element4);
                     }
                 }
             }
             if (this.histogramRequestNdpOobStatus != null && this.histogramRequestNdpOobStatus.length > 0) {
-                for (NanStatusHistogramBucket element5 : this.histogramRequestNdpOobStatus) {
+                for (int i8 = 0; i8 < this.histogramRequestNdpOobStatus.length; i8++) {
+                    NanStatusHistogramBucket element5 = this.histogramRequestNdpOobStatus[i8];
                     if (element5 != null) {
                         output.writeMessage(15, element5);
                     }
                 }
             }
-            if (this.maxConcurrentNdiInApp != 0) {
+            int i9 = this.maxConcurrentNdiInApp;
+            if (i9 != 0) {
                 output.writeInt32(19, this.maxConcurrentNdiInApp);
             }
             if (this.maxConcurrentNdiInSystem != 0) {
@@ -4911,56 +5080,64 @@ public interface WifiMetricsProto {
                 output.writeInt32(25, this.maxConcurrentNdpPerNdi);
             }
             if (this.histogramAwareAvailableDurationMs != null && this.histogramAwareAvailableDurationMs.length > 0) {
-                for (HistogramBucket element6 : this.histogramAwareAvailableDurationMs) {
+                for (int i10 = 0; i10 < this.histogramAwareAvailableDurationMs.length; i10++) {
+                    HistogramBucket element6 = this.histogramAwareAvailableDurationMs[i10];
                     if (element6 != null) {
                         output.writeMessage(26, element6);
                     }
                 }
             }
             if (this.histogramAwareEnabledDurationMs != null && this.histogramAwareEnabledDurationMs.length > 0) {
-                for (HistogramBucket element7 : this.histogramAwareEnabledDurationMs) {
+                for (int i11 = 0; i11 < this.histogramAwareEnabledDurationMs.length; i11++) {
+                    HistogramBucket element7 = this.histogramAwareEnabledDurationMs[i11];
                     if (element7 != null) {
                         output.writeMessage(27, element7);
                     }
                 }
             }
             if (this.histogramAttachDurationMs != null && this.histogramAttachDurationMs.length > 0) {
-                for (HistogramBucket element8 : this.histogramAttachDurationMs) {
+                for (int i12 = 0; i12 < this.histogramAttachDurationMs.length; i12++) {
+                    HistogramBucket element8 = this.histogramAttachDurationMs[i12];
                     if (element8 != null) {
                         output.writeMessage(28, element8);
                     }
                 }
             }
             if (this.histogramPublishSessionDurationMs != null && this.histogramPublishSessionDurationMs.length > 0) {
-                for (HistogramBucket element9 : this.histogramPublishSessionDurationMs) {
+                for (int i13 = 0; i13 < this.histogramPublishSessionDurationMs.length; i13++) {
+                    HistogramBucket element9 = this.histogramPublishSessionDurationMs[i13];
                     if (element9 != null) {
                         output.writeMessage(29, element9);
                     }
                 }
             }
             if (this.histogramSubscribeSessionDurationMs != null && this.histogramSubscribeSessionDurationMs.length > 0) {
-                for (HistogramBucket element10 : this.histogramSubscribeSessionDurationMs) {
+                for (int i14 = 0; i14 < this.histogramSubscribeSessionDurationMs.length; i14++) {
+                    HistogramBucket element10 = this.histogramSubscribeSessionDurationMs[i14];
                     if (element10 != null) {
                         output.writeMessage(30, element10);
                     }
                 }
             }
             if (this.histogramNdpSessionDurationMs != null && this.histogramNdpSessionDurationMs.length > 0) {
-                for (HistogramBucket element11 : this.histogramNdpSessionDurationMs) {
+                for (int i15 = 0; i15 < this.histogramNdpSessionDurationMs.length; i15++) {
+                    HistogramBucket element11 = this.histogramNdpSessionDurationMs[i15];
                     if (element11 != null) {
                         output.writeMessage(31, element11);
                     }
                 }
             }
             if (this.histogramNdpSessionDataUsageMb != null && this.histogramNdpSessionDataUsageMb.length > 0) {
-                for (HistogramBucket element12 : this.histogramNdpSessionDataUsageMb) {
+                for (int i16 = 0; i16 < this.histogramNdpSessionDataUsageMb.length; i16++) {
+                    HistogramBucket element12 = this.histogramNdpSessionDataUsageMb[i16];
                     if (element12 != null) {
                         output.writeMessage(32, element12);
                     }
                 }
             }
             if (this.histogramNdpCreationTimeMs != null && this.histogramNdpCreationTimeMs.length > 0) {
-                for (HistogramBucket element13 : this.histogramNdpCreationTimeMs) {
+                for (int i17 = 0; i17 < this.histogramNdpCreationTimeMs.length; i17++) {
+                    HistogramBucket element13 = this.histogramNdpCreationTimeMs[i17];
                     if (element13 != null) {
                         output.writeMessage(33, element13);
                     }
@@ -5000,7 +5177,8 @@ public interface WifiMetricsProto {
                 output.writeInt32(44, this.maxConcurrentSubscribeWithRangingInSystem);
             }
             if (this.histogramSubscribeGeofenceMin != null && this.histogramSubscribeGeofenceMin.length > 0) {
-                for (HistogramBucket element14 : this.histogramSubscribeGeofenceMin) {
+                for (int i18 = 0; i18 < this.histogramSubscribeGeofenceMin.length; i18++) {
+                    HistogramBucket element14 = this.histogramSubscribeGeofenceMin[i18];
                     if (element14 != null) {
                         output.writeMessage(45, element14);
                     }
@@ -5008,18 +5186,19 @@ public interface WifiMetricsProto {
             }
             if (this.histogramSubscribeGeofenceMax != null && this.histogramSubscribeGeofenceMax.length > 0) {
                 while (true) {
-                    int i2 = i;
-                    if (i2 >= this.histogramSubscribeGeofenceMax.length) {
+                    int i19 = i;
+                    if (i19 >= this.histogramSubscribeGeofenceMax.length) {
                         break;
                     }
-                    HistogramBucket element15 = this.histogramSubscribeGeofenceMax[i2];
+                    HistogramBucket element15 = this.histogramSubscribeGeofenceMax[i19];
                     if (element15 != null) {
                         output.writeMessage(46, element15);
                     }
-                    i = i2 + 1;
+                    i = i19 + 1;
                 }
             }
-            if (this.numSubscribesWithRanging != 0) {
+            int i20 = this.numSubscribesWithRanging;
+            if (i20 != 0) {
                 output.writeInt32(47, this.numSubscribesWithRanging);
             }
             if (this.numMatchesWithRanging != 0) {
@@ -5031,8 +5210,8 @@ public interface WifiMetricsProto {
             super.writeTo(output);
         }
 
-        /* access modifiers changed from: protected */
-        public int computeSerializedSize() {
+        @Override // com.android.framework.protobuf.nano.MessageNano
+        protected int computeSerializedSize() {
             int size = super.computeSerializedSize();
             if (this.numApps != 0) {
                 size += CodedOutputByteBufferNano.computeInt32Size(1, this.numApps);
@@ -5046,7 +5225,8 @@ public interface WifiMetricsProto {
             int i = 0;
             if (this.histogramAttachSessionStatus != null && this.histogramAttachSessionStatus.length > 0) {
                 int size2 = size;
-                for (NanStatusHistogramBucket element : this.histogramAttachSessionStatus) {
+                for (int size3 = 0; size3 < this.histogramAttachSessionStatus.length; size3++) {
+                    NanStatusHistogramBucket element = this.histogramAttachSessionStatus[size3];
                     if (element != null) {
                         size2 += CodedOutputByteBufferNano.computeMessageSize(4, element);
                     }
@@ -5072,43 +5252,47 @@ public interface WifiMetricsProto {
                 size += CodedOutputByteBufferNano.computeInt32Size(10, this.maxConcurrentDiscoverySessionsInSystem);
             }
             if (this.histogramPublishStatus != null && this.histogramPublishStatus.length > 0) {
-                int size3 = size;
-                for (NanStatusHistogramBucket element2 : this.histogramPublishStatus) {
-                    if (element2 != null) {
-                        size3 += CodedOutputByteBufferNano.computeMessageSize(11, element2);
-                    }
-                }
-                size = size3;
-            }
-            if (this.histogramSubscribeStatus != null && this.histogramSubscribeStatus.length > 0) {
                 int size4 = size;
-                for (NanStatusHistogramBucket element3 : this.histogramSubscribeStatus) {
-                    if (element3 != null) {
-                        size4 += CodedOutputByteBufferNano.computeMessageSize(12, element3);
+                for (int size5 = 0; size5 < this.histogramPublishStatus.length; size5++) {
+                    NanStatusHistogramBucket element2 = this.histogramPublishStatus[size5];
+                    if (element2 != null) {
+                        size4 += CodedOutputByteBufferNano.computeMessageSize(11, element2);
                     }
                 }
                 size = size4;
+            }
+            if (this.histogramSubscribeStatus != null && this.histogramSubscribeStatus.length > 0) {
+                int size6 = size;
+                for (int size7 = 0; size7 < this.histogramSubscribeStatus.length; size7++) {
+                    NanStatusHistogramBucket element3 = this.histogramSubscribeStatus[size7];
+                    if (element3 != null) {
+                        size6 += CodedOutputByteBufferNano.computeMessageSize(12, element3);
+                    }
+                }
+                size = size6;
             }
             if (this.numAppsWithDiscoverySessionFailureOutOfResources != 0) {
                 size += CodedOutputByteBufferNano.computeInt32Size(13, this.numAppsWithDiscoverySessionFailureOutOfResources);
             }
             if (this.histogramRequestNdpStatus != null && this.histogramRequestNdpStatus.length > 0) {
-                int size5 = size;
-                for (NanStatusHistogramBucket element4 : this.histogramRequestNdpStatus) {
+                int size8 = size;
+                for (int size9 = 0; size9 < this.histogramRequestNdpStatus.length; size9++) {
+                    NanStatusHistogramBucket element4 = this.histogramRequestNdpStatus[size9];
                     if (element4 != null) {
-                        size5 += CodedOutputByteBufferNano.computeMessageSize(14, element4);
+                        size8 += CodedOutputByteBufferNano.computeMessageSize(14, element4);
                     }
                 }
-                size = size5;
+                size = size8;
             }
             if (this.histogramRequestNdpOobStatus != null && this.histogramRequestNdpOobStatus.length > 0) {
-                int size6 = size;
-                for (NanStatusHistogramBucket element5 : this.histogramRequestNdpOobStatus) {
+                int size10 = size;
+                for (int size11 = 0; size11 < this.histogramRequestNdpOobStatus.length; size11++) {
+                    NanStatusHistogramBucket element5 = this.histogramRequestNdpOobStatus[size11];
                     if (element5 != null) {
-                        size6 += CodedOutputByteBufferNano.computeMessageSize(15, element5);
+                        size10 += CodedOutputByteBufferNano.computeMessageSize(15, element5);
                     }
                 }
-                size = size6;
+                size = size10;
             }
             if (this.maxConcurrentNdiInApp != 0) {
                 size += CodedOutputByteBufferNano.computeInt32Size(19, this.maxConcurrentNdiInApp);
@@ -5132,76 +5316,84 @@ public interface WifiMetricsProto {
                 size += CodedOutputByteBufferNano.computeInt32Size(25, this.maxConcurrentNdpPerNdi);
             }
             if (this.histogramAwareAvailableDurationMs != null && this.histogramAwareAvailableDurationMs.length > 0) {
-                int size7 = size;
-                for (HistogramBucket element6 : this.histogramAwareAvailableDurationMs) {
-                    if (element6 != null) {
-                        size7 += CodedOutputByteBufferNano.computeMessageSize(26, element6);
-                    }
-                }
-                size = size7;
-            }
-            if (this.histogramAwareEnabledDurationMs != null && this.histogramAwareEnabledDurationMs.length > 0) {
-                int size8 = size;
-                for (HistogramBucket element7 : this.histogramAwareEnabledDurationMs) {
-                    if (element7 != null) {
-                        size8 += CodedOutputByteBufferNano.computeMessageSize(27, element7);
-                    }
-                }
-                size = size8;
-            }
-            if (this.histogramAttachDurationMs != null && this.histogramAttachDurationMs.length > 0) {
-                int size9 = size;
-                for (HistogramBucket element8 : this.histogramAttachDurationMs) {
-                    if (element8 != null) {
-                        size9 += CodedOutputByteBufferNano.computeMessageSize(28, element8);
-                    }
-                }
-                size = size9;
-            }
-            if (this.histogramPublishSessionDurationMs != null && this.histogramPublishSessionDurationMs.length > 0) {
-                int size10 = size;
-                for (HistogramBucket element9 : this.histogramPublishSessionDurationMs) {
-                    if (element9 != null) {
-                        size10 += CodedOutputByteBufferNano.computeMessageSize(29, element9);
-                    }
-                }
-                size = size10;
-            }
-            if (this.histogramSubscribeSessionDurationMs != null && this.histogramSubscribeSessionDurationMs.length > 0) {
-                int size11 = size;
-                for (HistogramBucket element10 : this.histogramSubscribeSessionDurationMs) {
-                    if (element10 != null) {
-                        size11 += CodedOutputByteBufferNano.computeMessageSize(30, element10);
-                    }
-                }
-                size = size11;
-            }
-            if (this.histogramNdpSessionDurationMs != null && this.histogramNdpSessionDurationMs.length > 0) {
                 int size12 = size;
-                for (HistogramBucket element11 : this.histogramNdpSessionDurationMs) {
-                    if (element11 != null) {
-                        size12 += CodedOutputByteBufferNano.computeMessageSize(31, element11);
+                for (int size13 = 0; size13 < this.histogramAwareAvailableDurationMs.length; size13++) {
+                    HistogramBucket element6 = this.histogramAwareAvailableDurationMs[size13];
+                    if (element6 != null) {
+                        size12 += CodedOutputByteBufferNano.computeMessageSize(26, element6);
                     }
                 }
                 size = size12;
             }
-            if (this.histogramNdpSessionDataUsageMb != null && this.histogramNdpSessionDataUsageMb.length > 0) {
-                int size13 = size;
-                for (HistogramBucket element12 : this.histogramNdpSessionDataUsageMb) {
-                    if (element12 != null) {
-                        size13 += CodedOutputByteBufferNano.computeMessageSize(32, element12);
-                    }
-                }
-                size = size13;
-            }
-            if (this.histogramNdpCreationTimeMs != null && this.histogramNdpCreationTimeMs.length > 0) {
+            if (this.histogramAwareEnabledDurationMs != null && this.histogramAwareEnabledDurationMs.length > 0) {
                 int size14 = size;
-                for (HistogramBucket element13 : this.histogramNdpCreationTimeMs) {
-                    if (element13 != null) {
-                        size14 += CodedOutputByteBufferNano.computeMessageSize(33, element13);
+                for (int size15 = 0; size15 < this.histogramAwareEnabledDurationMs.length; size15++) {
+                    HistogramBucket element7 = this.histogramAwareEnabledDurationMs[size15];
+                    if (element7 != null) {
+                        size14 += CodedOutputByteBufferNano.computeMessageSize(27, element7);
                     }
                 }
                 size = size14;
+            }
+            if (this.histogramAttachDurationMs != null && this.histogramAttachDurationMs.length > 0) {
+                int size16 = size;
+                for (int size17 = 0; size17 < this.histogramAttachDurationMs.length; size17++) {
+                    HistogramBucket element8 = this.histogramAttachDurationMs[size17];
+                    if (element8 != null) {
+                        size16 += CodedOutputByteBufferNano.computeMessageSize(28, element8);
+                    }
+                }
+                size = size16;
+            }
+            if (this.histogramPublishSessionDurationMs != null && this.histogramPublishSessionDurationMs.length > 0) {
+                int size18 = size;
+                for (int size19 = 0; size19 < this.histogramPublishSessionDurationMs.length; size19++) {
+                    HistogramBucket element9 = this.histogramPublishSessionDurationMs[size19];
+                    if (element9 != null) {
+                        size18 += CodedOutputByteBufferNano.computeMessageSize(29, element9);
+                    }
+                }
+                size = size18;
+            }
+            if (this.histogramSubscribeSessionDurationMs != null && this.histogramSubscribeSessionDurationMs.length > 0) {
+                int size20 = size;
+                for (int size21 = 0; size21 < this.histogramSubscribeSessionDurationMs.length; size21++) {
+                    HistogramBucket element10 = this.histogramSubscribeSessionDurationMs[size21];
+                    if (element10 != null) {
+                        size20 += CodedOutputByteBufferNano.computeMessageSize(30, element10);
+                    }
+                }
+                size = size20;
+            }
+            if (this.histogramNdpSessionDurationMs != null && this.histogramNdpSessionDurationMs.length > 0) {
+                int size22 = size;
+                for (int size23 = 0; size23 < this.histogramNdpSessionDurationMs.length; size23++) {
+                    HistogramBucket element11 = this.histogramNdpSessionDurationMs[size23];
+                    if (element11 != null) {
+                        size22 += CodedOutputByteBufferNano.computeMessageSize(31, element11);
+                    }
+                }
+                size = size22;
+            }
+            if (this.histogramNdpSessionDataUsageMb != null && this.histogramNdpSessionDataUsageMb.length > 0) {
+                int size24 = size;
+                for (int size25 = 0; size25 < this.histogramNdpSessionDataUsageMb.length; size25++) {
+                    HistogramBucket element12 = this.histogramNdpSessionDataUsageMb[size25];
+                    if (element12 != null) {
+                        size24 += CodedOutputByteBufferNano.computeMessageSize(32, element12);
+                    }
+                }
+                size = size24;
+            }
+            if (this.histogramNdpCreationTimeMs != null && this.histogramNdpCreationTimeMs.length > 0) {
+                int size26 = size;
+                for (int size27 = 0; size27 < this.histogramNdpCreationTimeMs.length; size27++) {
+                    HistogramBucket element13 = this.histogramNdpCreationTimeMs[size27];
+                    if (element13 != null) {
+                        size26 += CodedOutputByteBufferNano.computeMessageSize(33, element13);
+                    }
+                }
+                size = size26;
             }
             if (this.ndpCreationTimeMsMin != 0) {
                 size += CodedOutputByteBufferNano.computeInt64Size(34, this.ndpCreationTimeMsMin);
@@ -5237,13 +5429,14 @@ public interface WifiMetricsProto {
                 size += CodedOutputByteBufferNano.computeInt32Size(44, this.maxConcurrentSubscribeWithRangingInSystem);
             }
             if (this.histogramSubscribeGeofenceMin != null && this.histogramSubscribeGeofenceMin.length > 0) {
-                int size15 = size;
-                for (HistogramBucket element14 : this.histogramSubscribeGeofenceMin) {
+                int size28 = size;
+                for (int size29 = 0; size29 < this.histogramSubscribeGeofenceMin.length; size29++) {
+                    HistogramBucket element14 = this.histogramSubscribeGeofenceMin[size29];
                     if (element14 != null) {
-                        size15 += CodedOutputByteBufferNano.computeMessageSize(45, element14);
+                        size28 += CodedOutputByteBufferNano.computeMessageSize(45, element14);
                     }
                 }
-                size = size15;
+                size = size28;
             }
             if (this.histogramSubscribeGeofenceMax != null && this.histogramSubscribeGeofenceMax.length > 0) {
                 while (true) {
@@ -5258,7 +5451,8 @@ public interface WifiMetricsProto {
                     i = i2 + 1;
                 }
             }
-            if (this.numSubscribesWithRanging != 0) {
+            int i3 = this.numSubscribesWithRanging;
+            if (i3 != 0) {
                 size += CodedOutputByteBufferNano.computeInt32Size(47, this.numSubscribesWithRanging);
             }
             if (this.numMatchesWithRanging != 0) {
@@ -5270,6 +5464,7 @@ public interface WifiMetricsProto {
             return size;
         }
 
+        @Override // com.android.framework.protobuf.nano.MessageNano
         public WifiAwareLog mergeFrom(CodedInputByteBufferNano input) throws IOException {
             while (true) {
                 int tag = input.readTag();
@@ -5288,7 +5483,7 @@ public interface WifiMetricsProto {
                     case 34:
                         int arrayLength = WireFormatNano.getRepeatedFieldArrayLength(input, 34);
                         int i = this.histogramAttachSessionStatus == null ? 0 : this.histogramAttachSessionStatus.length;
-                        NanStatusHistogramBucket[] newArray = new NanStatusHistogramBucket[(i + arrayLength)];
+                        NanStatusHistogramBucket[] newArray = new NanStatusHistogramBucket[i + arrayLength];
                         if (i != 0) {
                             System.arraycopy(this.histogramAttachSessionStatus, 0, newArray, 0, i);
                         }
@@ -5323,7 +5518,7 @@ public interface WifiMetricsProto {
                     case 90:
                         int arrayLength2 = WireFormatNano.getRepeatedFieldArrayLength(input, 90);
                         int i2 = this.histogramPublishStatus == null ? 0 : this.histogramPublishStatus.length;
-                        NanStatusHistogramBucket[] newArray2 = new NanStatusHistogramBucket[(i2 + arrayLength2)];
+                        NanStatusHistogramBucket[] newArray2 = new NanStatusHistogramBucket[i2 + arrayLength2];
                         if (i2 != 0) {
                             System.arraycopy(this.histogramPublishStatus, 0, newArray2, 0, i2);
                         }
@@ -5340,7 +5535,7 @@ public interface WifiMetricsProto {
                     case 98:
                         int arrayLength3 = WireFormatNano.getRepeatedFieldArrayLength(input, 98);
                         int i3 = this.histogramSubscribeStatus == null ? 0 : this.histogramSubscribeStatus.length;
-                        NanStatusHistogramBucket[] newArray3 = new NanStatusHistogramBucket[(i3 + arrayLength3)];
+                        NanStatusHistogramBucket[] newArray3 = new NanStatusHistogramBucket[i3 + arrayLength3];
                         if (i3 != 0) {
                             System.arraycopy(this.histogramSubscribeStatus, 0, newArray3, 0, i3);
                         }
@@ -5360,7 +5555,7 @@ public interface WifiMetricsProto {
                     case 114:
                         int arrayLength4 = WireFormatNano.getRepeatedFieldArrayLength(input, 114);
                         int i4 = this.histogramRequestNdpStatus == null ? 0 : this.histogramRequestNdpStatus.length;
-                        NanStatusHistogramBucket[] newArray4 = new NanStatusHistogramBucket[(i4 + arrayLength4)];
+                        NanStatusHistogramBucket[] newArray4 = new NanStatusHistogramBucket[i4 + arrayLength4];
                         if (i4 != 0) {
                             System.arraycopy(this.histogramRequestNdpStatus, 0, newArray4, 0, i4);
                         }
@@ -5377,7 +5572,7 @@ public interface WifiMetricsProto {
                     case 122:
                         int arrayLength5 = WireFormatNano.getRepeatedFieldArrayLength(input, 122);
                         int i5 = this.histogramRequestNdpOobStatus == null ? 0 : this.histogramRequestNdpOobStatus.length;
-                        NanStatusHistogramBucket[] newArray5 = new NanStatusHistogramBucket[(i5 + arrayLength5)];
+                        NanStatusHistogramBucket[] newArray5 = new NanStatusHistogramBucket[i5 + arrayLength5];
                         if (i5 != 0) {
                             System.arraycopy(this.histogramRequestNdpOobStatus, 0, newArray5, 0, i5);
                         }
@@ -5415,7 +5610,7 @@ public interface WifiMetricsProto {
                     case 210:
                         int arrayLength6 = WireFormatNano.getRepeatedFieldArrayLength(input, 210);
                         int i6 = this.histogramAwareAvailableDurationMs == null ? 0 : this.histogramAwareAvailableDurationMs.length;
-                        HistogramBucket[] newArray6 = new HistogramBucket[(i6 + arrayLength6)];
+                        HistogramBucket[] newArray6 = new HistogramBucket[i6 + arrayLength6];
                         if (i6 != 0) {
                             System.arraycopy(this.histogramAwareAvailableDurationMs, 0, newArray6, 0, i6);
                         }
@@ -5432,7 +5627,7 @@ public interface WifiMetricsProto {
                     case 218:
                         int arrayLength7 = WireFormatNano.getRepeatedFieldArrayLength(input, 218);
                         int i7 = this.histogramAwareEnabledDurationMs == null ? 0 : this.histogramAwareEnabledDurationMs.length;
-                        HistogramBucket[] newArray7 = new HistogramBucket[(i7 + arrayLength7)];
+                        HistogramBucket[] newArray7 = new HistogramBucket[i7 + arrayLength7];
                         if (i7 != 0) {
                             System.arraycopy(this.histogramAwareEnabledDurationMs, 0, newArray7, 0, i7);
                         }
@@ -5449,7 +5644,7 @@ public interface WifiMetricsProto {
                     case 226:
                         int arrayLength8 = WireFormatNano.getRepeatedFieldArrayLength(input, 226);
                         int i8 = this.histogramAttachDurationMs == null ? 0 : this.histogramAttachDurationMs.length;
-                        HistogramBucket[] newArray8 = new HistogramBucket[(i8 + arrayLength8)];
+                        HistogramBucket[] newArray8 = new HistogramBucket[i8 + arrayLength8];
                         if (i8 != 0) {
                             System.arraycopy(this.histogramAttachDurationMs, 0, newArray8, 0, i8);
                         }
@@ -5466,7 +5661,7 @@ public interface WifiMetricsProto {
                     case 234:
                         int arrayLength9 = WireFormatNano.getRepeatedFieldArrayLength(input, 234);
                         int i9 = this.histogramPublishSessionDurationMs == null ? 0 : this.histogramPublishSessionDurationMs.length;
-                        HistogramBucket[] newArray9 = new HistogramBucket[(i9 + arrayLength9)];
+                        HistogramBucket[] newArray9 = new HistogramBucket[i9 + arrayLength9];
                         if (i9 != 0) {
                             System.arraycopy(this.histogramPublishSessionDurationMs, 0, newArray9, 0, i9);
                         }
@@ -5483,7 +5678,7 @@ public interface WifiMetricsProto {
                     case 242:
                         int arrayLength10 = WireFormatNano.getRepeatedFieldArrayLength(input, 242);
                         int i10 = this.histogramSubscribeSessionDurationMs == null ? 0 : this.histogramSubscribeSessionDurationMs.length;
-                        HistogramBucket[] newArray10 = new HistogramBucket[(i10 + arrayLength10)];
+                        HistogramBucket[] newArray10 = new HistogramBucket[i10 + arrayLength10];
                         if (i10 != 0) {
                             System.arraycopy(this.histogramSubscribeSessionDurationMs, 0, newArray10, 0, i10);
                         }
@@ -5500,7 +5695,7 @@ public interface WifiMetricsProto {
                     case 250:
                         int arrayLength11 = WireFormatNano.getRepeatedFieldArrayLength(input, 250);
                         int i11 = this.histogramNdpSessionDurationMs == null ? 0 : this.histogramNdpSessionDurationMs.length;
-                        HistogramBucket[] newArray11 = new HistogramBucket[(i11 + arrayLength11)];
+                        HistogramBucket[] newArray11 = new HistogramBucket[i11 + arrayLength11];
                         if (i11 != 0) {
                             System.arraycopy(this.histogramNdpSessionDurationMs, 0, newArray11, 0, i11);
                         }
@@ -5517,7 +5712,7 @@ public interface WifiMetricsProto {
                     case 258:
                         int arrayLength12 = WireFormatNano.getRepeatedFieldArrayLength(input, 258);
                         int i12 = this.histogramNdpSessionDataUsageMb == null ? 0 : this.histogramNdpSessionDataUsageMb.length;
-                        HistogramBucket[] newArray12 = new HistogramBucket[(i12 + arrayLength12)];
+                        HistogramBucket[] newArray12 = new HistogramBucket[i12 + arrayLength12];
                         if (i12 != 0) {
                             System.arraycopy(this.histogramNdpSessionDataUsageMb, 0, newArray12, 0, i12);
                         }
@@ -5534,7 +5729,7 @@ public interface WifiMetricsProto {
                     case 266:
                         int arrayLength13 = WireFormatNano.getRepeatedFieldArrayLength(input, 266);
                         int i13 = this.histogramNdpCreationTimeMs == null ? 0 : this.histogramNdpCreationTimeMs.length;
-                        HistogramBucket[] newArray13 = new HistogramBucket[(i13 + arrayLength13)];
+                        HistogramBucket[] newArray13 = new HistogramBucket[i13 + arrayLength13];
                         if (i13 != 0) {
                             System.arraycopy(this.histogramNdpCreationTimeMs, 0, newArray13, 0, i13);
                         }
@@ -5584,7 +5779,7 @@ public interface WifiMetricsProto {
                     case 362:
                         int arrayLength14 = WireFormatNano.getRepeatedFieldArrayLength(input, 362);
                         int i14 = this.histogramSubscribeGeofenceMin == null ? 0 : this.histogramSubscribeGeofenceMin.length;
-                        HistogramBucket[] newArray14 = new HistogramBucket[(i14 + arrayLength14)];
+                        HistogramBucket[] newArray14 = new HistogramBucket[i14 + arrayLength14];
                         if (i14 != 0) {
                             System.arraycopy(this.histogramSubscribeGeofenceMin, 0, newArray14, 0, i14);
                         }
@@ -5601,7 +5796,7 @@ public interface WifiMetricsProto {
                     case 370:
                         int arrayLength15 = WireFormatNano.getRepeatedFieldArrayLength(input, 370);
                         int i15 = this.histogramSubscribeGeofenceMax == null ? 0 : this.histogramSubscribeGeofenceMax.length;
-                        HistogramBucket[] newArray15 = new HistogramBucket[(i15 + arrayLength15)];
+                        HistogramBucket[] newArray15 = new HistogramBucket[i15 + arrayLength15];
                         if (i15 != 0) {
                             System.arraycopy(this.histogramSubscribeGeofenceMax, 0, newArray15, 0, i15);
                         }
@@ -5618,10 +5813,10 @@ public interface WifiMetricsProto {
                     case 376:
                         this.numSubscribesWithRanging = input.readInt32();
                         break;
-                    case MetricsProto.MetricsEvent.ACTION_SHOW_SETTINGS_SUGGESTION:
+                    case MetricsProto.MetricsEvent.ACTION_SHOW_SETTINGS_SUGGESTION /* 384 */:
                         this.numMatchesWithRanging = input.readInt32();
                         break;
-                    case MetricsProto.MetricsEvent.TUNER_POWER_NOTIFICATION_CONTROLS:
+                    case MetricsProto.MetricsEvent.TUNER_POWER_NOTIFICATION_CONTROLS /* 392 */:
                         this.numMatchesWithoutRangingForRangingEnabledSubscribes = input.readInt32();
                         break;
                     default:
@@ -5643,6 +5838,7 @@ public interface WifiMetricsProto {
         }
     }
 
+    /* loaded from: classes4.dex */
     public static final class NumConnectableNetworksBucket extends MessageNano {
         private static volatile NumConnectableNetworksBucket[] _emptyArray;
         public int count;
@@ -5670,6 +5866,7 @@ public interface WifiMetricsProto {
             return this;
         }
 
+        @Override // com.android.framework.protobuf.nano.MessageNano
         public void writeTo(CodedOutputByteBufferNano output) throws IOException {
             if (this.numConnectableNetworks != 0) {
                 output.writeInt32(1, this.numConnectableNetworks);
@@ -5680,8 +5877,8 @@ public interface WifiMetricsProto {
             super.writeTo(output);
         }
 
-        /* access modifiers changed from: protected */
-        public int computeSerializedSize() {
+        @Override // com.android.framework.protobuf.nano.MessageNano
+        protected int computeSerializedSize() {
             int size = super.computeSerializedSize();
             if (this.numConnectableNetworks != 0) {
                 size += CodedOutputByteBufferNano.computeInt32Size(1, this.numConnectableNetworks);
@@ -5692,6 +5889,7 @@ public interface WifiMetricsProto {
             return size;
         }
 
+        @Override // com.android.framework.protobuf.nano.MessageNano
         public NumConnectableNetworksBucket mergeFrom(CodedInputByteBufferNano input) throws IOException {
             while (true) {
                 int tag = input.readTag();
@@ -5700,10 +5898,12 @@ public interface WifiMetricsProto {
                 }
                 if (tag == 8) {
                     this.numConnectableNetworks = input.readInt32();
-                } else if (tag == 16) {
+                } else if (tag != 16) {
+                    if (!WireFormatNano.parseUnknownField(input, tag)) {
+                        return this;
+                    }
+                } else {
                     this.count = input.readInt32();
-                } else if (!WireFormatNano.parseUnknownField(input, tag)) {
-                    return this;
                 }
             }
         }
@@ -5717,6 +5917,7 @@ public interface WifiMetricsProto {
         }
     }
 
+    /* loaded from: classes4.dex */
     public static final class PnoScanMetrics extends MessageNano {
         private static volatile PnoScanMetrics[] _emptyArray;
         public int numPnoFoundNetworkEvents;
@@ -5750,6 +5951,7 @@ public interface WifiMetricsProto {
             return this;
         }
 
+        @Override // com.android.framework.protobuf.nano.MessageNano
         public void writeTo(CodedOutputByteBufferNano output) throws IOException {
             if (this.numPnoScanAttempts != 0) {
                 output.writeInt32(1, this.numPnoScanAttempts);
@@ -5769,8 +5971,8 @@ public interface WifiMetricsProto {
             super.writeTo(output);
         }
 
-        /* access modifiers changed from: protected */
-        public int computeSerializedSize() {
+        @Override // com.android.framework.protobuf.nano.MessageNano
+        protected int computeSerializedSize() {
             int size = super.computeSerializedSize();
             if (this.numPnoScanAttempts != 0) {
                 size += CodedOutputByteBufferNano.computeInt32Size(1, this.numPnoScanAttempts);
@@ -5790,6 +5992,7 @@ public interface WifiMetricsProto {
             return size;
         }
 
+        @Override // com.android.framework.protobuf.nano.MessageNano
         public PnoScanMetrics mergeFrom(CodedInputByteBufferNano input) throws IOException {
             while (true) {
                 int tag = input.readTag();
@@ -5804,10 +6007,12 @@ public interface WifiMetricsProto {
                     this.numPnoScanStartedOverOffload = input.readInt32();
                 } else if (tag == 32) {
                     this.numPnoScanFailedOverOffload = input.readInt32();
-                } else if (tag == 40) {
+                } else if (tag != 40) {
+                    if (!WireFormatNano.parseUnknownField(input, tag)) {
+                        return this;
+                    }
+                } else {
                     this.numPnoFoundNetworkEvents = input.readInt32();
-                } else if (!WireFormatNano.parseUnknownField(input, tag)) {
-                    return this;
                 }
             }
         }
@@ -5821,6 +6026,7 @@ public interface WifiMetricsProto {
         }
     }
 
+    /* loaded from: classes4.dex */
     public static final class ConnectToNetworkNotificationAndActionCount extends MessageNano {
         public static final int ACTION_CONNECT_TO_NETWORK = 2;
         public static final int ACTION_PICK_WIFI_NETWORK = 3;
@@ -5864,6 +6070,7 @@ public interface WifiMetricsProto {
             return this;
         }
 
+        @Override // com.android.framework.protobuf.nano.MessageNano
         public void writeTo(CodedOutputByteBufferNano output) throws IOException {
             if (this.notification != 0) {
                 output.writeInt32(1, this.notification);
@@ -5880,8 +6087,8 @@ public interface WifiMetricsProto {
             super.writeTo(output);
         }
 
-        /* access modifiers changed from: protected */
-        public int computeSerializedSize() {
+        @Override // com.android.framework.protobuf.nano.MessageNano
+        protected int computeSerializedSize() {
             int size = super.computeSerializedSize();
             if (this.notification != 0) {
                 size += CodedOutputByteBufferNano.computeInt32Size(1, this.notification);
@@ -5898,51 +6105,49 @@ public interface WifiMetricsProto {
             return size;
         }
 
+        @Override // com.android.framework.protobuf.nano.MessageNano
         public ConnectToNetworkNotificationAndActionCount mergeFrom(CodedInputByteBufferNano input) throws IOException {
             while (true) {
                 int tag = input.readTag();
-                if (tag != 0) {
-                    if (tag != 8) {
-                        if (tag != 16) {
-                            if (tag == 24) {
-                                int value = input.readInt32();
-                                switch (value) {
-                                    case 0:
-                                    case 1:
-                                        this.recommender = value;
-                                        break;
-                                }
-                            } else if (tag == 32) {
-                                this.count = input.readInt32();
-                            } else if (!WireFormatNano.parseUnknownField(input, tag)) {
-                                return this;
-                            }
-                        } else {
-                            int value2 = input.readInt32();
-                            switch (value2) {
-                                case 0:
-                                case 1:
-                                case 2:
-                                case 3:
-                                case 4:
-                                    this.action = value2;
-                                    break;
-                            }
-                        }
-                    } else {
-                        int value3 = input.readInt32();
-                        switch (value3) {
-                            case 0:
-                            case 1:
-                            case 2:
-                            case 3:
-                            case 4:
-                                this.notification = value3;
-                                break;
-                        }
+                if (tag == 0) {
+                    return this;
+                }
+                if (tag == 8) {
+                    int value = input.readInt32();
+                    switch (value) {
+                        case 0:
+                        case 1:
+                        case 2:
+                        case 3:
+                        case 4:
+                            this.notification = value;
+                            continue;
+                    }
+                } else if (tag == 16) {
+                    int value2 = input.readInt32();
+                    switch (value2) {
+                        case 0:
+                        case 1:
+                        case 2:
+                        case 3:
+                        case 4:
+                            this.action = value2;
+                            continue;
+                    }
+                } else if (tag == 24) {
+                    int value3 = input.readInt32();
+                    switch (value3) {
+                        case 0:
+                        case 1:
+                            this.recommender = value3;
+                            continue;
+                    }
+                } else if (tag != 32) {
+                    if (!WireFormatNano.parseUnknownField(input, tag)) {
+                        return this;
                     }
                 } else {
-                    return this;
+                    this.count = input.readInt32();
                 }
             }
         }
@@ -5956,6 +6161,7 @@ public interface WifiMetricsProto {
         }
     }
 
+    /* loaded from: classes4.dex */
     public static final class SoftApConnectedClientsEvent extends MessageNano {
         public static final int BANDWIDTH_160 = 6;
         public static final int BANDWIDTH_20 = 2;
@@ -5991,7 +6197,7 @@ public interface WifiMetricsProto {
 
         public SoftApConnectedClientsEvent clear() {
             this.eventType = 0;
-            this.timeStampMillis = 0;
+            this.timeStampMillis = 0L;
             this.numConnectedClients = 0;
             this.channelFrequency = 0;
             this.channelBandwidth = 0;
@@ -5999,6 +6205,7 @@ public interface WifiMetricsProto {
             return this;
         }
 
+        @Override // com.android.framework.protobuf.nano.MessageNano
         public void writeTo(CodedOutputByteBufferNano output) throws IOException {
             if (this.eventType != 0) {
                 output.writeInt32(1, this.eventType);
@@ -6018,8 +6225,8 @@ public interface WifiMetricsProto {
             super.writeTo(output);
         }
 
-        /* access modifiers changed from: protected */
-        public int computeSerializedSize() {
+        @Override // com.android.framework.protobuf.nano.MessageNano
+        protected int computeSerializedSize() {
             int size = super.computeSerializedSize();
             if (this.eventType != 0) {
                 size += CodedOutputByteBufferNano.computeInt32Size(1, this.eventType);
@@ -6039,45 +6246,45 @@ public interface WifiMetricsProto {
             return size;
         }
 
+        @Override // com.android.framework.protobuf.nano.MessageNano
         public SoftApConnectedClientsEvent mergeFrom(CodedInputByteBufferNano input) throws IOException {
             while (true) {
                 int tag = input.readTag();
-                if (tag != 0) {
-                    if (tag == 8) {
-                        int value = input.readInt32();
-                        switch (value) {
-                            case 0:
-                            case 1:
-                            case 2:
-                                this.eventType = value;
-                                break;
-                        }
-                    } else if (tag == 16) {
-                        this.timeStampMillis = input.readInt64();
-                    } else if (tag == 24) {
-                        this.numConnectedClients = input.readInt32();
-                    } else if (tag != 32) {
-                        if (tag == 40) {
-                            int value2 = input.readInt32();
-                            switch (value2) {
-                                case 0:
-                                case 1:
-                                case 2:
-                                case 3:
-                                case 4:
-                                case 5:
-                                case 6:
-                                    this.channelBandwidth = value2;
-                                    break;
-                            }
-                        } else if (!WireFormatNano.parseUnknownField(input, tag)) {
-                            return this;
-                        }
-                    } else {
-                        this.channelFrequency = input.readInt32();
+                if (tag == 0) {
+                    return this;
+                }
+                if (tag == 8) {
+                    int value = input.readInt32();
+                    switch (value) {
+                        case 0:
+                        case 1:
+                        case 2:
+                            this.eventType = value;
+                            continue;
+                    }
+                } else if (tag == 16) {
+                    this.timeStampMillis = input.readInt64();
+                } else if (tag == 24) {
+                    this.numConnectedClients = input.readInt32();
+                } else if (tag == 32) {
+                    this.channelFrequency = input.readInt32();
+                } else if (tag != 40) {
+                    if (!WireFormatNano.parseUnknownField(input, tag)) {
+                        return this;
                     }
                 } else {
-                    return this;
+                    int value2 = input.readInt32();
+                    switch (value2) {
+                        case 0:
+                        case 1:
+                        case 2:
+                        case 3:
+                        case 4:
+                        case 5:
+                        case 6:
+                            this.channelBandwidth = value2;
+                            continue;
+                    }
                 }
             }
         }
@@ -6091,6 +6298,7 @@ public interface WifiMetricsProto {
         }
     }
 
+    /* loaded from: classes4.dex */
     public static final class WpsMetrics extends MessageNano {
         private static volatile WpsMetrics[] _emptyArray;
         public int numWpsAttempts;
@@ -6130,6 +6338,7 @@ public interface WifiMetricsProto {
             return this;
         }
 
+        @Override // com.android.framework.protobuf.nano.MessageNano
         public void writeTo(CodedOutputByteBufferNano output) throws IOException {
             if (this.numWpsAttempts != 0) {
                 output.writeInt32(1, this.numWpsAttempts);
@@ -6158,8 +6367,8 @@ public interface WifiMetricsProto {
             super.writeTo(output);
         }
 
-        /* access modifiers changed from: protected */
-        public int computeSerializedSize() {
+        @Override // com.android.framework.protobuf.nano.MessageNano
+        protected int computeSerializedSize() {
             int size = super.computeSerializedSize();
             if (this.numWpsAttempts != 0) {
                 size += CodedOutputByteBufferNano.computeInt32Size(1, this.numWpsAttempts);
@@ -6188,6 +6397,7 @@ public interface WifiMetricsProto {
             return size;
         }
 
+        @Override // com.android.framework.protobuf.nano.MessageNano
         public WpsMetrics mergeFrom(CodedInputByteBufferNano input) throws IOException {
             while (true) {
                 int tag = input.readTag();
@@ -6208,10 +6418,12 @@ public interface WifiMetricsProto {
                     this.numWpsOtherConnectionFailure = input.readInt32();
                 } else if (tag == 56) {
                     this.numWpsSupplicantFailure = input.readInt32();
-                } else if (tag == 64) {
+                } else if (tag != 64) {
+                    if (!WireFormatNano.parseUnknownField(input, tag)) {
+                        return this;
+                    }
+                } else {
                     this.numWpsCancellation = input.readInt32();
-                } else if (!WireFormatNano.parseUnknownField(input, tag)) {
-                    return this;
                 }
             }
         }
@@ -6225,6 +6437,7 @@ public interface WifiMetricsProto {
         }
     }
 
+    /* loaded from: classes4.dex */
     public static final class WifiPowerStats extends MessageNano {
         private static volatile WifiPowerStats[] _emptyArray;
         public double energyConsumedMah;
@@ -6257,23 +6470,24 @@ public interface WifiMetricsProto {
         }
 
         public WifiPowerStats clear() {
-            this.loggingDurationMs = 0;
+            this.loggingDurationMs = 0L;
             this.energyConsumedMah = 0.0d;
-            this.idleTimeMs = 0;
-            this.rxTimeMs = 0;
-            this.txTimeMs = 0;
-            this.wifiKernelActiveTimeMs = 0;
-            this.numPacketsTx = 0;
-            this.numBytesTx = 0;
-            this.numPacketsRx = 0;
-            this.numBytesRx = 0;
-            this.sleepTimeMs = 0;
-            this.scanTimeMs = 0;
+            this.idleTimeMs = 0L;
+            this.rxTimeMs = 0L;
+            this.txTimeMs = 0L;
+            this.wifiKernelActiveTimeMs = 0L;
+            this.numPacketsTx = 0L;
+            this.numBytesTx = 0L;
+            this.numPacketsRx = 0L;
+            this.numBytesRx = 0L;
+            this.sleepTimeMs = 0L;
+            this.scanTimeMs = 0L;
             this.monitoredRailEnergyConsumedMah = 0.0d;
             this.cachedSize = -1;
             return this;
         }
 
+        @Override // com.android.framework.protobuf.nano.MessageNano
         public void writeTo(CodedOutputByteBufferNano output) throws IOException {
             if (this.loggingDurationMs != 0) {
                 output.writeInt64(1, this.loggingDurationMs);
@@ -6317,8 +6531,8 @@ public interface WifiMetricsProto {
             super.writeTo(output);
         }
 
-        /* access modifiers changed from: protected */
-        public int computeSerializedSize() {
+        @Override // com.android.framework.protobuf.nano.MessageNano
+        protected int computeSerializedSize() {
             int size = super.computeSerializedSize();
             if (this.loggingDurationMs != 0) {
                 size += CodedOutputByteBufferNano.computeInt64Size(1, this.loggingDurationMs);
@@ -6362,6 +6576,7 @@ public interface WifiMetricsProto {
             return size;
         }
 
+        @Override // com.android.framework.protobuf.nano.MessageNano
         public WifiPowerStats mergeFrom(CodedInputByteBufferNano input) throws IOException {
             while (true) {
                 int tag = input.readTag();
@@ -6426,6 +6641,7 @@ public interface WifiMetricsProto {
         }
     }
 
+    /* loaded from: classes4.dex */
     public static final class WifiWakeStats extends MessageNano {
         private static volatile WifiWakeStats[] _emptyArray;
         public int numIgnoredStarts;
@@ -6433,6 +6649,7 @@ public interface WifiMetricsProto {
         public int numWakeups;
         public Session[] sessions;
 
+        /* loaded from: classes4.dex */
         public static final class Session extends MessageNano {
             private static volatile Session[] _emptyArray;
             public Event initializeEvent;
@@ -6443,6 +6660,7 @@ public interface WifiMetricsProto {
             public Event unlockEvent;
             public Event wakeupEvent;
 
+            /* loaded from: classes4.dex */
             public static final class Event extends MessageNano {
                 private static volatile Event[] _emptyArray;
                 public int elapsedScans;
@@ -6464,12 +6682,13 @@ public interface WifiMetricsProto {
                 }
 
                 public Event clear() {
-                    this.elapsedTimeMillis = 0;
+                    this.elapsedTimeMillis = 0L;
                     this.elapsedScans = 0;
                     this.cachedSize = -1;
                     return this;
                 }
 
+                @Override // com.android.framework.protobuf.nano.MessageNano
                 public void writeTo(CodedOutputByteBufferNano output) throws IOException {
                     if (this.elapsedTimeMillis != 0) {
                         output.writeInt64(1, this.elapsedTimeMillis);
@@ -6480,8 +6699,8 @@ public interface WifiMetricsProto {
                     super.writeTo(output);
                 }
 
-                /* access modifiers changed from: protected */
-                public int computeSerializedSize() {
+                @Override // com.android.framework.protobuf.nano.MessageNano
+                protected int computeSerializedSize() {
                     int size = super.computeSerializedSize();
                     if (this.elapsedTimeMillis != 0) {
                         size += CodedOutputByteBufferNano.computeInt64Size(1, this.elapsedTimeMillis);
@@ -6492,6 +6711,7 @@ public interface WifiMetricsProto {
                     return size;
                 }
 
+                @Override // com.android.framework.protobuf.nano.MessageNano
                 public Event mergeFrom(CodedInputByteBufferNano input) throws IOException {
                     while (true) {
                         int tag = input.readTag();
@@ -6500,10 +6720,12 @@ public interface WifiMetricsProto {
                         }
                         if (tag == 8) {
                             this.elapsedTimeMillis = input.readInt64();
-                        } else if (tag == 16) {
+                        } else if (tag != 16) {
+                            if (!WireFormatNano.parseUnknownField(input, tag)) {
+                                return this;
+                            }
+                        } else {
                             this.elapsedScans = input.readInt32();
-                        } else if (!WireFormatNano.parseUnknownField(input, tag)) {
-                            return this;
                         }
                     }
                 }
@@ -6533,7 +6755,7 @@ public interface WifiMetricsProto {
             }
 
             public Session clear() {
-                this.startTimeMillis = 0;
+                this.startTimeMillis = 0L;
                 this.lockedNetworksAtStart = 0;
                 this.lockedNetworksAtInitialize = 0;
                 this.initializeEvent = null;
@@ -6544,6 +6766,7 @@ public interface WifiMetricsProto {
                 return this;
             }
 
+            @Override // com.android.framework.protobuf.nano.MessageNano
             public void writeTo(CodedOutputByteBufferNano output) throws IOException {
                 if (this.startTimeMillis != 0) {
                     output.writeInt64(1, this.startTimeMillis);
@@ -6569,8 +6792,8 @@ public interface WifiMetricsProto {
                 super.writeTo(output);
             }
 
-            /* access modifiers changed from: protected */
-            public int computeSerializedSize() {
+            @Override // com.android.framework.protobuf.nano.MessageNano
+            protected int computeSerializedSize() {
                 int size = super.computeSerializedSize();
                 if (this.startTimeMillis != 0) {
                     size += CodedOutputByteBufferNano.computeInt64Size(1, this.startTimeMillis);
@@ -6596,6 +6819,7 @@ public interface WifiMetricsProto {
                 return size;
             }
 
+            @Override // com.android.framework.protobuf.nano.MessageNano
             public Session mergeFrom(CodedInputByteBufferNano input) throws IOException {
                 while (true) {
                     int tag = input.readTag();
@@ -6623,13 +6847,15 @@ public interface WifiMetricsProto {
                         input.readMessage(this.resetEvent);
                     } else if (tag == 48) {
                         this.lockedNetworksAtInitialize = input.readInt32();
-                    } else if (tag == 58) {
+                    } else if (tag != 58) {
+                        if (!WireFormatNano.parseUnknownField(input, tag)) {
+                            return this;
+                        }
+                    } else {
                         if (this.initializeEvent == null) {
                             this.initializeEvent = new Event();
                         }
                         input.readMessage(this.initializeEvent);
-                    } else if (!WireFormatNano.parseUnknownField(input, tag)) {
-                        return this;
                     }
                 }
             }
@@ -6667,18 +6893,21 @@ public interface WifiMetricsProto {
             return this;
         }
 
+        @Override // com.android.framework.protobuf.nano.MessageNano
         public void writeTo(CodedOutputByteBufferNano output) throws IOException {
             if (this.numSessions != 0) {
                 output.writeInt32(1, this.numSessions);
             }
             if (this.sessions != null && this.sessions.length > 0) {
-                for (Session element : this.sessions) {
+                for (int i = 0; i < this.sessions.length; i++) {
+                    Session element = this.sessions[i];
                     if (element != null) {
                         output.writeMessage(2, element);
                     }
                 }
             }
-            if (this.numIgnoredStarts != 0) {
+            int i2 = this.numIgnoredStarts;
+            if (i2 != 0) {
                 output.writeInt32(3, this.numIgnoredStarts);
             }
             if (this.numWakeups != 0) {
@@ -6687,20 +6916,22 @@ public interface WifiMetricsProto {
             super.writeTo(output);
         }
 
-        /* access modifiers changed from: protected */
-        public int computeSerializedSize() {
+        @Override // com.android.framework.protobuf.nano.MessageNano
+        protected int computeSerializedSize() {
             int size = super.computeSerializedSize();
             if (this.numSessions != 0) {
                 size += CodedOutputByteBufferNano.computeInt32Size(1, this.numSessions);
             }
             if (this.sessions != null && this.sessions.length > 0) {
-                for (Session element : this.sessions) {
+                for (int i = 0; i < this.sessions.length; i++) {
+                    Session element = this.sessions[i];
                     if (element != null) {
                         size += CodedOutputByteBufferNano.computeMessageSize(2, element);
                     }
                 }
             }
-            if (this.numIgnoredStarts != 0) {
+            int i2 = this.numIgnoredStarts;
+            if (i2 != 0) {
                 size += CodedOutputByteBufferNano.computeInt32Size(3, this.numIgnoredStarts);
             }
             if (this.numWakeups != 0) {
@@ -6709,6 +6940,7 @@ public interface WifiMetricsProto {
             return size;
         }
 
+        @Override // com.android.framework.protobuf.nano.MessageNano
         public WifiWakeStats mergeFrom(CodedInputByteBufferNano input) throws IOException {
             while (true) {
                 int tag = input.readTag();
@@ -6716,11 +6948,12 @@ public interface WifiMetricsProto {
                     return this;
                 }
                 if (tag == 8) {
-                    this.numSessions = input.readInt32();
+                    int arrayLength = input.readInt32();
+                    this.numSessions = arrayLength;
                 } else if (tag == 18) {
-                    int arrayLength = WireFormatNano.getRepeatedFieldArrayLength(input, 18);
+                    int arrayLength2 = WireFormatNano.getRepeatedFieldArrayLength(input, 18);
                     int i = this.sessions == null ? 0 : this.sessions.length;
-                    Session[] newArray = new Session[(i + arrayLength)];
+                    Session[] newArray = new Session[i + arrayLength2];
                     if (i != 0) {
                         System.arraycopy(this.sessions, 0, newArray, 0, i);
                     }
@@ -6735,10 +6968,12 @@ public interface WifiMetricsProto {
                     this.sessions = newArray;
                 } else if (tag == 24) {
                     this.numIgnoredStarts = input.readInt32();
-                } else if (tag == 32) {
+                } else if (tag != 32) {
+                    if (!WireFormatNano.parseUnknownField(input, tag)) {
+                        return this;
+                    }
+                } else {
                     this.numWakeups = input.readInt32();
-                } else if (!WireFormatNano.parseUnknownField(input, tag)) {
-                    return this;
                 }
             }
         }
@@ -6752,6 +6987,7 @@ public interface WifiMetricsProto {
         }
     }
 
+    /* loaded from: classes4.dex */
     public static final class WifiRttLog extends MessageNano {
         public static final int ABORTED = 9;
         public static final int FAILURE = 2;
@@ -6786,6 +7022,7 @@ public interface WifiMetricsProto {
         public RttToPeerLog rttToAp;
         public RttToPeerLog rttToAware;
 
+        /* loaded from: classes4.dex */
         public static final class RttToPeerLog extends MessageNano {
             private static volatile RttToPeerLog[] _emptyArray;
             public HistogramBucket[] histogramDistance;
@@ -6825,6 +7062,7 @@ public interface WifiMetricsProto {
                 return this;
             }
 
+            @Override // com.android.framework.protobuf.nano.MessageNano
             public void writeTo(CodedOutputByteBufferNano output) throws IOException {
                 if (this.numRequests != 0) {
                     output.writeInt32(1, this.numRequests);
@@ -6837,28 +7075,32 @@ public interface WifiMetricsProto {
                 }
                 int i = 0;
                 if (this.histogramNumRequestsPerApp != null && this.histogramNumRequestsPerApp.length > 0) {
-                    for (HistogramBucket element : this.histogramNumRequestsPerApp) {
+                    for (int i2 = 0; i2 < this.histogramNumRequestsPerApp.length; i2++) {
+                        HistogramBucket element = this.histogramNumRequestsPerApp[i2];
                         if (element != null) {
                             output.writeMessage(4, element);
                         }
                     }
                 }
                 if (this.histogramNumPeersPerRequest != null && this.histogramNumPeersPerRequest.length > 0) {
-                    for (HistogramBucket element2 : this.histogramNumPeersPerRequest) {
+                    for (int i3 = 0; i3 < this.histogramNumPeersPerRequest.length; i3++) {
+                        HistogramBucket element2 = this.histogramNumPeersPerRequest[i3];
                         if (element2 != null) {
                             output.writeMessage(5, element2);
                         }
                     }
                 }
                 if (this.histogramIndividualStatus != null && this.histogramIndividualStatus.length > 0) {
-                    for (RttIndividualStatusHistogramBucket element3 : this.histogramIndividualStatus) {
+                    for (int i4 = 0; i4 < this.histogramIndividualStatus.length; i4++) {
+                        RttIndividualStatusHistogramBucket element3 = this.histogramIndividualStatus[i4];
                         if (element3 != null) {
                             output.writeMessage(6, element3);
                         }
                     }
                 }
                 if (this.histogramDistance != null && this.histogramDistance.length > 0) {
-                    for (HistogramBucket element4 : this.histogramDistance) {
+                    for (int i5 = 0; i5 < this.histogramDistance.length; i5++) {
+                        HistogramBucket element4 = this.histogramDistance[i5];
                         if (element4 != null) {
                             output.writeMessage(7, element4);
                         }
@@ -6866,22 +7108,22 @@ public interface WifiMetricsProto {
                 }
                 if (this.histogramRequestIntervalMs != null && this.histogramRequestIntervalMs.length > 0) {
                     while (true) {
-                        int i2 = i;
-                        if (i2 >= this.histogramRequestIntervalMs.length) {
+                        int i6 = i;
+                        if (i6 >= this.histogramRequestIntervalMs.length) {
                             break;
                         }
-                        HistogramBucket element5 = this.histogramRequestIntervalMs[i2];
+                        HistogramBucket element5 = this.histogramRequestIntervalMs[i6];
                         if (element5 != null) {
                             output.writeMessage(8, element5);
                         }
-                        i = i2 + 1;
+                        i = i6 + 1;
                     }
                 }
                 super.writeTo(output);
             }
 
-            /* access modifiers changed from: protected */
-            public int computeSerializedSize() {
+            @Override // com.android.framework.protobuf.nano.MessageNano
+            protected int computeSerializedSize() {
                 int size = super.computeSerializedSize();
                 if (this.numRequests != 0) {
                     size += CodedOutputByteBufferNano.computeInt32Size(1, this.numRequests);
@@ -6895,7 +7137,8 @@ public interface WifiMetricsProto {
                 int i = 0;
                 if (this.histogramNumRequestsPerApp != null && this.histogramNumRequestsPerApp.length > 0) {
                     int size2 = size;
-                    for (HistogramBucket element : this.histogramNumRequestsPerApp) {
+                    for (int size3 = 0; size3 < this.histogramNumRequestsPerApp.length; size3++) {
+                        HistogramBucket element = this.histogramNumRequestsPerApp[size3];
                         if (element != null) {
                             size2 += CodedOutputByteBufferNano.computeMessageSize(4, element);
                         }
@@ -6903,31 +7146,34 @@ public interface WifiMetricsProto {
                     size = size2;
                 }
                 if (this.histogramNumPeersPerRequest != null && this.histogramNumPeersPerRequest.length > 0) {
-                    int size3 = size;
-                    for (HistogramBucket element2 : this.histogramNumPeersPerRequest) {
-                        if (element2 != null) {
-                            size3 += CodedOutputByteBufferNano.computeMessageSize(5, element2);
-                        }
-                    }
-                    size = size3;
-                }
-                if (this.histogramIndividualStatus != null && this.histogramIndividualStatus.length > 0) {
                     int size4 = size;
-                    for (RttIndividualStatusHistogramBucket element3 : this.histogramIndividualStatus) {
-                        if (element3 != null) {
-                            size4 += CodedOutputByteBufferNano.computeMessageSize(6, element3);
+                    for (int size5 = 0; size5 < this.histogramNumPeersPerRequest.length; size5++) {
+                        HistogramBucket element2 = this.histogramNumPeersPerRequest[size5];
+                        if (element2 != null) {
+                            size4 += CodedOutputByteBufferNano.computeMessageSize(5, element2);
                         }
                     }
                     size = size4;
                 }
-                if (this.histogramDistance != null && this.histogramDistance.length > 0) {
-                    int size5 = size;
-                    for (HistogramBucket element4 : this.histogramDistance) {
-                        if (element4 != null) {
-                            size5 += CodedOutputByteBufferNano.computeMessageSize(7, element4);
+                if (this.histogramIndividualStatus != null && this.histogramIndividualStatus.length > 0) {
+                    int size6 = size;
+                    for (int size7 = 0; size7 < this.histogramIndividualStatus.length; size7++) {
+                        RttIndividualStatusHistogramBucket element3 = this.histogramIndividualStatus[size7];
+                        if (element3 != null) {
+                            size6 += CodedOutputByteBufferNano.computeMessageSize(6, element3);
                         }
                     }
-                    size = size5;
+                    size = size6;
+                }
+                if (this.histogramDistance != null && this.histogramDistance.length > 0) {
+                    int size8 = size;
+                    for (int size9 = 0; size9 < this.histogramDistance.length; size9++) {
+                        HistogramBucket element4 = this.histogramDistance[size9];
+                        if (element4 != null) {
+                            size8 += CodedOutputByteBufferNano.computeMessageSize(7, element4);
+                        }
+                    }
+                    size = size8;
                 }
                 if (this.histogramRequestIntervalMs != null && this.histogramRequestIntervalMs.length > 0) {
                     while (true) {
@@ -6945,6 +7191,7 @@ public interface WifiMetricsProto {
                 return size;
             }
 
+            @Override // com.android.framework.protobuf.nano.MessageNano
             public RttToPeerLog mergeFrom(CodedInputByteBufferNano input) throws IOException {
                 while (true) {
                     int tag = input.readTag();
@@ -6956,11 +7203,12 @@ public interface WifiMetricsProto {
                     } else if (tag == 16) {
                         this.numIndividualRequests = input.readInt32();
                     } else if (tag == 24) {
-                        this.numApps = input.readInt32();
+                        int arrayLength = input.readInt32();
+                        this.numApps = arrayLength;
                     } else if (tag == 34) {
-                        int arrayLength = WireFormatNano.getRepeatedFieldArrayLength(input, 34);
+                        int arrayLength2 = WireFormatNano.getRepeatedFieldArrayLength(input, 34);
                         int i = this.histogramNumRequestsPerApp == null ? 0 : this.histogramNumRequestsPerApp.length;
-                        HistogramBucket[] newArray = new HistogramBucket[(i + arrayLength)];
+                        HistogramBucket[] newArray = new HistogramBucket[i + arrayLength2];
                         if (i != 0) {
                             System.arraycopy(this.histogramNumRequestsPerApp, 0, newArray, 0, i);
                         }
@@ -6974,9 +7222,9 @@ public interface WifiMetricsProto {
                         input.readMessage(newArray[i]);
                         this.histogramNumRequestsPerApp = newArray;
                     } else if (tag == 42) {
-                        int arrayLength2 = WireFormatNano.getRepeatedFieldArrayLength(input, 42);
+                        int arrayLength3 = WireFormatNano.getRepeatedFieldArrayLength(input, 42);
                         int i2 = this.histogramNumPeersPerRequest == null ? 0 : this.histogramNumPeersPerRequest.length;
-                        HistogramBucket[] newArray2 = new HistogramBucket[(i2 + arrayLength2)];
+                        HistogramBucket[] newArray2 = new HistogramBucket[i2 + arrayLength3];
                         if (i2 != 0) {
                             System.arraycopy(this.histogramNumPeersPerRequest, 0, newArray2, 0, i2);
                         }
@@ -6990,9 +7238,9 @@ public interface WifiMetricsProto {
                         input.readMessage(newArray2[i2]);
                         this.histogramNumPeersPerRequest = newArray2;
                     } else if (tag == 50) {
-                        int arrayLength3 = WireFormatNano.getRepeatedFieldArrayLength(input, 50);
+                        int arrayLength4 = WireFormatNano.getRepeatedFieldArrayLength(input, 50);
                         int i3 = this.histogramIndividualStatus == null ? 0 : this.histogramIndividualStatus.length;
-                        RttIndividualStatusHistogramBucket[] newArray3 = new RttIndividualStatusHistogramBucket[(i3 + arrayLength3)];
+                        RttIndividualStatusHistogramBucket[] newArray3 = new RttIndividualStatusHistogramBucket[i3 + arrayLength4];
                         if (i3 != 0) {
                             System.arraycopy(this.histogramIndividualStatus, 0, newArray3, 0, i3);
                         }
@@ -7006,9 +7254,9 @@ public interface WifiMetricsProto {
                         input.readMessage(newArray3[i3]);
                         this.histogramIndividualStatus = newArray3;
                     } else if (tag == 58) {
-                        int arrayLength4 = WireFormatNano.getRepeatedFieldArrayLength(input, 58);
+                        int arrayLength5 = WireFormatNano.getRepeatedFieldArrayLength(input, 58);
                         int i4 = this.histogramDistance == null ? 0 : this.histogramDistance.length;
-                        HistogramBucket[] newArray4 = new HistogramBucket[(i4 + arrayLength4)];
+                        HistogramBucket[] newArray4 = new HistogramBucket[i4 + arrayLength5];
                         if (i4 != 0) {
                             System.arraycopy(this.histogramDistance, 0, newArray4, 0, i4);
                         }
@@ -7021,10 +7269,14 @@ public interface WifiMetricsProto {
                         newArray4[i4] = new HistogramBucket();
                         input.readMessage(newArray4[i4]);
                         this.histogramDistance = newArray4;
-                    } else if (tag == 66) {
-                        int arrayLength5 = WireFormatNano.getRepeatedFieldArrayLength(input, 66);
+                    } else if (tag != 66) {
+                        if (!WireFormatNano.parseUnknownField(input, tag)) {
+                            return this;
+                        }
+                    } else {
+                        int arrayLength6 = WireFormatNano.getRepeatedFieldArrayLength(input, 66);
                         int i5 = this.histogramRequestIntervalMs == null ? 0 : this.histogramRequestIntervalMs.length;
-                        HistogramBucket[] newArray5 = new HistogramBucket[(i5 + arrayLength5)];
+                        HistogramBucket[] newArray5 = new HistogramBucket[i5 + arrayLength6];
                         if (i5 != 0) {
                             System.arraycopy(this.histogramRequestIntervalMs, 0, newArray5, 0, i5);
                         }
@@ -7037,8 +7289,6 @@ public interface WifiMetricsProto {
                         newArray5[i5] = new HistogramBucket();
                         input.readMessage(newArray5[i5]);
                         this.histogramRequestIntervalMs = newArray5;
-                    } else if (!WireFormatNano.parseUnknownField(input, tag)) {
-                        return this;
                     }
                 }
             }
@@ -7052,6 +7302,7 @@ public interface WifiMetricsProto {
             }
         }
 
+        /* loaded from: classes4.dex */
         public static final class HistogramBucket extends MessageNano {
             private static volatile HistogramBucket[] _emptyArray;
             public int count;
@@ -7074,13 +7325,14 @@ public interface WifiMetricsProto {
             }
 
             public HistogramBucket clear() {
-                this.start = 0;
-                this.end = 0;
+                this.start = 0L;
+                this.end = 0L;
                 this.count = 0;
                 this.cachedSize = -1;
                 return this;
             }
 
+            @Override // com.android.framework.protobuf.nano.MessageNano
             public void writeTo(CodedOutputByteBufferNano output) throws IOException {
                 if (this.start != 0) {
                     output.writeInt64(1, this.start);
@@ -7094,8 +7346,8 @@ public interface WifiMetricsProto {
                 super.writeTo(output);
             }
 
-            /* access modifiers changed from: protected */
-            public int computeSerializedSize() {
+            @Override // com.android.framework.protobuf.nano.MessageNano
+            protected int computeSerializedSize() {
                 int size = super.computeSerializedSize();
                 if (this.start != 0) {
                     size += CodedOutputByteBufferNano.computeInt64Size(1, this.start);
@@ -7109,6 +7361,7 @@ public interface WifiMetricsProto {
                 return size;
             }
 
+            @Override // com.android.framework.protobuf.nano.MessageNano
             public HistogramBucket mergeFrom(CodedInputByteBufferNano input) throws IOException {
                 while (true) {
                     int tag = input.readTag();
@@ -7119,10 +7372,12 @@ public interface WifiMetricsProto {
                         this.start = input.readInt64();
                     } else if (tag == 16) {
                         this.end = input.readInt64();
-                    } else if (tag == 24) {
+                    } else if (tag != 24) {
+                        if (!WireFormatNano.parseUnknownField(input, tag)) {
+                            return this;
+                        }
+                    } else {
                         this.count = input.readInt32();
-                    } else if (!WireFormatNano.parseUnknownField(input, tag)) {
-                        return this;
                     }
                 }
             }
@@ -7136,6 +7391,7 @@ public interface WifiMetricsProto {
             }
         }
 
+        /* loaded from: classes4.dex */
         public static final class RttOverallStatusHistogramBucket extends MessageNano {
             private static volatile RttOverallStatusHistogramBucket[] _emptyArray;
             public int count;
@@ -7163,6 +7419,7 @@ public interface WifiMetricsProto {
                 return this;
             }
 
+            @Override // com.android.framework.protobuf.nano.MessageNano
             public void writeTo(CodedOutputByteBufferNano output) throws IOException {
                 if (this.statusType != 0) {
                     output.writeInt32(1, this.statusType);
@@ -7173,8 +7430,8 @@ public interface WifiMetricsProto {
                 super.writeTo(output);
             }
 
-            /* access modifiers changed from: protected */
-            public int computeSerializedSize() {
+            @Override // com.android.framework.protobuf.nano.MessageNano
+            protected int computeSerializedSize() {
                 int size = super.computeSerializedSize();
                 if (this.statusType != 0) {
                     size += CodedOutputByteBufferNano.computeInt32Size(1, this.statusType);
@@ -7185,32 +7442,34 @@ public interface WifiMetricsProto {
                 return size;
             }
 
+            @Override // com.android.framework.protobuf.nano.MessageNano
             public RttOverallStatusHistogramBucket mergeFrom(CodedInputByteBufferNano input) throws IOException {
                 while (true) {
                     int tag = input.readTag();
-                    if (tag != 0) {
-                        if (tag == 8) {
-                            int value = input.readInt32();
-                            switch (value) {
-                                case 0:
-                                case 1:
-                                case 2:
-                                case 3:
-                                case 4:
-                                case 5:
-                                case 6:
-                                case 7:
-                                case 8:
-                                    this.statusType = value;
-                                    break;
-                            }
-                        } else if (tag == 16) {
-                            this.count = input.readInt32();
-                        } else if (!WireFormatNano.parseUnknownField(input, tag)) {
+                    if (tag == 0) {
+                        return this;
+                    }
+                    if (tag == 8) {
+                        int value = input.readInt32();
+                        switch (value) {
+                            case 0:
+                            case 1:
+                            case 2:
+                            case 3:
+                            case 4:
+                            case 5:
+                            case 6:
+                            case 7:
+                            case 8:
+                                this.statusType = value;
+                                continue;
+                        }
+                    } else if (tag != 16) {
+                        if (!WireFormatNano.parseUnknownField(input, tag)) {
                             return this;
                         }
                     } else {
-                        return this;
+                        this.count = input.readInt32();
                     }
                 }
             }
@@ -7224,6 +7483,7 @@ public interface WifiMetricsProto {
             }
         }
 
+        /* loaded from: classes4.dex */
         public static final class RttIndividualStatusHistogramBucket extends MessageNano {
             private static volatile RttIndividualStatusHistogramBucket[] _emptyArray;
             public int count;
@@ -7251,6 +7511,7 @@ public interface WifiMetricsProto {
                 return this;
             }
 
+            @Override // com.android.framework.protobuf.nano.MessageNano
             public void writeTo(CodedOutputByteBufferNano output) throws IOException {
                 if (this.statusType != 0) {
                     output.writeInt32(1, this.statusType);
@@ -7261,8 +7522,8 @@ public interface WifiMetricsProto {
                 super.writeTo(output);
             }
 
-            /* access modifiers changed from: protected */
-            public int computeSerializedSize() {
+            @Override // com.android.framework.protobuf.nano.MessageNano
+            protected int computeSerializedSize() {
                 int size = super.computeSerializedSize();
                 if (this.statusType != 0) {
                     size += CodedOutputByteBufferNano.computeInt32Size(1, this.statusType);
@@ -7273,41 +7534,43 @@ public interface WifiMetricsProto {
                 return size;
             }
 
+            @Override // com.android.framework.protobuf.nano.MessageNano
             public RttIndividualStatusHistogramBucket mergeFrom(CodedInputByteBufferNano input) throws IOException {
                 while (true) {
                     int tag = input.readTag();
-                    if (tag != 0) {
-                        if (tag == 8) {
-                            int value = input.readInt32();
-                            switch (value) {
-                                case 0:
-                                case 1:
-                                case 2:
-                                case 3:
-                                case 4:
-                                case 5:
-                                case 6:
-                                case 7:
-                                case 8:
-                                case 9:
-                                case 10:
-                                case 11:
-                                case 12:
-                                case 13:
-                                case 14:
-                                case 15:
-                                case 16:
-                                case 17:
-                                    this.statusType = value;
-                                    break;
-                            }
-                        } else if (tag == 16) {
-                            this.count = input.readInt32();
-                        } else if (!WireFormatNano.parseUnknownField(input, tag)) {
+                    if (tag == 0) {
+                        return this;
+                    }
+                    if (tag == 8) {
+                        int value = input.readInt32();
+                        switch (value) {
+                            case 0:
+                            case 1:
+                            case 2:
+                            case 3:
+                            case 4:
+                            case 5:
+                            case 6:
+                            case 7:
+                            case 8:
+                            case 9:
+                            case 10:
+                            case 11:
+                            case 12:
+                            case 13:
+                            case 14:
+                            case 15:
+                            case 16:
+                            case 17:
+                                this.statusType = value;
+                                continue;
+                        }
+                    } else if (tag != 16) {
+                        if (!WireFormatNano.parseUnknownField(input, tag)) {
                             return this;
                         }
                     } else {
-                        return this;
+                        this.count = input.readInt32();
                     }
                 }
             }
@@ -7345,12 +7608,14 @@ public interface WifiMetricsProto {
             return this;
         }
 
+        @Override // com.android.framework.protobuf.nano.MessageNano
         public void writeTo(CodedOutputByteBufferNano output) throws IOException {
             if (this.numRequests != 0) {
                 output.writeInt32(1, this.numRequests);
             }
             if (this.histogramOverallStatus != null && this.histogramOverallStatus.length > 0) {
-                for (RttOverallStatusHistogramBucket element : this.histogramOverallStatus) {
+                for (int i = 0; i < this.histogramOverallStatus.length; i++) {
+                    RttOverallStatusHistogramBucket element = this.histogramOverallStatus[i];
                     if (element != null) {
                         output.writeMessage(2, element);
                     }
@@ -7365,14 +7630,15 @@ public interface WifiMetricsProto {
             super.writeTo(output);
         }
 
-        /* access modifiers changed from: protected */
-        public int computeSerializedSize() {
+        @Override // com.android.framework.protobuf.nano.MessageNano
+        protected int computeSerializedSize() {
             int size = super.computeSerializedSize();
             if (this.numRequests != 0) {
                 size += CodedOutputByteBufferNano.computeInt32Size(1, this.numRequests);
             }
             if (this.histogramOverallStatus != null && this.histogramOverallStatus.length > 0) {
-                for (RttOverallStatusHistogramBucket element : this.histogramOverallStatus) {
+                for (int i = 0; i < this.histogramOverallStatus.length; i++) {
+                    RttOverallStatusHistogramBucket element = this.histogramOverallStatus[i];
                     if (element != null) {
                         size += CodedOutputByteBufferNano.computeMessageSize(2, element);
                     }
@@ -7387,6 +7653,7 @@ public interface WifiMetricsProto {
             return size;
         }
 
+        @Override // com.android.framework.protobuf.nano.MessageNano
         public WifiRttLog mergeFrom(CodedInputByteBufferNano input) throws IOException {
             while (true) {
                 int tag = input.readTag();
@@ -7394,11 +7661,12 @@ public interface WifiMetricsProto {
                     return this;
                 }
                 if (tag == 8) {
-                    this.numRequests = input.readInt32();
+                    int arrayLength = input.readInt32();
+                    this.numRequests = arrayLength;
                 } else if (tag == 18) {
-                    int arrayLength = WireFormatNano.getRepeatedFieldArrayLength(input, 18);
+                    int arrayLength2 = WireFormatNano.getRepeatedFieldArrayLength(input, 18);
                     int i = this.histogramOverallStatus == null ? 0 : this.histogramOverallStatus.length;
-                    RttOverallStatusHistogramBucket[] newArray = new RttOverallStatusHistogramBucket[(i + arrayLength)];
+                    RttOverallStatusHistogramBucket[] newArray = new RttOverallStatusHistogramBucket[i + arrayLength2];
                     if (i != 0) {
                         System.arraycopy(this.histogramOverallStatus, 0, newArray, 0, i);
                     }
@@ -7416,13 +7684,15 @@ public interface WifiMetricsProto {
                         this.rttToAp = new RttToPeerLog();
                     }
                     input.readMessage(this.rttToAp);
-                } else if (tag == 34) {
+                } else if (tag != 34) {
+                    if (!WireFormatNano.parseUnknownField(input, tag)) {
+                        return this;
+                    }
+                } else {
                     if (this.rttToAware == null) {
                         this.rttToAware = new RttToPeerLog();
                     }
                     input.readMessage(this.rttToAware);
-                } else if (!WireFormatNano.parseUnknownField(input, tag)) {
-                    return this;
                 }
             }
         }
@@ -7436,6 +7706,7 @@ public interface WifiMetricsProto {
         }
     }
 
+    /* loaded from: classes4.dex */
     public static final class WifiRadioUsage extends MessageNano {
         private static volatile WifiRadioUsage[] _emptyArray;
         public long loggingDurationMs;
@@ -7457,12 +7728,13 @@ public interface WifiMetricsProto {
         }
 
         public WifiRadioUsage clear() {
-            this.loggingDurationMs = 0;
-            this.scanTimeMs = 0;
+            this.loggingDurationMs = 0L;
+            this.scanTimeMs = 0L;
             this.cachedSize = -1;
             return this;
         }
 
+        @Override // com.android.framework.protobuf.nano.MessageNano
         public void writeTo(CodedOutputByteBufferNano output) throws IOException {
             if (this.loggingDurationMs != 0) {
                 output.writeInt64(1, this.loggingDurationMs);
@@ -7473,8 +7745,8 @@ public interface WifiMetricsProto {
             super.writeTo(output);
         }
 
-        /* access modifiers changed from: protected */
-        public int computeSerializedSize() {
+        @Override // com.android.framework.protobuf.nano.MessageNano
+        protected int computeSerializedSize() {
             int size = super.computeSerializedSize();
             if (this.loggingDurationMs != 0) {
                 size += CodedOutputByteBufferNano.computeInt64Size(1, this.loggingDurationMs);
@@ -7485,6 +7757,7 @@ public interface WifiMetricsProto {
             return size;
         }
 
+        @Override // com.android.framework.protobuf.nano.MessageNano
         public WifiRadioUsage mergeFrom(CodedInputByteBufferNano input) throws IOException {
             while (true) {
                 int tag = input.readTag();
@@ -7493,10 +7766,12 @@ public interface WifiMetricsProto {
                 }
                 if (tag == 8) {
                     this.loggingDurationMs = input.readInt64();
-                } else if (tag == 16) {
+                } else if (tag != 16) {
+                    if (!WireFormatNano.parseUnknownField(input, tag)) {
+                        return this;
+                    }
+                } else {
                     this.scanTimeMs = input.readInt64();
-                } else if (!WireFormatNano.parseUnknownField(input, tag)) {
-                    return this;
                 }
             }
         }
@@ -7510,6 +7785,7 @@ public interface WifiMetricsProto {
         }
     }
 
+    /* loaded from: classes4.dex */
     public static final class ExperimentValues extends MessageNano {
         private static volatile ExperimentValues[] _emptyArray;
         public boolean linkSpeedCountsLoggingEnabled;
@@ -7541,6 +7817,7 @@ public interface WifiMetricsProto {
             return this;
         }
 
+        @Override // com.android.framework.protobuf.nano.MessageNano
         public void writeTo(CodedOutputByteBufferNano output) throws IOException {
             if (this.wifiIsUnusableLoggingEnabled) {
                 output.writeBool(1, this.wifiIsUnusableLoggingEnabled);
@@ -7557,8 +7834,8 @@ public interface WifiMetricsProto {
             super.writeTo(output);
         }
 
-        /* access modifiers changed from: protected */
-        public int computeSerializedSize() {
+        @Override // com.android.framework.protobuf.nano.MessageNano
+        protected int computeSerializedSize() {
             int size = super.computeSerializedSize();
             if (this.wifiIsUnusableLoggingEnabled) {
                 size += CodedOutputByteBufferNano.computeBoolSize(1, this.wifiIsUnusableLoggingEnabled);
@@ -7575,6 +7852,7 @@ public interface WifiMetricsProto {
             return size;
         }
 
+        @Override // com.android.framework.protobuf.nano.MessageNano
         public ExperimentValues mergeFrom(CodedInputByteBufferNano input) throws IOException {
             while (true) {
                 int tag = input.readTag();
@@ -7587,10 +7865,12 @@ public interface WifiMetricsProto {
                     this.wifiDataStallMinTxBad = input.readInt32();
                 } else if (tag == 24) {
                     this.wifiDataStallMinTxSuccessWithoutRx = input.readInt32();
-                } else if (tag == 32) {
+                } else if (tag != 32) {
+                    if (!WireFormatNano.parseUnknownField(input, tag)) {
+                        return this;
+                    }
+                } else {
                     this.linkSpeedCountsLoggingEnabled = input.readBool();
-                } else if (!WireFormatNano.parseUnknownField(input, tag)) {
-                    return this;
                 }
             }
         }
@@ -7604,6 +7884,7 @@ public interface WifiMetricsProto {
         }
     }
 
+    /* loaded from: classes4.dex */
     public static final class WifiIsUnusableEvent extends MessageNano {
         public static final int TYPE_DATA_STALL_BAD_TX = 1;
         public static final int TYPE_DATA_STALL_BOTH = 3;
@@ -7643,14 +7924,14 @@ public interface WifiMetricsProto {
 
         public WifiIsUnusableEvent clear() {
             this.type = 0;
-            this.startTimeMillis = 0;
+            this.startTimeMillis = 0L;
             this.lastScore = -1;
-            this.txSuccessDelta = 0;
-            this.txRetriesDelta = 0;
-            this.txBadDelta = 0;
-            this.rxSuccessDelta = 0;
-            this.packetUpdateTimeDelta = 0;
-            this.lastLinkLayerStatsUpdateTime = 0;
+            this.txSuccessDelta = 0L;
+            this.txRetriesDelta = 0L;
+            this.txBadDelta = 0L;
+            this.rxSuccessDelta = 0L;
+            this.packetUpdateTimeDelta = 0L;
+            this.lastLinkLayerStatsUpdateTime = 0L;
             this.firmwareAlertCode = -1;
             this.lastWifiUsabilityScore = -1;
             this.lastPredictionHorizonSec = -1;
@@ -7659,6 +7940,7 @@ public interface WifiMetricsProto {
             return this;
         }
 
+        @Override // com.android.framework.protobuf.nano.MessageNano
         public void writeTo(CodedOutputByteBufferNano output) throws IOException {
             if (this.type != 0) {
                 output.writeInt32(1, this.type);
@@ -7702,8 +7984,8 @@ public interface WifiMetricsProto {
             super.writeTo(output);
         }
 
-        /* access modifiers changed from: protected */
-        public int computeSerializedSize() {
+        @Override // com.android.framework.protobuf.nano.MessageNano
+        protected int computeSerializedSize() {
             int size = super.computeSerializedSize();
             if (this.type != 0) {
                 size += CodedOutputByteBufferNano.computeInt32Size(1, this.type);
@@ -7747,6 +8029,7 @@ public interface WifiMetricsProto {
             return size;
         }
 
+        @Override // com.android.framework.protobuf.nano.MessageNano
         public WifiIsUnusableEvent mergeFrom(CodedInputByteBufferNano input) throws IOException {
             while (true) {
                 int tag = input.readTag();
@@ -7763,7 +8046,7 @@ public interface WifiMetricsProto {
                             case 4:
                             case 5:
                                 this.type = value;
-                                break;
+                                continue;
                         }
                     case 16:
                         this.startTimeMillis = input.readInt64();
@@ -7820,6 +8103,7 @@ public interface WifiMetricsProto {
         }
     }
 
+    /* loaded from: classes4.dex */
     public static final class PasspointProfileTypeCount extends MessageNano {
         public static final int TYPE_EAP_AKA = 4;
         public static final int TYPE_EAP_AKA_PRIME = 5;
@@ -7853,6 +8137,7 @@ public interface WifiMetricsProto {
             return this;
         }
 
+        @Override // com.android.framework.protobuf.nano.MessageNano
         public void writeTo(CodedOutputByteBufferNano output) throws IOException {
             if (this.eapMethodType != 0) {
                 output.writeInt32(1, this.eapMethodType);
@@ -7863,8 +8148,8 @@ public interface WifiMetricsProto {
             super.writeTo(output);
         }
 
-        /* access modifiers changed from: protected */
-        public int computeSerializedSize() {
+        @Override // com.android.framework.protobuf.nano.MessageNano
+        protected int computeSerializedSize() {
             int size = super.computeSerializedSize();
             if (this.eapMethodType != 0) {
                 size += CodedOutputByteBufferNano.computeInt32Size(1, this.eapMethodType);
@@ -7875,29 +8160,31 @@ public interface WifiMetricsProto {
             return size;
         }
 
+        @Override // com.android.framework.protobuf.nano.MessageNano
         public PasspointProfileTypeCount mergeFrom(CodedInputByteBufferNano input) throws IOException {
             while (true) {
                 int tag = input.readTag();
-                if (tag != 0) {
-                    if (tag == 8) {
-                        int value = input.readInt32();
-                        switch (value) {
-                            case 0:
-                            case 1:
-                            case 2:
-                            case 3:
-                            case 4:
-                            case 5:
-                                this.eapMethodType = value;
-                                break;
-                        }
-                    } else if (tag == 16) {
-                        this.count = input.readInt32();
-                    } else if (!WireFormatNano.parseUnknownField(input, tag)) {
+                if (tag == 0) {
+                    return this;
+                }
+                if (tag == 8) {
+                    int value = input.readInt32();
+                    switch (value) {
+                        case 0:
+                        case 1:
+                        case 2:
+                        case 3:
+                        case 4:
+                        case 5:
+                            this.eapMethodType = value;
+                            continue;
+                    }
+                } else if (tag != 16) {
+                    if (!WireFormatNano.parseUnknownField(input, tag)) {
                         return this;
                     }
                 } else {
-                    return this;
+                    this.count = input.readInt32();
                 }
             }
         }
@@ -7911,6 +8198,7 @@ public interface WifiMetricsProto {
         }
     }
 
+    /* loaded from: classes4.dex */
     public static final class WifiLinkLayerUsageStats extends MessageNano {
         private static volatile WifiLinkLayerUsageStats[] _emptyArray;
         public long loggingDurationMs;
@@ -7940,20 +8228,21 @@ public interface WifiMetricsProto {
         }
 
         public WifiLinkLayerUsageStats clear() {
-            this.loggingDurationMs = 0;
-            this.radioOnTimeMs = 0;
-            this.radioTxTimeMs = 0;
-            this.radioRxTimeMs = 0;
-            this.radioScanTimeMs = 0;
-            this.radioNanScanTimeMs = 0;
-            this.radioBackgroundScanTimeMs = 0;
-            this.radioRoamScanTimeMs = 0;
-            this.radioPnoScanTimeMs = 0;
-            this.radioHs20ScanTimeMs = 0;
+            this.loggingDurationMs = 0L;
+            this.radioOnTimeMs = 0L;
+            this.radioTxTimeMs = 0L;
+            this.radioRxTimeMs = 0L;
+            this.radioScanTimeMs = 0L;
+            this.radioNanScanTimeMs = 0L;
+            this.radioBackgroundScanTimeMs = 0L;
+            this.radioRoamScanTimeMs = 0L;
+            this.radioPnoScanTimeMs = 0L;
+            this.radioHs20ScanTimeMs = 0L;
             this.cachedSize = -1;
             return this;
         }
 
+        @Override // com.android.framework.protobuf.nano.MessageNano
         public void writeTo(CodedOutputByteBufferNano output) throws IOException {
             if (this.loggingDurationMs != 0) {
                 output.writeInt64(1, this.loggingDurationMs);
@@ -7988,8 +8277,8 @@ public interface WifiMetricsProto {
             super.writeTo(output);
         }
 
-        /* access modifiers changed from: protected */
-        public int computeSerializedSize() {
+        @Override // com.android.framework.protobuf.nano.MessageNano
+        protected int computeSerializedSize() {
             int size = super.computeSerializedSize();
             if (this.loggingDurationMs != 0) {
                 size += CodedOutputByteBufferNano.computeInt64Size(1, this.loggingDurationMs);
@@ -8024,6 +8313,7 @@ public interface WifiMetricsProto {
             return size;
         }
 
+        @Override // com.android.framework.protobuf.nano.MessageNano
         public WifiLinkLayerUsageStats mergeFrom(CodedInputByteBufferNano input) throws IOException {
             while (true) {
                 int tag = input.readTag();
@@ -8079,6 +8369,7 @@ public interface WifiMetricsProto {
         }
     }
 
+    /* loaded from: classes4.dex */
     public static final class WifiUsabilityStatsEntry extends MessageNano {
         public static final int NETWORK_TYPE_CDMA = 2;
         public static final int NETWORK_TYPE_EVDO_0 = 3;
@@ -8144,28 +8435,28 @@ public interface WifiMetricsProto {
         }
 
         public WifiUsabilityStatsEntry clear() {
-            this.timeStampMs = 0;
+            this.timeStampMs = 0L;
             this.rssi = 0;
             this.linkSpeedMbps = 0;
-            this.totalTxSuccess = 0;
-            this.totalTxRetries = 0;
-            this.totalTxBad = 0;
-            this.totalRxSuccess = 0;
-            this.totalRadioOnTimeMs = 0;
-            this.totalRadioTxTimeMs = 0;
-            this.totalRadioRxTimeMs = 0;
-            this.totalScanTimeMs = 0;
-            this.totalNanScanTimeMs = 0;
-            this.totalBackgroundScanTimeMs = 0;
-            this.totalRoamScanTimeMs = 0;
-            this.totalPnoScanTimeMs = 0;
-            this.totalHotspot2ScanTimeMs = 0;
+            this.totalTxSuccess = 0L;
+            this.totalTxRetries = 0L;
+            this.totalTxBad = 0L;
+            this.totalRxSuccess = 0L;
+            this.totalRadioOnTimeMs = 0L;
+            this.totalRadioTxTimeMs = 0L;
+            this.totalRadioRxTimeMs = 0L;
+            this.totalScanTimeMs = 0L;
+            this.totalNanScanTimeMs = 0L;
+            this.totalBackgroundScanTimeMs = 0L;
+            this.totalRoamScanTimeMs = 0L;
+            this.totalPnoScanTimeMs = 0L;
+            this.totalHotspot2ScanTimeMs = 0L;
             this.wifiScore = 0;
             this.wifiUsabilityScore = 0;
             this.seqNumToFramework = 0;
-            this.totalCcaBusyFreqTimeMs = 0;
-            this.totalRadioOnFreqTimeMs = 0;
-            this.totalBeaconRx = 0;
+            this.totalCcaBusyFreqTimeMs = 0L;
+            this.totalRadioOnFreqTimeMs = 0L;
+            this.totalBeaconRx = 0L;
             this.predictionHorizonSec = 0;
             this.probeStatusSinceLastUpdate = 0;
             this.probeElapsedTimeSinceLastUpdateMs = 0;
@@ -8182,6 +8473,7 @@ public interface WifiMetricsProto {
             return this;
         }
 
+        @Override // com.android.framework.protobuf.nano.MessageNano
         public void writeTo(CodedOutputByteBufferNano output) throws IOException {
             if (this.timeStampMs != 0) {
                 output.writeInt64(1, this.timeStampMs);
@@ -8288,8 +8580,8 @@ public interface WifiMetricsProto {
             super.writeTo(output);
         }
 
-        /* access modifiers changed from: protected */
-        public int computeSerializedSize() {
+        @Override // com.android.framework.protobuf.nano.MessageNano
+        protected int computeSerializedSize() {
             int size = super.computeSerializedSize();
             if (this.timeStampMs != 0) {
                 size += CodedOutputByteBufferNano.computeInt64Size(1, this.timeStampMs);
@@ -8396,6 +8688,7 @@ public interface WifiMetricsProto {
             return size;
         }
 
+        @Override // com.android.framework.protobuf.nano.MessageNano
         public WifiUsabilityStatsEntry mergeFrom(CodedInputByteBufferNano input) throws IOException {
             while (true) {
                 int tag = input.readTag();
@@ -8479,7 +8772,7 @@ public interface WifiMetricsProto {
                             case 2:
                             case 3:
                                 this.probeStatusSinceLastUpdate = value;
-                                break;
+                                continue;
                         }
                     case 200:
                         this.probeElapsedTimeSinceLastUpdateMs = input.readInt32();
@@ -8508,7 +8801,7 @@ public interface WifiMetricsProto {
                             case 6:
                             case 7:
                                 this.cellularDataNetworkType = value2;
-                                break;
+                                continue;
                         }
                     case 248:
                         this.cellularSignalStrengthDbm = input.readInt32();
@@ -8527,7 +8820,7 @@ public interface WifiMetricsProto {
                             case 2:
                             case 3:
                                 this.deviceMobilityState = value3;
-                                break;
+                                continue;
                         }
                     default:
                         if (WireFormatNano.parseUnknownField(input, tag)) {
@@ -8548,6 +8841,7 @@ public interface WifiMetricsProto {
         }
     }
 
+    /* loaded from: classes4.dex */
     public static final class WifiUsabilityStats extends MessageNano {
         public static final int LABEL_BAD = 2;
         public static final int LABEL_GOOD = 1;
@@ -8585,23 +8879,26 @@ public interface WifiMetricsProto {
             this.stats = WifiUsabilityStatsEntry.emptyArray();
             this.triggerType = 0;
             this.firmwareAlertCode = -1;
-            this.timeStampMs = 0;
+            this.timeStampMs = 0L;
             this.cachedSize = -1;
             return this;
         }
 
+        @Override // com.android.framework.protobuf.nano.MessageNano
         public void writeTo(CodedOutputByteBufferNano output) throws IOException {
             if (this.label != 0) {
                 output.writeInt32(1, this.label);
             }
             if (this.stats != null && this.stats.length > 0) {
-                for (WifiUsabilityStatsEntry element : this.stats) {
+                for (int i = 0; i < this.stats.length; i++) {
+                    WifiUsabilityStatsEntry element = this.stats[i];
                     if (element != null) {
                         output.writeMessage(2, element);
                     }
                 }
             }
-            if (this.triggerType != 0) {
+            int i2 = this.triggerType;
+            if (i2 != 0) {
                 output.writeInt32(3, this.triggerType);
             }
             if (this.firmwareAlertCode != -1) {
@@ -8613,20 +8910,22 @@ public interface WifiMetricsProto {
             super.writeTo(output);
         }
 
-        /* access modifiers changed from: protected */
-        public int computeSerializedSize() {
+        @Override // com.android.framework.protobuf.nano.MessageNano
+        protected int computeSerializedSize() {
             int size = super.computeSerializedSize();
             if (this.label != 0) {
                 size += CodedOutputByteBufferNano.computeInt32Size(1, this.label);
             }
             if (this.stats != null && this.stats.length > 0) {
-                for (WifiUsabilityStatsEntry element : this.stats) {
+                for (int i = 0; i < this.stats.length; i++) {
+                    WifiUsabilityStatsEntry element = this.stats[i];
                     if (element != null) {
                         size += CodedOutputByteBufferNano.computeMessageSize(2, element);
                     }
                 }
             }
-            if (this.triggerType != 0) {
+            int i2 = this.triggerType;
+            if (i2 != 0) {
                 size += CodedOutputByteBufferNano.computeInt32Size(3, this.triggerType);
             }
             if (this.firmwareAlertCode != -1) {
@@ -8638,58 +8937,58 @@ public interface WifiMetricsProto {
             return size;
         }
 
+        @Override // com.android.framework.protobuf.nano.MessageNano
         public WifiUsabilityStats mergeFrom(CodedInputByteBufferNano input) throws IOException {
             while (true) {
                 int tag = input.readTag();
-                if (tag != 0) {
-                    if (tag == 8) {
-                        int arrayLength = input.readInt32();
-                        switch (arrayLength) {
-                            case 0:
-                            case 1:
-                            case 2:
-                                this.label = arrayLength;
-                                break;
-                        }
-                    } else if (tag != 18) {
-                        if (tag == 24) {
-                            int value = input.readInt32();
-                            switch (value) {
-                                case 0:
-                                case 1:
-                                case 2:
-                                case 3:
-                                case 4:
-                                case 5:
-                                    this.triggerType = value;
-                                    break;
-                            }
-                        } else if (tag == 32) {
-                            this.firmwareAlertCode = input.readInt32();
-                        } else if (tag == 40) {
-                            this.timeStampMs = input.readInt64();
-                        } else if (!WireFormatNano.parseUnknownField(input, tag)) {
-                            return this;
-                        }
-                    } else {
-                        int arrayLength2 = WireFormatNano.getRepeatedFieldArrayLength(input, 18);
-                        int i = this.stats == null ? 0 : this.stats.length;
-                        WifiUsabilityStatsEntry[] newArray = new WifiUsabilityStatsEntry[(i + arrayLength2)];
-                        if (i != 0) {
-                            System.arraycopy(this.stats, 0, newArray, 0, i);
-                        }
-                        while (i < newArray.length - 1) {
-                            newArray[i] = new WifiUsabilityStatsEntry();
-                            input.readMessage(newArray[i]);
-                            input.readTag();
-                            i++;
-                        }
+                if (tag == 0) {
+                    return this;
+                }
+                if (tag == 8) {
+                    int value = input.readInt32();
+                    switch (value) {
+                        case 0:
+                        case 1:
+                        case 2:
+                            this.label = value;
+                            continue;
+                    }
+                } else if (tag == 18) {
+                    int arrayLength = WireFormatNano.getRepeatedFieldArrayLength(input, 18);
+                    int i = this.stats == null ? 0 : this.stats.length;
+                    WifiUsabilityStatsEntry[] newArray = new WifiUsabilityStatsEntry[i + arrayLength];
+                    if (i != 0) {
+                        System.arraycopy(this.stats, 0, newArray, 0, i);
+                    }
+                    while (i < newArray.length - 1) {
                         newArray[i] = new WifiUsabilityStatsEntry();
                         input.readMessage(newArray[i]);
-                        this.stats = newArray;
+                        input.readTag();
+                        i++;
+                    }
+                    newArray[i] = new WifiUsabilityStatsEntry();
+                    input.readMessage(newArray[i]);
+                    this.stats = newArray;
+                } else if (tag == 24) {
+                    int value2 = input.readInt32();
+                    switch (value2) {
+                        case 0:
+                        case 1:
+                        case 2:
+                        case 3:
+                        case 4:
+                        case 5:
+                            this.triggerType = value2;
+                            continue;
+                    }
+                } else if (tag == 32) {
+                    this.firmwareAlertCode = input.readInt32();
+                } else if (tag != 40) {
+                    if (!WireFormatNano.parseUnknownField(input, tag)) {
+                        return this;
                     }
                 } else {
-                    return this;
+                    this.timeStampMs = input.readInt64();
                 }
             }
         }
@@ -8703,6 +9002,7 @@ public interface WifiMetricsProto {
         }
     }
 
+    /* loaded from: classes4.dex */
     public static final class DeviceMobilityStatePnoScanStats extends MessageNano {
         public static final int HIGH_MVMT = 1;
         public static final int LOW_MVMT = 2;
@@ -8732,12 +9032,13 @@ public interface WifiMetricsProto {
         public DeviceMobilityStatePnoScanStats clear() {
             this.deviceMobilityState = 0;
             this.numTimesEnteredState = 0;
-            this.totalDurationMs = 0;
-            this.pnoDurationMs = 0;
+            this.totalDurationMs = 0L;
+            this.pnoDurationMs = 0L;
             this.cachedSize = -1;
             return this;
         }
 
+        @Override // com.android.framework.protobuf.nano.MessageNano
         public void writeTo(CodedOutputByteBufferNano output) throws IOException {
             if (this.deviceMobilityState != 0) {
                 output.writeInt32(1, this.deviceMobilityState);
@@ -8754,8 +9055,8 @@ public interface WifiMetricsProto {
             super.writeTo(output);
         }
 
-        /* access modifiers changed from: protected */
-        public int computeSerializedSize() {
+        @Override // com.android.framework.protobuf.nano.MessageNano
+        protected int computeSerializedSize() {
             int size = super.computeSerializedSize();
             if (this.deviceMobilityState != 0) {
                 size += CodedOutputByteBufferNano.computeInt32Size(1, this.deviceMobilityState);
@@ -8772,31 +9073,33 @@ public interface WifiMetricsProto {
             return size;
         }
 
+        @Override // com.android.framework.protobuf.nano.MessageNano
         public DeviceMobilityStatePnoScanStats mergeFrom(CodedInputByteBufferNano input) throws IOException {
             while (true) {
                 int tag = input.readTag();
-                if (tag != 0) {
-                    if (tag == 8) {
-                        int value = input.readInt32();
-                        switch (value) {
-                            case 0:
-                            case 1:
-                            case 2:
-                            case 3:
-                                this.deviceMobilityState = value;
-                                break;
-                        }
-                    } else if (tag == 16) {
-                        this.numTimesEnteredState = input.readInt32();
-                    } else if (tag == 24) {
-                        this.totalDurationMs = input.readInt64();
-                    } else if (tag == 32) {
-                        this.pnoDurationMs = input.readInt64();
-                    } else if (!WireFormatNano.parseUnknownField(input, tag)) {
+                if (tag == 0) {
+                    return this;
+                }
+                if (tag == 8) {
+                    int value = input.readInt32();
+                    switch (value) {
+                        case 0:
+                        case 1:
+                        case 2:
+                        case 3:
+                            this.deviceMobilityState = value;
+                            continue;
+                    }
+                } else if (tag == 16) {
+                    this.numTimesEnteredState = input.readInt32();
+                } else if (tag == 24) {
+                    this.totalDurationMs = input.readInt64();
+                } else if (tag != 32) {
+                    if (!WireFormatNano.parseUnknownField(input, tag)) {
                         return this;
                     }
                 } else {
-                    return this;
+                    this.pnoDurationMs = input.readInt64();
                 }
             }
         }
@@ -8810,6 +9113,7 @@ public interface WifiMetricsProto {
         }
     }
 
+    /* loaded from: classes4.dex */
     public static final class WifiP2pStats extends MessageNano {
         private static volatile WifiP2pStats[] _emptyArray;
         public P2pConnectionEvent[] connectionEvent;
@@ -8843,10 +9147,12 @@ public interface WifiMetricsProto {
             return this;
         }
 
+        @Override // com.android.framework.protobuf.nano.MessageNano
         public void writeTo(CodedOutputByteBufferNano output) throws IOException {
             int i = 0;
             if (this.groupEvent != null && this.groupEvent.length > 0) {
-                for (GroupEvent element : this.groupEvent) {
+                for (int i2 = 0; i2 < this.groupEvent.length; i2++) {
+                    GroupEvent element = this.groupEvent[i2];
                     if (element != null) {
                         output.writeMessage(1, element);
                     }
@@ -8854,18 +9160,19 @@ public interface WifiMetricsProto {
             }
             if (this.connectionEvent != null && this.connectionEvent.length > 0) {
                 while (true) {
-                    int i2 = i;
-                    if (i2 >= this.connectionEvent.length) {
+                    int i3 = i;
+                    if (i3 >= this.connectionEvent.length) {
                         break;
                     }
-                    P2pConnectionEvent element2 = this.connectionEvent[i2];
+                    P2pConnectionEvent element2 = this.connectionEvent[i3];
                     if (element2 != null) {
                         output.writeMessage(2, element2);
                     }
-                    i = i2 + 1;
+                    i = i3 + 1;
                 }
             }
-            if (this.numPersistentGroup != 0) {
+            int i4 = this.numPersistentGroup;
+            if (i4 != 0) {
                 output.writeInt32(3, this.numPersistentGroup);
             }
             if (this.numTotalPeerScans != 0) {
@@ -8877,13 +9184,14 @@ public interface WifiMetricsProto {
             super.writeTo(output);
         }
 
-        /* access modifiers changed from: protected */
-        public int computeSerializedSize() {
+        @Override // com.android.framework.protobuf.nano.MessageNano
+        protected int computeSerializedSize() {
             int i = super.computeSerializedSize();
             int i2 = 0;
             if (this.groupEvent != null && this.groupEvent.length > 0) {
                 int size = i;
-                for (GroupEvent element : this.groupEvent) {
+                for (int size2 = 0; size2 < this.groupEvent.length; size2++) {
+                    GroupEvent element = this.groupEvent[size2];
                     if (element != null) {
                         size += CodedOutputByteBufferNano.computeMessageSize(1, element);
                     }
@@ -8910,11 +9218,13 @@ public interface WifiMetricsProto {
                 i += CodedOutputByteBufferNano.computeInt32Size(4, this.numTotalPeerScans);
             }
             if (this.numTotalServiceScans != 0) {
-                return i + CodedOutputByteBufferNano.computeInt32Size(5, this.numTotalServiceScans);
+                int size3 = i + CodedOutputByteBufferNano.computeInt32Size(5, this.numTotalServiceScans);
+                return size3;
             }
             return i;
         }
 
+        @Override // com.android.framework.protobuf.nano.MessageNano
         public WifiP2pStats mergeFrom(CodedInputByteBufferNano input) throws IOException {
             while (true) {
                 int tag = input.readTag();
@@ -8924,7 +9234,7 @@ public interface WifiMetricsProto {
                 if (tag == 10) {
                     int arrayLength = WireFormatNano.getRepeatedFieldArrayLength(input, 10);
                     int i = this.groupEvent == null ? 0 : this.groupEvent.length;
-                    GroupEvent[] newArray = new GroupEvent[(i + arrayLength)];
+                    GroupEvent[] newArray = new GroupEvent[i + arrayLength];
                     if (i != 0) {
                         System.arraycopy(this.groupEvent, 0, newArray, 0, i);
                     }
@@ -8940,7 +9250,7 @@ public interface WifiMetricsProto {
                 } else if (tag == 18) {
                     int arrayLength2 = WireFormatNano.getRepeatedFieldArrayLength(input, 18);
                     int i2 = this.connectionEvent == null ? 0 : this.connectionEvent.length;
-                    P2pConnectionEvent[] newArray2 = new P2pConnectionEvent[(i2 + arrayLength2)];
+                    P2pConnectionEvent[] newArray2 = new P2pConnectionEvent[i2 + arrayLength2];
                     if (i2 != 0) {
                         System.arraycopy(this.connectionEvent, 0, newArray2, 0, i2);
                     }
@@ -8957,10 +9267,12 @@ public interface WifiMetricsProto {
                     this.numPersistentGroup = input.readInt32();
                 } else if (tag == 32) {
                     this.numTotalPeerScans = input.readInt32();
-                } else if (tag == 40) {
+                } else if (tag != 40) {
+                    if (!WireFormatNano.parseUnknownField(input, tag)) {
+                        return this;
+                    }
+                } else {
                     this.numTotalServiceScans = input.readInt32();
-                } else if (!WireFormatNano.parseUnknownField(input, tag)) {
-                    return this;
                 }
             }
         }
@@ -8974,6 +9286,7 @@ public interface WifiMetricsProto {
         }
     }
 
+    /* loaded from: classes4.dex */
     public static final class P2pConnectionEvent extends MessageNano {
         public static final int CLF_CANCEL = 3;
         public static final int CLF_INVITATION_FAIL = 5;
@@ -9015,7 +9328,7 @@ public interface WifiMetricsProto {
         }
 
         public P2pConnectionEvent clear() {
-            this.startTimeMillis = 0;
+            this.startTimeMillis = 0L;
             this.connectionType = 0;
             this.wpsMethod = -1;
             this.durationTakenToConnectMillis = 0;
@@ -9024,6 +9337,7 @@ public interface WifiMetricsProto {
             return this;
         }
 
+        @Override // com.android.framework.protobuf.nano.MessageNano
         public void writeTo(CodedOutputByteBufferNano output) throws IOException {
             if (this.startTimeMillis != 0) {
                 output.writeInt64(1, this.startTimeMillis);
@@ -9043,8 +9357,8 @@ public interface WifiMetricsProto {
             super.writeTo(output);
         }
 
-        /* access modifiers changed from: protected */
-        public int computeSerializedSize() {
+        @Override // com.android.framework.protobuf.nano.MessageNano
+        protected int computeSerializedSize() {
             int size = super.computeSerializedSize();
             if (this.startTimeMillis != 0) {
                 size += CodedOutputByteBufferNano.computeInt64Size(1, this.startTimeMillis);
@@ -9064,59 +9378,56 @@ public interface WifiMetricsProto {
             return size;
         }
 
+        @Override // com.android.framework.protobuf.nano.MessageNano
         public P2pConnectionEvent mergeFrom(CodedInputByteBufferNano input) throws IOException {
             while (true) {
                 int tag = input.readTag();
                 if (tag == 0) {
                     return this;
                 }
-                if (tag != 8) {
-                    if (tag != 16) {
-                        if (tag == 24) {
-                            int value = input.readInt32();
-                            switch (value) {
-                                case -1:
-                                case 0:
-                                case 1:
-                                case 2:
-                                case 3:
-                                    this.wpsMethod = value;
-                                    break;
-                            }
-                        } else if (tag != 32) {
-                            if (tag == 40) {
-                                int value2 = input.readInt32();
-                                switch (value2) {
-                                    case 0:
-                                    case 1:
-                                    case 2:
-                                    case 3:
-                                    case 4:
-                                    case 5:
-                                    case 6:
-                                    case 7:
-                                        this.connectivityLevelFailureCode = value2;
-                                        break;
-                                }
-                            } else if (!WireFormatNano.parseUnknownField(input, tag)) {
-                                return this;
-                            }
-                        } else {
-                            this.durationTakenToConnectMillis = input.readInt32();
-                        }
-                    } else {
-                        int value3 = input.readInt32();
-                        switch (value3) {
-                            case 0:
-                            case 1:
-                            case 2:
-                            case 3:
-                                this.connectionType = value3;
-                                break;
-                        }
+                if (tag == 8) {
+                    this.startTimeMillis = input.readInt64();
+                } else if (tag == 16) {
+                    int value = input.readInt32();
+                    switch (value) {
+                        case 0:
+                        case 1:
+                        case 2:
+                        case 3:
+                            this.connectionType = value;
+                            continue;
+                    }
+                } else if (tag == 24) {
+                    int value2 = input.readInt32();
+                    switch (value2) {
+                        case -1:
+                        case 0:
+                        case 1:
+                        case 2:
+                        case 3:
+                            this.wpsMethod = value2;
+                            continue;
+                    }
+                } else if (tag == 32) {
+                    this.durationTakenToConnectMillis = input.readInt32();
+                } else if (tag != 40) {
+                    if (!WireFormatNano.parseUnknownField(input, tag)) {
+                        return this;
                     }
                 } else {
-                    this.startTimeMillis = input.readInt64();
+                    int value3 = input.readInt32();
+                    switch (value3) {
+                        case 0:
+                        case 1:
+                        case 2:
+                        case 3:
+                        case 4:
+                        case 5:
+                        case 6:
+                        case 7:
+                            this.connectivityLevelFailureCode = value3;
+                            continue;
+                    }
                 }
             }
         }
@@ -9130,6 +9441,7 @@ public interface WifiMetricsProto {
         }
     }
 
+    /* loaded from: classes4.dex */
     public static final class GroupEvent extends MessageNano {
         public static final int GROUP_CLIENT = 1;
         public static final int GROUP_OWNER = 0;
@@ -9160,7 +9472,7 @@ public interface WifiMetricsProto {
 
         public GroupEvent clear() {
             this.netId = 0;
-            this.startTimeMillis = 0;
+            this.startTimeMillis = 0L;
             this.channelFrequency = 0;
             this.groupRole = 0;
             this.numConnectedClients = 0;
@@ -9171,6 +9483,7 @@ public interface WifiMetricsProto {
             return this;
         }
 
+        @Override // com.android.framework.protobuf.nano.MessageNano
         public void writeTo(CodedOutputByteBufferNano output) throws IOException {
             if (this.netId != 0) {
                 output.writeInt32(1, this.netId);
@@ -9199,8 +9512,8 @@ public interface WifiMetricsProto {
             super.writeTo(output);
         }
 
-        /* access modifiers changed from: protected */
-        public int computeSerializedSize() {
+        @Override // com.android.framework.protobuf.nano.MessageNano
+        protected int computeSerializedSize() {
             int size = super.computeSerializedSize();
             if (this.netId != 0) {
                 size += CodedOutputByteBufferNano.computeInt32Size(1, this.netId);
@@ -9229,6 +9542,7 @@ public interface WifiMetricsProto {
             return size;
         }
 
+        @Override // com.android.framework.protobuf.nano.MessageNano
         public GroupEvent mergeFrom(CodedInputByteBufferNano input) throws IOException {
             while (true) {
                 int tag = input.readTag();
@@ -9239,28 +9553,28 @@ public interface WifiMetricsProto {
                     this.netId = input.readInt32();
                 } else if (tag == 16) {
                     this.startTimeMillis = input.readInt64();
-                } else if (tag != 24) {
-                    if (tag == 40) {
-                        int value = input.readInt32();
-                        switch (value) {
-                            case 0:
-                            case 1:
-                                this.groupRole = value;
-                                break;
-                        }
-                    } else if (tag == 48) {
-                        this.numConnectedClients = input.readInt32();
-                    } else if (tag == 56) {
-                        this.numCumulativeClients = input.readInt32();
-                    } else if (tag == 64) {
-                        this.sessionDurationMillis = input.readInt32();
-                    } else if (tag == 72) {
-                        this.idleDurationMillis = input.readInt32();
-                    } else if (!WireFormatNano.parseUnknownField(input, tag)) {
+                } else if (tag == 24) {
+                    this.channelFrequency = input.readInt32();
+                } else if (tag == 40) {
+                    int value = input.readInt32();
+                    switch (value) {
+                        case 0:
+                        case 1:
+                            this.groupRole = value;
+                            continue;
+                    }
+                } else if (tag == 48) {
+                    this.numConnectedClients = input.readInt32();
+                } else if (tag == 56) {
+                    this.numCumulativeClients = input.readInt32();
+                } else if (tag == 64) {
+                    this.sessionDurationMillis = input.readInt32();
+                } else if (tag != 72) {
+                    if (!WireFormatNano.parseUnknownField(input, tag)) {
                         return this;
                     }
                 } else {
-                    this.channelFrequency = input.readInt32();
+                    this.idleDurationMillis = input.readInt32();
                 }
             }
         }
@@ -9274,6 +9588,7 @@ public interface WifiMetricsProto {
         }
     }
 
+    /* loaded from: classes4.dex */
     public static final class WifiDppLog extends MessageNano {
         public static final int EASY_CONNECT_EVENT_FAILURE_AUTHENTICATION = 2;
         public static final int EASY_CONNECT_EVENT_FAILURE_BUSY = 5;
@@ -9295,6 +9610,7 @@ public interface WifiMetricsProto {
         public int numDppEnrolleeInitiatorRequests;
         public int numDppEnrolleeSuccess;
 
+        /* loaded from: classes4.dex */
         public static final class DppConfiguratorSuccessStatusHistogramBucket extends MessageNano {
             private static volatile DppConfiguratorSuccessStatusHistogramBucket[] _emptyArray;
             public int count;
@@ -9322,6 +9638,7 @@ public interface WifiMetricsProto {
                 return this;
             }
 
+            @Override // com.android.framework.protobuf.nano.MessageNano
             public void writeTo(CodedOutputByteBufferNano output) throws IOException {
                 if (this.dppStatusType != 0) {
                     output.writeInt32(1, this.dppStatusType);
@@ -9332,8 +9649,8 @@ public interface WifiMetricsProto {
                 super.writeTo(output);
             }
 
-            /* access modifiers changed from: protected */
-            public int computeSerializedSize() {
+            @Override // com.android.framework.protobuf.nano.MessageNano
+            protected int computeSerializedSize() {
                 int size = super.computeSerializedSize();
                 if (this.dppStatusType != 0) {
                     size += CodedOutputByteBufferNano.computeInt32Size(1, this.dppStatusType);
@@ -9344,25 +9661,27 @@ public interface WifiMetricsProto {
                 return size;
             }
 
+            @Override // com.android.framework.protobuf.nano.MessageNano
             public DppConfiguratorSuccessStatusHistogramBucket mergeFrom(CodedInputByteBufferNano input) throws IOException {
                 while (true) {
                     int tag = input.readTag();
-                    if (tag != 0) {
-                        if (tag == 8) {
-                            int value = input.readInt32();
-                            switch (value) {
-                                case 0:
-                                case 1:
-                                    this.dppStatusType = value;
-                                    break;
-                            }
-                        } else if (tag == 16) {
-                            this.count = input.readInt32();
-                        } else if (!WireFormatNano.parseUnknownField(input, tag)) {
+                    if (tag == 0) {
+                        return this;
+                    }
+                    if (tag == 8) {
+                        int value = input.readInt32();
+                        switch (value) {
+                            case 0:
+                            case 1:
+                                this.dppStatusType = value;
+                                continue;
+                        }
+                    } else if (tag != 16) {
+                        if (!WireFormatNano.parseUnknownField(input, tag)) {
                             return this;
                         }
                     } else {
-                        return this;
+                        this.count = input.readInt32();
                     }
                 }
             }
@@ -9376,6 +9695,7 @@ public interface WifiMetricsProto {
             }
         }
 
+        /* loaded from: classes4.dex */
         public static final class DppFailureStatusHistogramBucket extends MessageNano {
             private static volatile DppFailureStatusHistogramBucket[] _emptyArray;
             public int count;
@@ -9403,6 +9723,7 @@ public interface WifiMetricsProto {
                 return this;
             }
 
+            @Override // com.android.framework.protobuf.nano.MessageNano
             public void writeTo(CodedOutputByteBufferNano output) throws IOException {
                 if (this.dppStatusType != 0) {
                     output.writeInt32(1, this.dppStatusType);
@@ -9413,8 +9734,8 @@ public interface WifiMetricsProto {
                 super.writeTo(output);
             }
 
-            /* access modifiers changed from: protected */
-            public int computeSerializedSize() {
+            @Override // com.android.framework.protobuf.nano.MessageNano
+            protected int computeSerializedSize() {
                 int size = super.computeSerializedSize();
                 if (this.dppStatusType != 0) {
                     size += CodedOutputByteBufferNano.computeInt32Size(1, this.dppStatusType);
@@ -9425,33 +9746,35 @@ public interface WifiMetricsProto {
                 return size;
             }
 
+            @Override // com.android.framework.protobuf.nano.MessageNano
             public DppFailureStatusHistogramBucket mergeFrom(CodedInputByteBufferNano input) throws IOException {
                 while (true) {
                     int tag = input.readTag();
-                    if (tag != 0) {
-                        if (tag == 8) {
-                            int value = input.readInt32();
-                            switch (value) {
-                                case 0:
-                                case 1:
-                                case 2:
-                                case 3:
-                                case 4:
-                                case 5:
-                                case 6:
-                                case 7:
-                                case 8:
-                                case 9:
-                                    this.dppStatusType = value;
-                                    break;
-                            }
-                        } else if (tag == 16) {
-                            this.count = input.readInt32();
-                        } else if (!WireFormatNano.parseUnknownField(input, tag)) {
+                    if (tag == 0) {
+                        return this;
+                    }
+                    if (tag == 8) {
+                        int value = input.readInt32();
+                        switch (value) {
+                            case 0:
+                            case 1:
+                            case 2:
+                            case 3:
+                            case 4:
+                            case 5:
+                            case 6:
+                            case 7:
+                            case 8:
+                            case 9:
+                                this.dppStatusType = value;
+                                continue;
+                        }
+                    } else if (tag != 16) {
+                        if (!WireFormatNano.parseUnknownField(input, tag)) {
                             return this;
                         }
                     } else {
-                        return this;
+                        this.count = input.readInt32();
                     }
                 }
             }
@@ -9491,6 +9814,7 @@ public interface WifiMetricsProto {
             return this;
         }
 
+        @Override // com.android.framework.protobuf.nano.MessageNano
         public void writeTo(CodedOutputByteBufferNano output) throws IOException {
             if (this.numDppConfiguratorInitiatorRequests != 0) {
                 output.writeInt32(1, this.numDppConfiguratorInitiatorRequests);
@@ -9503,14 +9827,16 @@ public interface WifiMetricsProto {
             }
             int i = 0;
             if (this.dppConfiguratorSuccessCode != null && this.dppConfiguratorSuccessCode.length > 0) {
-                for (DppConfiguratorSuccessStatusHistogramBucket element : this.dppConfiguratorSuccessCode) {
+                for (int i2 = 0; i2 < this.dppConfiguratorSuccessCode.length; i2++) {
+                    DppConfiguratorSuccessStatusHistogramBucket element = this.dppConfiguratorSuccessCode[i2];
                     if (element != null) {
                         output.writeMessage(4, element);
                     }
                 }
             }
             if (this.dppFailureCode != null && this.dppFailureCode.length > 0) {
-                for (DppFailureStatusHistogramBucket element2 : this.dppFailureCode) {
+                for (int i3 = 0; i3 < this.dppFailureCode.length; i3++) {
+                    DppFailureStatusHistogramBucket element2 = this.dppFailureCode[i3];
                     if (element2 != null) {
                         output.writeMessage(5, element2);
                     }
@@ -9518,22 +9844,22 @@ public interface WifiMetricsProto {
             }
             if (this.dppOperationTime != null && this.dppOperationTime.length > 0) {
                 while (true) {
-                    int i2 = i;
-                    if (i2 >= this.dppOperationTime.length) {
+                    int i4 = i;
+                    if (i4 >= this.dppOperationTime.length) {
                         break;
                     }
-                    HistogramBucketInt32 element3 = this.dppOperationTime[i2];
+                    HistogramBucketInt32 element3 = this.dppOperationTime[i4];
                     if (element3 != null) {
                         output.writeMessage(7, element3);
                     }
-                    i = i2 + 1;
+                    i = i4 + 1;
                 }
             }
             super.writeTo(output);
         }
 
-        /* access modifiers changed from: protected */
-        public int computeSerializedSize() {
+        @Override // com.android.framework.protobuf.nano.MessageNano
+        protected int computeSerializedSize() {
             int size = super.computeSerializedSize();
             if (this.numDppConfiguratorInitiatorRequests != 0) {
                 size += CodedOutputByteBufferNano.computeInt32Size(1, this.numDppConfiguratorInitiatorRequests);
@@ -9547,7 +9873,8 @@ public interface WifiMetricsProto {
             int i = 0;
             if (this.dppConfiguratorSuccessCode != null && this.dppConfiguratorSuccessCode.length > 0) {
                 int size2 = size;
-                for (DppConfiguratorSuccessStatusHistogramBucket element : this.dppConfiguratorSuccessCode) {
+                for (int size3 = 0; size3 < this.dppConfiguratorSuccessCode.length; size3++) {
+                    DppConfiguratorSuccessStatusHistogramBucket element = this.dppConfiguratorSuccessCode[size3];
                     if (element != null) {
                         size2 += CodedOutputByteBufferNano.computeMessageSize(4, element);
                     }
@@ -9555,13 +9882,14 @@ public interface WifiMetricsProto {
                 size = size2;
             }
             if (this.dppFailureCode != null && this.dppFailureCode.length > 0) {
-                int size3 = size;
-                for (DppFailureStatusHistogramBucket element2 : this.dppFailureCode) {
+                int size4 = size;
+                for (int size5 = 0; size5 < this.dppFailureCode.length; size5++) {
+                    DppFailureStatusHistogramBucket element2 = this.dppFailureCode[size5];
                     if (element2 != null) {
-                        size3 += CodedOutputByteBufferNano.computeMessageSize(5, element2);
+                        size4 += CodedOutputByteBufferNano.computeMessageSize(5, element2);
                     }
                 }
-                size = size3;
+                size = size4;
             }
             if (this.dppOperationTime != null && this.dppOperationTime.length > 0) {
                 while (true) {
@@ -9579,6 +9907,7 @@ public interface WifiMetricsProto {
             return size;
         }
 
+        @Override // com.android.framework.protobuf.nano.MessageNano
         public WifiDppLog mergeFrom(CodedInputByteBufferNano input) throws IOException {
             while (true) {
                 int tag = input.readTag();
@@ -9590,11 +9919,12 @@ public interface WifiMetricsProto {
                 } else if (tag == 16) {
                     this.numDppEnrolleeInitiatorRequests = input.readInt32();
                 } else if (tag == 24) {
-                    this.numDppEnrolleeSuccess = input.readInt32();
+                    int arrayLength = input.readInt32();
+                    this.numDppEnrolleeSuccess = arrayLength;
                 } else if (tag == 34) {
-                    int arrayLength = WireFormatNano.getRepeatedFieldArrayLength(input, 34);
+                    int arrayLength2 = WireFormatNano.getRepeatedFieldArrayLength(input, 34);
                     int i = this.dppConfiguratorSuccessCode == null ? 0 : this.dppConfiguratorSuccessCode.length;
-                    DppConfiguratorSuccessStatusHistogramBucket[] newArray = new DppConfiguratorSuccessStatusHistogramBucket[(i + arrayLength)];
+                    DppConfiguratorSuccessStatusHistogramBucket[] newArray = new DppConfiguratorSuccessStatusHistogramBucket[i + arrayLength2];
                     if (i != 0) {
                         System.arraycopy(this.dppConfiguratorSuccessCode, 0, newArray, 0, i);
                     }
@@ -9608,9 +9938,9 @@ public interface WifiMetricsProto {
                     input.readMessage(newArray[i]);
                     this.dppConfiguratorSuccessCode = newArray;
                 } else if (tag == 42) {
-                    int arrayLength2 = WireFormatNano.getRepeatedFieldArrayLength(input, 42);
+                    int arrayLength3 = WireFormatNano.getRepeatedFieldArrayLength(input, 42);
                     int i2 = this.dppFailureCode == null ? 0 : this.dppFailureCode.length;
-                    DppFailureStatusHistogramBucket[] newArray2 = new DppFailureStatusHistogramBucket[(i2 + arrayLength2)];
+                    DppFailureStatusHistogramBucket[] newArray2 = new DppFailureStatusHistogramBucket[i2 + arrayLength3];
                     if (i2 != 0) {
                         System.arraycopy(this.dppFailureCode, 0, newArray2, 0, i2);
                     }
@@ -9623,10 +9953,14 @@ public interface WifiMetricsProto {
                     newArray2[i2] = new DppFailureStatusHistogramBucket();
                     input.readMessage(newArray2[i2]);
                     this.dppFailureCode = newArray2;
-                } else if (tag == 58) {
-                    int arrayLength3 = WireFormatNano.getRepeatedFieldArrayLength(input, 58);
+                } else if (tag != 58) {
+                    if (!WireFormatNano.parseUnknownField(input, tag)) {
+                        return this;
+                    }
+                } else {
+                    int arrayLength4 = WireFormatNano.getRepeatedFieldArrayLength(input, 58);
                     int i3 = this.dppOperationTime == null ? 0 : this.dppOperationTime.length;
-                    HistogramBucketInt32[] newArray3 = new HistogramBucketInt32[(i3 + arrayLength3)];
+                    HistogramBucketInt32[] newArray3 = new HistogramBucketInt32[i3 + arrayLength4];
                     if (i3 != 0) {
                         System.arraycopy(this.dppOperationTime, 0, newArray3, 0, i3);
                     }
@@ -9639,8 +9973,6 @@ public interface WifiMetricsProto {
                     newArray3[i3] = new HistogramBucketInt32();
                     input.readMessage(newArray3[i3]);
                     this.dppOperationTime = newArray3;
-                } else if (!WireFormatNano.parseUnknownField(input, tag)) {
-                    return this;
                 }
             }
         }
@@ -9654,11 +9986,13 @@ public interface WifiMetricsProto {
         }
     }
 
+    /* loaded from: classes4.dex */
     public static final class WifiConfigStoreIO extends MessageNano {
         private static volatile WifiConfigStoreIO[] _emptyArray;
         public DurationBucket[] readDurations;
         public DurationBucket[] writeDurations;
 
+        /* loaded from: classes4.dex */
         public static final class DurationBucket extends MessageNano {
             private static volatile DurationBucket[] _emptyArray;
             public int count;
@@ -9688,6 +10022,7 @@ public interface WifiMetricsProto {
                 return this;
             }
 
+            @Override // com.android.framework.protobuf.nano.MessageNano
             public void writeTo(CodedOutputByteBufferNano output) throws IOException {
                 if (this.rangeStartMs != 0) {
                     output.writeInt32(1, this.rangeStartMs);
@@ -9701,8 +10036,8 @@ public interface WifiMetricsProto {
                 super.writeTo(output);
             }
 
-            /* access modifiers changed from: protected */
-            public int computeSerializedSize() {
+            @Override // com.android.framework.protobuf.nano.MessageNano
+            protected int computeSerializedSize() {
                 int size = super.computeSerializedSize();
                 if (this.rangeStartMs != 0) {
                     size += CodedOutputByteBufferNano.computeInt32Size(1, this.rangeStartMs);
@@ -9716,6 +10051,7 @@ public interface WifiMetricsProto {
                 return size;
             }
 
+            @Override // com.android.framework.protobuf.nano.MessageNano
             public DurationBucket mergeFrom(CodedInputByteBufferNano input) throws IOException {
                 while (true) {
                     int tag = input.readTag();
@@ -9726,10 +10062,12 @@ public interface WifiMetricsProto {
                         this.rangeStartMs = input.readInt32();
                     } else if (tag == 16) {
                         this.rangeEndMs = input.readInt32();
-                    } else if (tag == 24) {
+                    } else if (tag != 24) {
+                        if (!WireFormatNano.parseUnknownField(input, tag)) {
+                            return this;
+                        }
+                    } else {
                         this.count = input.readInt32();
-                    } else if (!WireFormatNano.parseUnknownField(input, tag)) {
-                        return this;
                     }
                 }
             }
@@ -9765,10 +10103,12 @@ public interface WifiMetricsProto {
             return this;
         }
 
+        @Override // com.android.framework.protobuf.nano.MessageNano
         public void writeTo(CodedOutputByteBufferNano output) throws IOException {
             int i = 0;
             if (this.readDurations != null && this.readDurations.length > 0) {
-                for (DurationBucket element : this.readDurations) {
+                for (int i2 = 0; i2 < this.readDurations.length; i2++) {
+                    DurationBucket element = this.readDurations[i2];
                     if (element != null) {
                         output.writeMessage(1, element);
                     }
@@ -9776,27 +10116,28 @@ public interface WifiMetricsProto {
             }
             if (this.writeDurations != null && this.writeDurations.length > 0) {
                 while (true) {
-                    int i2 = i;
-                    if (i2 >= this.writeDurations.length) {
+                    int i3 = i;
+                    if (i3 >= this.writeDurations.length) {
                         break;
                     }
-                    DurationBucket element2 = this.writeDurations[i2];
+                    DurationBucket element2 = this.writeDurations[i3];
                     if (element2 != null) {
                         output.writeMessage(2, element2);
                     }
-                    i = i2 + 1;
+                    i = i3 + 1;
                 }
             }
             super.writeTo(output);
         }
 
-        /* access modifiers changed from: protected */
-        public int computeSerializedSize() {
+        @Override // com.android.framework.protobuf.nano.MessageNano
+        protected int computeSerializedSize() {
             int i = super.computeSerializedSize();
             int i2 = 0;
             if (this.readDurations != null && this.readDurations.length > 0) {
                 int size = i;
-                for (DurationBucket element : this.readDurations) {
+                for (int size2 = 0; size2 < this.readDurations.length; size2++) {
+                    DurationBucket element = this.readDurations[size2];
                     if (element != null) {
                         size += CodedOutputByteBufferNano.computeMessageSize(1, element);
                     }
@@ -9819,6 +10160,7 @@ public interface WifiMetricsProto {
             return i;
         }
 
+        @Override // com.android.framework.protobuf.nano.MessageNano
         public WifiConfigStoreIO mergeFrom(CodedInputByteBufferNano input) throws IOException {
             while (true) {
                 int tag = input.readTag();
@@ -9828,7 +10170,7 @@ public interface WifiMetricsProto {
                 if (tag == 10) {
                     int arrayLength = WireFormatNano.getRepeatedFieldArrayLength(input, 10);
                     int i = this.readDurations == null ? 0 : this.readDurations.length;
-                    DurationBucket[] newArray = new DurationBucket[(i + arrayLength)];
+                    DurationBucket[] newArray = new DurationBucket[i + arrayLength];
                     if (i != 0) {
                         System.arraycopy(this.readDurations, 0, newArray, 0, i);
                     }
@@ -9841,10 +10183,14 @@ public interface WifiMetricsProto {
                     newArray[i] = new DurationBucket();
                     input.readMessage(newArray[i]);
                     this.readDurations = newArray;
-                } else if (tag == 18) {
+                } else if (tag != 18) {
+                    if (!WireFormatNano.parseUnknownField(input, tag)) {
+                        return this;
+                    }
+                } else {
                     int arrayLength2 = WireFormatNano.getRepeatedFieldArrayLength(input, 18);
                     int i2 = this.writeDurations == null ? 0 : this.writeDurations.length;
-                    DurationBucket[] newArray2 = new DurationBucket[(i2 + arrayLength2)];
+                    DurationBucket[] newArray2 = new DurationBucket[i2 + arrayLength2];
                     if (i2 != 0) {
                         System.arraycopy(this.writeDurations, 0, newArray2, 0, i2);
                     }
@@ -9857,8 +10203,6 @@ public interface WifiMetricsProto {
                     newArray2[i2] = new DurationBucket();
                     input.readMessage(newArray2[i2]);
                     this.writeDurations = newArray2;
-                } else if (!WireFormatNano.parseUnknownField(input, tag)) {
-                    return this;
                 }
             }
         }
@@ -9872,6 +10216,7 @@ public interface WifiMetricsProto {
         }
     }
 
+    /* loaded from: classes4.dex */
     public static final class HistogramBucketInt32 extends MessageNano {
         private static volatile HistogramBucketInt32[] _emptyArray;
         public int count;
@@ -9901,6 +10246,7 @@ public interface WifiMetricsProto {
             return this;
         }
 
+        @Override // com.android.framework.protobuf.nano.MessageNano
         public void writeTo(CodedOutputByteBufferNano output) throws IOException {
             if (this.start != 0) {
                 output.writeInt32(1, this.start);
@@ -9914,8 +10260,8 @@ public interface WifiMetricsProto {
             super.writeTo(output);
         }
 
-        /* access modifiers changed from: protected */
-        public int computeSerializedSize() {
+        @Override // com.android.framework.protobuf.nano.MessageNano
+        protected int computeSerializedSize() {
             int size = super.computeSerializedSize();
             if (this.start != 0) {
                 size += CodedOutputByteBufferNano.computeInt32Size(1, this.start);
@@ -9929,6 +10275,7 @@ public interface WifiMetricsProto {
             return size;
         }
 
+        @Override // com.android.framework.protobuf.nano.MessageNano
         public HistogramBucketInt32 mergeFrom(CodedInputByteBufferNano input) throws IOException {
             while (true) {
                 int tag = input.readTag();
@@ -9939,10 +10286,12 @@ public interface WifiMetricsProto {
                     this.start = input.readInt32();
                 } else if (tag == 16) {
                     this.end = input.readInt32();
-                } else if (tag == 24) {
+                } else if (tag != 24) {
+                    if (!WireFormatNano.parseUnknownField(input, tag)) {
+                        return this;
+                    }
+                } else {
                     this.count = input.readInt32();
-                } else if (!WireFormatNano.parseUnknownField(input, tag)) {
-                    return this;
                 }
             }
         }
@@ -9956,6 +10305,7 @@ public interface WifiMetricsProto {
         }
     }
 
+    /* loaded from: classes4.dex */
     public static final class Int32Count extends MessageNano {
         private static volatile Int32Count[] _emptyArray;
         public int count;
@@ -9983,6 +10333,7 @@ public interface WifiMetricsProto {
             return this;
         }
 
+        @Override // com.android.framework.protobuf.nano.MessageNano
         public void writeTo(CodedOutputByteBufferNano output) throws IOException {
             if (this.key != 0) {
                 output.writeInt32(1, this.key);
@@ -9993,8 +10344,8 @@ public interface WifiMetricsProto {
             super.writeTo(output);
         }
 
-        /* access modifiers changed from: protected */
-        public int computeSerializedSize() {
+        @Override // com.android.framework.protobuf.nano.MessageNano
+        protected int computeSerializedSize() {
             int size = super.computeSerializedSize();
             if (this.key != 0) {
                 size += CodedOutputByteBufferNano.computeInt32Size(1, this.key);
@@ -10005,6 +10356,7 @@ public interface WifiMetricsProto {
             return size;
         }
 
+        @Override // com.android.framework.protobuf.nano.MessageNano
         public Int32Count mergeFrom(CodedInputByteBufferNano input) throws IOException {
             while (true) {
                 int tag = input.readTag();
@@ -10013,10 +10365,12 @@ public interface WifiMetricsProto {
                 }
                 if (tag == 8) {
                     this.key = input.readInt32();
-                } else if (tag == 16) {
+                } else if (tag != 16) {
+                    if (!WireFormatNano.parseUnknownField(input, tag)) {
+                        return this;
+                    }
+                } else {
                     this.count = input.readInt32();
-                } else if (!WireFormatNano.parseUnknownField(input, tag)) {
-                    return this;
                 }
             }
         }
@@ -10030,6 +10384,7 @@ public interface WifiMetricsProto {
         }
     }
 
+    /* loaded from: classes4.dex */
     public static final class LinkProbeStats extends MessageNano {
         public static final int LINK_PROBE_FAILURE_REASON_ALREADY_STARTED = 4;
         public static final int LINK_PROBE_FAILURE_REASON_MCS_UNSUPPORTED = 1;
@@ -10047,6 +10402,7 @@ public interface WifiMetricsProto {
         public Int32Count[] successRssiCounts;
         public HistogramBucketInt32[] successSecondsSinceLastTxSuccessHistogram;
 
+        /* loaded from: classes4.dex */
         public static final class LinkProbeFailureReasonCount extends MessageNano {
             private static volatile LinkProbeFailureReasonCount[] _emptyArray;
             public int count;
@@ -10074,6 +10430,7 @@ public interface WifiMetricsProto {
                 return this;
             }
 
+            @Override // com.android.framework.protobuf.nano.MessageNano
             public void writeTo(CodedOutputByteBufferNano output) throws IOException {
                 if (this.failureReason != 0) {
                     output.writeInt32(1, this.failureReason);
@@ -10084,8 +10441,8 @@ public interface WifiMetricsProto {
                 super.writeTo(output);
             }
 
-            /* access modifiers changed from: protected */
-            public int computeSerializedSize() {
+            @Override // com.android.framework.protobuf.nano.MessageNano
+            protected int computeSerializedSize() {
                 int size = super.computeSerializedSize();
                 if (this.failureReason != 0) {
                     size += CodedOutputByteBufferNano.computeInt32Size(1, this.failureReason);
@@ -10096,28 +10453,30 @@ public interface WifiMetricsProto {
                 return size;
             }
 
+            @Override // com.android.framework.protobuf.nano.MessageNano
             public LinkProbeFailureReasonCount mergeFrom(CodedInputByteBufferNano input) throws IOException {
                 while (true) {
                     int tag = input.readTag();
-                    if (tag != 0) {
-                        if (tag == 8) {
-                            int value = input.readInt32();
-                            switch (value) {
-                                case 0:
-                                case 1:
-                                case 2:
-                                case 3:
-                                case 4:
-                                    this.failureReason = value;
-                                    break;
-                            }
-                        } else if (tag == 16) {
-                            this.count = input.readInt32();
-                        } else if (!WireFormatNano.parseUnknownField(input, tag)) {
+                    if (tag == 0) {
+                        return this;
+                    }
+                    if (tag == 8) {
+                        int value = input.readInt32();
+                        switch (value) {
+                            case 0:
+                            case 1:
+                            case 2:
+                            case 3:
+                            case 4:
+                                this.failureReason = value;
+                                continue;
+                        }
+                    } else if (tag != 16) {
+                        if (!WireFormatNano.parseUnknownField(input, tag)) {
                             return this;
                         }
                     } else {
-                        return this;
+                        this.count = input.readInt32();
                     }
                 }
             }
@@ -10131,6 +10490,7 @@ public interface WifiMetricsProto {
             }
         }
 
+        /* loaded from: classes4.dex */
         public static final class ExperimentProbeCounts extends MessageNano {
             private static volatile ExperimentProbeCounts[] _emptyArray;
             public String experimentId;
@@ -10158,6 +10518,7 @@ public interface WifiMetricsProto {
                 return this;
             }
 
+            @Override // com.android.framework.protobuf.nano.MessageNano
             public void writeTo(CodedOutputByteBufferNano output) throws IOException {
                 if (!this.experimentId.equals("")) {
                     output.writeString(1, this.experimentId);
@@ -10168,8 +10529,8 @@ public interface WifiMetricsProto {
                 super.writeTo(output);
             }
 
-            /* access modifiers changed from: protected */
-            public int computeSerializedSize() {
+            @Override // com.android.framework.protobuf.nano.MessageNano
+            protected int computeSerializedSize() {
                 int size = super.computeSerializedSize();
                 if (!this.experimentId.equals("")) {
                     size += CodedOutputByteBufferNano.computeStringSize(1, this.experimentId);
@@ -10180,6 +10541,7 @@ public interface WifiMetricsProto {
                 return size;
             }
 
+            @Override // com.android.framework.protobuf.nano.MessageNano
             public ExperimentProbeCounts mergeFrom(CodedInputByteBufferNano input) throws IOException {
                 while (true) {
                     int tag = input.readTag();
@@ -10188,10 +10550,12 @@ public interface WifiMetricsProto {
                     }
                     if (tag == 10) {
                         this.experimentId = input.readString();
-                    } else if (tag == 16) {
+                    } else if (tag != 16) {
+                        if (!WireFormatNano.parseUnknownField(input, tag)) {
+                            return this;
+                        }
+                    } else {
                         this.probeCount = input.readInt32();
-                    } else if (!WireFormatNano.parseUnknownField(input, tag)) {
-                        return this;
                     }
                 }
             }
@@ -10234,59 +10598,68 @@ public interface WifiMetricsProto {
             return this;
         }
 
+        @Override // com.android.framework.protobuf.nano.MessageNano
         public void writeTo(CodedOutputByteBufferNano output) throws IOException {
             int i = 0;
             if (this.successRssiCounts != null && this.successRssiCounts.length > 0) {
-                for (Int32Count element : this.successRssiCounts) {
+                for (int i2 = 0; i2 < this.successRssiCounts.length; i2++) {
+                    Int32Count element = this.successRssiCounts[i2];
                     if (element != null) {
                         output.writeMessage(1, element);
                     }
                 }
             }
             if (this.failureRssiCounts != null && this.failureRssiCounts.length > 0) {
-                for (Int32Count element2 : this.failureRssiCounts) {
+                for (int i3 = 0; i3 < this.failureRssiCounts.length; i3++) {
+                    Int32Count element2 = this.failureRssiCounts[i3];
                     if (element2 != null) {
                         output.writeMessage(2, element2);
                     }
                 }
             }
             if (this.successLinkSpeedCounts != null && this.successLinkSpeedCounts.length > 0) {
-                for (Int32Count element3 : this.successLinkSpeedCounts) {
+                for (int i4 = 0; i4 < this.successLinkSpeedCounts.length; i4++) {
+                    Int32Count element3 = this.successLinkSpeedCounts[i4];
                     if (element3 != null) {
                         output.writeMessage(3, element3);
                     }
                 }
             }
             if (this.failureLinkSpeedCounts != null && this.failureLinkSpeedCounts.length > 0) {
-                for (Int32Count element4 : this.failureLinkSpeedCounts) {
+                for (int i5 = 0; i5 < this.failureLinkSpeedCounts.length; i5++) {
+                    Int32Count element4 = this.failureLinkSpeedCounts[i5];
                     if (element4 != null) {
                         output.writeMessage(4, element4);
                     }
                 }
             }
             if (this.successSecondsSinceLastTxSuccessHistogram != null && this.successSecondsSinceLastTxSuccessHistogram.length > 0) {
-                for (HistogramBucketInt32 element5 : this.successSecondsSinceLastTxSuccessHistogram) {
+                for (int i6 = 0; i6 < this.successSecondsSinceLastTxSuccessHistogram.length; i6++) {
+                    HistogramBucketInt32 element5 = this.successSecondsSinceLastTxSuccessHistogram[i6];
                     if (element5 != null) {
                         output.writeMessage(5, element5);
                     }
                 }
             }
             if (this.failureSecondsSinceLastTxSuccessHistogram != null && this.failureSecondsSinceLastTxSuccessHistogram.length > 0) {
-                for (HistogramBucketInt32 element6 : this.failureSecondsSinceLastTxSuccessHistogram) {
+                for (int i7 = 0; i7 < this.failureSecondsSinceLastTxSuccessHistogram.length; i7++) {
+                    HistogramBucketInt32 element6 = this.failureSecondsSinceLastTxSuccessHistogram[i7];
                     if (element6 != null) {
                         output.writeMessage(6, element6);
                     }
                 }
             }
             if (this.successElapsedTimeMsHistogram != null && this.successElapsedTimeMsHistogram.length > 0) {
-                for (HistogramBucketInt32 element7 : this.successElapsedTimeMsHistogram) {
+                for (int i8 = 0; i8 < this.successElapsedTimeMsHistogram.length; i8++) {
+                    HistogramBucketInt32 element7 = this.successElapsedTimeMsHistogram[i8];
                     if (element7 != null) {
                         output.writeMessage(7, element7);
                     }
                 }
             }
             if (this.failureReasonCounts != null && this.failureReasonCounts.length > 0) {
-                for (LinkProbeFailureReasonCount element8 : this.failureReasonCounts) {
+                for (int i9 = 0; i9 < this.failureReasonCounts.length; i9++) {
+                    LinkProbeFailureReasonCount element8 = this.failureReasonCounts[i9];
                     if (element8 != null) {
                         output.writeMessage(8, element8);
                     }
@@ -10294,27 +10667,28 @@ public interface WifiMetricsProto {
             }
             if (this.experimentProbeCounts != null && this.experimentProbeCounts.length > 0) {
                 while (true) {
-                    int i2 = i;
-                    if (i2 >= this.experimentProbeCounts.length) {
+                    int i10 = i;
+                    if (i10 >= this.experimentProbeCounts.length) {
                         break;
                     }
-                    ExperimentProbeCounts element9 = this.experimentProbeCounts[i2];
+                    ExperimentProbeCounts element9 = this.experimentProbeCounts[i10];
                     if (element9 != null) {
                         output.writeMessage(9, element9);
                     }
-                    i = i2 + 1;
+                    i = i10 + 1;
                 }
             }
             super.writeTo(output);
         }
 
-        /* access modifiers changed from: protected */
-        public int computeSerializedSize() {
+        @Override // com.android.framework.protobuf.nano.MessageNano
+        protected int computeSerializedSize() {
             int i = super.computeSerializedSize();
             int i2 = 0;
             if (this.successRssiCounts != null && this.successRssiCounts.length > 0) {
                 int size = i;
-                for (Int32Count element : this.successRssiCounts) {
+                for (int size2 = 0; size2 < this.successRssiCounts.length; size2++) {
+                    Int32Count element = this.successRssiCounts[size2];
                     if (element != null) {
                         size += CodedOutputByteBufferNano.computeMessageSize(1, element);
                     }
@@ -10322,67 +10696,74 @@ public interface WifiMetricsProto {
                 i = size;
             }
             if (this.failureRssiCounts != null && this.failureRssiCounts.length > 0) {
-                int size2 = i;
-                for (Int32Count element2 : this.failureRssiCounts) {
-                    if (element2 != null) {
-                        size2 += CodedOutputByteBufferNano.computeMessageSize(2, element2);
-                    }
-                }
-                i = size2;
-            }
-            if (this.successLinkSpeedCounts != null && this.successLinkSpeedCounts.length > 0) {
                 int size3 = i;
-                for (Int32Count element3 : this.successLinkSpeedCounts) {
-                    if (element3 != null) {
-                        size3 += CodedOutputByteBufferNano.computeMessageSize(3, element3);
+                for (int size4 = 0; size4 < this.failureRssiCounts.length; size4++) {
+                    Int32Count element2 = this.failureRssiCounts[size4];
+                    if (element2 != null) {
+                        size3 += CodedOutputByteBufferNano.computeMessageSize(2, element2);
                     }
                 }
                 i = size3;
             }
-            if (this.failureLinkSpeedCounts != null && this.failureLinkSpeedCounts.length > 0) {
-                int size4 = i;
-                for (Int32Count element4 : this.failureLinkSpeedCounts) {
-                    if (element4 != null) {
-                        size4 += CodedOutputByteBufferNano.computeMessageSize(4, element4);
-                    }
-                }
-                i = size4;
-            }
-            if (this.successSecondsSinceLastTxSuccessHistogram != null && this.successSecondsSinceLastTxSuccessHistogram.length > 0) {
+            if (this.successLinkSpeedCounts != null && this.successLinkSpeedCounts.length > 0) {
                 int size5 = i;
-                for (HistogramBucketInt32 element5 : this.successSecondsSinceLastTxSuccessHistogram) {
-                    if (element5 != null) {
-                        size5 += CodedOutputByteBufferNano.computeMessageSize(5, element5);
+                for (int size6 = 0; size6 < this.successLinkSpeedCounts.length; size6++) {
+                    Int32Count element3 = this.successLinkSpeedCounts[size6];
+                    if (element3 != null) {
+                        size5 += CodedOutputByteBufferNano.computeMessageSize(3, element3);
                     }
                 }
                 i = size5;
             }
-            if (this.failureSecondsSinceLastTxSuccessHistogram != null && this.failureSecondsSinceLastTxSuccessHistogram.length > 0) {
-                int size6 = i;
-                for (HistogramBucketInt32 element6 : this.failureSecondsSinceLastTxSuccessHistogram) {
-                    if (element6 != null) {
-                        size6 += CodedOutputByteBufferNano.computeMessageSize(6, element6);
-                    }
-                }
-                i = size6;
-            }
-            if (this.successElapsedTimeMsHistogram != null && this.successElapsedTimeMsHistogram.length > 0) {
+            if (this.failureLinkSpeedCounts != null && this.failureLinkSpeedCounts.length > 0) {
                 int size7 = i;
-                for (HistogramBucketInt32 element7 : this.successElapsedTimeMsHistogram) {
-                    if (element7 != null) {
-                        size7 += CodedOutputByteBufferNano.computeMessageSize(7, element7);
+                for (int size8 = 0; size8 < this.failureLinkSpeedCounts.length; size8++) {
+                    Int32Count element4 = this.failureLinkSpeedCounts[size8];
+                    if (element4 != null) {
+                        size7 += CodedOutputByteBufferNano.computeMessageSize(4, element4);
                     }
                 }
                 i = size7;
             }
-            if (this.failureReasonCounts != null && this.failureReasonCounts.length > 0) {
-                int size8 = i;
-                for (LinkProbeFailureReasonCount element8 : this.failureReasonCounts) {
-                    if (element8 != null) {
-                        size8 += CodedOutputByteBufferNano.computeMessageSize(8, element8);
+            if (this.successSecondsSinceLastTxSuccessHistogram != null && this.successSecondsSinceLastTxSuccessHistogram.length > 0) {
+                int size9 = i;
+                for (int size10 = 0; size10 < this.successSecondsSinceLastTxSuccessHistogram.length; size10++) {
+                    HistogramBucketInt32 element5 = this.successSecondsSinceLastTxSuccessHistogram[size10];
+                    if (element5 != null) {
+                        size9 += CodedOutputByteBufferNano.computeMessageSize(5, element5);
                     }
                 }
-                i = size8;
+                i = size9;
+            }
+            if (this.failureSecondsSinceLastTxSuccessHistogram != null && this.failureSecondsSinceLastTxSuccessHistogram.length > 0) {
+                int size11 = i;
+                for (int size12 = 0; size12 < this.failureSecondsSinceLastTxSuccessHistogram.length; size12++) {
+                    HistogramBucketInt32 element6 = this.failureSecondsSinceLastTxSuccessHistogram[size12];
+                    if (element6 != null) {
+                        size11 += CodedOutputByteBufferNano.computeMessageSize(6, element6);
+                    }
+                }
+                i = size11;
+            }
+            if (this.successElapsedTimeMsHistogram != null && this.successElapsedTimeMsHistogram.length > 0) {
+                int size13 = i;
+                for (int size14 = 0; size14 < this.successElapsedTimeMsHistogram.length; size14++) {
+                    HistogramBucketInt32 element7 = this.successElapsedTimeMsHistogram[size14];
+                    if (element7 != null) {
+                        size13 += CodedOutputByteBufferNano.computeMessageSize(7, element7);
+                    }
+                }
+                i = size13;
+            }
+            if (this.failureReasonCounts != null && this.failureReasonCounts.length > 0) {
+                int size15 = i;
+                for (int size16 = 0; size16 < this.failureReasonCounts.length; size16++) {
+                    LinkProbeFailureReasonCount element8 = this.failureReasonCounts[size16];
+                    if (element8 != null) {
+                        size15 += CodedOutputByteBufferNano.computeMessageSize(8, element8);
+                    }
+                }
+                i = size15;
             }
             if (this.experimentProbeCounts != null && this.experimentProbeCounts.length > 0) {
                 while (true) {
@@ -10400,6 +10781,7 @@ public interface WifiMetricsProto {
             return i;
         }
 
+        @Override // com.android.framework.protobuf.nano.MessageNano
         public LinkProbeStats mergeFrom(CodedInputByteBufferNano input) throws IOException {
             while (true) {
                 int tag = input.readTag();
@@ -10409,7 +10791,7 @@ public interface WifiMetricsProto {
                 if (tag == 10) {
                     int arrayLength = WireFormatNano.getRepeatedFieldArrayLength(input, 10);
                     int i = this.successRssiCounts == null ? 0 : this.successRssiCounts.length;
-                    Int32Count[] newArray = new Int32Count[(i + arrayLength)];
+                    Int32Count[] newArray = new Int32Count[i + arrayLength];
                     if (i != 0) {
                         System.arraycopy(this.successRssiCounts, 0, newArray, 0, i);
                     }
@@ -10425,7 +10807,7 @@ public interface WifiMetricsProto {
                 } else if (tag == 18) {
                     int arrayLength2 = WireFormatNano.getRepeatedFieldArrayLength(input, 18);
                     int i2 = this.failureRssiCounts == null ? 0 : this.failureRssiCounts.length;
-                    Int32Count[] newArray2 = new Int32Count[(i2 + arrayLength2)];
+                    Int32Count[] newArray2 = new Int32Count[i2 + arrayLength2];
                     if (i2 != 0) {
                         System.arraycopy(this.failureRssiCounts, 0, newArray2, 0, i2);
                     }
@@ -10441,7 +10823,7 @@ public interface WifiMetricsProto {
                 } else if (tag == 26) {
                     int arrayLength3 = WireFormatNano.getRepeatedFieldArrayLength(input, 26);
                     int i3 = this.successLinkSpeedCounts == null ? 0 : this.successLinkSpeedCounts.length;
-                    Int32Count[] newArray3 = new Int32Count[(i3 + arrayLength3)];
+                    Int32Count[] newArray3 = new Int32Count[i3 + arrayLength3];
                     if (i3 != 0) {
                         System.arraycopy(this.successLinkSpeedCounts, 0, newArray3, 0, i3);
                     }
@@ -10457,7 +10839,7 @@ public interface WifiMetricsProto {
                 } else if (tag == 34) {
                     int arrayLength4 = WireFormatNano.getRepeatedFieldArrayLength(input, 34);
                     int i4 = this.failureLinkSpeedCounts == null ? 0 : this.failureLinkSpeedCounts.length;
-                    Int32Count[] newArray4 = new Int32Count[(i4 + arrayLength4)];
+                    Int32Count[] newArray4 = new Int32Count[i4 + arrayLength4];
                     if (i4 != 0) {
                         System.arraycopy(this.failureLinkSpeedCounts, 0, newArray4, 0, i4);
                     }
@@ -10473,7 +10855,7 @@ public interface WifiMetricsProto {
                 } else if (tag == 42) {
                     int arrayLength5 = WireFormatNano.getRepeatedFieldArrayLength(input, 42);
                     int i5 = this.successSecondsSinceLastTxSuccessHistogram == null ? 0 : this.successSecondsSinceLastTxSuccessHistogram.length;
-                    HistogramBucketInt32[] newArray5 = new HistogramBucketInt32[(i5 + arrayLength5)];
+                    HistogramBucketInt32[] newArray5 = new HistogramBucketInt32[i5 + arrayLength5];
                     if (i5 != 0) {
                         System.arraycopy(this.successSecondsSinceLastTxSuccessHistogram, 0, newArray5, 0, i5);
                     }
@@ -10489,7 +10871,7 @@ public interface WifiMetricsProto {
                 } else if (tag == 50) {
                     int arrayLength6 = WireFormatNano.getRepeatedFieldArrayLength(input, 50);
                     int i6 = this.failureSecondsSinceLastTxSuccessHistogram == null ? 0 : this.failureSecondsSinceLastTxSuccessHistogram.length;
-                    HistogramBucketInt32[] newArray6 = new HistogramBucketInt32[(i6 + arrayLength6)];
+                    HistogramBucketInt32[] newArray6 = new HistogramBucketInt32[i6 + arrayLength6];
                     if (i6 != 0) {
                         System.arraycopy(this.failureSecondsSinceLastTxSuccessHistogram, 0, newArray6, 0, i6);
                     }
@@ -10505,7 +10887,7 @@ public interface WifiMetricsProto {
                 } else if (tag == 58) {
                     int arrayLength7 = WireFormatNano.getRepeatedFieldArrayLength(input, 58);
                     int i7 = this.successElapsedTimeMsHistogram == null ? 0 : this.successElapsedTimeMsHistogram.length;
-                    HistogramBucketInt32[] newArray7 = new HistogramBucketInt32[(i7 + arrayLength7)];
+                    HistogramBucketInt32[] newArray7 = new HistogramBucketInt32[i7 + arrayLength7];
                     if (i7 != 0) {
                         System.arraycopy(this.successElapsedTimeMsHistogram, 0, newArray7, 0, i7);
                     }
@@ -10521,7 +10903,7 @@ public interface WifiMetricsProto {
                 } else if (tag == 66) {
                     int arrayLength8 = WireFormatNano.getRepeatedFieldArrayLength(input, 66);
                     int i8 = this.failureReasonCounts == null ? 0 : this.failureReasonCounts.length;
-                    LinkProbeFailureReasonCount[] newArray8 = new LinkProbeFailureReasonCount[(i8 + arrayLength8)];
+                    LinkProbeFailureReasonCount[] newArray8 = new LinkProbeFailureReasonCount[i8 + arrayLength8];
                     if (i8 != 0) {
                         System.arraycopy(this.failureReasonCounts, 0, newArray8, 0, i8);
                     }
@@ -10534,10 +10916,14 @@ public interface WifiMetricsProto {
                     newArray8[i8] = new LinkProbeFailureReasonCount();
                     input.readMessage(newArray8[i8]);
                     this.failureReasonCounts = newArray8;
-                } else if (tag == 74) {
+                } else if (tag != 74) {
+                    if (!WireFormatNano.parseUnknownField(input, tag)) {
+                        return this;
+                    }
+                } else {
                     int arrayLength9 = WireFormatNano.getRepeatedFieldArrayLength(input, 74);
                     int i9 = this.experimentProbeCounts == null ? 0 : this.experimentProbeCounts.length;
-                    ExperimentProbeCounts[] newArray9 = new ExperimentProbeCounts[(i9 + arrayLength9)];
+                    ExperimentProbeCounts[] newArray9 = new ExperimentProbeCounts[i9 + arrayLength9];
                     if (i9 != 0) {
                         System.arraycopy(this.experimentProbeCounts, 0, newArray9, 0, i9);
                     }
@@ -10550,8 +10936,6 @@ public interface WifiMetricsProto {
                     newArray9[i9] = new ExperimentProbeCounts();
                     input.readMessage(newArray9[i9]);
                     this.experimentProbeCounts = newArray9;
-                } else if (!WireFormatNano.parseUnknownField(input, tag)) {
-                    return this;
                 }
             }
         }
@@ -10565,6 +10949,7 @@ public interface WifiMetricsProto {
         }
     }
 
+    /* loaded from: classes4.dex */
     public static final class NetworkSelectionExperimentDecisions extends MessageNano {
         private static volatile NetworkSelectionExperimentDecisions[] _emptyArray;
         public Int32Count[] differentSelectionNumChoicesCounter;
@@ -10596,6 +10981,7 @@ public interface WifiMetricsProto {
             return this;
         }
 
+        @Override // com.android.framework.protobuf.nano.MessageNano
         public void writeTo(CodedOutputByteBufferNano output) throws IOException {
             if (this.experiment1Id != 0) {
                 output.writeInt32(1, this.experiment1Id);
@@ -10605,7 +10991,8 @@ public interface WifiMetricsProto {
             }
             int i = 0;
             if (this.sameSelectionNumChoicesCounter != null && this.sameSelectionNumChoicesCounter.length > 0) {
-                for (Int32Count element : this.sameSelectionNumChoicesCounter) {
+                for (int i2 = 0; i2 < this.sameSelectionNumChoicesCounter.length; i2++) {
+                    Int32Count element = this.sameSelectionNumChoicesCounter[i2];
                     if (element != null) {
                         output.writeMessage(3, element);
                     }
@@ -10613,22 +11000,22 @@ public interface WifiMetricsProto {
             }
             if (this.differentSelectionNumChoicesCounter != null && this.differentSelectionNumChoicesCounter.length > 0) {
                 while (true) {
-                    int i2 = i;
-                    if (i2 >= this.differentSelectionNumChoicesCounter.length) {
+                    int i3 = i;
+                    if (i3 >= this.differentSelectionNumChoicesCounter.length) {
                         break;
                     }
-                    Int32Count element2 = this.differentSelectionNumChoicesCounter[i2];
+                    Int32Count element2 = this.differentSelectionNumChoicesCounter[i3];
                     if (element2 != null) {
                         output.writeMessage(4, element2);
                     }
-                    i = i2 + 1;
+                    i = i3 + 1;
                 }
             }
             super.writeTo(output);
         }
 
-        /* access modifiers changed from: protected */
-        public int computeSerializedSize() {
+        @Override // com.android.framework.protobuf.nano.MessageNano
+        protected int computeSerializedSize() {
             int size = super.computeSerializedSize();
             if (this.experiment1Id != 0) {
                 size += CodedOutputByteBufferNano.computeInt32Size(1, this.experiment1Id);
@@ -10639,7 +11026,8 @@ public interface WifiMetricsProto {
             int i = 0;
             if (this.sameSelectionNumChoicesCounter != null && this.sameSelectionNumChoicesCounter.length > 0) {
                 int size2 = size;
-                for (Int32Count element : this.sameSelectionNumChoicesCounter) {
+                for (int size3 = 0; size3 < this.sameSelectionNumChoicesCounter.length; size3++) {
+                    Int32Count element = this.sameSelectionNumChoicesCounter[size3];
                     if (element != null) {
                         size2 += CodedOutputByteBufferNano.computeMessageSize(3, element);
                     }
@@ -10662,6 +11050,7 @@ public interface WifiMetricsProto {
             return size;
         }
 
+        @Override // com.android.framework.protobuf.nano.MessageNano
         public NetworkSelectionExperimentDecisions mergeFrom(CodedInputByteBufferNano input) throws IOException {
             while (true) {
                 int tag = input.readTag();
@@ -10671,11 +11060,12 @@ public interface WifiMetricsProto {
                 if (tag == 8) {
                     this.experiment1Id = input.readInt32();
                 } else if (tag == 16) {
-                    this.experiment2Id = input.readInt32();
+                    int arrayLength = input.readInt32();
+                    this.experiment2Id = arrayLength;
                 } else if (tag == 26) {
-                    int arrayLength = WireFormatNano.getRepeatedFieldArrayLength(input, 26);
+                    int arrayLength2 = WireFormatNano.getRepeatedFieldArrayLength(input, 26);
                     int i = this.sameSelectionNumChoicesCounter == null ? 0 : this.sameSelectionNumChoicesCounter.length;
-                    Int32Count[] newArray = new Int32Count[(i + arrayLength)];
+                    Int32Count[] newArray = new Int32Count[i + arrayLength2];
                     if (i != 0) {
                         System.arraycopy(this.sameSelectionNumChoicesCounter, 0, newArray, 0, i);
                     }
@@ -10688,10 +11078,14 @@ public interface WifiMetricsProto {
                     newArray[i] = new Int32Count();
                     input.readMessage(newArray[i]);
                     this.sameSelectionNumChoicesCounter = newArray;
-                } else if (tag == 34) {
-                    int arrayLength2 = WireFormatNano.getRepeatedFieldArrayLength(input, 34);
+                } else if (tag != 34) {
+                    if (!WireFormatNano.parseUnknownField(input, tag)) {
+                        return this;
+                    }
+                } else {
+                    int arrayLength3 = WireFormatNano.getRepeatedFieldArrayLength(input, 34);
                     int i2 = this.differentSelectionNumChoicesCounter == null ? 0 : this.differentSelectionNumChoicesCounter.length;
-                    Int32Count[] newArray2 = new Int32Count[(i2 + arrayLength2)];
+                    Int32Count[] newArray2 = new Int32Count[i2 + arrayLength3];
                     if (i2 != 0) {
                         System.arraycopy(this.differentSelectionNumChoicesCounter, 0, newArray2, 0, i2);
                     }
@@ -10704,8 +11098,6 @@ public interface WifiMetricsProto {
                     newArray2[i2] = new Int32Count();
                     input.readMessage(newArray2[i2]);
                     this.differentSelectionNumChoicesCounter = newArray2;
-                } else if (!WireFormatNano.parseUnknownField(input, tag)) {
-                    return this;
                 }
             }
         }
@@ -10719,6 +11111,7 @@ public interface WifiMetricsProto {
         }
     }
 
+    /* loaded from: classes4.dex */
     public static final class WifiNetworkRequestApiLog extends MessageNano {
         private static volatile WifiNetworkRequestApiLog[] _emptyArray;
         public HistogramBucketInt32[] networkMatchSizeHistogram;
@@ -10754,18 +11147,21 @@ public interface WifiMetricsProto {
             return this;
         }
 
+        @Override // com.android.framework.protobuf.nano.MessageNano
         public void writeTo(CodedOutputByteBufferNano output) throws IOException {
             if (this.numRequest != 0) {
                 output.writeInt32(1, this.numRequest);
             }
             if (this.networkMatchSizeHistogram != null && this.networkMatchSizeHistogram.length > 0) {
-                for (HistogramBucketInt32 element : this.networkMatchSizeHistogram) {
+                for (int i = 0; i < this.networkMatchSizeHistogram.length; i++) {
+                    HistogramBucketInt32 element = this.networkMatchSizeHistogram[i];
                     if (element != null) {
                         output.writeMessage(2, element);
                     }
                 }
             }
-            if (this.numConnectSuccess != 0) {
+            int i2 = this.numConnectSuccess;
+            if (i2 != 0) {
                 output.writeInt32(3, this.numConnectSuccess);
             }
             if (this.numUserApprovalBypass != 0) {
@@ -10780,20 +11176,22 @@ public interface WifiMetricsProto {
             super.writeTo(output);
         }
 
-        /* access modifiers changed from: protected */
-        public int computeSerializedSize() {
+        @Override // com.android.framework.protobuf.nano.MessageNano
+        protected int computeSerializedSize() {
             int size = super.computeSerializedSize();
             if (this.numRequest != 0) {
                 size += CodedOutputByteBufferNano.computeInt32Size(1, this.numRequest);
             }
             if (this.networkMatchSizeHistogram != null && this.networkMatchSizeHistogram.length > 0) {
-                for (HistogramBucketInt32 element : this.networkMatchSizeHistogram) {
+                for (int i = 0; i < this.networkMatchSizeHistogram.length; i++) {
+                    HistogramBucketInt32 element = this.networkMatchSizeHistogram[i];
                     if (element != null) {
                         size += CodedOutputByteBufferNano.computeMessageSize(2, element);
                     }
                 }
             }
-            if (this.numConnectSuccess != 0) {
+            int i2 = this.numConnectSuccess;
+            if (i2 != 0) {
                 size += CodedOutputByteBufferNano.computeInt32Size(3, this.numConnectSuccess);
             }
             if (this.numUserApprovalBypass != 0) {
@@ -10808,6 +11206,7 @@ public interface WifiMetricsProto {
             return size;
         }
 
+        @Override // com.android.framework.protobuf.nano.MessageNano
         public WifiNetworkRequestApiLog mergeFrom(CodedInputByteBufferNano input) throws IOException {
             while (true) {
                 int tag = input.readTag();
@@ -10815,11 +11214,12 @@ public interface WifiMetricsProto {
                     return this;
                 }
                 if (tag == 8) {
-                    this.numRequest = input.readInt32();
+                    int arrayLength = input.readInt32();
+                    this.numRequest = arrayLength;
                 } else if (tag == 18) {
-                    int arrayLength = WireFormatNano.getRepeatedFieldArrayLength(input, 18);
+                    int arrayLength2 = WireFormatNano.getRepeatedFieldArrayLength(input, 18);
                     int i = this.networkMatchSizeHistogram == null ? 0 : this.networkMatchSizeHistogram.length;
-                    HistogramBucketInt32[] newArray = new HistogramBucketInt32[(i + arrayLength)];
+                    HistogramBucketInt32[] newArray = new HistogramBucketInt32[i + arrayLength2];
                     if (i != 0) {
                         System.arraycopy(this.networkMatchSizeHistogram, 0, newArray, 0, i);
                     }
@@ -10838,10 +11238,12 @@ public interface WifiMetricsProto {
                     this.numUserApprovalBypass = input.readInt32();
                 } else if (tag == 40) {
                     this.numUserReject = input.readInt32();
-                } else if (tag == 48) {
+                } else if (tag != 48) {
+                    if (!WireFormatNano.parseUnknownField(input, tag)) {
+                        return this;
+                    }
+                } else {
                     this.numApps = input.readInt32();
-                } else if (!WireFormatNano.parseUnknownField(input, tag)) {
-                    return this;
                 }
             }
         }
@@ -10855,6 +11257,7 @@ public interface WifiMetricsProto {
         }
     }
 
+    /* loaded from: classes4.dex */
     public static final class WifiNetworkSuggestionApiLog extends MessageNano {
         private static volatile WifiNetworkSuggestionApiLog[] _emptyArray;
         public HistogramBucketInt32[] networkListSizeHistogram;
@@ -10886,6 +11289,7 @@ public interface WifiMetricsProto {
             return this;
         }
 
+        @Override // com.android.framework.protobuf.nano.MessageNano
         public void writeTo(CodedOutputByteBufferNano output) throws IOException {
             if (this.numModification != 0) {
                 output.writeInt32(1, this.numModification);
@@ -10897,7 +11301,8 @@ public interface WifiMetricsProto {
                 output.writeInt32(3, this.numConnectFailure);
             }
             if (this.networkListSizeHistogram != null && this.networkListSizeHistogram.length > 0) {
-                for (HistogramBucketInt32 element : this.networkListSizeHistogram) {
+                for (int i = 0; i < this.networkListSizeHistogram.length; i++) {
+                    HistogramBucketInt32 element = this.networkListSizeHistogram[i];
                     if (element != null) {
                         output.writeMessage(4, element);
                     }
@@ -10906,8 +11311,8 @@ public interface WifiMetricsProto {
             super.writeTo(output);
         }
 
-        /* access modifiers changed from: protected */
-        public int computeSerializedSize() {
+        @Override // com.android.framework.protobuf.nano.MessageNano
+        protected int computeSerializedSize() {
             int size = super.computeSerializedSize();
             if (this.numModification != 0) {
                 size += CodedOutputByteBufferNano.computeInt32Size(1, this.numModification);
@@ -10919,7 +11324,8 @@ public interface WifiMetricsProto {
                 size += CodedOutputByteBufferNano.computeInt32Size(3, this.numConnectFailure);
             }
             if (this.networkListSizeHistogram != null && this.networkListSizeHistogram.length > 0) {
-                for (HistogramBucketInt32 element : this.networkListSizeHistogram) {
+                for (int i = 0; i < this.networkListSizeHistogram.length; i++) {
+                    HistogramBucketInt32 element = this.networkListSizeHistogram[i];
                     if (element != null) {
                         size += CodedOutputByteBufferNano.computeMessageSize(4, element);
                     }
@@ -10928,6 +11334,7 @@ public interface WifiMetricsProto {
             return size;
         }
 
+        @Override // com.android.framework.protobuf.nano.MessageNano
         public WifiNetworkSuggestionApiLog mergeFrom(CodedInputByteBufferNano input) throws IOException {
             while (true) {
                 int tag = input.readTag();
@@ -10939,11 +11346,16 @@ public interface WifiMetricsProto {
                 } else if (tag == 16) {
                     this.numConnectSuccess = input.readInt32();
                 } else if (tag == 24) {
-                    this.numConnectFailure = input.readInt32();
-                } else if (tag == 34) {
-                    int arrayLength = WireFormatNano.getRepeatedFieldArrayLength(input, 34);
+                    int arrayLength = input.readInt32();
+                    this.numConnectFailure = arrayLength;
+                } else if (tag != 34) {
+                    if (!WireFormatNano.parseUnknownField(input, tag)) {
+                        return this;
+                    }
+                } else {
+                    int arrayLength2 = WireFormatNano.getRepeatedFieldArrayLength(input, 34);
                     int i = this.networkListSizeHistogram == null ? 0 : this.networkListSizeHistogram.length;
-                    HistogramBucketInt32[] newArray = new HistogramBucketInt32[(i + arrayLength)];
+                    HistogramBucketInt32[] newArray = new HistogramBucketInt32[i + arrayLength2];
                     if (i != 0) {
                         System.arraycopy(this.networkListSizeHistogram, 0, newArray, 0, i);
                     }
@@ -10956,8 +11368,6 @@ public interface WifiMetricsProto {
                     newArray[i] = new HistogramBucketInt32();
                     input.readMessage(newArray[i]);
                     this.networkListSizeHistogram = newArray;
-                } else if (!WireFormatNano.parseUnknownField(input, tag)) {
-                    return this;
                 }
             }
         }
@@ -10971,6 +11381,7 @@ public interface WifiMetricsProto {
         }
     }
 
+    /* loaded from: classes4.dex */
     public static final class WifiLockStats extends MessageNano {
         private static volatile WifiLockStats[] _emptyArray;
         public HistogramBucketInt32[] highPerfActiveSessionDurationSecHistogram;
@@ -10996,8 +11407,8 @@ public interface WifiMetricsProto {
         }
 
         public WifiLockStats clear() {
-            this.highPerfActiveTimeMs = 0;
-            this.lowLatencyActiveTimeMs = 0;
+            this.highPerfActiveTimeMs = 0L;
+            this.lowLatencyActiveTimeMs = 0L;
             this.highPerfLockAcqDurationSecHistogram = HistogramBucketInt32.emptyArray();
             this.lowLatencyLockAcqDurationSecHistogram = HistogramBucketInt32.emptyArray();
             this.highPerfActiveSessionDurationSecHistogram = HistogramBucketInt32.emptyArray();
@@ -11006,6 +11417,7 @@ public interface WifiMetricsProto {
             return this;
         }
 
+        @Override // com.android.framework.protobuf.nano.MessageNano
         public void writeTo(CodedOutputByteBufferNano output) throws IOException {
             if (this.highPerfActiveTimeMs != 0) {
                 output.writeInt64(1, this.highPerfActiveTimeMs);
@@ -11015,21 +11427,24 @@ public interface WifiMetricsProto {
             }
             int i = 0;
             if (this.highPerfLockAcqDurationSecHistogram != null && this.highPerfLockAcqDurationSecHistogram.length > 0) {
-                for (HistogramBucketInt32 element : this.highPerfLockAcqDurationSecHistogram) {
+                for (int i2 = 0; i2 < this.highPerfLockAcqDurationSecHistogram.length; i2++) {
+                    HistogramBucketInt32 element = this.highPerfLockAcqDurationSecHistogram[i2];
                     if (element != null) {
                         output.writeMessage(3, element);
                     }
                 }
             }
             if (this.lowLatencyLockAcqDurationSecHistogram != null && this.lowLatencyLockAcqDurationSecHistogram.length > 0) {
-                for (HistogramBucketInt32 element2 : this.lowLatencyLockAcqDurationSecHistogram) {
+                for (int i3 = 0; i3 < this.lowLatencyLockAcqDurationSecHistogram.length; i3++) {
+                    HistogramBucketInt32 element2 = this.lowLatencyLockAcqDurationSecHistogram[i3];
                     if (element2 != null) {
                         output.writeMessage(4, element2);
                     }
                 }
             }
             if (this.highPerfActiveSessionDurationSecHistogram != null && this.highPerfActiveSessionDurationSecHistogram.length > 0) {
-                for (HistogramBucketInt32 element3 : this.highPerfActiveSessionDurationSecHistogram) {
+                for (int i4 = 0; i4 < this.highPerfActiveSessionDurationSecHistogram.length; i4++) {
+                    HistogramBucketInt32 element3 = this.highPerfActiveSessionDurationSecHistogram[i4];
                     if (element3 != null) {
                         output.writeMessage(5, element3);
                     }
@@ -11037,22 +11452,22 @@ public interface WifiMetricsProto {
             }
             if (this.lowLatencyActiveSessionDurationSecHistogram != null && this.lowLatencyActiveSessionDurationSecHistogram.length > 0) {
                 while (true) {
-                    int i2 = i;
-                    if (i2 >= this.lowLatencyActiveSessionDurationSecHistogram.length) {
+                    int i5 = i;
+                    if (i5 >= this.lowLatencyActiveSessionDurationSecHistogram.length) {
                         break;
                     }
-                    HistogramBucketInt32 element4 = this.lowLatencyActiveSessionDurationSecHistogram[i2];
+                    HistogramBucketInt32 element4 = this.lowLatencyActiveSessionDurationSecHistogram[i5];
                     if (element4 != null) {
                         output.writeMessage(6, element4);
                     }
-                    i = i2 + 1;
+                    i = i5 + 1;
                 }
             }
             super.writeTo(output);
         }
 
-        /* access modifiers changed from: protected */
-        public int computeSerializedSize() {
+        @Override // com.android.framework.protobuf.nano.MessageNano
+        protected int computeSerializedSize() {
             int size = super.computeSerializedSize();
             if (this.highPerfActiveTimeMs != 0) {
                 size += CodedOutputByteBufferNano.computeInt64Size(1, this.highPerfActiveTimeMs);
@@ -11063,7 +11478,8 @@ public interface WifiMetricsProto {
             int i = 0;
             if (this.highPerfLockAcqDurationSecHistogram != null && this.highPerfLockAcqDurationSecHistogram.length > 0) {
                 int size2 = size;
-                for (HistogramBucketInt32 element : this.highPerfLockAcqDurationSecHistogram) {
+                for (int size3 = 0; size3 < this.highPerfLockAcqDurationSecHistogram.length; size3++) {
+                    HistogramBucketInt32 element = this.highPerfLockAcqDurationSecHistogram[size3];
                     if (element != null) {
                         size2 += CodedOutputByteBufferNano.computeMessageSize(3, element);
                     }
@@ -11071,22 +11487,24 @@ public interface WifiMetricsProto {
                 size = size2;
             }
             if (this.lowLatencyLockAcqDurationSecHistogram != null && this.lowLatencyLockAcqDurationSecHistogram.length > 0) {
-                int size3 = size;
-                for (HistogramBucketInt32 element2 : this.lowLatencyLockAcqDurationSecHistogram) {
-                    if (element2 != null) {
-                        size3 += CodedOutputByteBufferNano.computeMessageSize(4, element2);
-                    }
-                }
-                size = size3;
-            }
-            if (this.highPerfActiveSessionDurationSecHistogram != null && this.highPerfActiveSessionDurationSecHistogram.length > 0) {
                 int size4 = size;
-                for (HistogramBucketInt32 element3 : this.highPerfActiveSessionDurationSecHistogram) {
-                    if (element3 != null) {
-                        size4 += CodedOutputByteBufferNano.computeMessageSize(5, element3);
+                for (int size5 = 0; size5 < this.lowLatencyLockAcqDurationSecHistogram.length; size5++) {
+                    HistogramBucketInt32 element2 = this.lowLatencyLockAcqDurationSecHistogram[size5];
+                    if (element2 != null) {
+                        size4 += CodedOutputByteBufferNano.computeMessageSize(4, element2);
                     }
                 }
                 size = size4;
+            }
+            if (this.highPerfActiveSessionDurationSecHistogram != null && this.highPerfActiveSessionDurationSecHistogram.length > 0) {
+                int size6 = size;
+                for (int size7 = 0; size7 < this.highPerfActiveSessionDurationSecHistogram.length; size7++) {
+                    HistogramBucketInt32 element3 = this.highPerfActiveSessionDurationSecHistogram[size7];
+                    if (element3 != null) {
+                        size6 += CodedOutputByteBufferNano.computeMessageSize(5, element3);
+                    }
+                }
+                size = size6;
             }
             if (this.lowLatencyActiveSessionDurationSecHistogram != null && this.lowLatencyActiveSessionDurationSecHistogram.length > 0) {
                 while (true) {
@@ -11104,6 +11522,7 @@ public interface WifiMetricsProto {
             return size;
         }
 
+        @Override // com.android.framework.protobuf.nano.MessageNano
         public WifiLockStats mergeFrom(CodedInputByteBufferNano input) throws IOException {
             while (true) {
                 int tag = input.readTag();
@@ -11117,7 +11536,7 @@ public interface WifiMetricsProto {
                 } else if (tag == 26) {
                     int arrayLength = WireFormatNano.getRepeatedFieldArrayLength(input, 26);
                     int i = this.highPerfLockAcqDurationSecHistogram == null ? 0 : this.highPerfLockAcqDurationSecHistogram.length;
-                    HistogramBucketInt32[] newArray = new HistogramBucketInt32[(i + arrayLength)];
+                    HistogramBucketInt32[] newArray = new HistogramBucketInt32[i + arrayLength];
                     if (i != 0) {
                         System.arraycopy(this.highPerfLockAcqDurationSecHistogram, 0, newArray, 0, i);
                     }
@@ -11133,7 +11552,7 @@ public interface WifiMetricsProto {
                 } else if (tag == 34) {
                     int arrayLength2 = WireFormatNano.getRepeatedFieldArrayLength(input, 34);
                     int i2 = this.lowLatencyLockAcqDurationSecHistogram == null ? 0 : this.lowLatencyLockAcqDurationSecHistogram.length;
-                    HistogramBucketInt32[] newArray2 = new HistogramBucketInt32[(i2 + arrayLength2)];
+                    HistogramBucketInt32[] newArray2 = new HistogramBucketInt32[i2 + arrayLength2];
                     if (i2 != 0) {
                         System.arraycopy(this.lowLatencyLockAcqDurationSecHistogram, 0, newArray2, 0, i2);
                     }
@@ -11149,7 +11568,7 @@ public interface WifiMetricsProto {
                 } else if (tag == 42) {
                     int arrayLength3 = WireFormatNano.getRepeatedFieldArrayLength(input, 42);
                     int i3 = this.highPerfActiveSessionDurationSecHistogram == null ? 0 : this.highPerfActiveSessionDurationSecHistogram.length;
-                    HistogramBucketInt32[] newArray3 = new HistogramBucketInt32[(i3 + arrayLength3)];
+                    HistogramBucketInt32[] newArray3 = new HistogramBucketInt32[i3 + arrayLength3];
                     if (i3 != 0) {
                         System.arraycopy(this.highPerfActiveSessionDurationSecHistogram, 0, newArray3, 0, i3);
                     }
@@ -11162,10 +11581,14 @@ public interface WifiMetricsProto {
                     newArray3[i3] = new HistogramBucketInt32();
                     input.readMessage(newArray3[i3]);
                     this.highPerfActiveSessionDurationSecHistogram = newArray3;
-                } else if (tag == 50) {
+                } else if (tag != 50) {
+                    if (!WireFormatNano.parseUnknownField(input, tag)) {
+                        return this;
+                    }
+                } else {
                     int arrayLength4 = WireFormatNano.getRepeatedFieldArrayLength(input, 50);
                     int i4 = this.lowLatencyActiveSessionDurationSecHistogram == null ? 0 : this.lowLatencyActiveSessionDurationSecHistogram.length;
-                    HistogramBucketInt32[] newArray4 = new HistogramBucketInt32[(i4 + arrayLength4)];
+                    HistogramBucketInt32[] newArray4 = new HistogramBucketInt32[i4 + arrayLength4];
                     if (i4 != 0) {
                         System.arraycopy(this.lowLatencyActiveSessionDurationSecHistogram, 0, newArray4, 0, i4);
                     }
@@ -11178,8 +11601,6 @@ public interface WifiMetricsProto {
                     newArray4[i4] = new HistogramBucketInt32();
                     input.readMessage(newArray4[i4]);
                     this.lowLatencyActiveSessionDurationSecHistogram = newArray4;
-                } else if (!WireFormatNano.parseUnknownField(input, tag)) {
-                    return this;
                 }
             }
         }
@@ -11193,6 +11614,7 @@ public interface WifiMetricsProto {
         }
     }
 
+    /* loaded from: classes4.dex */
     public static final class WifiToggleStats extends MessageNano {
         private static volatile WifiToggleStats[] _emptyArray;
         public int numToggleOffNormal;
@@ -11224,6 +11646,7 @@ public interface WifiMetricsProto {
             return this;
         }
 
+        @Override // com.android.framework.protobuf.nano.MessageNano
         public void writeTo(CodedOutputByteBufferNano output) throws IOException {
             if (this.numToggleOnPrivileged != 0) {
                 output.writeInt32(1, this.numToggleOnPrivileged);
@@ -11240,8 +11663,8 @@ public interface WifiMetricsProto {
             super.writeTo(output);
         }
 
-        /* access modifiers changed from: protected */
-        public int computeSerializedSize() {
+        @Override // com.android.framework.protobuf.nano.MessageNano
+        protected int computeSerializedSize() {
             int size = super.computeSerializedSize();
             if (this.numToggleOnPrivileged != 0) {
                 size += CodedOutputByteBufferNano.computeInt32Size(1, this.numToggleOnPrivileged);
@@ -11258,6 +11681,7 @@ public interface WifiMetricsProto {
             return size;
         }
 
+        @Override // com.android.framework.protobuf.nano.MessageNano
         public WifiToggleStats mergeFrom(CodedInputByteBufferNano input) throws IOException {
             while (true) {
                 int tag = input.readTag();
@@ -11270,10 +11694,12 @@ public interface WifiMetricsProto {
                     this.numToggleOffPrivileged = input.readInt32();
                 } else if (tag == 24) {
                     this.numToggleOnNormal = input.readInt32();
-                } else if (tag == 32) {
+                } else if (tag != 32) {
+                    if (!WireFormatNano.parseUnknownField(input, tag)) {
+                        return this;
+                    }
+                } else {
                     this.numToggleOffNormal = input.readInt32();
-                } else if (!WireFormatNano.parseUnknownField(input, tag)) {
-                    return this;
                 }
             }
         }
@@ -11287,6 +11713,7 @@ public interface WifiMetricsProto {
         }
     }
 
+    /* loaded from: classes4.dex */
     public static final class PasspointProvisionStats extends MessageNano {
         public static final int OSU_FAILURE_ADD_PASSPOINT_CONFIGURATION = 22;
         public static final int OSU_FAILURE_AP_CONNECTION = 1;
@@ -11316,6 +11743,7 @@ public interface WifiMetricsProto {
         public int numProvisionSuccess;
         public ProvisionFailureCount[] provisionFailureCount;
 
+        /* loaded from: classes4.dex */
         public static final class ProvisionFailureCount extends MessageNano {
             private static volatile ProvisionFailureCount[] _emptyArray;
             public int count;
@@ -11343,6 +11771,7 @@ public interface WifiMetricsProto {
                 return this;
             }
 
+            @Override // com.android.framework.protobuf.nano.MessageNano
             public void writeTo(CodedOutputByteBufferNano output) throws IOException {
                 if (this.failureCode != 0) {
                     output.writeInt32(1, this.failureCode);
@@ -11353,8 +11782,8 @@ public interface WifiMetricsProto {
                 super.writeTo(output);
             }
 
-            /* access modifiers changed from: protected */
-            public int computeSerializedSize() {
+            @Override // com.android.framework.protobuf.nano.MessageNano
+            protected int computeSerializedSize() {
                 int size = super.computeSerializedSize();
                 if (this.failureCode != 0) {
                     size += CodedOutputByteBufferNano.computeInt32Size(1, this.failureCode);
@@ -11365,47 +11794,49 @@ public interface WifiMetricsProto {
                 return size;
             }
 
+            @Override // com.android.framework.protobuf.nano.MessageNano
             public ProvisionFailureCount mergeFrom(CodedInputByteBufferNano input) throws IOException {
                 while (true) {
                     int tag = input.readTag();
-                    if (tag != 0) {
-                        if (tag == 8) {
-                            int value = input.readInt32();
-                            switch (value) {
-                                case 0:
-                                case 1:
-                                case 2:
-                                case 3:
-                                case 4:
-                                case 5:
-                                case 6:
-                                case 7:
-                                case 8:
-                                case 9:
-                                case 10:
-                                case 11:
-                                case 12:
-                                case 13:
-                                case 14:
-                                case 15:
-                                case 16:
-                                case 17:
-                                case 18:
-                                case 19:
-                                case 20:
-                                case 21:
-                                case 22:
-                                case 23:
-                                    this.failureCode = value;
-                                    break;
-                            }
-                        } else if (tag == 16) {
-                            this.count = input.readInt32();
-                        } else if (!WireFormatNano.parseUnknownField(input, tag)) {
+                    if (tag == 0) {
+                        return this;
+                    }
+                    if (tag == 8) {
+                        int value = input.readInt32();
+                        switch (value) {
+                            case 0:
+                            case 1:
+                            case 2:
+                            case 3:
+                            case 4:
+                            case 5:
+                            case 6:
+                            case 7:
+                            case 8:
+                            case 9:
+                            case 10:
+                            case 11:
+                            case 12:
+                            case 13:
+                            case 14:
+                            case 15:
+                            case 16:
+                            case 17:
+                            case 18:
+                            case 19:
+                            case 20:
+                            case 21:
+                            case 22:
+                            case 23:
+                                this.failureCode = value;
+                                continue;
+                        }
+                    } else if (tag != 16) {
+                        if (!WireFormatNano.parseUnknownField(input, tag)) {
                             return this;
                         }
                     } else {
-                        return this;
+                        this.count = input.readInt32();
                     }
                 }
             }
@@ -11441,12 +11872,14 @@ public interface WifiMetricsProto {
             return this;
         }
 
+        @Override // com.android.framework.protobuf.nano.MessageNano
         public void writeTo(CodedOutputByteBufferNano output) throws IOException {
             if (this.numProvisionSuccess != 0) {
                 output.writeInt32(1, this.numProvisionSuccess);
             }
             if (this.provisionFailureCount != null && this.provisionFailureCount.length > 0) {
-                for (ProvisionFailureCount element : this.provisionFailureCount) {
+                for (int i = 0; i < this.provisionFailureCount.length; i++) {
+                    ProvisionFailureCount element = this.provisionFailureCount[i];
                     if (element != null) {
                         output.writeMessage(2, element);
                     }
@@ -11455,14 +11888,15 @@ public interface WifiMetricsProto {
             super.writeTo(output);
         }
 
-        /* access modifiers changed from: protected */
-        public int computeSerializedSize() {
+        @Override // com.android.framework.protobuf.nano.MessageNano
+        protected int computeSerializedSize() {
             int size = super.computeSerializedSize();
             if (this.numProvisionSuccess != 0) {
                 size += CodedOutputByteBufferNano.computeInt32Size(1, this.numProvisionSuccess);
             }
             if (this.provisionFailureCount != null && this.provisionFailureCount.length > 0) {
-                for (ProvisionFailureCount element : this.provisionFailureCount) {
+                for (int i = 0; i < this.provisionFailureCount.length; i++) {
+                    ProvisionFailureCount element = this.provisionFailureCount[i];
                     if (element != null) {
                         size += CodedOutputByteBufferNano.computeMessageSize(2, element);
                     }
@@ -11471,6 +11905,7 @@ public interface WifiMetricsProto {
             return size;
         }
 
+        @Override // com.android.framework.protobuf.nano.MessageNano
         public PasspointProvisionStats mergeFrom(CodedInputByteBufferNano input) throws IOException {
             while (true) {
                 int tag = input.readTag();
@@ -11478,11 +11913,16 @@ public interface WifiMetricsProto {
                     return this;
                 }
                 if (tag == 8) {
-                    this.numProvisionSuccess = input.readInt32();
-                } else if (tag == 18) {
-                    int arrayLength = WireFormatNano.getRepeatedFieldArrayLength(input, 18);
+                    int arrayLength = input.readInt32();
+                    this.numProvisionSuccess = arrayLength;
+                } else if (tag != 18) {
+                    if (!WireFormatNano.parseUnknownField(input, tag)) {
+                        return this;
+                    }
+                } else {
+                    int arrayLength2 = WireFormatNano.getRepeatedFieldArrayLength(input, 18);
                     int i = this.provisionFailureCount == null ? 0 : this.provisionFailureCount.length;
-                    ProvisionFailureCount[] newArray = new ProvisionFailureCount[(i + arrayLength)];
+                    ProvisionFailureCount[] newArray = new ProvisionFailureCount[i + arrayLength2];
                     if (i != 0) {
                         System.arraycopy(this.provisionFailureCount, 0, newArray, 0, i);
                     }
@@ -11495,8 +11935,6 @@ public interface WifiMetricsProto {
                     newArray[i] = new ProvisionFailureCount();
                     input.readMessage(newArray[i]);
                     this.provisionFailureCount = newArray;
-                } else if (!WireFormatNano.parseUnknownField(input, tag)) {
-                    return this;
                 }
             }
         }

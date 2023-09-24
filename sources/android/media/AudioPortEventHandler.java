@@ -2,12 +2,13 @@ package android.media;
 
 import android.annotation.UnsupportedAppUsage;
 import android.media.AudioManager;
-import android.os.Handler;
-import android.os.HandlerThread;
-import android.os.Message;
+import android.p007os.Handler;
+import android.p007os.HandlerThread;
+import android.p007os.Message;
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 
+/* loaded from: classes3.dex */
 class AudioPortEventHandler {
     private static final int AUDIOPORT_EVENT_NEW_LISTENER = 4;
     private static final int AUDIOPORT_EVENT_PATCH_LIST_UPDATED = 2;
@@ -19,8 +20,7 @@ class AudioPortEventHandler {
     private HandlerThread mHandlerThread;
     @UnsupportedAppUsage
     private long mJniCallback;
-    /* access modifiers changed from: private */
-    public final ArrayList<AudioManager.OnAudioPortUpdateListener> mListeners = new ArrayList<>();
+    private final ArrayList<AudioManager.OnAudioPortUpdateListener> mListeners = new ArrayList<>();
 
     private native void native_finalize();
 
@@ -29,79 +29,128 @@ class AudioPortEventHandler {
     AudioPortEventHandler() {
     }
 
-    /* access modifiers changed from: package-private */
-    /* JADX WARNING: Code restructure failed: missing block: B:11:0x0037, code lost:
-        return;
-     */
-    /* Code decompiled incorrectly, please refer to instructions dump. */
-    public void init() {
-        /*
-            r2 = this;
-            monitor-enter(r2)
-            android.os.Handler r0 = r2.mHandler     // Catch:{ all -> 0x0038 }
-            if (r0 == 0) goto L_0x0007
-            monitor-exit(r2)     // Catch:{ all -> 0x0038 }
-            return
-        L_0x0007:
-            android.os.HandlerThread r0 = new android.os.HandlerThread     // Catch:{ all -> 0x0038 }
-            java.lang.String r1 = "AudioPortEventHandler"
-            r0.<init>(r1)     // Catch:{ all -> 0x0038 }
-            r2.mHandlerThread = r0     // Catch:{ all -> 0x0038 }
-            android.os.HandlerThread r0 = r2.mHandlerThread     // Catch:{ all -> 0x0038 }
-            r0.start()     // Catch:{ all -> 0x0038 }
-            android.os.HandlerThread r0 = r2.mHandlerThread     // Catch:{ all -> 0x0038 }
-            android.os.Looper r0 = r0.getLooper()     // Catch:{ all -> 0x0038 }
-            if (r0 == 0) goto L_0x0033
-            android.media.AudioPortEventHandler$1 r0 = new android.media.AudioPortEventHandler$1     // Catch:{ all -> 0x0038 }
-            android.os.HandlerThread r1 = r2.mHandlerThread     // Catch:{ all -> 0x0038 }
-            android.os.Looper r1 = r1.getLooper()     // Catch:{ all -> 0x0038 }
-            r0.<init>(r1)     // Catch:{ all -> 0x0038 }
-            r2.mHandler = r0     // Catch:{ all -> 0x0038 }
-            java.lang.ref.WeakReference r0 = new java.lang.ref.WeakReference     // Catch:{ all -> 0x0038 }
-            r0.<init>(r2)     // Catch:{ all -> 0x0038 }
-            r2.native_setup(r0)     // Catch:{ all -> 0x0038 }
-            goto L_0x0036
-        L_0x0033:
-            r0 = 0
-            r2.mHandler = r0     // Catch:{ all -> 0x0038 }
-        L_0x0036:
-            monitor-exit(r2)     // Catch:{ all -> 0x0038 }
-            return
-        L_0x0038:
-            r0 = move-exception
-            monitor-exit(r2)     // Catch:{ all -> 0x0038 }
-            throw r0
-        */
-        throw new UnsupportedOperationException("Method not decompiled: android.media.AudioPortEventHandler.init():void");
+    void init() {
+        synchronized (this) {
+            if (this.mHandler != null) {
+                return;
+            }
+            this.mHandlerThread = new HandlerThread(TAG);
+            this.mHandlerThread.start();
+            if (this.mHandlerThread.getLooper() != null) {
+                this.mHandler = new Handler(this.mHandlerThread.getLooper()) { // from class: android.media.AudioPortEventHandler.1
+                    /* JADX WARN: Removed duplicated region for block: B:44:0x00b0 A[LOOP:1: B:42:0x00a9->B:44:0x00b0, LOOP_END] */
+                    /* JADX WARN: Removed duplicated region for block: B:53:0x00bd A[SYNTHETIC] */
+                    @Override // android.p007os.Handler
+                    /*
+                        Code decompiled incorrectly, please refer to instructions dump.
+                    */
+                    public void handleMessage(Message msg) {
+                        ArrayList<AudioManager.OnAudioPortUpdateListener> listeners;
+                        AudioPatch[] patchList;
+                        int i;
+                        synchronized (this) {
+                            if (msg.what != 4) {
+                                listeners = AudioPortEventHandler.this.mListeners;
+                            } else {
+                                listeners = new ArrayList<>();
+                                if (AudioPortEventHandler.this.mListeners.contains(msg.obj)) {
+                                    listeners.add((AudioManager.OnAudioPortUpdateListener) msg.obj);
+                                }
+                            }
+                        }
+                        if (msg.what == 1 || msg.what == 2 || msg.what == 3) {
+                            AudioManager.resetAudioPortGeneration();
+                        }
+                        if (listeners.isEmpty()) {
+                            return;
+                        }
+                        ArrayList<AudioPort> ports = new ArrayList<>();
+                        ArrayList<AudioPatch> patches = new ArrayList<>();
+                        if (msg.what != 3) {
+                            int status = AudioManager.updateAudioPortCache(ports, patches, null);
+                            if (status != 0) {
+                                sendMessageDelayed(obtainMessage(msg.what, msg.obj), AudioPortEventHandler.RESCHEDULE_MESSAGE_DELAY_MS);
+                                return;
+                            }
+                        }
+                        int status2 = msg.what;
+                        int i2 = 0;
+                        switch (status2) {
+                            case 1:
+                            case 4:
+                                AudioPort[] portList = (AudioPort[]) ports.toArray(new AudioPort[0]);
+                                for (int i3 = 0; i3 < listeners.size(); i3++) {
+                                    listeners.get(i3).onAudioPortListUpdate(portList);
+                                }
+                                if (msg.what == 1) {
+                                    return;
+                                }
+                                patchList = (AudioPatch[]) patches.toArray(new AudioPatch[0]);
+                                while (true) {
+                                    i = i2;
+                                    if (i >= listeners.size()) {
+                                        listeners.get(i).onAudioPatchListUpdate(patchList);
+                                        i2 = i + 1;
+                                    } else {
+                                        return;
+                                    }
+                                }
+                            case 2:
+                                patchList = (AudioPatch[]) patches.toArray(new AudioPatch[0]);
+                                while (true) {
+                                    i = i2;
+                                    if (i >= listeners.size()) {
+                                    }
+                                    listeners.get(i).onAudioPatchListUpdate(patchList);
+                                    i2 = i + 1;
+                                }
+                                break;
+                            case 3:
+                                while (true) {
+                                    int i4 = i2;
+                                    if (i4 < listeners.size()) {
+                                        listeners.get(i4).onServiceDied();
+                                        i2 = i4 + 1;
+                                    } else {
+                                        return;
+                                    }
+                                }
+                            default:
+                                return;
+                        }
+                    }
+                };
+                native_setup(new WeakReference(this));
+            } else {
+                this.mHandler = null;
+            }
+        }
     }
 
-    /* access modifiers changed from: protected */
-    public void finalize() {
+    protected void finalize() {
         native_finalize();
         if (this.mHandlerThread.isAlive()) {
             this.mHandlerThread.quit();
         }
     }
 
-    /* access modifiers changed from: package-private */
-    public void registerListener(AudioManager.OnAudioPortUpdateListener l) {
+    void registerListener(AudioManager.OnAudioPortUpdateListener l) {
         synchronized (this) {
             this.mListeners.add(l);
         }
         if (this.mHandler != null) {
-            this.mHandler.sendMessage(this.mHandler.obtainMessage(4, 0, 0, l));
+            Message m = this.mHandler.obtainMessage(4, 0, 0, l);
+            this.mHandler.sendMessage(m);
         }
     }
 
-    /* access modifiers changed from: package-private */
-    public void unregisterListener(AudioManager.OnAudioPortUpdateListener l) {
+    void unregisterListener(AudioManager.OnAudioPortUpdateListener l) {
         synchronized (this) {
             this.mListeners.remove(l);
         }
     }
 
-    /* access modifiers changed from: package-private */
-    public Handler handler() {
+    Handler handler() {
         return this.mHandler;
     }
 

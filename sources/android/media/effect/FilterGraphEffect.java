@@ -4,9 +4,11 @@ import android.filterfw.core.Filter;
 import android.filterfw.core.FilterGraph;
 import android.filterfw.core.GraphRunner;
 import android.filterfw.core.SyncRunner;
-import android.filterfw.io.GraphIOException;
-import android.filterfw.io.TextGraphReader;
+import android.filterfw.p003io.GraphIOException;
+import android.filterfw.p003io.GraphReader;
+import android.filterfw.p003io.TextGraphReader;
 
+/* loaded from: classes3.dex */
 public class FilterGraphEffect extends FilterEffect {
     private static final String TAG = "FilterGraphEffect";
     protected FilterGraph mGraph;
@@ -24,18 +26,19 @@ public class FilterGraphEffect extends FilterEffect {
     }
 
     private void createGraph(String graphString) {
+        GraphReader reader = new TextGraphReader();
         try {
-            this.mGraph = new TextGraphReader().readGraphString(graphString);
-            if (this.mGraph != null) {
-                this.mRunner = new SyncRunner(getFilterContext(), this.mGraph, this.mSchedulerClass);
-                return;
+            this.mGraph = reader.readGraphString(graphString);
+            if (this.mGraph == null) {
+                throw new RuntimeException("Could not setup effect");
             }
-            throw new RuntimeException("Could not setup effect");
+            this.mRunner = new SyncRunner(getFilterContext(), this.mGraph, this.mSchedulerClass);
         } catch (GraphIOException e) {
             throw new RuntimeException("Could not setup effect", e);
         }
     }
 
+    @Override // android.media.effect.Effect
     public void apply(int inputTexId, int width, int height, int outputTexId) {
         beginGLEffect();
         Filter src = this.mGraph.getFilter(this.mInputName);
@@ -49,20 +52,21 @@ public class FilterGraphEffect extends FilterEffect {
                 try {
                     this.mRunner.run();
                     endGLEffect();
+                    return;
                 } catch (RuntimeException e) {
                     throw new RuntimeException("Internal error applying effect: ", e);
                 }
-            } else {
-                throw new RuntimeException("Internal error applying effect");
             }
-        } else {
             throw new RuntimeException("Internal error applying effect");
         }
+        throw new RuntimeException("Internal error applying effect");
     }
 
+    @Override // android.media.effect.Effect
     public void setParameter(String parameterKey, Object value) {
     }
 
+    @Override // android.media.effect.Effect
     public void release() {
         this.mGraph.tearDown(getFilterContext());
         this.mGraph = null;

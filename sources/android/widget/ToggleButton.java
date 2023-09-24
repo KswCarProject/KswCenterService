@@ -8,8 +8,9 @@ import android.util.AttributeSet;
 import android.view.inspector.InspectionCompanion;
 import android.view.inspector.PropertyMapper;
 import android.view.inspector.PropertyReader;
-import com.android.internal.R;
+import com.android.internal.C3132R;
 
+/* loaded from: classes4.dex */
 public class ToggleButton extends CompoundButton {
     private static final int NO_ALPHA = 255;
     private float mDisabledAlpha;
@@ -17,12 +18,14 @@ public class ToggleButton extends CompoundButton {
     private CharSequence mTextOff;
     private CharSequence mTextOn;
 
+    /* loaded from: classes4.dex */
     public final class InspectionCompanion implements android.view.inspector.InspectionCompanion<ToggleButton> {
         private int mDisabledAlphaId;
         private boolean mPropertiesMapped = false;
         private int mTextOffId;
         private int mTextOnId;
 
+        @Override // android.view.inspector.InspectionCompanion
         public void mapProperties(PropertyMapper propertyMapper) {
             this.mDisabledAlphaId = propertyMapper.mapFloat("disabledAlpha", 16842803);
             this.mTextOffId = propertyMapper.mapObject("textOff", 16843045);
@@ -30,21 +33,21 @@ public class ToggleButton extends CompoundButton {
             this.mPropertiesMapped = true;
         }
 
+        @Override // android.view.inspector.InspectionCompanion
         public void readProperties(ToggleButton node, PropertyReader propertyReader) {
-            if (this.mPropertiesMapped) {
-                propertyReader.readFloat(this.mDisabledAlphaId, node.getDisabledAlpha());
-                propertyReader.readObject(this.mTextOffId, node.getTextOff());
-                propertyReader.readObject(this.mTextOnId, node.getTextOn());
-                return;
+            if (!this.mPropertiesMapped) {
+                throw new InspectionCompanion.UninitializedPropertyMapException();
             }
-            throw new InspectionCompanion.UninitializedPropertyMapException();
+            propertyReader.readFloat(this.mDisabledAlphaId, node.getDisabledAlpha());
+            propertyReader.readObject(this.mTextOffId, node.getTextOff());
+            propertyReader.readObject(this.mTextOnId, node.getTextOn());
         }
     }
 
     public ToggleButton(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
         super(context, attrs, defStyleAttr, defStyleRes);
-        TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.ToggleButton, defStyleAttr, defStyleRes);
-        saveAttributeDataForStyleable(context, R.styleable.ToggleButton, attrs, a, defStyleAttr, defStyleRes);
+        TypedArray a = context.obtainStyledAttributes(attrs, C3132R.styleable.ToggleButton, defStyleAttr, defStyleRes);
+        saveAttributeDataForStyleable(context, C3132R.styleable.ToggleButton, attrs, a, defStyleAttr, defStyleRes);
         this.mTextOn = a.getText(1);
         this.mTextOff = a.getText(2);
         this.mDisabledAlpha = a.getFloat(0, 0.5f);
@@ -61,9 +64,10 @@ public class ToggleButton extends CompoundButton {
     }
 
     public ToggleButton(Context context) {
-        this(context, (AttributeSet) null);
+        this(context, null);
     }
 
+    @Override // android.widget.CompoundButton, android.widget.Checkable
     public void setChecked(boolean checked) {
         super.setChecked(checked);
         syncTextState();
@@ -98,12 +102,13 @@ public class ToggleButton extends CompoundButton {
         return this.mDisabledAlpha;
     }
 
-    /* access modifiers changed from: protected */
-    public void onFinishInflate() {
+    @Override // android.view.View
+    protected void onFinishInflate() {
         super.onFinishInflate();
         updateReferenceToIndicatorDrawable(getBackground());
     }
 
+    @Override // android.view.View
     public void setBackgroundDrawable(Drawable d) {
         super.setBackgroundDrawable(d);
         updateReferenceToIndicatorDrawable(d);
@@ -111,20 +116,22 @@ public class ToggleButton extends CompoundButton {
 
     private void updateReferenceToIndicatorDrawable(Drawable backgroundDrawable) {
         if (backgroundDrawable instanceof LayerDrawable) {
-            this.mIndicatorDrawable = ((LayerDrawable) backgroundDrawable).findDrawableByLayerId(16908311);
-        } else {
-            this.mIndicatorDrawable = null;
+            LayerDrawable layerDrawable = (LayerDrawable) backgroundDrawable;
+            this.mIndicatorDrawable = layerDrawable.findDrawableByLayerId(16908311);
+            return;
         }
+        this.mIndicatorDrawable = null;
     }
 
-    /* access modifiers changed from: protected */
-    public void drawableStateChanged() {
+    @Override // android.widget.CompoundButton, android.widget.TextView, android.view.View
+    protected void drawableStateChanged() {
         super.drawableStateChanged();
         if (this.mIndicatorDrawable != null) {
             this.mIndicatorDrawable.setAlpha(isEnabled() ? 255 : (int) (this.mDisabledAlpha * 255.0f));
         }
     }
 
+    @Override // android.widget.CompoundButton, android.widget.Button, android.widget.TextView, android.view.View
     public CharSequence getAccessibilityClassName() {
         return ToggleButton.class.getName();
     }

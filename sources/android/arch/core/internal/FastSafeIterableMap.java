@@ -7,14 +7,16 @@ import java.util.HashMap;
 import java.util.Map;
 
 @RestrictTo({RestrictTo.Scope.LIBRARY_GROUP})
+/* loaded from: classes.dex */
 public class FastSafeIterableMap<K, V> extends SafeIterableMap<K, V> {
     private HashMap<K, SafeIterableMap.Entry<K, V>> mHashMap = new HashMap<>();
 
-    /* access modifiers changed from: protected */
-    public SafeIterableMap.Entry<K, V> get(K k) {
+    @Override // android.arch.core.internal.SafeIterableMap
+    protected SafeIterableMap.Entry<K, V> get(K k) {
         return this.mHashMap.get(k);
     }
 
+    @Override // android.arch.core.internal.SafeIterableMap
     public V putIfAbsent(@NonNull K key, @NonNull V v) {
         SafeIterableMap.Entry<K, V> current = get(key);
         if (current != null) {
@@ -24,8 +26,9 @@ public class FastSafeIterableMap<K, V> extends SafeIterableMap<K, V> {
         return null;
     }
 
+    @Override // android.arch.core.internal.SafeIterableMap
     public V remove(@NonNull K key) {
-        V removed = super.remove(key);
+        V removed = (V) super.remove(key);
         this.mHashMap.remove(key);
         return removed;
     }

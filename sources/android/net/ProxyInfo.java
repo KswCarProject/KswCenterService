@@ -1,8 +1,8 @@
 package android.net;
 
 import android.annotation.UnsupportedAppUsage;
-import android.os.Parcel;
-import android.os.Parcelable;
+import android.p007os.Parcel;
+import android.p007os.Parcelable;
 import android.telephony.SmsManager;
 import android.text.TextUtils;
 import java.net.InetSocketAddress;
@@ -10,21 +10,31 @@ import java.net.Proxy;
 import java.util.List;
 import java.util.Locale;
 
+/* loaded from: classes3.dex */
 public class ProxyInfo implements Parcelable {
-    public static final Parcelable.Creator<ProxyInfo> CREATOR = new Parcelable.Creator<ProxyInfo>() {
+    public static final Parcelable.Creator<ProxyInfo> CREATOR = new Parcelable.Creator<ProxyInfo>() { // from class: android.net.ProxyInfo.1
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public ProxyInfo createFromParcel(Parcel in) {
             String host = null;
             int port = 0;
             if (in.readByte() != 0) {
-                return new ProxyInfo(Uri.CREATOR.createFromParcel(in), in.readInt());
+                Uri url = Uri.CREATOR.createFromParcel(in);
+                int localPort = in.readInt();
+                return new ProxyInfo(url, localPort);
             }
             if (in.readByte() != 0) {
                 host = in.readString();
                 port = in.readInt();
             }
-            return new ProxyInfo(host, port, in.readString(), in.readStringArray());
+            String exclList = in.readString();
+            String[] parsedExclList = in.readStringArray();
+            ProxyInfo proxyProperties = new ProxyInfo(host, port, exclList, parsedExclList);
+            return proxyProperties;
         }
 
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public ProxyInfo[] newArray(int size) {
             return new ProxyInfo[size];
         }
@@ -39,12 +49,12 @@ public class ProxyInfo implements Parcelable {
     private final int mPort;
 
     public static ProxyInfo buildDirectProxy(String host, int port) {
-        return new ProxyInfo(host, port, (String) null);
+        return new ProxyInfo(host, port, null);
     }
 
     public static ProxyInfo buildDirectProxy(String host, int port, List<String> exclList) {
         String[] array = (String[]) exclList.toArray(new String[exclList.size()]);
-        return new ProxyInfo(host, port, TextUtils.join((CharSequence) SmsManager.REGEX_PREFIX_DELIMITER, (Object[]) array), array);
+        return new ProxyInfo(host, port, TextUtils.join(SmsManager.REGEX_PREFIX_DELIMITER, array), array);
     }
 
     public static ProxyInfo buildPacProxy(Uri pacUri) {
@@ -65,11 +75,10 @@ public class ProxyInfo implements Parcelable {
         this.mPort = -1;
         this.mExclusionList = "";
         this.mParsedExclusionList = parseExclusionList(this.mExclusionList);
-        if (pacFileUrl != null) {
-            this.mPacFileUrl = pacFileUrl;
-            return;
+        if (pacFileUrl == null) {
+            throw new NullPointerException();
         }
-        throw new NullPointerException();
+        this.mPacFileUrl = pacFileUrl;
     }
 
     public ProxyInfo(String pacFileUrl) {
@@ -85,11 +94,10 @@ public class ProxyInfo implements Parcelable {
         this.mPort = localProxyPort;
         this.mExclusionList = "";
         this.mParsedExclusionList = parseExclusionList(this.mExclusionList);
-        if (pacFileUrl != null) {
-            this.mPacFileUrl = pacFileUrl;
-            return;
+        if (pacFileUrl == null) {
+            throw new NullPointerException();
         }
-        throw new NullPointerException();
+        this.mPacFileUrl = pacFileUrl;
     }
 
     private static String[] parseExclusionList(String exclusionList) {
@@ -125,7 +133,8 @@ public class ProxyInfo implements Parcelable {
 
     public InetSocketAddress getSocketAddress() {
         try {
-            return new InetSocketAddress(this.mHost, this.mPort);
+            InetSocketAddress inetSocketAddress = new InetSocketAddress(this.mHost, this.mPort);
+            return inetSocketAddress;
         } catch (IllegalArgumentException e) {
             return null;
         }
@@ -152,25 +161,23 @@ public class ProxyInfo implements Parcelable {
     }
 
     public boolean isValid() {
-        if (!Uri.EMPTY.equals(this.mPacFileUrl)) {
-            return true;
+        if (Uri.EMPTY.equals(this.mPacFileUrl)) {
+            return Proxy.validate(this.mHost == null ? "" : this.mHost, this.mPort == 0 ? "" : Integer.toString(this.mPort), this.mExclusionList == null ? "" : this.mExclusionList) == 0;
         }
-        if (Proxy.validate(this.mHost == null ? "" : this.mHost, this.mPort == 0 ? "" : Integer.toString(this.mPort), this.mExclusionList == null ? "" : this.mExclusionList) == 0) {
-            return true;
-        }
-        return false;
+        return true;
     }
 
-    public Proxy makeProxy() {
-        Proxy proxy = Proxy.NO_PROXY;
-        if (this.mHost == null) {
-            return proxy;
+    public java.net.Proxy makeProxy() {
+        java.net.Proxy proxy = java.net.Proxy.NO_PROXY;
+        if (this.mHost != null) {
+            try {
+                InetSocketAddress inetSocketAddress = new InetSocketAddress(this.mHost, this.mPort);
+                return new java.net.Proxy(Proxy.Type.HTTP, inetSocketAddress);
+            } catch (IllegalArgumentException e) {
+                return proxy;
+            }
         }
-        try {
-            return new Proxy(Proxy.Type.HTTP, new InetSocketAddress(this.mHost, this.mPort));
-        } catch (IllegalArgumentException e) {
-            return proxy;
-        }
+        return proxy;
     }
 
     public String toString() {
@@ -195,52 +202,44 @@ public class ProxyInfo implements Parcelable {
     }
 
     public boolean equals(Object o) {
-        if (!(o instanceof ProxyInfo)) {
-            return false;
+        if (o instanceof ProxyInfo) {
+            ProxyInfo p = (ProxyInfo) o;
+            if (!Uri.EMPTY.equals(this.mPacFileUrl)) {
+                return this.mPacFileUrl.equals(p.getPacFileUrl()) && this.mPort == p.mPort;
+            } else if (Uri.EMPTY.equals(p.mPacFileUrl)) {
+                if (this.mExclusionList == null || this.mExclusionList.equals(p.getExclusionListAsString())) {
+                    if (this.mHost == null || p.getHost() == null || this.mHost.equals(p.getHost())) {
+                        if (this.mHost == null || p.mHost != null) {
+                            return (this.mHost != null || p.mHost == null) && this.mPort == p.mPort;
+                        }
+                        return false;
+                    }
+                    return false;
+                }
+                return false;
+            } else {
+                return false;
+            }
         }
-        ProxyInfo p = (ProxyInfo) o;
-        if (!Uri.EMPTY.equals(this.mPacFileUrl)) {
-            if (!this.mPacFileUrl.equals(p.getPacFileUrl()) || this.mPort != p.mPort) {
-                return false;
-            }
-            return true;
-        } else if (!Uri.EMPTY.equals(p.mPacFileUrl)) {
-            return false;
-        } else {
-            if (this.mExclusionList != null && !this.mExclusionList.equals(p.getExclusionListAsString())) {
-                return false;
-            }
-            if (this.mHost != null && p.getHost() != null && !this.mHost.equals(p.getHost())) {
-                return false;
-            }
-            if (this.mHost != null && p.mHost == null) {
-                return false;
-            }
-            if ((this.mHost != null || p.mHost == null) && this.mPort == p.mPort) {
-                return true;
-            }
-            return false;
-        }
+        return false;
     }
 
+    @Override // android.p007os.Parcelable
     public int describeContents() {
         return 0;
     }
 
     public int hashCode() {
-        int i;
-        int i2 = 0;
-        if (this.mHost == null) {
-            i = 0;
+        int hashCode;
+        if (this.mHost != null) {
+            hashCode = this.mHost.hashCode();
         } else {
-            i = this.mHost.hashCode();
+            hashCode = 0;
         }
-        if (this.mExclusionList != null) {
-            i2 = this.mExclusionList.hashCode();
-        }
-        return i + i2 + this.mPort;
+        return hashCode + (this.mExclusionList != null ? this.mExclusionList.hashCode() : 0) + this.mPort;
     }
 
+    @Override // android.p007os.Parcelable
     public void writeToParcel(Parcel dest, int flags) {
         if (!Uri.EMPTY.equals(this.mPacFileUrl)) {
             dest.writeByte((byte) 1);

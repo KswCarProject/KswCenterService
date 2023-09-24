@@ -5,6 +5,7 @@ import android.annotation.UnsupportedAppUsage;
 import java.io.FileDescriptor;
 import java.io.IOException;
 
+/* loaded from: classes.dex */
 public class BackupDataInput {
     long mBackupReader;
     private EntityHeader mHeader = new EntityHeader();
@@ -20,6 +21,7 @@ public class BackupDataInput {
 
     private native int skipEntityData_native(long j);
 
+    /* loaded from: classes.dex */
     private static class EntityHeader {
         @UnsupportedAppUsage
         int dataSize;
@@ -32,18 +34,16 @@ public class BackupDataInput {
 
     @SystemApi
     public BackupDataInput(FileDescriptor fd) {
-        if (fd != null) {
-            this.mBackupReader = ctor(fd);
-            if (this.mBackupReader == 0) {
-                throw new RuntimeException("Native initialization failed with fd=" + fd);
-            }
-            return;
+        if (fd == null) {
+            throw new NullPointerException();
         }
-        throw new NullPointerException();
+        this.mBackupReader = ctor(fd);
+        if (this.mBackupReader == 0) {
+            throw new RuntimeException("Native initialization failed with fd=" + fd);
+        }
     }
 
-    /* access modifiers changed from: protected */
-    public void finalize() throws Throwable {
+    protected void finalize() throws Throwable {
         try {
             dtor(this.mBackupReader);
         } finally {

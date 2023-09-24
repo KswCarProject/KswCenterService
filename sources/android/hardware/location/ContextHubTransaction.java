@@ -1,8 +1,8 @@
 package android.hardware.location;
 
 import android.annotation.SystemApi;
-import android.os.Handler;
-import android.os.HandlerExecutor;
+import android.p007os.Handler;
+import android.p007os.HandlerExecutor;
 import com.android.internal.util.Preconditions;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
@@ -12,6 +12,7 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 
 @SystemApi
+/* loaded from: classes.dex */
 public class ContextHubTransaction<T> {
     public static final int RESULT_FAILED_AT_HUB = 5;
     public static final int RESULT_FAILED_BAD_PARAMS = 2;
@@ -28,26 +29,30 @@ public class ContextHubTransaction<T> {
     public static final int TYPE_LOAD_NANOAPP = 0;
     public static final int TYPE_QUERY_NANOAPPS = 4;
     public static final int TYPE_UNLOAD_NANOAPP = 1;
-    private final CountDownLatch mDoneSignal = new CountDownLatch(1);
-    private Executor mExecutor = null;
-    private boolean mIsResponseSet = false;
-    private OnCompleteListener<T> mListener = null;
     private Response<T> mResponse;
     private int mTransactionType;
+    private Executor mExecutor = null;
+    private OnCompleteListener<T> mListener = null;
+    private final CountDownLatch mDoneSignal = new CountDownLatch(1);
+    private boolean mIsResponseSet = false;
 
     @FunctionalInterface
+    /* loaded from: classes.dex */
     public interface OnCompleteListener<L> {
         void onComplete(ContextHubTransaction<L> contextHubTransaction, Response<L> response);
     }
 
     @Retention(RetentionPolicy.SOURCE)
+    /* loaded from: classes.dex */
     public @interface Result {
     }
 
     @Retention(RetentionPolicy.SOURCE)
+    /* loaded from: classes.dex */
     public @interface Type {
     }
 
+    /* loaded from: classes.dex */
     public static class Response<R> {
         private R mContents;
         private int mResult;
@@ -92,28 +97,29 @@ public class ContextHubTransaction<T> {
     }
 
     public Response<T> waitForResponse(long timeout, TimeUnit unit) throws InterruptedException, TimeoutException {
-        if (this.mDoneSignal.await(timeout, unit)) {
-            return this.mResponse;
+        boolean success = this.mDoneSignal.await(timeout, unit);
+        if (!success) {
+            throw new TimeoutException("Timed out while waiting for transaction");
         }
-        throw new TimeoutException("Timed out while waiting for transaction");
+        return this.mResponse;
     }
 
     public void setOnCompleteListener(OnCompleteListener<T> listener, Executor executor) {
         synchronized (this) {
             Preconditions.checkNotNull(listener, "OnCompleteListener cannot be null");
             Preconditions.checkNotNull(executor, "Executor cannot be null");
-            if (this.mListener == null) {
-                this.mListener = listener;
-                this.mExecutor = executor;
-                if (this.mDoneSignal.getCount() == 0) {
-                    this.mExecutor.execute(new Runnable() {
-                        public final void run() {
-                            ContextHubTransaction.this.mListener.onComplete(ContextHubTransaction.this, ContextHubTransaction.this.mResponse);
-                        }
-                    });
-                }
-            } else {
+            if (this.mListener != null) {
                 throw new IllegalStateException("Cannot set ContextHubTransaction listener multiple times");
+            }
+            this.mListener = listener;
+            this.mExecutor = executor;
+            if (this.mDoneSignal.getCount() == 0) {
+                this.mExecutor.execute(new Runnable() { // from class: android.hardware.location.-$$Lambda$ContextHubTransaction$7a5H6DrY_dOy9M3qnYHhlmDHRNQ
+                    @Override // java.lang.Runnable
+                    public final void run() {
+                        r0.mListener.onComplete(r0, ContextHubTransaction.this.mResponse);
+                    }
+                });
             }
         }
     }
@@ -122,23 +128,22 @@ public class ContextHubTransaction<T> {
         setOnCompleteListener(listener, new HandlerExecutor(Handler.getMain()));
     }
 
-    /* access modifiers changed from: package-private */
-    public void setResponse(Response<T> response) {
+    void setResponse(Response<T> response) {
         synchronized (this) {
             Preconditions.checkNotNull(response, "Response cannot be null");
-            if (!this.mIsResponseSet) {
-                this.mResponse = response;
-                this.mIsResponseSet = true;
-                this.mDoneSignal.countDown();
-                if (this.mListener != null) {
-                    this.mExecutor.execute(new Runnable() {
-                        public final void run() {
-                            ContextHubTransaction.this.mListener.onComplete(ContextHubTransaction.this, ContextHubTransaction.this.mResponse);
-                        }
-                    });
-                }
-            } else {
+            if (this.mIsResponseSet) {
                 throw new IllegalStateException("Cannot set response of ContextHubTransaction multiple times");
+            }
+            this.mResponse = response;
+            this.mIsResponseSet = true;
+            this.mDoneSignal.countDown();
+            if (this.mListener != null) {
+                this.mExecutor.execute(new Runnable() { // from class: android.hardware.location.-$$Lambda$ContextHubTransaction$RNVGnle3xCUm9u68syzn6-2znnU
+                    @Override // java.lang.Runnable
+                    public final void run() {
+                        r0.mListener.onComplete(r0, ContextHubTransaction.this.mResponse);
+                    }
+                });
             }
         }
     }

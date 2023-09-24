@@ -1,16 +1,21 @@
 package android.content;
 
 import android.annotation.UnsupportedAppUsage;
-import android.os.Parcel;
-import android.os.Parcelable;
+import android.p007os.Parcel;
+import android.p007os.Parcelable;
 import android.text.TextUtils;
 
+/* loaded from: classes.dex */
 public class SyncAdapterType implements Parcelable {
-    public static final Parcelable.Creator<SyncAdapterType> CREATOR = new Parcelable.Creator<SyncAdapterType>() {
+    public static final Parcelable.Creator<SyncAdapterType> CREATOR = new Parcelable.Creator<SyncAdapterType>() { // from class: android.content.SyncAdapterType.1
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public SyncAdapterType createFromParcel(Parcel source) {
             return new SyncAdapterType(source);
         }
 
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public SyncAdapterType[] newArray(int size) {
             return new SyncAdapterType[size];
         }
@@ -30,49 +35,51 @@ public class SyncAdapterType implements Parcelable {
     @UnsupportedAppUsage(maxTargetSdk = 28, trackingBug = 115609023)
     private final boolean userVisible;
 
-    public SyncAdapterType(String authority2, String accountType2, boolean userVisible2, boolean supportsUploading2) {
-        if (TextUtils.isEmpty(authority2)) {
-            throw new IllegalArgumentException("the authority must not be empty: " + authority2);
-        } else if (!TextUtils.isEmpty(accountType2)) {
-            this.authority = authority2;
-            this.accountType = accountType2;
-            this.userVisible = userVisible2;
-            this.supportsUploading = supportsUploading2;
+    public SyncAdapterType(String authority, String accountType, boolean userVisible, boolean supportsUploading) {
+        if (TextUtils.isEmpty(authority)) {
+            throw new IllegalArgumentException("the authority must not be empty: " + authority);
+        } else if (TextUtils.isEmpty(accountType)) {
+            throw new IllegalArgumentException("the accountType must not be empty: " + accountType);
+        } else {
+            this.authority = authority;
+            this.accountType = accountType;
+            this.userVisible = userVisible;
+            this.supportsUploading = supportsUploading;
             this.isAlwaysSyncable = false;
             this.allowParallelSyncs = false;
             this.settingsActivity = null;
             this.isKey = false;
             this.packageName = null;
-        } else {
-            throw new IllegalArgumentException("the accountType must not be empty: " + accountType2);
         }
     }
 
-    public SyncAdapterType(String authority2, String accountType2, boolean userVisible2, boolean supportsUploading2, boolean isAlwaysSyncable2, boolean allowParallelSyncs2, String settingsActivity2, String packageName2) {
-        if (TextUtils.isEmpty(authority2)) {
-            throw new IllegalArgumentException("the authority must not be empty: " + authority2);
-        } else if (!TextUtils.isEmpty(accountType2)) {
-            this.authority = authority2;
-            this.accountType = accountType2;
-            this.userVisible = userVisible2;
-            this.supportsUploading = supportsUploading2;
-            this.isAlwaysSyncable = isAlwaysSyncable2;
-            this.allowParallelSyncs = allowParallelSyncs2;
-            this.settingsActivity = settingsActivity2;
-            this.isKey = false;
-            this.packageName = packageName2;
+    public SyncAdapterType(String authority, String accountType, boolean userVisible, boolean supportsUploading, boolean isAlwaysSyncable, boolean allowParallelSyncs, String settingsActivity, String packageName) {
+        if (TextUtils.isEmpty(authority)) {
+            throw new IllegalArgumentException("the authority must not be empty: " + authority);
+        } else if (TextUtils.isEmpty(accountType)) {
+            throw new IllegalArgumentException("the accountType must not be empty: " + accountType);
         } else {
-            throw new IllegalArgumentException("the accountType must not be empty: " + accountType2);
+            this.authority = authority;
+            this.accountType = accountType;
+            this.userVisible = userVisible;
+            this.supportsUploading = supportsUploading;
+            this.isAlwaysSyncable = isAlwaysSyncable;
+            this.allowParallelSyncs = allowParallelSyncs;
+            this.settingsActivity = settingsActivity;
+            this.isKey = false;
+            this.packageName = packageName;
         }
     }
 
     @UnsupportedAppUsage(maxTargetSdk = 28, trackingBug = 115609023)
-    private SyncAdapterType(String authority2, String accountType2) {
-        if (TextUtils.isEmpty(authority2)) {
-            throw new IllegalArgumentException("the authority must not be empty: " + authority2);
-        } else if (!TextUtils.isEmpty(accountType2)) {
-            this.authority = authority2;
-            this.accountType = accountType2;
+    private SyncAdapterType(String authority, String accountType) {
+        if (TextUtils.isEmpty(authority)) {
+            throw new IllegalArgumentException("the authority must not be empty: " + authority);
+        } else if (TextUtils.isEmpty(accountType)) {
+            throw new IllegalArgumentException("the accountType must not be empty: " + accountType);
+        } else {
+            this.authority = authority;
+            this.accountType = accountType;
             this.userVisible = true;
             this.supportsUploading = true;
             this.isAlwaysSyncable = false;
@@ -80,70 +87,66 @@ public class SyncAdapterType implements Parcelable {
             this.settingsActivity = null;
             this.isKey = true;
             this.packageName = null;
-        } else {
-            throw new IllegalArgumentException("the accountType must not be empty: " + accountType2);
         }
     }
 
     public boolean supportsUploading() {
-        if (!this.isKey) {
-            return this.supportsUploading;
+        if (this.isKey) {
+            throw new IllegalStateException("this method is not allowed to be called when this is a key");
         }
-        throw new IllegalStateException("this method is not allowed to be called when this is a key");
+        return this.supportsUploading;
     }
 
     public boolean isUserVisible() {
-        if (!this.isKey) {
-            return this.userVisible;
+        if (this.isKey) {
+            throw new IllegalStateException("this method is not allowed to be called when this is a key");
         }
-        throw new IllegalStateException("this method is not allowed to be called when this is a key");
+        return this.userVisible;
     }
 
     public boolean allowParallelSyncs() {
-        if (!this.isKey) {
-            return this.allowParallelSyncs;
+        if (this.isKey) {
+            throw new IllegalStateException("this method is not allowed to be called when this is a key");
         }
-        throw new IllegalStateException("this method is not allowed to be called when this is a key");
+        return this.allowParallelSyncs;
     }
 
     public boolean isAlwaysSyncable() {
-        if (!this.isKey) {
-            return this.isAlwaysSyncable;
+        if (this.isKey) {
+            throw new IllegalStateException("this method is not allowed to be called when this is a key");
         }
-        throw new IllegalStateException("this method is not allowed to be called when this is a key");
+        return this.isAlwaysSyncable;
     }
 
     public String getSettingsActivity() {
-        if (!this.isKey) {
-            return this.settingsActivity;
+        if (this.isKey) {
+            throw new IllegalStateException("this method is not allowed to be called when this is a key");
         }
-        throw new IllegalStateException("this method is not allowed to be called when this is a key");
+        return this.settingsActivity;
     }
 
     public String getPackageName() {
         return this.packageName;
     }
 
-    public static SyncAdapterType newKey(String authority2, String accountType2) {
-        return new SyncAdapterType(authority2, accountType2);
+    public static SyncAdapterType newKey(String authority, String accountType) {
+        return new SyncAdapterType(authority, accountType);
     }
 
     public boolean equals(Object o) {
         if (o == this) {
             return true;
         }
-        if (!(o instanceof SyncAdapterType)) {
-            return false;
+        if (o instanceof SyncAdapterType) {
+            SyncAdapterType other = (SyncAdapterType) o;
+            return this.authority.equals(other.authority) && this.accountType.equals(other.accountType);
         }
-        SyncAdapterType other = (SyncAdapterType) o;
-        if (!this.authority.equals(other.authority) || !this.accountType.equals(other.accountType)) {
-            return false;
-        }
-        return true;
+        return false;
     }
 
     public int hashCode() {
-        return (((17 * 31) + this.authority.hashCode()) * 31) + this.accountType.hashCode();
+        int result = (17 * 31) + this.authority.hashCode();
+        return (result * 31) + this.accountType.hashCode();
     }
 
     public String toString() {
@@ -153,26 +156,26 @@ public class SyncAdapterType implements Parcelable {
         return "SyncAdapterType {name=" + this.authority + ", type=" + this.accountType + ", userVisible=" + this.userVisible + ", supportsUploading=" + this.supportsUploading + ", isAlwaysSyncable=" + this.isAlwaysSyncable + ", allowParallelSyncs=" + this.allowParallelSyncs + ", settingsActivity=" + this.settingsActivity + ", packageName=" + this.packageName + "}";
     }
 
+    @Override // android.p007os.Parcelable
     public int describeContents() {
         return 0;
     }
 
+    @Override // android.p007os.Parcelable
     public void writeToParcel(Parcel dest, int flags) {
-        if (!this.isKey) {
-            dest.writeString(this.authority);
-            dest.writeString(this.accountType);
-            dest.writeInt(this.userVisible ? 1 : 0);
-            dest.writeInt(this.supportsUploading ? 1 : 0);
-            dest.writeInt(this.isAlwaysSyncable ? 1 : 0);
-            dest.writeInt(this.allowParallelSyncs ? 1 : 0);
-            dest.writeString(this.settingsActivity);
-            dest.writeString(this.packageName);
-            return;
+        if (this.isKey) {
+            throw new IllegalStateException("keys aren't parcelable");
         }
-        throw new IllegalStateException("keys aren't parcelable");
+        dest.writeString(this.authority);
+        dest.writeString(this.accountType);
+        dest.writeInt(this.userVisible ? 1 : 0);
+        dest.writeInt(this.supportsUploading ? 1 : 0);
+        dest.writeInt(this.isAlwaysSyncable ? 1 : 0);
+        dest.writeInt(this.allowParallelSyncs ? 1 : 0);
+        dest.writeString(this.settingsActivity);
+        dest.writeString(this.packageName);
     }
 
-    /* JADX INFO: this call moved to the top of the method (can break code semantics) */
     public SyncAdapterType(Parcel source) {
         this(source.readString(), source.readString(), source.readInt() != 0, source.readInt() != 0, source.readInt() != 0, source.readInt() != 0, source.readString(), source.readString());
     }

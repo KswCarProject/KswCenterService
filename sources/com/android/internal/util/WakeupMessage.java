@@ -2,10 +2,11 @@ package com.android.internal.util;
 
 import android.app.AlarmManager;
 import android.content.Context;
-import android.os.Handler;
-import android.os.Message;
+import android.p007os.Handler;
+import android.p007os.Message;
 import com.android.internal.annotations.VisibleForTesting;
 
+/* loaded from: classes4.dex */
 public class WakeupMessage implements AlarmManager.OnAlarmListener {
     private final AlarmManager mAlarmManager;
     @VisibleForTesting
@@ -35,15 +36,15 @@ public class WakeupMessage implements AlarmManager.OnAlarmListener {
     }
 
     public WakeupMessage(Context context, Handler handler, String cmdName, int cmd, int arg1) {
-        this(context, handler, cmdName, cmd, arg1, 0, (Object) null);
+        this(context, handler, cmdName, cmd, arg1, 0, null);
     }
 
     public WakeupMessage(Context context, Handler handler, String cmdName, int cmd, int arg1, int arg2) {
-        this(context, handler, cmdName, cmd, arg1, arg2, (Object) null);
+        this(context, handler, cmdName, cmd, arg1, arg2, null);
     }
 
     public WakeupMessage(Context context, Handler handler, String cmdName, int cmd) {
-        this(context, handler, cmdName, cmd, 0, 0, (Object) null);
+        this(context, handler, cmdName, cmd, 0, 0, null);
     }
 
     public WakeupMessage(Context context, Handler handler, String cmdName, Runnable runnable) {
@@ -68,11 +69,12 @@ public class WakeupMessage implements AlarmManager.OnAlarmListener {
 
     public synchronized void cancel() {
         if (this.mScheduled) {
-            this.mAlarmManager.cancel((AlarmManager.OnAlarmListener) this);
+            this.mAlarmManager.cancel(this);
             this.mScheduled = false;
         }
     }
 
+    @Override // android.app.AlarmManager.OnAlarmListener
     public void onAlarm() {
         boolean stillScheduled;
         Message msg;

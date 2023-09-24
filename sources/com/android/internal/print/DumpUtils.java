@@ -1,7 +1,7 @@
 package com.android.internal.print;
 
 import android.content.Context;
-import android.os.DropBoxManager;
+import android.p007os.DropBoxManager;
 import android.print.PageRange;
 import android.print.PrintAttributes;
 import android.print.PrintDocumentInfo;
@@ -15,6 +15,7 @@ import android.provider.Telephony;
 import android.service.print.PrinterCapabilitiesProto;
 import com.android.internal.util.dump.DualDumpOutputStream;
 
+/* loaded from: classes4.dex */
 public class DumpUtils {
     public static void writePrinterId(DualDumpOutputStream proto, String idName, long id, PrinterId printerId) {
         long token = proto.start(idName, id);
@@ -24,7 +25,6 @@ public class DumpUtils {
     }
 
     public static void writePrinterCapabilities(Context context, DualDumpOutputStream proto, String idName, long id, PrinterCapabilitiesInfo cap) {
-        DualDumpOutputStream dualDumpOutputStream = proto;
         long token = proto.start(idName, id);
         writeMargins(proto, "min_margins", 1146756268033L, cap.getMinMargins());
         int numMediaSizes = cap.getMediaSizes().size();
@@ -47,20 +47,21 @@ public class DumpUtils {
             writeResolution(proto, "resolutions", 2246267895811L, cap.getResolutions().get(i4));
             i = i4 + 1;
         }
-        if ((cap.getColorModes() & 1) != 0) {
+        int i5 = cap.getColorModes();
+        if ((i5 & 1) != 0) {
             proto.write("color_modes", 2259152797700L, 1);
         }
         if ((cap.getColorModes() & 2) != 0) {
             proto.write("color_modes", 2259152797700L, 2);
         }
         if ((cap.getDuplexModes() & 1) != 0) {
-            proto.write("duplex_modes", (long) PrinterCapabilitiesProto.DUPLEX_MODES, 1);
+            proto.write("duplex_modes", PrinterCapabilitiesProto.DUPLEX_MODES, 1);
         }
         if ((cap.getDuplexModes() & 2) != 0) {
-            proto.write("duplex_modes", (long) PrinterCapabilitiesProto.DUPLEX_MODES, 2);
+            proto.write("duplex_modes", PrinterCapabilitiesProto.DUPLEX_MODES, 2);
         }
         if ((cap.getDuplexModes() & 4) != 0) {
-            proto.write("duplex_modes", (long) PrinterCapabilitiesProto.DUPLEX_MODES, 4);
+            proto.write("duplex_modes", PrinterCapabilitiesProto.DUPLEX_MODES, 4);
         }
         proto.end(token);
     }
@@ -145,27 +146,25 @@ public class DumpUtils {
     }
 
     public static void writePrintJobInfo(Context context, DualDumpOutputStream proto, String idName, long id, PrintJobInfo printJobInfo) {
-        DualDumpOutputStream dualDumpOutputStream = proto;
         long token = proto.start(idName, id);
-        dualDumpOutputStream.write("label", 1138166333441L, printJobInfo.getLabel());
+        proto.write("label", 1138166333441L, printJobInfo.getLabel());
         PrintJobId printJobId = printJobInfo.getId();
         if (printJobId != null) {
-            dualDumpOutputStream.write("print_job_id", 1138166333442L, printJobId.flattenToString());
+            proto.write("print_job_id", 1138166333442L, printJobId.flattenToString());
         }
         int state = printJobInfo.getState();
-        boolean z = true;
         if (state < 1 || state > 7) {
-            dualDumpOutputStream.write("state", 1159641169923L, 0);
+            proto.write("state", 1159641169923L, 0);
         } else {
-            dualDumpOutputStream.write("state", 1159641169923L, state);
+            proto.write("state", 1159641169923L, state);
         }
         PrinterId printer = printJobInfo.getPrinterId();
         if (printer != null) {
-            writePrinterId(dualDumpOutputStream, "printer", 1146756268036L, printer);
+            writePrinterId(proto, "printer", 1146756268036L, printer);
         }
         String tag = printJobInfo.getTag();
         if (tag != null) {
-            dualDumpOutputStream.write(DropBoxManager.EXTRA_TAG, 1138166333445L, tag);
+            proto.write(DropBoxManager.EXTRA_TAG, 1138166333445L, tag);
         }
         proto.write("creation_time", 1112396529670L, printJobInfo.getCreationTime());
         PrintAttributes attributes = printJobInfo.getAttributes();
@@ -174,24 +173,21 @@ public class DumpUtils {
         }
         PrintDocumentInfo docInfo = printJobInfo.getDocumentInfo();
         if (docInfo != null) {
-            writePrintDocumentInfo(dualDumpOutputStream, "document_info", 1146756268040L, docInfo);
+            writePrintDocumentInfo(proto, "document_info", 1146756268040L, docInfo);
         }
-        dualDumpOutputStream.write("is_canceling", 1133871366153L, printJobInfo.isCancelling());
+        proto.write("is_canceling", 1133871366153L, printJobInfo.isCancelling());
         PageRange[] pages = printJobInfo.getPages();
         if (pages != null) {
-            for (PageRange writePageRange : pages) {
-                writePageRange(dualDumpOutputStream, "pages", 2246267895818L, writePageRange);
+            for (PageRange pageRange : pages) {
+                writePageRange(proto, "pages", 2246267895818L, pageRange);
             }
         }
-        if (printJobInfo.getAdvancedOptions() == null) {
-            z = false;
-        }
-        dualDumpOutputStream.write("has_advanced_options", 1133871366155L, z);
-        dualDumpOutputStream.write("progress", 1108101562380L, printJobInfo.getProgress());
+        proto.write("has_advanced_options", 1133871366155L, printJobInfo.getAdvancedOptions() != null);
+        proto.write("progress", 1108101562380L, printJobInfo.getProgress());
         CharSequence status = printJobInfo.getStatus(context.getPackageManager());
         if (status != null) {
-            dualDumpOutputStream.write("status", 1138166333453L, status.toString());
+            proto.write("status", 1138166333453L, status.toString());
         }
-        dualDumpOutputStream.end(token);
+        proto.end(token);
     }
 }

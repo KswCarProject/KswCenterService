@@ -1,15 +1,20 @@
 package com.android.ims.internal.uce.options;
 
 import android.annotation.UnsupportedAppUsage;
-import android.os.Parcel;
-import android.os.Parcelable;
+import android.p007os.Parcel;
+import android.p007os.Parcelable;
 
+/* loaded from: classes4.dex */
 public class OptionsCmdId implements Parcelable {
-    public static final Parcelable.Creator<OptionsCmdId> CREATOR = new Parcelable.Creator<OptionsCmdId>() {
+    public static final Parcelable.Creator<OptionsCmdId> CREATOR = new Parcelable.Creator<OptionsCmdId>() { // from class: com.android.ims.internal.uce.options.OptionsCmdId.1
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public OptionsCmdId createFromParcel(Parcel source) {
             return new OptionsCmdId(source);
         }
 
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public OptionsCmdId[] newArray(int size) {
             return new OptionsCmdId[size];
         }
@@ -37,10 +42,12 @@ public class OptionsCmdId implements Parcelable {
         this.mCmdId = 6;
     }
 
+    @Override // android.p007os.Parcelable
     public int describeContents() {
         return 0;
     }
 
+    @Override // android.p007os.Parcelable
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeInt(this.mCmdId);
     }

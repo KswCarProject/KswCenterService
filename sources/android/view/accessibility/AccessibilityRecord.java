@@ -1,13 +1,13 @@
 package android.view.accessibility;
 
 import android.annotation.UnsupportedAppUsage;
-import android.os.Bundle;
-import android.os.Parcelable;
+import android.p007os.Parcelable;
 import android.view.View;
 import com.ibm.icu.text.PluralRules;
 import java.util.ArrayList;
 import java.util.List;
 
+/* loaded from: classes4.dex */
 public class AccessibilityRecord {
     protected static final boolean DEBUG_CONCISE_TOSTRING = false;
     private static final int GET_SOURCE_PREFETCH_FLAGS = 7;
@@ -22,32 +22,32 @@ public class AccessibilityRecord {
     private static AccessibilityRecord sPool;
     private static final Object sPoolLock = new Object();
     private static int sPoolSize;
-    int mAddedCount = -1;
     CharSequence mBeforeText;
-    int mBooleanProperties = 0;
     CharSequence mClassName;
-    int mConnectionId = -1;
     CharSequence mContentDescription;
-    int mCurrentItemIndex = -1;
-    int mFromIndex = -1;
     private boolean mIsInPool;
-    int mItemCount = -1;
-    int mMaxScrollX = -1;
-    int mMaxScrollY = -1;
     private AccessibilityRecord mNext;
     Parcelable mParcelableData;
-    int mRemovedCount = -1;
-    int mScrollDeltaX = -1;
-    int mScrollDeltaY = -1;
-    int mScrollX = -1;
-    int mScrollY = -1;
     @UnsupportedAppUsage
     boolean mSealed;
+    int mBooleanProperties = 0;
+    int mCurrentItemIndex = -1;
+    int mItemCount = -1;
+    int mFromIndex = -1;
+    int mToIndex = -1;
+    int mScrollX = -1;
+    int mScrollY = -1;
+    int mScrollDeltaX = -1;
+    int mScrollDeltaY = -1;
+    int mMaxScrollX = -1;
+    int mMaxScrollY = -1;
+    int mAddedCount = -1;
+    int mRemovedCount = -1;
     @UnsupportedAppUsage
     long mSourceNodeId = AccessibilityNodeInfo.UNDEFINED_NODE_ID;
     int mSourceWindowId = -1;
     final List<CharSequence> mText = new ArrayList();
-    int mToIndex = -1;
+    int mConnectionId = -1;
 
     AccessibilityRecord() {
     }
@@ -79,7 +79,8 @@ public class AccessibilityRecord {
         if (this.mConnectionId == -1 || this.mSourceWindowId == -1 || AccessibilityNodeInfo.getAccessibilityViewId(this.mSourceNodeId) == Integer.MAX_VALUE) {
             return null;
         }
-        return AccessibilityInteractionClient.getInstance().findAccessibilityNodeInfoByAccessibilityId(this.mConnectionId, this.mSourceWindowId, this.mSourceNodeId, false, 7, (Bundle) null);
+        AccessibilityInteractionClient client = AccessibilityInteractionClient.getInstance();
+        return client.findAccessibilityNodeInfoByAccessibilityId(this.mConnectionId, this.mSourceWindowId, this.mSourceNodeId, false, 7, null);
     }
 
     public void setWindowId(int windowId) {
@@ -270,14 +271,8 @@ public class AccessibilityRecord {
     }
 
     public void setBeforeText(CharSequence beforeText) {
-        CharSequence charSequence;
         enforceNotSealed();
-        if (beforeText == null) {
-            charSequence = null;
-        } else {
-            charSequence = beforeText.subSequence(0, beforeText.length());
-        }
-        this.mBeforeText = charSequence;
+        this.mBeforeText = beforeText == null ? null : beforeText.subSequence(0, beforeText.length());
     }
 
     public CharSequence getContentDescription() {
@@ -285,14 +280,8 @@ public class AccessibilityRecord {
     }
 
     public void setContentDescription(CharSequence contentDescription) {
-        CharSequence charSequence;
         enforceNotSealed();
-        if (contentDescription == null) {
-            charSequence = null;
-        } else {
-            charSequence = contentDescription.subSequence(0, contentDescription.length());
-        }
-        this.mContentDescription = charSequence;
+        this.mContentDescription = contentDescription == null ? null : contentDescription.subSequence(0, contentDescription.length());
     }
 
     public Parcelable getParcelableData() {
@@ -318,20 +307,17 @@ public class AccessibilityRecord {
         this.mSealed = sealed;
     }
 
-    /* access modifiers changed from: package-private */
-    public boolean isSealed() {
+    boolean isSealed() {
         return this.mSealed;
     }
 
-    /* access modifiers changed from: package-private */
-    public void enforceSealed() {
+    void enforceSealed() {
         if (!isSealed()) {
             throw new IllegalStateException("Cannot perform this action on a not sealed instance.");
         }
     }
 
-    /* access modifiers changed from: package-private */
-    public void enforceNotSealed() {
+    void enforceNotSealed() {
         if (isSealed()) {
             throw new IllegalStateException("Cannot perform this action on a sealed instance.");
         }
@@ -365,29 +351,26 @@ public class AccessibilityRecord {
                 record.mIsInPool = false;
                 return record;
             }
-            AccessibilityRecord accessibilityRecord = new AccessibilityRecord();
-            return accessibilityRecord;
+            return new AccessibilityRecord();
         }
     }
 
     public void recycle() {
-        if (!this.mIsInPool) {
-            clear();
-            synchronized (sPoolLock) {
-                if (sPoolSize <= 10) {
-                    this.mNext = sPool;
-                    sPool = this;
-                    this.mIsInPool = true;
-                    sPoolSize++;
-                }
-            }
-            return;
+        if (this.mIsInPool) {
+            throw new IllegalStateException("Record already recycled!");
         }
-        throw new IllegalStateException("Record already recycled!");
+        clear();
+        synchronized (sPoolLock) {
+            if (sPoolSize <= 10) {
+                this.mNext = sPool;
+                sPool = this;
+                this.mIsInPool = true;
+                sPoolSize++;
+            }
+        }
     }
 
-    /* access modifiers changed from: package-private */
-    public void init(AccessibilityRecord record) {
+    void init(AccessibilityRecord record) {
         this.mSealed = record.mSealed;
         this.mBooleanProperties = record.mBooleanProperties;
         this.mCurrentItemIndex = record.mCurrentItemIndex;
@@ -410,8 +393,7 @@ public class AccessibilityRecord {
         this.mConnectionId = record.mConnectionId;
     }
 
-    /* access modifiers changed from: package-private */
-    public void clear() {
+    void clear() {
         this.mSealed = false;
         this.mBooleanProperties = 0;
         this.mCurrentItemIndex = -1;
@@ -438,12 +420,11 @@ public class AccessibilityRecord {
         return appendTo(new StringBuilder()).toString();
     }
 
-    /* access modifiers changed from: package-private */
-    public StringBuilder appendTo(StringBuilder builder) {
+    StringBuilder appendTo(StringBuilder builder) {
         builder.append(" [ ClassName: ");
         builder.append(this.mClassName);
         appendPropName(builder, "Text").append(this.mText);
-        append(builder, "ContentDescription", (Object) this.mContentDescription);
+        append(builder, "ContentDescription", this.mContentDescription);
         append(builder, "ItemCount", this.mItemCount);
         append(builder, "CurrentItemIndex", this.mCurrentItemIndex);
         appendUnless(true, 2, builder);
@@ -451,7 +432,7 @@ public class AccessibilityRecord {
         appendUnless(false, 1, builder);
         appendUnless(false, 128, builder);
         appendUnless(false, 256, builder);
-        append(builder, "BeforeText", (Object) this.mBeforeText);
+        append(builder, "BeforeText", this.mBeforeText);
         append(builder, "FromIndex", this.mFromIndex);
         append(builder, "ToIndex", this.mToIndex);
         append(builder, "ScrollX", this.mScrollX);
@@ -460,36 +441,37 @@ public class AccessibilityRecord {
         append(builder, "MaxScrollY", this.mMaxScrollY);
         append(builder, "AddedCount", this.mAddedCount);
         append(builder, "RemovedCount", this.mRemovedCount);
-        append(builder, "ParcelableData", (Object) this.mParcelableData);
+        append(builder, "ParcelableData", this.mParcelableData);
         builder.append(" ]");
         return builder;
     }
 
     private void appendUnless(boolean defValue, int prop, StringBuilder builder) {
-        appendPropName(builder, singleBooleanPropertyToString(prop)).append(getBooleanProperty(prop));
+        boolean value = getBooleanProperty(prop);
+        appendPropName(builder, singleBooleanPropertyToString(prop)).append(value);
     }
 
     private static String singleBooleanPropertyToString(int prop) {
-        if (prop == 4) {
-            return "Password";
-        }
-        if (prop == 128) {
+        if (prop != 4) {
+            if (prop != 128) {
+                if (prop != 256) {
+                    if (prop != 512) {
+                        switch (prop) {
+                            case 1:
+                                return "Checked";
+                            case 2:
+                                return "Enabled";
+                            default:
+                                return Integer.toHexString(prop);
+                        }
+                    }
+                    return "ImportantForAccessibility";
+                }
+                return "Scrollable";
+            }
             return "FullScreen";
         }
-        if (prop == 256) {
-            return "Scrollable";
-        }
-        if (prop == 512) {
-            return "ImportantForAccessibility";
-        }
-        switch (prop) {
-            case 1:
-                return "Checked";
-            case 2:
-                return "Enabled";
-            default:
-                return Integer.toHexString(prop);
-        }
+        return "Password";
     }
 
     private void append(StringBuilder builder, String propName, int propValue) {

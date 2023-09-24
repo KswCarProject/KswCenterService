@@ -2,6 +2,7 @@ package android.graphics;
 
 import android.annotation.UnsupportedAppUsage;
 
+/* loaded from: classes.dex */
 public class NinePatch {
     @UnsupportedAppUsage
     private final Bitmap mBitmap;
@@ -18,6 +19,7 @@ public class NinePatch {
 
     private static native long validateNinePatchChunk(byte[] bArr);
 
+    /* loaded from: classes.dex */
     public static class InsetStruct {
         public final Rect opticalRect;
         public final float outlineAlpha;
@@ -25,12 +27,12 @@ public class NinePatch {
         public final Rect outlineRect;
 
         @UnsupportedAppUsage
-        InsetStruct(int opticalLeft, int opticalTop, int opticalRight, int opticalBottom, int outlineLeft, int outlineTop, int outlineRight, int outlineBottom, float outlineRadius2, int outlineAlpha2, float decodeScale) {
+        InsetStruct(int opticalLeft, int opticalTop, int opticalRight, int opticalBottom, int outlineLeft, int outlineTop, int outlineRight, int outlineBottom, float outlineRadius, int outlineAlpha, float decodeScale) {
             this.opticalRect = new Rect(opticalLeft, opticalTop, opticalRight, opticalBottom);
             this.opticalRect.scale(decodeScale);
             this.outlineRect = scaleInsets(outlineLeft, outlineTop, outlineRight, outlineBottom, decodeScale);
-            this.outlineRadius = outlineRadius2 * decodeScale;
-            this.outlineAlpha = ((float) outlineAlpha2) / 255.0f;
+            this.outlineRadius = outlineRadius * decodeScale;
+            this.outlineAlpha = outlineAlpha / 255.0f;
         }
 
         public static Rect scaleInsets(int left, int top, int right, int bottom, float scale) {
@@ -38,16 +40,16 @@ public class NinePatch {
                 return new Rect(left, top, right, bottom);
             }
             Rect result = new Rect();
-            result.left = (int) Math.ceil((double) (((float) left) * scale));
-            result.top = (int) Math.ceil((double) (((float) top) * scale));
-            result.right = (int) Math.ceil((double) (((float) right) * scale));
-            result.bottom = (int) Math.ceil((double) (((float) bottom) * scale));
+            result.left = (int) Math.ceil(left * scale);
+            result.top = (int) Math.ceil(top * scale);
+            result.right = (int) Math.ceil(right * scale);
+            result.bottom = (int) Math.ceil(bottom * scale);
             return result;
         }
     }
 
     public NinePatch(Bitmap bitmap, byte[] chunk) {
-        this(bitmap, chunk, (String) null);
+        this(bitmap, chunk, null);
     }
 
     public NinePatch(Bitmap bitmap, byte[] chunk, String srcName) {
@@ -65,12 +67,11 @@ public class NinePatch {
         this.mNativeChunk = patch.mNativeChunk;
     }
 
-    /* access modifiers changed from: protected */
-    public void finalize() throws Throwable {
+    protected void finalize() throws Throwable {
         try {
             if (this.mNativeChunk != 0) {
                 nativeFinalize(this.mNativeChunk);
-                this.mNativeChunk = 0;
+                this.mNativeChunk = 0L;
             }
         } finally {
             super.finalize();

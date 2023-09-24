@@ -1,32 +1,31 @@
 package android.app;
 
 import android.graphics.drawable.Icon;
-import android.os.Parcel;
-import android.os.Parcelable;
+import android.p007os.Parcel;
+import android.p007os.Parcelable;
 import java.util.Objects;
 
+/* loaded from: classes.dex */
 public final class Person implements Parcelable {
-    public static final Parcelable.Creator<Person> CREATOR = new Parcelable.Creator<Person>() {
+    public static final Parcelable.Creator<Person> CREATOR = new Parcelable.Creator<Person>() { // from class: android.app.Person.1
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public Person createFromParcel(Parcel in) {
             return new Person(in);
         }
 
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public Person[] newArray(int size) {
             return new Person[size];
         }
     };
-    /* access modifiers changed from: private */
-    public Icon mIcon;
-    /* access modifiers changed from: private */
-    public boolean mIsBot;
-    /* access modifiers changed from: private */
-    public boolean mIsImportant;
-    /* access modifiers changed from: private */
-    public String mKey;
-    /* access modifiers changed from: private */
-    public CharSequence mName;
-    /* access modifiers changed from: private */
-    public String mUri;
+    private Icon mIcon;
+    private boolean mIsBot;
+    private boolean mIsImportant;
+    private String mKey;
+    private CharSequence mName;
+    private String mUri;
 
     private Person(Parcel in) {
         this.mName = in.readCharSequence();
@@ -80,41 +79,40 @@ public final class Person implements Parcelable {
         if (this.mUri != null) {
             return this.mUri;
         }
-        if (this.mName == null) {
-            return "";
+        if (this.mName != null) {
+            return "name:" + ((Object) this.mName);
         }
-        return "name:" + this.mName;
+        return "";
     }
 
     public boolean equals(Object obj) {
-        if (!(obj instanceof Person)) {
-            return false;
-        }
-        Person other = (Person) obj;
-        if (!Objects.equals(this.mName, other.mName)) {
-            return false;
-        }
-        if (this.mIcon == null) {
-            if (other.mIcon != null) {
-                return false;
+        if (obj instanceof Person) {
+            Person other = (Person) obj;
+            if (Objects.equals(this.mName, other.mName)) {
+                if (this.mIcon == null) {
+                    if (other.mIcon != null) {
+                        return false;
+                    }
+                } else if (other.mIcon == null || !this.mIcon.sameAs(other.mIcon)) {
+                    return false;
+                }
+                return Objects.equals(this.mUri, other.mUri) && Objects.equals(this.mKey, other.mKey) && this.mIsBot == other.mIsBot && this.mIsImportant == other.mIsImportant;
             }
-        } else if (other.mIcon == null || !this.mIcon.sameAs(other.mIcon)) {
             return false;
         }
-        if (!Objects.equals(this.mUri, other.mUri) || !Objects.equals(this.mKey, other.mKey) || this.mIsBot != other.mIsBot || this.mIsImportant != other.mIsImportant) {
-            return false;
-        }
-        return true;
+        return false;
     }
 
     public int hashCode() {
-        return Objects.hash(new Object[]{this.mName, this.mIcon, this.mUri, this.mKey, Boolean.valueOf(this.mIsBot), Boolean.valueOf(this.mIsImportant)});
+        return Objects.hash(this.mName, this.mIcon, this.mUri, this.mKey, Boolean.valueOf(this.mIsBot), Boolean.valueOf(this.mIsImportant));
     }
 
+    @Override // android.p007os.Parcelable
     public int describeContents() {
         return 0;
     }
 
+    @Override // android.p007os.Parcelable
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeCharSequence(this.mName);
         if (this.mIcon != null) {
@@ -129,19 +127,14 @@ public final class Person implements Parcelable {
         dest.writeBoolean(this.mIsBot);
     }
 
+    /* loaded from: classes.dex */
     public static class Builder {
-        /* access modifiers changed from: private */
-        public Icon mIcon;
-        /* access modifiers changed from: private */
-        public boolean mIsBot;
-        /* access modifiers changed from: private */
-        public boolean mIsImportant;
-        /* access modifiers changed from: private */
-        public String mKey;
-        /* access modifiers changed from: private */
-        public CharSequence mName;
-        /* access modifiers changed from: private */
-        public String mUri;
+        private Icon mIcon;
+        private boolean mIsBot;
+        private boolean mIsImportant;
+        private String mKey;
+        private CharSequence mName;
+        private String mUri;
 
         public Builder() {
         }

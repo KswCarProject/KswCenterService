@@ -1,13 +1,13 @@
 package com.android.internal.telephony;
 
-import android.os.Handler;
-import android.os.Looper;
+import android.p007os.Handler;
+import android.p007os.Looper;
 import com.android.internal.annotations.VisibleForTesting;
 
+/* loaded from: classes4.dex */
 public class ExponentialBackoff {
     private long mCurrentDelayMs;
-    /* access modifiers changed from: private */
-    public final Handler mHandler;
+    private final Handler mHandler;
     private HandlerAdapter mHandlerAdapter;
     private long mMaximumDelayMs;
     private int mMultiplier;
@@ -15,6 +15,7 @@ public class ExponentialBackoff {
     private final Runnable mRunnable;
     private long mStartDelayMs;
 
+    /* loaded from: classes4.dex */
     public interface HandlerAdapter {
         boolean postDelayed(Runnable runnable, long j);
 
@@ -26,13 +27,15 @@ public class ExponentialBackoff {
     }
 
     public ExponentialBackoff(long initialDelayMs, long maximumDelayMs, int multiplier, Handler handler, Runnable runnable) {
-        this.mHandlerAdapter = new HandlerAdapter() {
-            public boolean postDelayed(Runnable runnable, long delayMillis) {
-                return ExponentialBackoff.this.mHandler.postDelayed(runnable, delayMillis);
+        this.mHandlerAdapter = new HandlerAdapter() { // from class: com.android.internal.telephony.ExponentialBackoff.1
+            @Override // com.android.internal.telephony.ExponentialBackoff.HandlerAdapter
+            public boolean postDelayed(Runnable runnable2, long delayMillis) {
+                return ExponentialBackoff.this.mHandler.postDelayed(runnable2, delayMillis);
             }
 
-            public void removeCallbacks(Runnable runnable) {
-                ExponentialBackoff.this.mHandler.removeCallbacks(runnable);
+            @Override // com.android.internal.telephony.ExponentialBackoff.HandlerAdapter
+            public void removeCallbacks(Runnable runnable2) {
+                ExponentialBackoff.this.mHandler.removeCallbacks(runnable2);
             }
         };
         this.mRetryCounter = 0;
@@ -57,7 +60,8 @@ public class ExponentialBackoff {
 
     public void notifyFailed() {
         this.mRetryCounter++;
-        this.mCurrentDelayMs = (long) (((Math.random() + 1.0d) / 2.0d) * ((double) Math.min(this.mMaximumDelayMs, (long) (((double) this.mStartDelayMs) * Math.pow((double) this.mMultiplier, (double) this.mRetryCounter)))));
+        long temp = Math.min(this.mMaximumDelayMs, (long) (this.mStartDelayMs * Math.pow(this.mMultiplier, this.mRetryCounter)));
+        this.mCurrentDelayMs = (long) (((Math.random() + 1.0d) / 2.0d) * temp);
         this.mHandlerAdapter.removeCallbacks(this.mRunnable);
         this.mHandlerAdapter.postDelayed(this.mRunnable, this.mCurrentDelayMs);
     }

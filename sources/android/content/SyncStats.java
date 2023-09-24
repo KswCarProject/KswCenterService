@@ -1,14 +1,19 @@
 package android.content;
 
-import android.os.Parcel;
-import android.os.Parcelable;
+import android.p007os.Parcel;
+import android.p007os.Parcelable;
 
+/* loaded from: classes.dex */
 public class SyncStats implements Parcelable {
-    public static final Parcelable.Creator<SyncStats> CREATOR = new Parcelable.Creator<SyncStats>() {
+    public static final Parcelable.Creator<SyncStats> CREATOR = new Parcelable.Creator<SyncStats>() { // from class: android.content.SyncStats.1
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public SyncStats createFromParcel(Parcel in) {
             return new SyncStats(in);
         }
 
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public SyncStats[] newArray(int size) {
             return new SyncStats[size];
         }
@@ -24,15 +29,15 @@ public class SyncStats implements Parcelable {
     public long numUpdates;
 
     public SyncStats() {
-        this.numAuthExceptions = 0;
-        this.numIoExceptions = 0;
-        this.numParseExceptions = 0;
-        this.numConflictDetectedExceptions = 0;
-        this.numInserts = 0;
-        this.numUpdates = 0;
-        this.numDeletes = 0;
-        this.numEntries = 0;
-        this.numSkippedEntries = 0;
+        this.numAuthExceptions = 0L;
+        this.numIoExceptions = 0L;
+        this.numParseExceptions = 0L;
+        this.numConflictDetectedExceptions = 0L;
+        this.numInserts = 0L;
+        this.numUpdates = 0L;
+        this.numDeletes = 0L;
+        this.numEntries = 0L;
+        this.numSkippedEntries = 0L;
     }
 
     public SyncStats(Parcel in) {
@@ -91,21 +96,23 @@ public class SyncStats implements Parcelable {
     }
 
     public void clear() {
-        this.numAuthExceptions = 0;
-        this.numIoExceptions = 0;
-        this.numParseExceptions = 0;
-        this.numConflictDetectedExceptions = 0;
-        this.numInserts = 0;
-        this.numUpdates = 0;
-        this.numDeletes = 0;
-        this.numEntries = 0;
-        this.numSkippedEntries = 0;
+        this.numAuthExceptions = 0L;
+        this.numIoExceptions = 0L;
+        this.numParseExceptions = 0L;
+        this.numConflictDetectedExceptions = 0L;
+        this.numInserts = 0L;
+        this.numUpdates = 0L;
+        this.numDeletes = 0L;
+        this.numEntries = 0L;
+        this.numSkippedEntries = 0L;
     }
 
+    @Override // android.p007os.Parcelable
     public int describeContents() {
         return 0;
     }
 
+    @Override // android.p007os.Parcelable
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeLong(this.numAuthExceptions);
         dest.writeLong(this.numIoExceptions);

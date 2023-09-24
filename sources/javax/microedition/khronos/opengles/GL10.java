@@ -4,7 +4,8 @@ import java.nio.Buffer;
 import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
 
-public interface GL10 extends GL {
+/* loaded from: classes5.dex */
+public interface GL10 extends InterfaceC3683GL {
     public static final int GL_ADD = 260;
     public static final int GL_ALIASED_LINE_WIDTH_RANGE = 33902;
     public static final int GL_ALIASED_POINT_SIZE_RANGE = 33901;

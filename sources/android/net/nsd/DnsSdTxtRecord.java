@@ -1,25 +1,29 @@
 package android.net.nsd;
 
-import android.os.Parcel;
-import android.os.Parcelable;
+import android.p007os.Parcel;
+import android.p007os.Parcelable;
 import java.io.UnsupportedEncodingException;
 import java.util.Arrays;
 
+/* loaded from: classes3.dex */
 public class DnsSdTxtRecord implements Parcelable {
-    public static final Parcelable.Creator<DnsSdTxtRecord> CREATOR = new Parcelable.Creator<DnsSdTxtRecord>() {
+    public static final Parcelable.Creator<DnsSdTxtRecord> CREATOR = new Parcelable.Creator<DnsSdTxtRecord>() { // from class: android.net.nsd.DnsSdTxtRecord.1
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public DnsSdTxtRecord createFromParcel(Parcel in) {
             DnsSdTxtRecord info = new DnsSdTxtRecord();
             in.readByteArray(info.mData);
             return info;
         }
 
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public DnsSdTxtRecord[] newArray(int size) {
             return new DnsSdTxtRecord[size];
         }
     };
     private static final byte mSeperator = 61;
-    /* access modifiers changed from: private */
-    public byte[] mData;
+    private byte[] mData;
 
     public DnsSdTxtRecord() {
         this.mData = new byte[0];
@@ -36,9 +40,8 @@ public class DnsSdTxtRecord implements Parcelable {
     }
 
     public void set(String key, String value) {
-        int valLen;
         byte[] valBytes;
-        int i = 0;
+        int valLen;
         if (value != null) {
             valBytes = value.getBytes();
             valLen = valBytes.length;
@@ -48,22 +51,20 @@ public class DnsSdTxtRecord implements Parcelable {
         }
         try {
             byte[] keyBytes = key.getBytes("US-ASCII");
-            while (i < keyBytes.length) {
-                if (keyBytes[i] != 61) {
-                    i++;
-                } else {
+            for (byte b : keyBytes) {
+                if (b == 61) {
                     throw new IllegalArgumentException("= is not a valid character in key");
                 }
             }
-            if (keyBytes.length + valLen < 255) {
-                int currentLoc = remove(key);
-                if (currentLoc == -1) {
-                    currentLoc = keyCount();
-                }
-                insert(keyBytes, valBytes, currentLoc);
-                return;
+            int i = keyBytes.length;
+            if (i + valLen >= 255) {
+                throw new IllegalArgumentException("Key and Value length cannot exceed 255 bytes");
             }
-            throw new IllegalArgumentException("Key and Value length cannot exceed 255 bytes");
+            int currentLoc = remove(key);
+            if (currentLoc == -1) {
+                currentLoc = keyCount();
+            }
+            insert(keyBytes, valBytes, currentLoc);
         } catch (UnsupportedEncodingException e) {
             throw new IllegalArgumentException("key should be US-ASCII");
         }
@@ -79,19 +80,21 @@ public class DnsSdTxtRecord implements Parcelable {
 
     public int remove(String key) {
         int avStart = 0;
-        int i = 0;
+        int avStart2 = 0;
         while (avStart < this.mData.length) {
-            byte avLen = this.mData[avStart];
-            if (key.length() > avLen || !((key.length() == avLen || this.mData[key.length() + avStart + 1] == 61) && key.compareToIgnoreCase(new String(this.mData, avStart + 1, key.length())) == 0)) {
-                avStart += (avLen + 1) & 255;
-                i++;
-            } else {
-                byte[] oldBytes = this.mData;
-                this.mData = new byte[((oldBytes.length - avLen) - 1)];
-                System.arraycopy(oldBytes, 0, this.mData, 0, avStart);
-                System.arraycopy(oldBytes, avStart + avLen + 1, this.mData, avStart, ((oldBytes.length - avStart) - avLen) - 1);
-                return i;
+            int avLen = this.mData[avStart];
+            if (key.length() <= avLen && (key.length() == avLen || this.mData[key.length() + avStart + 1] == 61)) {
+                String s = new String(this.mData, avStart + 1, key.length());
+                if (key.compareToIgnoreCase(s) == 0) {
+                    byte[] oldBytes = this.mData;
+                    this.mData = new byte[(oldBytes.length - avLen) - 1];
+                    System.arraycopy(oldBytes, 0, this.mData, 0, avStart);
+                    System.arraycopy(oldBytes, avStart + avLen + 1, this.mData, avStart, ((oldBytes.length - avStart) - avLen) - 1);
+                    return avStart2;
+                }
             }
+            avStart += (avLen + 1) & 255;
+            avStart2++;
         }
         return -1;
     }
@@ -109,9 +112,8 @@ public class DnsSdTxtRecord implements Parcelable {
     public boolean contains(String key) {
         int i = 0;
         while (true) {
-            String key2 = getKey(i);
-            String s = key2;
-            if (key2 == null) {
+            String s = getKey(i);
+            if (s == null) {
                 return false;
             }
             if (key.compareToIgnoreCase(s) == 0) {
@@ -133,10 +135,11 @@ public class DnsSdTxtRecord implements Parcelable {
         byte[] oldBytes = this.mData;
         int valLen = value != null ? value.length : 0;
         int insertion = 0;
-        for (int i = 0; i < index && insertion < this.mData.length; i++) {
+        for (int insertion2 = 0; insertion2 < index && insertion < this.mData.length; insertion2++) {
             insertion += (this.mData[insertion] + 1) & 255;
         }
-        int avLen = keyBytes.length + valLen + (value != null ? 1 : 0);
+        int i = keyBytes.length;
+        int avLen = i + valLen + (value != null ? 1 : 0);
         int newLen = oldBytes.length + avLen + 1;
         this.mData = new byte[newLen];
         System.arraycopy(oldBytes, 0, this.mData, 0, insertion);
@@ -155,29 +158,29 @@ public class DnsSdTxtRecord implements Parcelable {
         for (int i = 0; i < index && avStart < this.mData.length; i++) {
             avStart += this.mData[avStart] + 1;
         }
-        if (avStart >= this.mData.length) {
-            return null;
+        if (avStart < this.mData.length) {
+            int avLen = this.mData[avStart];
+            int aLen = 0;
+            while (aLen < avLen && this.mData[avStart + aLen + 1] != 61) {
+                aLen++;
+            }
+            return new String(this.mData, avStart + 1, aLen);
         }
-        byte avLen = this.mData[avStart];
-        int aLen = 0;
-        while (aLen < avLen && this.mData[avStart + aLen + 1] != 61) {
-            aLen++;
-        }
-        return new String(this.mData, avStart + 1, aLen);
+        return null;
     }
 
     private byte[] getValue(int index) {
         int avStart = 0;
-        for (int i = 0; i < index && avStart < this.mData.length; i++) {
+        for (int avStart2 = 0; avStart2 < index && avStart < this.mData.length; avStart2++) {
             avStart += this.mData[avStart] + 1;
         }
         if (avStart >= this.mData.length) {
             return null;
         }
-        byte avLen = this.mData[avStart];
+        int avLen = this.mData[avStart];
         for (int aLen = 0; aLen < avLen; aLen++) {
             if (this.mData[avStart + aLen + 1] == 61) {
-                byte[] value = new byte[((avLen - aLen) - 1)];
+                byte[] value = new byte[(avLen - aLen) - 1];
                 System.arraycopy(this.mData, avStart + aLen + 2, value, 0, (avLen - aLen) - 1);
                 return value;
             }
@@ -196,15 +199,16 @@ public class DnsSdTxtRecord implements Parcelable {
     private byte[] getValue(String forKey) {
         int i = 0;
         while (true) {
-            String key = getKey(i);
-            String s = key;
-            if (key == null) {
+            String s = getKey(i);
+            if (s != null) {
+                if (forKey.compareToIgnoreCase(s) != 0) {
+                    i++;
+                } else {
+                    return getValue(i);
+                }
+            } else {
                 return null;
             }
-            if (forKey.compareToIgnoreCase(s) == 0) {
-                return getValue(i);
-            }
-            i++;
         }
     }
 
@@ -213,9 +217,8 @@ public class DnsSdTxtRecord implements Parcelable {
         String result = null;
         int i = 0;
         while (true) {
-            String key = getKey(i);
-            String a = key;
-            if (key == null) {
+            String a = getKey(i);
+            if (a == null) {
                 break;
             }
             String av2 = "{" + a;
@@ -242,17 +245,20 @@ public class DnsSdTxtRecord implements Parcelable {
         if (!(o instanceof DnsSdTxtRecord)) {
             return false;
         }
-        return Arrays.equals(((DnsSdTxtRecord) o).mData, this.mData);
+        DnsSdTxtRecord record = (DnsSdTxtRecord) o;
+        return Arrays.equals(record.mData, this.mData);
     }
 
     public int hashCode() {
         return Arrays.hashCode(this.mData);
     }
 
+    @Override // android.p007os.Parcelable
     public int describeContents() {
         return 0;
     }
 
+    @Override // android.p007os.Parcelable
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeByteArray(this.mData);
     }

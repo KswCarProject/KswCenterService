@@ -1,17 +1,22 @@
 package android.net;
 
 import android.annotation.UnsupportedAppUsage;
-import android.os.Parcel;
-import android.os.Parcelable;
+import android.p007os.Parcel;
+import android.p007os.Parcelable;
 
 @Deprecated
+/* loaded from: classes3.dex */
 public class NetworkQuotaInfo implements Parcelable {
     @UnsupportedAppUsage
-    public static final Parcelable.Creator<NetworkQuotaInfo> CREATOR = new Parcelable.Creator<NetworkQuotaInfo>() {
+    public static final Parcelable.Creator<NetworkQuotaInfo> CREATOR = new Parcelable.Creator<NetworkQuotaInfo>() { // from class: android.net.NetworkQuotaInfo.1
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public NetworkQuotaInfo createFromParcel(Parcel in) {
             return new NetworkQuotaInfo(in);
         }
 
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public NetworkQuotaInfo[] newArray(int size) {
             return new NetworkQuotaInfo[size];
         }
@@ -26,23 +31,25 @@ public class NetworkQuotaInfo implements Parcelable {
 
     @UnsupportedAppUsage
     public long getEstimatedBytes() {
-        return 0;
+        return 0L;
     }
 
     @UnsupportedAppUsage
     public long getSoftLimitBytes() {
-        return -1;
+        return -1L;
     }
 
     @UnsupportedAppUsage
     public long getHardLimitBytes() {
-        return -1;
+        return -1L;
     }
 
+    @Override // android.p007os.Parcelable
     public int describeContents() {
         return 0;
     }
 
+    @Override // android.p007os.Parcelable
     public void writeToParcel(Parcel out, int flags) {
     }
 }

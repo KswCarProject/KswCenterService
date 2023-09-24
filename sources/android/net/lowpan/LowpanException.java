@@ -1,8 +1,9 @@
 package android.net.lowpan;
 
-import android.os.ServiceSpecificException;
+import android.p007os.ServiceSpecificException;
 import android.util.AndroidException;
 
+/* loaded from: classes3.dex */
 public class LowpanException extends AndroidException {
     public LowpanException() {
     }
@@ -24,25 +25,29 @@ public class LowpanException extends AndroidException {
             case 2:
                 throw new LowpanRuntimeException(e.getMessage() != null ? e.getMessage() : "Invalid argument", e);
             case 3:
-                throw new InterfaceDisabledException((Exception) e);
+                throw new InterfaceDisabledException(e);
             case 4:
-                throw new WrongStateException((Exception) e);
+                throw new WrongStateException(e);
+            case 5:
+            case 6:
+            case 8:
+            case 9:
+            default:
+                throw new LowpanRuntimeException(e);
             case 7:
                 throw new LowpanRuntimeException(e.getMessage() != null ? e.getMessage() : "NCP problem", e);
             case 10:
-                throw new OperationCanceledException((Exception) e);
+                throw new OperationCanceledException(e);
             case 11:
                 throw new LowpanException(e.getMessage() != null ? e.getMessage() : "Feature not supported", e);
             case 12:
-                throw new JoinFailedException((Exception) e);
+                throw new JoinFailedException(e);
             case 13:
-                throw new JoinFailedAtScanException((Exception) e);
+                throw new JoinFailedAtScanException(e);
             case 14:
-                throw new JoinFailedAtAuthException((Exception) e);
+                throw new JoinFailedAtAuthException(e);
             case 15:
-                throw new NetworkAlreadyExistsException((Exception) e);
-            default:
-                throw new LowpanRuntimeException((Exception) e);
+                throw new NetworkAlreadyExistsException(e);
         }
     }
 }

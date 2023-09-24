@@ -1,5 +1,6 @@
 package android.support.compat;
 
+/* loaded from: classes3.dex */
 public final class BuildConfig {
     public static final String APPLICATION_ID = "android.support.compat";
     public static final String BUILD_TYPE = "release";

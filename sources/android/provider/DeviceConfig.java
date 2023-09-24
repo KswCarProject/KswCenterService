@@ -3,10 +3,10 @@ package android.provider;
 import android.Manifest;
 import android.annotation.SystemApi;
 import android.app.ActivityThread;
+import android.content.ContentResolver;
 import android.content.Context;
 import android.database.ContentObserver;
 import android.net.Uri;
-import android.os.Handler;
 import android.provider.Settings;
 import android.util.ArrayMap;
 import android.util.Log;
@@ -21,8 +21,8 @@ import java.util.Set;
 import java.util.concurrent.Executor;
 
 @SystemApi
+/* loaded from: classes3.dex */
 public final class DeviceConfig {
-    public static final Uri CONTENT_URI = Uri.parse("content://settings/config");
     @SystemApi
     public static final String NAMESPACE_ACTIVITY_MANAGER = "activity_manager";
     @SystemApi
@@ -58,8 +58,6 @@ public final class DeviceConfig {
     @SystemApi
     public static final String NAMESPACE_ROLLBACK_BOOT = "rollback_boot";
     @SystemApi
-    public static final String NAMESPACE_RUNTIME = "runtime";
-    @SystemApi
     public static final String NAMESPACE_RUNTIME_NATIVE = "runtime_native";
     @SystemApi
     public static final String NAMESPACE_RUNTIME_NATIVE_BOOT = "runtime_native_boot";
@@ -72,31 +70,35 @@ public final class DeviceConfig {
     public static final String NAMESPACE_SYSTEMUI = "systemui";
     @SystemApi
     public static final String NAMESPACE_TELEPHONY = "telephony";
+    public static final String NAMESPACE_WINDOW_MANAGER = "android:window_manager";
+    private static final String TAG = "DeviceConfig";
+    public static final Uri CONTENT_URI = Uri.parse("content://settings/config");
     @SystemApi
     public static final String NAMESPACE_TEXTCLASSIFIER = "textclassifier";
-    public static final String NAMESPACE_WINDOW_MANAGER = "android:window_manager";
-    private static final List<String> PUBLIC_NAMESPACES = Arrays.asList(new String[]{NAMESPACE_TEXTCLASSIFIER, NAMESPACE_RUNTIME});
-    private static final String TAG = "DeviceConfig";
-    /* access modifiers changed from: private */
-    @GuardedBy({"sLock"})
-    public static ArrayMap<OnPropertiesChangedListener, Pair<String, Executor>> sListeners = new ArrayMap<>();
+    @SystemApi
+    public static final String NAMESPACE_RUNTIME = "runtime";
+    private static final List<String> PUBLIC_NAMESPACES = Arrays.asList(NAMESPACE_TEXTCLASSIFIER, NAMESPACE_RUNTIME);
     private static final Object sLock = new Object();
     @GuardedBy({"sLock"})
-    private static Map<String, Pair<ContentObserver, Integer>> sNamespaces = new HashMap();
-    /* access modifiers changed from: private */
+    private static ArrayMap<OnPropertyChangedListener, Pair<String, Executor>> sSingleListeners = new ArrayMap<>();
     @GuardedBy({"sLock"})
-    public static ArrayMap<OnPropertyChangedListener, Pair<String, Executor>> sSingleListeners = new ArrayMap<>();
+    private static ArrayMap<OnPropertiesChangedListener, Pair<String, Executor>> sListeners = new ArrayMap<>();
+    @GuardedBy({"sLock"})
+    private static Map<String, Pair<ContentObserver, Integer>> sNamespaces = new HashMap();
 
     @SystemApi
+    /* loaded from: classes3.dex */
     public interface OnPropertiesChangedListener {
         void onPropertiesChanged(Properties properties);
     }
 
     @SystemApi
+    /* loaded from: classes3.dex */
     public interface OnPropertyChangedListener {
         void onPropertyChanged(String str, String str2, String str3);
     }
 
+    /* loaded from: classes3.dex */
     public interface WindowManager {
         public static final String KEY_SYSTEM_GESTURES_EXCLUDED_BY_PRE_Q_STICKY_IMMERSIVE = "system_gestures_excluded_by_pre_q_sticky_immersive";
         public static final String KEY_SYSTEM_GESTURE_EXCLUSION_LIMIT_DP = "system_gesture_exclusion_limit_dp";
@@ -107,7 +109,9 @@ public final class DeviceConfig {
 
     @SystemApi
     public static String getProperty(String namespace, String name) {
-        return Settings.Config.getString(ActivityThread.currentApplication().getContentResolver(), createCompositeName(namespace, name));
+        ContentResolver contentResolver = ActivityThread.currentApplication().getContentResolver();
+        String compositeName = createCompositeName(namespace, name);
+        return Settings.Config.getString(contentResolver, compositeName);
     }
 
     @SystemApi
@@ -131,7 +135,7 @@ public final class DeviceConfig {
         try {
             return Integer.parseInt(value);
         } catch (NumberFormatException e) {
-            Log.e(TAG, "Parsing integer failed for " + namespace + SettingsStringUtil.DELIMITER + name);
+            Log.m70e(TAG, "Parsing integer failed for " + namespace + SettingsStringUtil.DELIMITER + name);
             return defaultValue;
         }
     }
@@ -145,7 +149,7 @@ public final class DeviceConfig {
         try {
             return Long.parseLong(value);
         } catch (NumberFormatException e) {
-            Log.e(TAG, "Parsing long failed for " + namespace + SettingsStringUtil.DELIMITER + name);
+            Log.m70e(TAG, "Parsing long failed for " + namespace + SettingsStringUtil.DELIMITER + name);
             return defaultValue;
         }
     }
@@ -159,19 +163,22 @@ public final class DeviceConfig {
         try {
             return Float.parseFloat(value);
         } catch (NumberFormatException e) {
-            Log.e(TAG, "Parsing float failed for " + namespace + SettingsStringUtil.DELIMITER + name);
+            Log.m70e(TAG, "Parsing float failed for " + namespace + SettingsStringUtil.DELIMITER + name);
             return defaultValue;
         }
     }
 
     @SystemApi
     public static boolean setProperty(String namespace, String name, String value, boolean makeDefault) {
-        return Settings.Config.putString(ActivityThread.currentApplication().getContentResolver(), createCompositeName(namespace, name), value, makeDefault);
+        String compositeName = createCompositeName(namespace, name);
+        ContentResolver contentResolver = ActivityThread.currentApplication().getContentResolver();
+        return Settings.Config.putString(contentResolver, compositeName, value, makeDefault);
     }
 
     @SystemApi
     public static void resetToDefaults(int resetMode, String namespace) {
-        Settings.Config.resetToDefaults(ActivityThread.currentApplication().getContentResolver(), resetMode, namespace);
+        ContentResolver contentResolver = ActivityThread.currentApplication().getContentResolver();
+        Settings.Config.resetToDefaults(contentResolver, resetMode, namespace);
     }
 
     @SystemApi
@@ -180,13 +187,13 @@ public final class DeviceConfig {
         synchronized (sLock) {
             Pair<String, Executor> oldNamespace = sSingleListeners.get(onPropertyChangedListener);
             if (oldNamespace == null) {
-                sSingleListeners.put(onPropertyChangedListener, new Pair(namespace, executor));
+                sSingleListeners.put(onPropertyChangedListener, new Pair<>(namespace, executor));
                 incrementNamespace(namespace);
             } else if (namespace.equals(oldNamespace.first)) {
-                sSingleListeners.put(onPropertyChangedListener, new Pair(namespace, executor));
+                sSingleListeners.put(onPropertyChangedListener, new Pair<>(namespace, executor));
             } else {
-                decrementNamespace((String) sSingleListeners.get(onPropertyChangedListener).first);
-                sSingleListeners.put(onPropertyChangedListener, new Pair(namespace, executor));
+                decrementNamespace(sSingleListeners.get(onPropertyChangedListener).first);
+                sSingleListeners.put(onPropertyChangedListener, new Pair<>(namespace, executor));
                 incrementNamespace(namespace);
             }
         }
@@ -198,13 +205,13 @@ public final class DeviceConfig {
         synchronized (sLock) {
             Pair<String, Executor> oldNamespace = sListeners.get(onPropertiesChangedListener);
             if (oldNamespace == null) {
-                sListeners.put(onPropertiesChangedListener, new Pair(namespace, executor));
+                sListeners.put(onPropertiesChangedListener, new Pair<>(namespace, executor));
                 incrementNamespace(namespace);
             } else if (namespace.equals(oldNamespace.first)) {
-                sListeners.put(onPropertiesChangedListener, new Pair(namespace, executor));
+                sListeners.put(onPropertiesChangedListener, new Pair<>(namespace, executor));
             } else {
-                decrementNamespace((String) sListeners.get(onPropertiesChangedListener).first);
-                sListeners.put(onPropertiesChangedListener, new Pair(namespace, executor));
+                decrementNamespace(sListeners.get(onPropertiesChangedListener).first);
+                sListeners.put(onPropertiesChangedListener, new Pair<>(namespace, executor));
                 incrementNamespace(namespace);
             }
         }
@@ -215,7 +222,7 @@ public final class DeviceConfig {
         Preconditions.checkNotNull(onPropertyChangedListener);
         synchronized (sLock) {
             if (sSingleListeners.containsKey(onPropertyChangedListener)) {
-                decrementNamespace((String) sSingleListeners.get(onPropertyChangedListener).first);
+                decrementNamespace(sSingleListeners.get(onPropertyChangedListener).first);
                 sSingleListeners.remove(onPropertyChangedListener);
             }
         }
@@ -226,7 +233,7 @@ public final class DeviceConfig {
         Preconditions.checkNotNull(onPropertiesChangedListener);
         synchronized (sLock) {
             if (sListeners.containsKey(onPropertiesChangedListener)) {
-                decrementNamespace((String) sListeners.get(onPropertiesChangedListener).first);
+                decrementNamespace(sListeners.get(onPropertiesChangedListener).first);
                 sListeners.remove(onPropertiesChangedListener);
             }
         }
@@ -248,10 +255,11 @@ public final class DeviceConfig {
         Preconditions.checkNotNull(namespace);
         Pair<ContentObserver, Integer> namespaceCount = sNamespaces.get(namespace);
         if (namespaceCount != null) {
-            sNamespaces.put(namespace, new Pair((ContentObserver) namespaceCount.first, Integer.valueOf(((Integer) namespaceCount.second).intValue() + 1)));
+            sNamespaces.put(namespace, new Pair<>(namespaceCount.first, Integer.valueOf(namespaceCount.second.intValue() + 1)));
             return;
         }
-        ContentObserver contentObserver = new ContentObserver((Handler) null) {
+        ContentObserver contentObserver = new ContentObserver(null) { // from class: android.provider.DeviceConfig.1
+            @Override // android.database.ContentObserver
             public void onChange(boolean selfChange, Uri uri) {
                 if (uri != null) {
                     DeviceConfig.handleChange(uri);
@@ -259,24 +267,25 @@ public final class DeviceConfig {
             }
         };
         ActivityThread.currentApplication().getContentResolver().registerContentObserver(createNamespaceUri(namespace), true, contentObserver);
-        sNamespaces.put(namespace, new Pair(contentObserver, 1));
+        sNamespaces.put(namespace, new Pair<>(contentObserver, 1));
     }
 
     @GuardedBy({"sLock"})
     private static void decrementNamespace(String namespace) {
         Preconditions.checkNotNull(namespace);
         Pair<ContentObserver, Integer> namespaceCount = sNamespaces.get(namespace);
-        if (namespaceCount != null) {
-            if (((Integer) namespaceCount.second).intValue() > 1) {
-                sNamespaces.put(namespace, new Pair((ContentObserver) namespaceCount.first, Integer.valueOf(((Integer) namespaceCount.second).intValue() - 1)));
-                return;
-            }
-            ActivityThread.currentApplication().getContentResolver().unregisterContentObserver((ContentObserver) namespaceCount.first);
-            sNamespaces.remove(namespace);
+        if (namespaceCount == null) {
+            return;
         }
+        if (namespaceCount.second.intValue() > 1) {
+            sNamespaces.put(namespace, new Pair<>(namespaceCount.first, Integer.valueOf(namespaceCount.second.intValue() - 1)));
+            return;
+        }
+        ActivityThread.currentApplication().getContentResolver().unregisterContentObserver(namespaceCount.first);
+        sNamespaces.remove(namespace);
     }
 
-    /* access modifiers changed from: private */
+    /* JADX INFO: Access modifiers changed from: private */
     public static void handleChange(Uri uri) {
         Preconditions.checkNotNull(uri);
         List<String> pathSegments = uri.getPathSegments();
@@ -288,7 +297,8 @@ public final class DeviceConfig {
                 for (int i = 0; i < sListeners.size(); i++) {
                     if (namespace.equals(sListeners.valueAt(i).first)) {
                         final int j = i;
-                        ((Executor) sListeners.valueAt(i).second).execute(new Runnable() {
+                        sListeners.valueAt(i).second.execute(new Runnable() { // from class: android.provider.DeviceConfig.2
+                            @Override // java.lang.Runnable
                             public void run() {
                                 Map<String, String> propertyMap = new HashMap<>(1);
                                 propertyMap.put(name, value);
@@ -300,7 +310,8 @@ public final class DeviceConfig {
                 for (int i2 = 0; i2 < sSingleListeners.size(); i2++) {
                     if (namespace.equals(sSingleListeners.valueAt(i2).first)) {
                         final int j2 = i2;
-                        ((Executor) sSingleListeners.valueAt(i2).second).execute(new Runnable() {
+                        sSingleListeners.valueAt(i2).second.execute(new Runnable() { // from class: android.provider.DeviceConfig.3
+                            @Override // java.lang.Runnable
                             public void run() {
                                 ((OnPropertyChangedListener) DeviceConfig.sSingleListeners.keyAt(j2)).onPropertyChanged(namespace, name, value);
                             }
@@ -309,24 +320,26 @@ public final class DeviceConfig {
                 }
             }
         } catch (SecurityException e) {
-            Log.e(TAG, "OnPropertyChangedListener update failed: permission violation.");
+            Log.m70e(TAG, "OnPropertyChangedListener update failed: permission violation.");
         }
     }
 
     public static void enforceReadPermission(Context context, String namespace) {
-        if (context.checkCallingOrSelfPermission(Manifest.permission.READ_DEVICE_CONFIG) != 0 && !PUBLIC_NAMESPACES.contains(namespace)) {
+        if (context.checkCallingOrSelfPermission(Manifest.C0000permission.READ_DEVICE_CONFIG) != 0 && !PUBLIC_NAMESPACES.contains(namespace)) {
             throw new SecurityException("Permission denial: reading from settings requires:android.permission.READ_DEVICE_CONFIG");
         }
     }
 
     @SystemApi
+    /* loaded from: classes3.dex */
     public static class Properties {
-        private final HashMap<String, String> mMap = new HashMap<>();
+        private final HashMap<String, String> mMap;
         private final String mNamespace;
 
         Properties(String namespace, Map<String, String> keyValueMap) {
             Preconditions.checkNotNull(namespace);
             this.mNamespace = namespace;
+            this.mMap = new HashMap<>();
             if (keyValueMap != null) {
                 this.mMap.putAll(keyValueMap);
             }
@@ -361,7 +374,7 @@ public final class DeviceConfig {
             try {
                 return Integer.parseInt(value);
             } catch (NumberFormatException e) {
-                Log.e(DeviceConfig.TAG, "Parsing int failed for " + name);
+                Log.m70e(DeviceConfig.TAG, "Parsing int failed for " + name);
                 return defaultValue;
             }
         }
@@ -375,7 +388,7 @@ public final class DeviceConfig {
             try {
                 return Long.parseLong(value);
             } catch (NumberFormatException e) {
-                Log.e(DeviceConfig.TAG, "Parsing long failed for " + name);
+                Log.m70e(DeviceConfig.TAG, "Parsing long failed for " + name);
                 return defaultValue;
             }
         }
@@ -389,7 +402,7 @@ public final class DeviceConfig {
             try {
                 return Float.parseFloat(value);
             } catch (NumberFormatException e) {
-                Log.e(DeviceConfig.TAG, "Parsing float failed for " + name);
+                Log.m70e(DeviceConfig.TAG, "Parsing float failed for " + name);
                 return defaultValue;
             }
         }

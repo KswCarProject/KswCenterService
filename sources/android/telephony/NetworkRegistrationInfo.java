@@ -1,8 +1,8 @@
 package android.telephony;
 
 import android.annotation.SystemApi;
-import android.os.Parcel;
-import android.os.Parcelable;
+import android.p007os.Parcel;
+import android.p007os.Parcelable;
 import android.security.keystore.KeyProperties;
 import com.android.internal.telephony.IccCardConstants;
 import java.lang.annotation.Retention;
@@ -11,15 +11,21 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 @SystemApi
+/* loaded from: classes.dex */
 public final class NetworkRegistrationInfo implements Parcelable {
-    public static final Parcelable.Creator<NetworkRegistrationInfo> CREATOR = new Parcelable.Creator<NetworkRegistrationInfo>() {
+    public static final Parcelable.Creator<NetworkRegistrationInfo> CREATOR = new Parcelable.Creator<NetworkRegistrationInfo>() { // from class: android.telephony.NetworkRegistrationInfo.1
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public NetworkRegistrationInfo createFromParcel(Parcel source) {
             return new NetworkRegistrationInfo(source);
         }
 
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public NetworkRegistrationInfo[] newArray(int size) {
             return new NetworkRegistrationInfo[size];
         }
@@ -56,18 +62,22 @@ public final class NetworkRegistrationInfo implements Parcelable {
     private VoiceSpecificRegistrationInfo mVoiceSpecificInfo;
 
     @Retention(RetentionPolicy.SOURCE)
+    /* loaded from: classes.dex */
     public @interface Domain {
     }
 
     @Retention(RetentionPolicy.SOURCE)
+    /* loaded from: classes.dex */
     public @interface NRState {
     }
 
     @Retention(RetentionPolicy.SOURCE)
+    /* loaded from: classes.dex */
     public @interface RegistrationState {
     }
 
     @Retention(RetentionPolicy.SOURCE)
+    /* loaded from: classes.dex */
     public @interface ServiceType {
     }
 
@@ -89,7 +99,6 @@ public final class NetworkRegistrationInfo implements Parcelable {
         this.mVoiceSpecificInfo = new VoiceSpecificRegistrationInfo(cssSupported, roamingIndicator, systemIsInPrl, defaultRoamingIndicator);
     }
 
-    /* JADX INFO: this call moved to the top of the method (can break code semantics) */
     public NetworkRegistrationInfo(int domain, int transportType, int registrationState, int accessNetworkTechnology, int rejectCause, boolean emergencyOnly, List<Integer> availableServices, CellIdentity cellIdentity, int maxDataCalls, boolean isDcNrRestricted, boolean isNrAvailable, boolean isEndcAvailable, LteVopsSupportInfo lteVopsSupportInfo, boolean isUsingCarrierAggregation) {
         this(domain, transportType, registrationState, accessNetworkTechnology, rejectCause, emergencyOnly, availableServices, cellIdentity);
         this.mDataSpecificInfo = new DataSpecificRegistrationInfo(maxDataCalls, isDcNrRestricted, isNrAvailable, isEndcAvailable, lteVopsSupportInfo, isUsingCarrierAggregation);
@@ -210,6 +219,7 @@ public final class NetworkRegistrationInfo implements Parcelable {
         return this.mDataSpecificInfo;
     }
 
+    @Override // android.p007os.Parcelable
     public int describeContents() {
         return 0;
     }
@@ -282,7 +292,14 @@ public final class NetworkRegistrationInfo implements Parcelable {
         sb.append(" availableServices=");
         StringBuilder sb2 = new StringBuilder();
         sb2.append("[");
-        sb2.append(this.mAvailableServices != null ? (String) this.mAvailableServices.stream().map($$Lambda$NetworkRegistrationInfo$1JuZmO5PoYGZY8bHhZYwvmqwOB0.INSTANCE).collect(Collectors.joining(SmsManager.REGEX_PREFIX_DELIMITER)) : null);
+        sb2.append(this.mAvailableServices != null ? (String) this.mAvailableServices.stream().map(new Function() { // from class: android.telephony.-$$Lambda$NetworkRegistrationInfo$1JuZmO5PoYGZY8bHhZYwvmqwOB0
+            @Override // java.util.function.Function
+            public final Object apply(Object obj) {
+                String serviceTypeToString;
+                serviceTypeToString = NetworkRegistrationInfo.serviceTypeToString(((Integer) obj).intValue());
+                return serviceTypeToString;
+            }
+        }).collect(Collectors.joining(SmsManager.REGEX_PREFIX_DELIMITER)) : null);
         sb2.append("]");
         sb.append(sb2.toString());
         sb.append(" cellIdentity=");
@@ -298,23 +315,21 @@ public final class NetworkRegistrationInfo implements Parcelable {
     }
 
     public int hashCode() {
-        return Objects.hash(new Object[]{Integer.valueOf(this.mDomain), Integer.valueOf(this.mTransportType), Integer.valueOf(this.mRegistrationState), Integer.valueOf(this.mRoamingType), Integer.valueOf(this.mAccessNetworkTechnology), Integer.valueOf(this.mRejectCause), Boolean.valueOf(this.mEmergencyOnly), this.mAvailableServices, this.mCellIdentity, this.mVoiceSpecificInfo, this.mDataSpecificInfo, Integer.valueOf(this.mNrState)});
+        return Objects.hash(Integer.valueOf(this.mDomain), Integer.valueOf(this.mTransportType), Integer.valueOf(this.mRegistrationState), Integer.valueOf(this.mRoamingType), Integer.valueOf(this.mAccessNetworkTechnology), Integer.valueOf(this.mRejectCause), Boolean.valueOf(this.mEmergencyOnly), this.mAvailableServices, this.mCellIdentity, this.mVoiceSpecificInfo, this.mDataSpecificInfo, Integer.valueOf(this.mNrState));
     }
 
     public boolean equals(Object o) {
         if (this == o) {
             return true;
         }
-        if (!(o instanceof NetworkRegistrationInfo)) {
-            return false;
-        }
-        NetworkRegistrationInfo other = (NetworkRegistrationInfo) o;
-        if (this.mDomain == other.mDomain && this.mTransportType == other.mTransportType && this.mRegistrationState == other.mRegistrationState && this.mRoamingType == other.mRoamingType && this.mAccessNetworkTechnology == other.mAccessNetworkTechnology && this.mRejectCause == other.mRejectCause && this.mEmergencyOnly == other.mEmergencyOnly && this.mAvailableServices.equals(other.mAvailableServices) && Objects.equals(this.mCellIdentity, other.mCellIdentity) && Objects.equals(this.mVoiceSpecificInfo, other.mVoiceSpecificInfo) && Objects.equals(this.mDataSpecificInfo, other.mDataSpecificInfo) && this.mNrState == other.mNrState) {
-            return true;
+        if (o instanceof NetworkRegistrationInfo) {
+            NetworkRegistrationInfo other = (NetworkRegistrationInfo) o;
+            return this.mDomain == other.mDomain && this.mTransportType == other.mTransportType && this.mRegistrationState == other.mRegistrationState && this.mRoamingType == other.mRoamingType && this.mAccessNetworkTechnology == other.mAccessNetworkTechnology && this.mRejectCause == other.mRejectCause && this.mEmergencyOnly == other.mEmergencyOnly && this.mAvailableServices.equals(other.mAvailableServices) && Objects.equals(this.mCellIdentity, other.mCellIdentity) && Objects.equals(this.mVoiceSpecificInfo, other.mVoiceSpecificInfo) && Objects.equals(this.mDataSpecificInfo, other.mDataSpecificInfo) && this.mNrState == other.mNrState;
         }
         return false;
     }
 
+    @Override // android.p007os.Parcelable
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeInt(this.mDomain);
         dest.writeInt(this.mTransportType);
@@ -332,13 +347,12 @@ public final class NetworkRegistrationInfo implements Parcelable {
 
     private void updateNrState(DataSpecificRegistrationInfo state) {
         this.mNrState = -1;
-        if (!state.isEnDcAvailable) {
-            return;
-        }
-        if (state.isDcNrRestricted || !state.isNrAvailable) {
-            this.mNrState = 1;
-        } else {
-            this.mNrState = 2;
+        if (state.isEnDcAvailable) {
+            if (!state.isDcNrRestricted && state.isNrAvailable) {
+                this.mNrState = 2;
+            } else {
+                this.mNrState = 1;
+            }
         }
     }
 
@@ -357,6 +371,7 @@ public final class NetworkRegistrationInfo implements Parcelable {
         return result;
     }
 
+    /* loaded from: classes.dex */
     public static final class Builder {
         private int mAccessNetworkTechnology;
         private List<Integer> mAvailableServices;

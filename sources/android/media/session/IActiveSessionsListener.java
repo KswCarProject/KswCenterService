@@ -1,25 +1,30 @@
 package android.media.session;
 
 import android.media.session.MediaSession;
-import android.os.Binder;
-import android.os.IBinder;
-import android.os.IInterface;
-import android.os.Parcel;
-import android.os.RemoteException;
+import android.p007os.Binder;
+import android.p007os.IBinder;
+import android.p007os.IInterface;
+import android.p007os.Parcel;
+import android.p007os.RemoteException;
 import java.util.List;
 
+/* loaded from: classes3.dex */
 public interface IActiveSessionsListener extends IInterface {
     void onActiveSessionsChanged(List<MediaSession.Token> list) throws RemoteException;
 
+    /* loaded from: classes3.dex */
     public static class Default implements IActiveSessionsListener {
-        public void onActiveSessionsChanged(List<MediaSession.Token> list) throws RemoteException {
+        @Override // android.media.session.IActiveSessionsListener
+        public void onActiveSessionsChanged(List<MediaSession.Token> sessions) throws RemoteException {
         }
 
+        @Override // android.p007os.IInterface
         public IBinder asBinder() {
             return null;
         }
     }
 
+    /* loaded from: classes3.dex */
     public static abstract class Stub extends Binder implements IActiveSessionsListener {
         private static final String DESCRIPTOR = "android.media.session.IActiveSessionsListener";
         static final int TRANSACTION_onActiveSessionsChanged = 1;
@@ -33,40 +38,45 @@ public interface IActiveSessionsListener extends IInterface {
                 return null;
             }
             IInterface iin = obj.queryLocalInterface(DESCRIPTOR);
-            if (iin == null || !(iin instanceof IActiveSessionsListener)) {
-                return new Proxy(obj);
+            if (iin != null && (iin instanceof IActiveSessionsListener)) {
+                return (IActiveSessionsListener) iin;
             }
-            return (IActiveSessionsListener) iin;
+            return new Proxy(obj);
         }
 
+        @Override // android.p007os.IInterface
         public IBinder asBinder() {
             return this;
         }
 
         public static String getDefaultTransactionName(int transactionCode) {
-            if (transactionCode != 1) {
-                return null;
+            if (transactionCode == 1) {
+                return "onActiveSessionsChanged";
             }
-            return "onActiveSessionsChanged";
+            return null;
         }
 
+        @Override // android.p007os.Binder
         public String getTransactionName(int transactionCode) {
             return getDefaultTransactionName(transactionCode);
         }
 
+        @Override // android.p007os.Binder
         public boolean onTransact(int code, Parcel data, Parcel reply, int flags) throws RemoteException {
-            if (code == 1) {
-                data.enforceInterface(DESCRIPTOR);
-                onActiveSessionsChanged(data.createTypedArrayList(MediaSession.Token.CREATOR));
-                return true;
-            } else if (code != 1598968902) {
+            if (code != 1) {
+                if (code == 1598968902) {
+                    reply.writeString(DESCRIPTOR);
+                    return true;
+                }
                 return super.onTransact(code, data, reply, flags);
-            } else {
-                reply.writeString(DESCRIPTOR);
-                return true;
             }
+            data.enforceInterface(DESCRIPTOR);
+            List<MediaSession.Token> _arg0 = data.createTypedArrayList(MediaSession.Token.CREATOR);
+            onActiveSessionsChanged(_arg0);
+            return true;
         }
 
+        /* loaded from: classes3.dex */
         private static class Proxy implements IActiveSessionsListener {
             public static IActiveSessionsListener sDefaultImpl;
             private IBinder mRemote;
@@ -75,6 +85,7 @@ public interface IActiveSessionsListener extends IInterface {
                 this.mRemote = remote;
             }
 
+            @Override // android.p007os.IInterface
             public IBinder asBinder() {
                 return this.mRemote;
             }
@@ -83,14 +94,14 @@ public interface IActiveSessionsListener extends IInterface {
                 return Stub.DESCRIPTOR;
             }
 
+            @Override // android.media.session.IActiveSessionsListener
             public void onActiveSessionsChanged(List<MediaSession.Token> sessions) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeTypedList(sessions);
-                    if (this.mRemote.transact(1, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    boolean _status = this.mRemote.transact(1, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().onActiveSessionsChanged(sessions);
                     }
                 } finally {
@@ -100,11 +111,11 @@ public interface IActiveSessionsListener extends IInterface {
         }
 
         public static boolean setDefaultImpl(IActiveSessionsListener impl) {
-            if (Proxy.sDefaultImpl != null || impl == null) {
-                return false;
+            if (Proxy.sDefaultImpl == null && impl != null) {
+                Proxy.sDefaultImpl = impl;
+                return true;
             }
-            Proxy.sDefaultImpl = impl;
-            return true;
+            return false;
         }
 
         public static IActiveSessionsListener getDefaultImpl() {

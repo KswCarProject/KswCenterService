@@ -5,11 +5,11 @@ import android.annotation.UnsupportedAppUsage;
 import android.app.PendingIntent;
 import android.content.ComponentName;
 import android.content.Context;
-import android.content.pm.PackageManager;
-import android.os.Bundle;
-import android.os.ParcelFileDescriptor;
-import android.os.Process;
-import android.os.RemoteException;
+import android.content.p002pm.PackageManager;
+import android.p007os.Bundle;
+import android.p007os.ParcelFileDescriptor;
+import android.p007os.Process;
+import android.p007os.RemoteException;
 import android.telephony.SmsManager;
 import android.util.Log;
 import java.util.ArrayList;
@@ -19,6 +19,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.StringJoiner;
 
+/* loaded from: classes.dex */
 public class UsbManager {
     public static final String ACTION_USB_ACCESSORY_ATTACHED = "android.hardware.usb.action.USB_ACCESSORY_ATTACHED";
     public static final String ACTION_USB_ACCESSORY_DETACHED = "android.hardware.usb.action.USB_ACCESSORY_DETACHED";
@@ -101,18 +102,18 @@ public class UsbManager {
         try {
             String deviceName = device.getDeviceName();
             ParcelFileDescriptor pfd = this.mService.openDevice(deviceName, this.mContext.getPackageName());
-            if (pfd == null) {
+            if (pfd != null) {
+                UsbDeviceConnection connection = new UsbDeviceConnection(device);
+                boolean result = connection.open(deviceName, pfd, this.mContext);
+                pfd.close();
+                if (result) {
+                    return connection;
+                }
                 return null;
-            }
-            UsbDeviceConnection connection = new UsbDeviceConnection(device);
-            boolean result = connection.open(deviceName, pfd, this.mContext);
-            pfd.close();
-            if (result) {
-                return connection;
             }
             return null;
         } catch (Exception e) {
-            Log.e(TAG, "exception in UsbManager.openDevice", e);
+            Log.m69e(TAG, "exception in UsbManager.openDevice", e);
             return null;
         }
     }
@@ -201,14 +202,15 @@ public class UsbManager {
     @SystemApi
     public void grantPermission(UsbDevice device, String packageName) {
         try {
-            grantPermission(device, this.mContext.getPackageManager().getPackageUidAsUser(packageName, this.mContext.getUserId()));
+            int uid = this.mContext.getPackageManager().getPackageUidAsUser(packageName, this.mContext.getUserId());
+            grantPermission(device, uid);
         } catch (PackageManager.NameNotFoundException e) {
-            Log.e(TAG, "Package " + packageName + " not found.", e);
+            Log.m69e(TAG, "Package " + packageName + " not found.", e);
         }
     }
 
-    @Deprecated
     @UnsupportedAppUsage
+    @Deprecated
     public boolean isFunctionEnabled(String function) {
         try {
             return this.mService.isFunctionEnabled(function);
@@ -225,8 +227,8 @@ public class UsbManager {
         }
     }
 
-    @Deprecated
     @UnsupportedAppUsage
+    @Deprecated
     public void setCurrentFunction(String functions, boolean usbDataUnlocked) {
         try {
             this.mService.setCurrentFunction(functions, usbDataUnlocked);
@@ -280,8 +282,7 @@ public class UsbManager {
         }
     }
 
-    /* access modifiers changed from: package-private */
-    public UsbPortStatus getPortStatus(UsbPort port) {
+    UsbPortStatus getPortStatus(UsbPort port) {
         try {
             return this.mService.getPortStatus(port.getId());
         } catch (RemoteException e) {
@@ -289,9 +290,8 @@ public class UsbManager {
         }
     }
 
-    /* access modifiers changed from: package-private */
-    public void setPortRoles(UsbPort port, int powerRole, int dataRole) {
-        Log.d(TAG, "setPortRoles Package:" + this.mContext.getPackageName());
+    void setPortRoles(UsbPort port, int powerRole, int dataRole) {
+        Log.m72d(TAG, "setPortRoles Package:" + this.mContext.getPackageName());
         try {
             this.mService.setPortRoles(port.getId(), powerRole, dataRole);
         } catch (RemoteException e) {
@@ -299,8 +299,7 @@ public class UsbManager {
         }
     }
 
-    /* access modifiers changed from: package-private */
-    public void enableContaminantDetection(UsbPort port, boolean enable) {
+    void enableContaminantDetection(UsbPort port, boolean enable) {
         try {
             this.mService.enableContaminantDetection(port.getId(), enable);
         } catch (RemoteException e) {
@@ -317,13 +316,10 @@ public class UsbManager {
     }
 
     public static boolean areSettableFunctions(long functions) {
-        if (functions == 0) {
-            return true;
+        if (functions != 0) {
+            return ((-61) & functions) == 0 && Long.bitCount(functions) == 1;
         }
-        if ((-61 & functions) == 0 && Long.bitCount(functions) == 1) {
-            return true;
-        }
-        return false;
+        return true;
     }
 
     public static String usbFunctionsToString(long functions) {
@@ -353,8 +349,9 @@ public class UsbManager {
     }
 
     public static long usbFunctionsFromString(String functions) {
+        String[] split;
         if (functions == null || functions.equals("none")) {
-            return 0;
+            return 0L;
         }
         long ret = 0;
         for (String function : functions.split(SmsManager.REGEX_PREFIX_DELIMITER)) {

@@ -7,20 +7,20 @@ import android.hardware.camera2.ICameraDeviceUser;
 import android.hardware.camera2.params.OutputConfiguration;
 import android.hardware.camera2.params.SessionConfiguration;
 import android.hardware.camera2.utils.SubmitInfo;
-import android.os.IBinder;
-import android.os.RemoteException;
-import android.os.ServiceSpecificException;
+import android.p007os.IBinder;
+import android.p007os.RemoteException;
+import android.p007os.ServiceSpecificException;
 import android.view.Surface;
 
+/* loaded from: classes.dex */
 public class ICameraDeviceUserWrapper {
     private final ICameraDeviceUser mRemoteDevice;
 
     public ICameraDeviceUserWrapper(ICameraDeviceUser remoteDevice) {
-        if (remoteDevice != null) {
-            this.mRemoteDevice = remoteDevice;
-            return;
+        if (remoteDevice == null) {
+            throw new NullPointerException("Remote device may not be null");
         }
-        throw new NullPointerException("Remote device may not be null");
+        this.mRemoteDevice = remoteDevice;
     }
 
     public void unlinkToDeath(IBinder.DeathRecipient recipient, int flags) {
@@ -76,10 +76,10 @@ public class ICameraDeviceUserWrapper {
         CameraMetadataNative cameraMetadataNative;
         try {
             ICameraDeviceUser iCameraDeviceUser = this.mRemoteDevice;
-            if (sessionParams == null) {
-                cameraMetadataNative = new CameraMetadataNative();
-            } else {
+            if (sessionParams != null) {
                 cameraMetadataNative = sessionParams;
+            } else {
+                cameraMetadataNative = new CameraMetadataNative();
             }
             iCameraDeviceUser.endConfigure(operatingMode, cameraMetadataNative);
         } catch (Throwable t) {
@@ -157,11 +157,11 @@ public class ICameraDeviceUserWrapper {
         } catch (ServiceSpecificException e) {
             if (e.errorCode == 10) {
                 throw new UnsupportedOperationException("Session configuration query not supported");
-            } else if (e.errorCode == 3) {
-                throw new IllegalArgumentException("Invalid session configuration");
-            } else {
-                throw e;
             }
+            if (e.errorCode == 3) {
+                throw new IllegalArgumentException("Invalid session configuration");
+            }
+            throw e;
         } catch (Throwable t) {
             CameraManager.throwAsPublicException(t);
             throw new UnsupportedOperationException("Unexpected exception", t);

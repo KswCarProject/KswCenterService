@@ -3,36 +3,36 @@ package com.android.internal.app;
 import android.app.Dialog;
 import android.content.Context;
 import android.media.MediaRouter;
-import android.os.Bundle;
+import android.p007os.Bundle;
 import android.text.TextUtils;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.Window;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
-import com.android.internal.R;
+import com.android.internal.C3132R;
 import java.util.Comparator;
 
+/* loaded from: classes4.dex */
 public class MediaRouteChooserDialog extends Dialog {
     private RouteAdapter mAdapter;
     private boolean mAttachedToWindow;
-    private final MediaRouterCallback mCallback = new MediaRouterCallback();
+    private final MediaRouterCallback mCallback;
     private Button mExtendedSettingsButton;
     private View.OnClickListener mExtendedSettingsClickListener;
     private ListView mListView;
     private int mRouteTypes;
-    /* access modifiers changed from: private */
-    public final MediaRouter mRouter;
+    private final MediaRouter mRouter;
 
     public MediaRouteChooserDialog(Context context, int theme) {
         super(context, theme);
         this.mRouter = (MediaRouter) context.getSystemService(Context.MEDIA_ROUTER_SERVICE);
+        this.mCallback = new MediaRouterCallback();
     }
 
     public int getRouteTypes() {
@@ -61,32 +61,25 @@ public class MediaRouteChooserDialog extends Dialog {
         return !route.isDefault() && route.isEnabled() && route.matchesTypes(this.mRouteTypes);
     }
 
-    /* access modifiers changed from: protected */
-    public void onCreate(Bundle savedInstanceState) {
+    @Override // android.app.Dialog
+    protected void onCreate(Bundle savedInstanceState) {
         int i;
-        int i2;
         super.onCreate(savedInstanceState);
         getWindow().requestFeature(3);
-        setContentView((int) R.layout.media_route_chooser_dialog);
+        setContentView(C3132R.layout.media_route_chooser_dialog);
         if (this.mRouteTypes == 4) {
-            i = R.string.media_route_chooser_title_for_remote_display;
+            i = C3132R.string.media_route_chooser_title_for_remote_display;
         } else {
-            i = R.string.media_route_chooser_title;
+            i = C3132R.string.media_route_chooser_title;
         }
         setTitle(i);
-        Window window = getWindow();
-        if (isLightTheme(getContext())) {
-            i2 = R.drawable.ic_media_route_off_holo_light;
-        } else {
-            i2 = R.drawable.ic_media_route_off_holo_dark;
-        }
-        window.setFeatureDrawableResource(3, i2);
+        getWindow().setFeatureDrawableResource(3, isLightTheme(getContext()) ? C3132R.C3133drawable.ic_media_route_off_holo_light : C3132R.C3133drawable.ic_media_route_off_holo_dark);
         this.mAdapter = new RouteAdapter(getContext());
-        this.mListView = (ListView) findViewById(R.id.media_route_list);
+        this.mListView = (ListView) findViewById(C3132R.C3134id.media_route_list);
         this.mListView.setAdapter((ListAdapter) this.mAdapter);
         this.mListView.setOnItemClickListener(this.mAdapter);
         this.mListView.setEmptyView(findViewById(16908292));
-        this.mExtendedSettingsButton = (Button) findViewById(R.id.media_route_extended_settings_button);
+        this.mExtendedSettingsButton = (Button) findViewById(C3132R.C3134id.media_route_extended_settings_button);
         updateExtendedSettingsButton();
     }
 
@@ -97,6 +90,7 @@ public class MediaRouteChooserDialog extends Dialog {
         }
     }
 
+    @Override // android.app.Dialog, android.view.Window.Callback
     public void onAttachedToWindow() {
         super.onAttachedToWindow();
         this.mAttachedToWindow = true;
@@ -104,6 +98,7 @@ public class MediaRouteChooserDialog extends Dialog {
         refreshRoutes();
     }
 
+    @Override // android.app.Dialog, android.view.Window.Callback
     public void onDetachedFromWindow() {
         this.mAttachedToWindow = false;
         this.mRouter.removeCallback(this.mCallback);
@@ -121,6 +116,7 @@ public class MediaRouteChooserDialog extends Dialog {
         return context.getTheme().resolveAttribute(16844176, value, true) && value.data != 0;
     }
 
+    /* loaded from: classes4.dex */
     private final class RouteAdapter extends ArrayAdapter<MediaRouter.RouteInfo> implements AdapterView.OnItemClickListener {
         private final LayoutInflater mInflater;
 
@@ -142,26 +138,30 @@ public class MediaRouteChooserDialog extends Dialog {
             notifyDataSetChanged();
         }
 
+        @Override // android.widget.BaseAdapter, android.widget.ListAdapter
         public boolean areAllItemsEnabled() {
             return false;
         }
 
+        @Override // android.widget.BaseAdapter, android.widget.ListAdapter
         public boolean isEnabled(int position) {
-            return ((MediaRouter.RouteInfo) getItem(position)).isEnabled();
+            return getItem(position).isEnabled();
         }
 
+        @Override // android.widget.ArrayAdapter, android.widget.Adapter
         public View getView(int position, View convertView, ViewGroup parent) {
             View view = convertView;
             if (view == null) {
-                view = this.mInflater.inflate((int) R.layout.media_route_list_item, parent, false);
+                view = this.mInflater.inflate(C3132R.layout.media_route_list_item, parent, false);
             }
-            MediaRouter.RouteInfo route = (MediaRouter.RouteInfo) getItem(position);
+            MediaRouter.RouteInfo route = getItem(position);
+            TextView text1 = (TextView) view.findViewById(16908308);
             TextView text2 = (TextView) view.findViewById(16908309);
-            ((TextView) view.findViewById(16908308)).setText(route.getName());
+            text1.setText(route.getName());
             CharSequence description = route.getDescription();
             if (TextUtils.isEmpty(description)) {
                 text2.setVisibility(8);
-                text2.setText((CharSequence) "");
+                text2.setText("");
             } else {
                 text2.setVisibility(0);
                 text2.setText(description);
@@ -170,8 +170,9 @@ public class MediaRouteChooserDialog extends Dialog {
             return view;
         }
 
-        public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
-            MediaRouter.RouteInfo route = (MediaRouter.RouteInfo) getItem(position);
+        @Override // android.widget.AdapterView.OnItemClickListener
+        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+            MediaRouter.RouteInfo route = getItem(position);
             if (route.isEnabled()) {
                 route.select();
                 MediaRouteChooserDialog.this.dismiss();
@@ -179,33 +180,40 @@ public class MediaRouteChooserDialog extends Dialog {
         }
     }
 
+    /* loaded from: classes4.dex */
     private final class MediaRouterCallback extends MediaRouter.SimpleCallback {
         private MediaRouterCallback() {
         }
 
+        @Override // android.media.MediaRouter.SimpleCallback, android.media.MediaRouter.Callback
         public void onRouteAdded(MediaRouter router, MediaRouter.RouteInfo info) {
             MediaRouteChooserDialog.this.refreshRoutes();
         }
 
+        @Override // android.media.MediaRouter.SimpleCallback, android.media.MediaRouter.Callback
         public void onRouteRemoved(MediaRouter router, MediaRouter.RouteInfo info) {
             MediaRouteChooserDialog.this.refreshRoutes();
         }
 
+        @Override // android.media.MediaRouter.SimpleCallback, android.media.MediaRouter.Callback
         public void onRouteChanged(MediaRouter router, MediaRouter.RouteInfo info) {
             MediaRouteChooserDialog.this.refreshRoutes();
         }
 
+        @Override // android.media.MediaRouter.SimpleCallback, android.media.MediaRouter.Callback
         public void onRouteSelected(MediaRouter router, int type, MediaRouter.RouteInfo info) {
             MediaRouteChooserDialog.this.dismiss();
         }
     }
 
+    /* loaded from: classes4.dex */
     private static final class RouteComparator implements Comparator<MediaRouter.RouteInfo> {
         public static final RouteComparator sInstance = new RouteComparator();
 
         private RouteComparator() {
         }
 
+        @Override // java.util.Comparator
         public int compare(MediaRouter.RouteInfo lhs, MediaRouter.RouteInfo rhs) {
             return lhs.getName().toString().compareTo(rhs.getName().toString());
         }

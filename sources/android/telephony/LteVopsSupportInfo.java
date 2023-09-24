@@ -1,19 +1,24 @@
 package android.telephony;
 
 import android.annotation.SystemApi;
-import android.os.Parcel;
-import android.os.Parcelable;
+import android.p007os.Parcel;
+import android.p007os.Parcelable;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.util.Objects;
 
 @SystemApi
+/* loaded from: classes.dex */
 public final class LteVopsSupportInfo implements Parcelable {
-    public static final Parcelable.Creator<LteVopsSupportInfo> CREATOR = new Parcelable.Creator<LteVopsSupportInfo>() {
+    public static final Parcelable.Creator<LteVopsSupportInfo> CREATOR = new Parcelable.Creator<LteVopsSupportInfo>() { // from class: android.telephony.LteVopsSupportInfo.1
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public LteVopsSupportInfo createFromParcel(Parcel in) {
             return new LteVopsSupportInfo(in);
         }
 
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public LteVopsSupportInfo[] newArray(int size) {
             return new LteVopsSupportInfo[size];
         }
@@ -25,6 +30,7 @@ public final class LteVopsSupportInfo implements Parcelable {
     private final int mVopsSupport;
 
     @Retention(RetentionPolicy.SOURCE)
+    /* loaded from: classes.dex */
     public @interface LteVopsStatus {
     }
 
@@ -41,10 +47,12 @@ public final class LteVopsSupportInfo implements Parcelable {
         return this.mEmcBearerSupport;
     }
 
+    @Override // android.p007os.Parcelable
     public int describeContents() {
         return 0;
     }
 
+    @Override // android.p007os.Parcelable
     public void writeToParcel(Parcel out, int flags) {
         out.writeInt(this.mVopsSupport);
         out.writeInt(this.mEmcBearerSupport);
@@ -58,14 +66,14 @@ public final class LteVopsSupportInfo implements Parcelable {
             return true;
         }
         LteVopsSupportInfo other = (LteVopsSupportInfo) o;
-        if (this.mVopsSupport == other.mVopsSupport && this.mEmcBearerSupport == other.mEmcBearerSupport) {
-            return true;
+        if (this.mVopsSupport != other.mVopsSupport || this.mEmcBearerSupport != other.mEmcBearerSupport) {
+            return false;
         }
-        return false;
+        return true;
     }
 
     public int hashCode() {
-        return Objects.hash(new Object[]{Integer.valueOf(this.mVopsSupport), Integer.valueOf(this.mEmcBearerSupport)});
+        return Objects.hash(Integer.valueOf(this.mVopsSupport), Integer.valueOf(this.mEmcBearerSupport));
     }
 
     public String toString() {

@@ -3,8 +3,11 @@ package android.hardware.radio.V1_4;
 import com.android.internal.telephony.IccCardConstants;
 import java.util.ArrayList;
 
+/* loaded from: classes.dex */
 public final class PdpProtocolType {
-    public static final int IP = 0;
+
+    /* renamed from: IP */
+    public static final int f100IP = 0;
     public static final int IPV4V6 = 2;
     public static final int IPV6 = 1;
     public static final int NON_IP = 4;
@@ -40,9 +43,9 @@ public final class PdpProtocolType {
     public static final String dumpBitfield(int o) {
         ArrayList<String> list = new ArrayList<>();
         int flipped = 0;
-        if ((o & -1) == -1) {
+        if ((o & (-1)) == -1) {
             list.add(IccCardConstants.INTENT_VALUE_ICC_UNKNOWN);
-            flipped = 0 | -1;
+            flipped = 0 | (-1);
         }
         list.add("IP");
         if ((o & 1) == 1) {

@@ -1,5 +1,6 @@
 package android.net;
 
+/* loaded from: classes3.dex */
 public abstract class NetworkSpecifier {
     public abstract boolean satisfiedBy(NetworkSpecifier networkSpecifier);
 

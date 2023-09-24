@@ -1,10 +1,13 @@
 package android.service.contentcapture;
 
-import android.os.Parcel;
-import android.os.Parcelable;
+import android.p007os.Parcel;
+import android.p007os.Parcelable;
 
+/* loaded from: classes3.dex */
 public final class FlushMetrics implements Parcelable {
-    public static final Parcelable.Creator<FlushMetrics> CREATOR = new Parcelable.Creator<FlushMetrics>() {
+    public static final Parcelable.Creator<FlushMetrics> CREATOR = new Parcelable.Creator<FlushMetrics>() { // from class: android.service.contentcapture.FlushMetrics.1
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public FlushMetrics createFromParcel(Parcel in) {
             FlushMetrics flushMetrics = new FlushMetrics();
             flushMetrics.sessionStarted = in.readInt();
@@ -15,6 +18,8 @@ public final class FlushMetrics implements Parcelable {
             return flushMetrics;
         }
 
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public FlushMetrics[] newArray(int size) {
             return new FlushMetrics[size];
         }
@@ -33,10 +38,12 @@ public final class FlushMetrics implements Parcelable {
         this.sessionFinished = 0;
     }
 
+    @Override // android.p007os.Parcelable
     public int describeContents() {
         return 0;
     }
 
+    @Override // android.p007os.Parcelable
     public void writeToParcel(Parcel out, int flags) {
         out.writeInt(this.sessionStarted);
         out.writeInt(this.sessionFinished);

@@ -3,33 +3,39 @@ package com.android.framework.protobuf.nano;
 import com.android.framework.protobuf.nano.ExtendableMessageNano;
 import java.io.IOException;
 
+/* loaded from: classes4.dex */
 public abstract class ExtendableMessageNano<M extends ExtendableMessageNano<M>> extends MessageNano {
     protected FieldArray unknownFieldData;
 
-    /* access modifiers changed from: protected */
-    public int computeSerializedSize() {
+    @Override // com.android.framework.protobuf.nano.MessageNano
+    protected int computeSerializedSize() {
         int size = 0;
         if (this.unknownFieldData != null) {
             for (int i = 0; i < this.unknownFieldData.size(); i++) {
-                size += this.unknownFieldData.dataAt(i).computeSerializedSize();
+                FieldData field = this.unknownFieldData.dataAt(i);
+                size += field.computeSerializedSize();
             }
         }
         return size;
     }
 
+    @Override // com.android.framework.protobuf.nano.MessageNano
     public void writeTo(CodedOutputByteBufferNano output) throws IOException {
-        if (this.unknownFieldData != null) {
-            for (int i = 0; i < this.unknownFieldData.size(); i++) {
-                this.unknownFieldData.dataAt(i).writeTo(output);
-            }
+        if (this.unknownFieldData == null) {
+            return;
+        }
+        for (int i = 0; i < this.unknownFieldData.size(); i++) {
+            FieldData field = this.unknownFieldData.dataAt(i);
+            field.writeTo(output);
         }
     }
 
     public final boolean hasExtension(Extension<M, ?> extension) {
-        if (this.unknownFieldData == null || this.unknownFieldData.get(WireFormatNano.getTagFieldNumber(extension.tag)) == null) {
+        if (this.unknownFieldData == null) {
             return false;
         }
-        return true;
+        FieldData field = this.unknownFieldData.get(WireFormatNano.getTagFieldNumber(extension.tag));
+        return field != null;
     }
 
     public final <T> T getExtension(Extension<M, T> extension) {
@@ -37,12 +43,19 @@ public abstract class ExtendableMessageNano<M extends ExtendableMessageNano<M>> 
         if (this.unknownFieldData == null || (field = this.unknownFieldData.get(WireFormatNano.getTagFieldNumber(extension.tag))) == null) {
             return null;
         }
-        return field.getValue(extension);
+        return (T) field.getValue(extension);
     }
 
     public final <T> M setExtension(Extension<M, T> extension, T value) {
         int fieldNumber = WireFormatNano.getTagFieldNumber(extension.tag);
-        if (value != null) {
+        if (value == null) {
+            if (this.unknownFieldData != null) {
+                this.unknownFieldData.remove(fieldNumber);
+                if (this.unknownFieldData.isEmpty()) {
+                    this.unknownFieldData = null;
+                }
+            }
+        } else {
             FieldData field = null;
             if (this.unknownFieldData == null) {
                 this.unknownFieldData = new FieldArray();
@@ -54,23 +67,19 @@ public abstract class ExtendableMessageNano<M extends ExtendableMessageNano<M>> 
             } else {
                 field.setValue(extension, value);
             }
-        } else if (this.unknownFieldData != null) {
-            this.unknownFieldData.remove(fieldNumber);
-            if (this.unknownFieldData.isEmpty()) {
-                this.unknownFieldData = null;
-            }
         }
         return this;
     }
 
-    /* access modifiers changed from: protected */
-    public final boolean storeUnknownField(CodedInputByteBufferNano input, int tag) throws IOException {
+    protected final boolean storeUnknownField(CodedInputByteBufferNano input, int tag) throws IOException {
         int startPos = input.getPosition();
         if (!input.skipField(tag)) {
             return false;
         }
         int fieldNumber = WireFormatNano.getTagFieldNumber(tag);
-        UnknownFieldData unknownField = new UnknownFieldData(tag, input.getData(startPos, input.getPosition() - startPos));
+        int endPos = input.getPosition();
+        byte[] bytes = input.getData(startPos, endPos - startPos);
+        UnknownFieldData unknownField = new UnknownFieldData(tag, bytes);
         FieldData field = null;
         if (this.unknownFieldData == null) {
             this.unknownFieldData = new FieldArray();
@@ -85,8 +94,10 @@ public abstract class ExtendableMessageNano<M extends ExtendableMessageNano<M>> 
         return true;
     }
 
-    public M clone() throws CloneNotSupportedException {
-        M cloned = (ExtendableMessageNano) super.clone();
+    @Override // com.android.framework.protobuf.nano.MessageNano
+    /* renamed from: clone */
+    public M mo189clone() throws CloneNotSupportedException {
+        M cloned = (M) super.mo189clone();
         InternalNano.cloneUnknownFieldData(this, cloned);
         return cloned;
     }

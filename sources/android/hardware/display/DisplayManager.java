@@ -6,7 +6,7 @@ import android.content.Context;
 import android.graphics.Point;
 import android.hardware.display.VirtualDisplay;
 import android.media.projection.MediaProjection;
-import android.os.Handler;
+import android.p007os.Handler;
 import android.util.Pair;
 import android.util.SparseArray;
 import android.view.Display;
@@ -14,6 +14,7 @@ import android.view.Surface;
 import java.util.ArrayList;
 import java.util.List;
 
+/* loaded from: classes.dex */
 public final class DisplayManager {
     @UnsupportedAppUsage
     public static final String ACTION_WIFI_DISPLAY_STATUS_CHANGED = "android.hardware.display.action.WIFI_DISPLAY_STATUS_CHANGED";
@@ -33,11 +34,12 @@ public final class DisplayManager {
     public static final int VIRTUAL_DISPLAY_FLAG_SHOULD_SHOW_SYSTEM_DECORATIONS = 512;
     public static final int VIRTUAL_DISPLAY_FLAG_SUPPORTS_TOUCH = 64;
     private final Context mContext;
-    private final SparseArray<Display> mDisplays = new SparseArray<>();
-    private final DisplayManagerGlobal mGlobal;
     private final Object mLock = new Object();
+    private final SparseArray<Display> mDisplays = new SparseArray<>();
     private final ArrayList<Display> mTempDisplays = new ArrayList<>();
+    private final DisplayManagerGlobal mGlobal = DisplayManagerGlobal.getInstance();
 
+    /* loaded from: classes.dex */
     public interface DisplayListener {
         void onDisplayAdded(int i);
 
@@ -48,7 +50,6 @@ public final class DisplayManager {
 
     public DisplayManager(Context context) {
         this.mContext = context;
-        this.mGlobal = DisplayManagerGlobal.getInstance();
     }
 
     public Display getDisplay(int displayId) {
@@ -60,7 +61,7 @@ public final class DisplayManager {
     }
 
     public Display[] getDisplays() {
-        return getDisplays((String) null);
+        return getDisplays(null);
     }
 
     public Display[] getDisplays(String category) {
@@ -68,12 +69,7 @@ public final class DisplayManager {
         int[] displayIds = this.mGlobal.getDisplayIds();
         synchronized (this.mLock) {
             if (category == null) {
-                try {
-                    addAllDisplaysLocked(this.mTempDisplays, displayIds);
-                } catch (Throwable th) {
-                    this.mTempDisplays.clear();
-                    throw th;
-                }
+                addAllDisplaysLocked(this.mTempDisplays, displayIds);
             } else if (category.equals("android.hardware.display.category.PRESENTATION")) {
                 addPresentationDisplaysLocked(this.mTempDisplays, displayIds, 3);
                 addPresentationDisplaysLocked(this.mTempDisplays, displayIds, 2);
@@ -87,8 +83,8 @@ public final class DisplayManager {
     }
 
     private void addAllDisplaysLocked(ArrayList<Display> displays, int[] displayIds) {
-        for (int orCreateDisplayLocked : displayIds) {
-            Display display = getOrCreateDisplayLocked(orCreateDisplayLocked, true);
+        for (int i : displayIds) {
+            Display display = getOrCreateDisplayLocked(i, true);
             if (display != null) {
                 displays.add(display);
             }
@@ -96,9 +92,9 @@ public final class DisplayManager {
     }
 
     private void addPresentationDisplaysLocked(ArrayList<Display> displays, int[] displayIds, int matchType) {
-        for (int orCreateDisplayLocked : displayIds) {
-            Display display = getOrCreateDisplayLocked(orCreateDisplayLocked, true);
-            if (!(display == null || (display.getFlags() & 8) == 0 || display.getType() != matchType)) {
+        for (int i : displayIds) {
+            Display display = getOrCreateDisplayLocked(i, true);
+            if (display != null && (display.getFlags() & 8) != 0 && display.getType() == matchType) {
                 displays.add(display);
             }
         }
@@ -106,18 +102,19 @@ public final class DisplayManager {
 
     private Display getOrCreateDisplayLocked(int displayId, boolean assumeValid) {
         Display display = this.mDisplays.get(displayId);
-        if (display == null) {
-            Display display2 = this.mGlobal.getCompatibleDisplay(displayId, (this.mContext.getDisplayId() == displayId ? this.mContext : this.mContext.getApplicationContext()).getResources());
-            if (display2 == null) {
-                return display2;
+        if (display != null) {
+            if (!assumeValid && !display.isValid()) {
+                return null;
             }
+            return display;
+        }
+        Context context = this.mContext.getDisplayId() == displayId ? this.mContext : this.mContext.getApplicationContext();
+        Display display2 = this.mGlobal.getCompatibleDisplay(displayId, context.getResources());
+        if (display2 != null) {
             this.mDisplays.put(displayId, display2);
             return display2;
-        } else if (assumeValid || display.isValid()) {
-            return display;
-        } else {
-            return null;
         }
+        return display2;
     }
 
     public void registerDisplayListener(DisplayListener listener, Handler handler) {
@@ -178,15 +175,16 @@ public final class DisplayManager {
         if (level < 0.0f || level > 1.0f) {
             throw new IllegalArgumentException("Saturation level must be between 0 and 1");
         }
-        ((ColorDisplayManager) this.mContext.getSystemService(ColorDisplayManager.class)).setSaturationLevel(Math.round(100.0f * level));
+        ColorDisplayManager cdm = (ColorDisplayManager) this.mContext.getSystemService(ColorDisplayManager.class);
+        cdm.setSaturationLevel(Math.round(100.0f * level));
     }
 
     public VirtualDisplay createVirtualDisplay(String name, int width, int height, int densityDpi, Surface surface, int flags) {
-        return createVirtualDisplay(name, width, height, densityDpi, surface, flags, (VirtualDisplay.Callback) null, (Handler) null);
+        return createVirtualDisplay(name, width, height, densityDpi, surface, flags, null, null);
     }
 
     public VirtualDisplay createVirtualDisplay(String name, int width, int height, int densityDpi, Surface surface, int flags, VirtualDisplay.Callback callback, Handler handler) {
-        return createVirtualDisplay((MediaProjection) null, name, width, height, densityDpi, surface, flags, callback, handler, (String) null);
+        return createVirtualDisplay(null, name, width, height, densityDpi, surface, flags, callback, handler, null);
     }
 
     public VirtualDisplay createVirtualDisplay(MediaProjection projection, String name, int width, int height, int densityDpi, Surface surface, int flags, VirtualDisplay.Callback callback, Handler handler, String uniqueId) {

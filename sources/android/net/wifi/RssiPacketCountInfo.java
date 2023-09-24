@@ -1,14 +1,19 @@
 package android.net.wifi;
 
-import android.os.Parcel;
-import android.os.Parcelable;
+import android.p007os.Parcel;
+import android.p007os.Parcelable;
 
+/* loaded from: classes3.dex */
 public class RssiPacketCountInfo implements Parcelable {
-    public static final Parcelable.Creator<RssiPacketCountInfo> CREATOR = new Parcelable.Creator<RssiPacketCountInfo>() {
+    public static final Parcelable.Creator<RssiPacketCountInfo> CREATOR = new Parcelable.Creator<RssiPacketCountInfo>() { // from class: android.net.wifi.RssiPacketCountInfo.1
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public RssiPacketCountInfo createFromParcel(Parcel in) {
             return new RssiPacketCountInfo(in);
         }
 
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public RssiPacketCountInfo[] newArray(int size) {
             return new RssiPacketCountInfo[size];
         }
@@ -32,6 +37,7 @@ public class RssiPacketCountInfo implements Parcelable {
         this.rxgood = in.readInt();
     }
 
+    @Override // android.p007os.Parcelable
     public void writeToParcel(Parcel out, int flags) {
         out.writeInt(this.rssi);
         out.writeInt(this.txgood);
@@ -39,6 +45,7 @@ public class RssiPacketCountInfo implements Parcelable {
         out.writeInt(this.rxgood);
     }
 
+    @Override // android.p007os.Parcelable
     public int describeContents() {
         return 0;
     }

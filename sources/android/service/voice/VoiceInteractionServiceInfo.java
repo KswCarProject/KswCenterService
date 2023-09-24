@@ -3,19 +3,20 @@ package android.service.voice;
 import android.Manifest;
 import android.app.AppGlobals;
 import android.content.ComponentName;
-import android.content.pm.PackageManager;
-import android.content.pm.ServiceInfo;
+import android.content.p002pm.PackageManager;
+import android.content.p002pm.ServiceInfo;
 import android.content.res.Resources;
 import android.content.res.TypedArray;
 import android.content.res.XmlResourceParser;
-import android.os.RemoteException;
+import android.p007os.RemoteException;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.util.Xml;
-import com.android.internal.R;
+import com.android.internal.C3132R;
 import java.io.IOException;
 import org.xmlpull.v1.XmlPullParserException;
 
+/* loaded from: classes3.dex */
 public class VoiceInteractionServiceInfo {
     static final String TAG = "VoiceInteractionServiceInfo";
     private String mParseError;
@@ -49,80 +50,87 @@ public class VoiceInteractionServiceInfo {
     public VoiceInteractionServiceInfo(PackageManager pm, ServiceInfo si) {
         if (si == null) {
             this.mParseError = "Service not available";
-        } else if (!Manifest.permission.BIND_VOICE_INTERACTION.equals(si.permission)) {
+        } else if (!Manifest.C0000permission.BIND_VOICE_INTERACTION.equals(si.permission)) {
             this.mParseError = "Service does not require permission android.permission.BIND_VOICE_INTERACTION";
         } else {
             XmlResourceParser parser = null;
             try {
-                parser = si.loadXmlMetaData(pm, VoiceInteractionService.SERVICE_META_DATA);
-                if (parser == null) {
-                    this.mParseError = "No android.voice_interaction meta-data for " + si.packageName;
-                    if (parser != null) {
+                try {
+                    try {
+                        try {
+                            XmlResourceParser parser2 = si.loadXmlMetaData(pm, VoiceInteractionService.SERVICE_META_DATA);
+                            if (parser2 == null) {
+                                this.mParseError = "No android.voice_interaction meta-data for " + si.packageName;
+                                if (parser2 != null) {
+                                    parser2.close();
+                                    return;
+                                }
+                                return;
+                            }
+                            Resources res = pm.getResourcesForApplication(si.applicationInfo);
+                            AttributeSet attrs = Xml.asAttributeSet(parser2);
+                            while (true) {
+                                int type = parser2.next();
+                                if (type == 1 || type == 2) {
+                                    break;
+                                }
+                            }
+                            String nodeName = parser2.getName();
+                            if (!"voice-interaction-service".equals(nodeName)) {
+                                this.mParseError = "Meta-data does not start with voice-interaction-service tag";
+                                if (parser2 != null) {
+                                    parser2.close();
+                                    return;
+                                }
+                                return;
+                            }
+                            TypedArray array = res.obtainAttributes(attrs, C3132R.styleable.VoiceInteractionService);
+                            this.mSessionService = array.getString(1);
+                            this.mRecognitionService = array.getString(2);
+                            this.mSettingsActivity = array.getString(0);
+                            this.mSupportsAssist = array.getBoolean(3, false);
+                            this.mSupportsLaunchFromKeyguard = array.getBoolean(4, false);
+                            this.mSupportsLocalInteraction = array.getBoolean(5, false);
+                            array.recycle();
+                            if (this.mSessionService == null) {
+                                this.mParseError = "No sessionService specified";
+                                if (parser2 != null) {
+                                    parser2.close();
+                                }
+                            } else if (this.mRecognitionService != null) {
+                                if (parser2 != null) {
+                                    parser2.close();
+                                }
+                                this.mServiceInfo = si;
+                            } else {
+                                this.mParseError = "No recognitionService specified";
+                                if (parser2 != null) {
+                                    parser2.close();
+                                }
+                            }
+                        } catch (XmlPullParserException e) {
+                            this.mParseError = "Error parsing voice interation service meta-data: " + e;
+                            Log.m63w(TAG, "error parsing voice interaction service meta-data", e);
+                            if (0 != 0) {
+                                parser.close();
+                            }
+                        }
+                    } catch (PackageManager.NameNotFoundException e2) {
+                        this.mParseError = "Error parsing voice interation service meta-data: " + e2;
+                        Log.m63w(TAG, "error parsing voice interaction service meta-data", e2);
+                        if (0 != 0) {
+                            parser.close();
+                        }
+                    }
+                } catch (IOException e3) {
+                    this.mParseError = "Error parsing voice interation service meta-data: " + e3;
+                    Log.m63w(TAG, "error parsing voice interaction service meta-data", e3);
+                    if (0 != 0) {
                         parser.close();
-                        return;
                     }
-                    return;
-                }
-                Resources res = pm.getResourcesForApplication(si.applicationInfo);
-                AttributeSet attrs = Xml.asAttributeSet(parser);
-                while (true) {
-                    int next = parser.next();
-                    int type = next;
-                    if (next == 1 || type == 2) {
-                    }
-                }
-                if (!"voice-interaction-service".equals(parser.getName())) {
-                    this.mParseError = "Meta-data does not start with voice-interaction-service tag";
-                    if (parser != null) {
-                        parser.close();
-                        return;
-                    }
-                    return;
-                }
-                TypedArray array = res.obtainAttributes(attrs, R.styleable.VoiceInteractionService);
-                this.mSessionService = array.getString(1);
-                this.mRecognitionService = array.getString(2);
-                this.mSettingsActivity = array.getString(0);
-                this.mSupportsAssist = array.getBoolean(3, false);
-                this.mSupportsLaunchFromKeyguard = array.getBoolean(4, false);
-                this.mSupportsLocalInteraction = array.getBoolean(5, false);
-                array.recycle();
-                if (this.mSessionService == null) {
-                    this.mParseError = "No sessionService specified";
-                    if (parser != null) {
-                        parser.close();
-                    }
-                } else if (this.mRecognitionService == null) {
-                    this.mParseError = "No recognitionService specified";
-                    if (parser != null) {
-                        parser.close();
-                    }
-                } else {
-                    if (parser != null) {
-                        parser.close();
-                    }
-                    this.mServiceInfo = si;
-                }
-            } catch (XmlPullParserException e) {
-                this.mParseError = "Error parsing voice interation service meta-data: " + e;
-                Log.w(TAG, "error parsing voice interaction service meta-data", e);
-                if (parser != null) {
-                    parser.close();
-                }
-            } catch (IOException e2) {
-                this.mParseError = "Error parsing voice interation service meta-data: " + e2;
-                Log.w(TAG, "error parsing voice interaction service meta-data", e2);
-                if (parser != null) {
-                    parser.close();
-                }
-            } catch (PackageManager.NameNotFoundException e3) {
-                this.mParseError = "Error parsing voice interation service meta-data: " + e3;
-                Log.w(TAG, "error parsing voice interaction service meta-data", e3);
-                if (parser != null) {
-                    parser.close();
                 }
             } catch (Throwable th) {
-                if (parser != null) {
+                if (0 != 0) {
                     parser.close();
                 }
                 throw th;

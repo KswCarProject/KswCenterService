@@ -1,7 +1,9 @@
 package android.drm;
 
+/* loaded from: classes.dex */
 public class DrmStore {
 
+    /* loaded from: classes.dex */
     public interface ConstraintsColumns {
         public static final String EXTENDED_METADATA = "extended_metadata";
         public static final String LICENSE_AVAILABLE_TIME = "license_available_time";
@@ -11,6 +13,7 @@ public class DrmStore {
         public static final String REMAINING_REPEAT_COUNT = "remaining_repeat_count";
     }
 
+    /* loaded from: classes.dex */
     public static class DrmObjectType {
         public static final int CONTENT = 1;
         public static final int RIGHTS_OBJECT = 2;
@@ -18,6 +21,7 @@ public class DrmStore {
         public static final int UNKNOWN = 0;
     }
 
+    /* loaded from: classes.dex */
     public static class RightsStatus {
         public static final int RIGHTS_EXPIRED = 2;
         public static final int RIGHTS_INVALID = 1;
@@ -25,6 +29,7 @@ public class DrmStore {
         public static final int RIGHTS_VALID = 0;
     }
 
+    /* loaded from: classes.dex */
     public static class Playback {
         public static final int PAUSE = 2;
         public static final int RESUME = 3;
@@ -44,6 +49,7 @@ public class DrmStore {
         }
     }
 
+    /* loaded from: classes.dex */
     public static class Action {
         public static final int DEFAULT = 0;
         public static final int DISPLAY = 7;

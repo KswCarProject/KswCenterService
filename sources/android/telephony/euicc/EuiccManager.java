@@ -6,15 +6,15 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentSender;
-import android.os.Bundle;
-import android.os.Parcelable;
-import android.os.RemoteException;
-import android.os.ServiceManager;
+import android.p007os.Bundle;
+import android.p007os.RemoteException;
+import android.p007os.ServiceManager;
 import android.telephony.TelephonyManager;
 import com.android.internal.telephony.euicc.IEuiccController;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 
+/* loaded from: classes3.dex */
 public class EuiccManager {
     @SystemApi
     public static final String ACTION_DELETE_SUBSCRIPTION_PRIVILEGED = "android.telephony.euicc.action.DELETE_SUBSCRIPTION_PRIVILEGED";
@@ -75,17 +75,20 @@ public class EuiccManager {
     private final Context mContext;
 
     @Retention(RetentionPolicy.SOURCE)
+    /* loaded from: classes3.dex */
     public @interface EuiccActivationType {
     }
 
     @SystemApi
     @Retention(RetentionPolicy.SOURCE)
+    /* loaded from: classes3.dex */
     public @interface OtaStatus {
     }
 
     public EuiccManager(Context context) {
         this.mContext = context;
-        this.mCardId = ((TelephonyManager) context.getSystemService("phone")).getCardIdForDefaultEuicc();
+        TelephonyManager tm = (TelephonyManager) context.getSystemService("phone");
+        this.mCardId = tm.getCardIdForDefaultEuicc();
     }
 
     private EuiccManager(Context context, int cardId) {
@@ -130,7 +133,7 @@ public class EuiccManager {
             return;
         }
         try {
-            getIEuiccController().downloadSubscription(this.mCardId, subscription, switchAfterDownload, this.mContext.getOpPackageName(), (Bundle) null, callbackIntent);
+            getIEuiccController().downloadSubscription(this.mCardId, subscription, switchAfterDownload, this.mContext.getOpPackageName(), null, callbackIntent);
         } catch (RemoteException e) {
             throw e.rethrowFromSystemServer();
         }
@@ -138,13 +141,12 @@ public class EuiccManager {
 
     public void startResolutionActivity(Activity activity, int requestCode, Intent resultIntent, PendingIntent callbackIntent) throws IntentSender.SendIntentException {
         PendingIntent resolutionIntent = (PendingIntent) resultIntent.getParcelableExtra(EXTRA_EMBEDDED_SUBSCRIPTION_RESOLUTION_INTENT);
-        if (resolutionIntent != null) {
-            Intent fillInIntent = new Intent();
-            fillInIntent.putExtra(EXTRA_EMBEDDED_SUBSCRIPTION_RESOLUTION_CALLBACK_INTENT, (Parcelable) callbackIntent);
-            activity.startIntentSenderForResult(resolutionIntent.getIntentSender(), requestCode, fillInIntent, 0, 0, 0);
-            return;
+        if (resolutionIntent == null) {
+            throw new IllegalArgumentException("Invalid result intent");
         }
-        throw new IllegalArgumentException("Invalid result intent");
+        Intent fillInIntent = new Intent();
+        fillInIntent.putExtra(EXTRA_EMBEDDED_SUBSCRIPTION_RESOLUTION_CALLBACK_INTENT, callbackIntent);
+        activity.startIntentSenderForResult(resolutionIntent.getIntentSender(), requestCode, fillInIntent, 0, 0, 0);
     }
 
     @SystemApi
@@ -264,7 +266,8 @@ public class EuiccManager {
 
     private boolean refreshCardIdIfUninitialized() {
         if (this.mCardId == -2) {
-            this.mCardId = ((TelephonyManager) this.mContext.getSystemService("phone")).getCardIdForDefaultEuicc();
+            TelephonyManager tm = (TelephonyManager) this.mContext.getSystemService("phone");
+            this.mCardId = tm.getCardIdForDefaultEuicc();
         }
         if (this.mCardId == -2) {
             return false;

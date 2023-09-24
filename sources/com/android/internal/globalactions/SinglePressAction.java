@@ -8,14 +8,16 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-import com.android.internal.R;
+import com.android.internal.C3132R;
 
+/* loaded from: classes4.dex */
 public abstract class SinglePressAction implements Action {
     private final Drawable mIcon;
     private final int mIconResId;
     private final CharSequence mMessage;
     private final int mMessageResId;
 
+    @Override // com.android.internal.globalactions.Action
     public abstract void onPress();
 
     protected SinglePressAction(int iconResId, int messageResId) {
@@ -32,6 +34,7 @@ public abstract class SinglePressAction implements Action {
         this.mIcon = icon;
     }
 
+    @Override // com.android.internal.globalactions.Action
     public boolean isEnabled() {
         return true;
     }
@@ -40,6 +43,7 @@ public abstract class SinglePressAction implements Action {
         return null;
     }
 
+    @Override // com.android.internal.globalactions.Action
     public CharSequence getLabelForAccessibility(Context context) {
         if (this.mMessage != null) {
             return this.mMessage;
@@ -47,15 +51,16 @@ public abstract class SinglePressAction implements Action {
         return context.getString(this.mMessageResId);
     }
 
+    @Override // com.android.internal.globalactions.Action
     public View create(Context context, View convertView, ViewGroup parent, LayoutInflater inflater) {
-        View v = inflater.inflate((int) R.layout.global_actions_item, parent, false);
+        View v = inflater.inflate(C3132R.layout.global_actions_item, parent, false);
         ImageView icon = (ImageView) v.findViewById(16908294);
         TextView messageView = (TextView) v.findViewById(16908299);
-        TextView statusView = (TextView) v.findViewById(R.id.status);
+        TextView statusView = (TextView) v.findViewById(C3132R.C3134id.status);
         String status = getStatus();
         if (statusView != null) {
             if (!TextUtils.isEmpty(status)) {
-                statusView.setText((CharSequence) status);
+                statusView.setText(status);
             } else {
                 statusView.setVisibility(8);
             }

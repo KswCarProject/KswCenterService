@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
+/* loaded from: classes3.dex */
 public class WifiP2pDnsSdServiceInfo extends WifiP2pServiceInfo {
     public static final int DNS_TYPE_PTR = 12;
     public static final int DNS_TYPE_TXT = 16;
@@ -48,7 +49,7 @@ public class WifiP2pDnsSdServiceInfo extends WifiP2pServiceInfo {
         sb.append(createRequest(serviceType + ".local.", 12, 1));
         sb.append(WifiEnterpriseConfig.CA_CERT_ALIAS_DELIMITER);
         byte[] data = instanceName.getBytes();
-        sb.append(String.format(Locale.US, "%02x", new Object[]{Integer.valueOf(data.length)}));
+        sb.append(String.format(Locale.US, "%02x", Integer.valueOf(data.length)));
         sb.append(WifiP2pServiceInfo.bin2HexStr(data));
         sb.append("c027");
         return sb.toString();
@@ -75,8 +76,8 @@ public class WifiP2pDnsSdServiceInfo extends WifiP2pServiceInfo {
             dnsName = dnsName.toLowerCase(Locale.ROOT);
         }
         sb.append(compressDnsName(dnsName));
-        sb.append(String.format(Locale.US, "%04x", new Object[]{Integer.valueOf(dnsType)}));
-        sb.append(String.format(Locale.US, "%02x", new Object[]{Integer.valueOf(version)}));
+        sb.append(String.format(Locale.US, "%04x", Integer.valueOf(dnsType)));
+        sb.append(String.format(Locale.US, "%02x", Integer.valueOf(version)));
         return sb.toString();
     }
 
@@ -91,14 +92,14 @@ public class WifiP2pDnsSdServiceInfo extends WifiP2pServiceInfo {
             int i = dnsName.indexOf(46);
             if (i == -1) {
                 if (dnsName.length() > 0) {
-                    sb.append(String.format(Locale.US, "%02x", new Object[]{Integer.valueOf(dnsName.length())}));
+                    sb.append(String.format(Locale.US, "%02x", Integer.valueOf(dnsName.length())));
                     sb.append(WifiP2pServiceInfo.bin2HexStr(dnsName.getBytes()));
                 }
                 sb.append("00");
             } else {
                 String name = dnsName.substring(0, i);
                 dnsName = dnsName.substring(i + 1);
-                sb.append(String.format(Locale.US, "%02x", new Object[]{Integer.valueOf(name.length())}));
+                sb.append(String.format(Locale.US, "%02x", Integer.valueOf(name.length())));
                 sb.append(WifiP2pServiceInfo.bin2HexStr(name.getBytes()));
             }
         }

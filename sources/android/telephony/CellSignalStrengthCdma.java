@@ -1,32 +1,37 @@
 package android.telephony;
 
-import android.content.pm.PackageManager;
+import android.content.p002pm.PackageManager;
 import android.hardware.radio.V1_0.CdmaSignalStrength;
 import android.hardware.radio.V1_0.EvdoSignalStrength;
-import android.os.Parcel;
-import android.os.Parcelable;
-import android.os.PersistableBundle;
+import android.p007os.Parcel;
+import android.p007os.Parcelable;
+import android.p007os.PersistableBundle;
 import java.util.Objects;
 
+/* loaded from: classes.dex */
 public final class CellSignalStrengthCdma extends CellSignalStrength implements Parcelable {
-    public static final Parcelable.Creator<CellSignalStrengthCdma> CREATOR = new Parcelable.Creator<CellSignalStrengthCdma>() {
-        public CellSignalStrengthCdma createFromParcel(Parcel in) {
-            return new CellSignalStrengthCdma(in);
-        }
-
-        public CellSignalStrengthCdma[] newArray(int size) {
-            return new CellSignalStrengthCdma[size];
-        }
-    };
     private static final boolean DBG = false;
     private static final String LOG_TAG = "CellSignalStrengthCdma";
-    private static final CellSignalStrengthCdma sInvalid = new CellSignalStrengthCdma();
     private int mCdmaDbm;
     private int mCdmaEcio;
     private int mEvdoDbm;
     private int mEvdoEcio;
     private int mEvdoSnr;
     private int mLevel;
+    private static final CellSignalStrengthCdma sInvalid = new CellSignalStrengthCdma();
+    public static final Parcelable.Creator<CellSignalStrengthCdma> CREATOR = new Parcelable.Creator<CellSignalStrengthCdma>() { // from class: android.telephony.CellSignalStrengthCdma.1
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
+        public CellSignalStrengthCdma createFromParcel(Parcel in) {
+            return new CellSignalStrengthCdma(in);
+        }
+
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
+        public CellSignalStrengthCdma[] newArray(int size) {
+            return new CellSignalStrengthCdma[size];
+        }
+    };
 
     public CellSignalStrengthCdma() {
         setDefaultValues();
@@ -38,7 +43,7 @@ public final class CellSignalStrengthCdma extends CellSignalStrength implements 
         this.mEvdoDbm = inRangeOrUnavailable(evdoDbm, PackageManager.INSTALL_FAILED_MULTIPACKAGE_INCONSISTENCY, 0);
         this.mEvdoEcio = inRangeOrUnavailable(evdoEcio, -160, 0);
         this.mEvdoSnr = inRangeOrUnavailable(evdoSnr, 0, 8);
-        updateLevel((PersistableBundle) null, (ServiceState) null);
+        updateLevel(null, null);
     }
 
     public CellSignalStrengthCdma(CdmaSignalStrength cdma, EvdoSignalStrength evdo) {
@@ -49,8 +54,7 @@ public final class CellSignalStrengthCdma extends CellSignalStrength implements 
         copyFrom(s);
     }
 
-    /* access modifiers changed from: protected */
-    public void copyFrom(CellSignalStrengthCdma s) {
+    protected void copyFrom(CellSignalStrengthCdma s) {
         this.mCdmaDbm = s.mCdmaDbm;
         this.mCdmaEcio = s.mCdmaEcio;
         this.mEvdoDbm = s.mEvdoDbm;
@@ -59,10 +63,12 @@ public final class CellSignalStrengthCdma extends CellSignalStrength implements 
         this.mLevel = s.mLevel;
     }
 
+    @Override // android.telephony.CellSignalStrength
     public CellSignalStrengthCdma copy() {
         return new CellSignalStrengthCdma(this);
     }
 
+    @Override // android.telephony.CellSignalStrength
     public void setDefaultValues() {
         this.mCdmaDbm = Integer.MAX_VALUE;
         this.mCdmaEcio = Integer.MAX_VALUE;
@@ -72,10 +78,12 @@ public final class CellSignalStrengthCdma extends CellSignalStrength implements 
         this.mLevel = 0;
     }
 
+    @Override // android.telephony.CellSignalStrength
     public int getLevel() {
         return this.mLevel;
     }
 
+    @Override // android.telephony.CellSignalStrength
     public void updateLevel(PersistableBundle cc, ServiceState ss) {
         int cdmaLevel = getCdmaLevel();
         int evdoLevel = getEvdoLevel();
@@ -88,6 +96,7 @@ public final class CellSignalStrengthCdma extends CellSignalStrength implements 
         }
     }
 
+    @Override // android.telephony.CellSignalStrength
     public int getAsuLevel() {
         int cdmaAsuLevel;
         int cdmaDbm = getCdmaDbm();
@@ -103,10 +112,8 @@ public final class CellSignalStrengthCdma extends CellSignalStrength implements 
             cdmaAsuLevel = 4;
         } else if (cdmaDbm >= -95) {
             cdmaAsuLevel = 2;
-        } else if (cdmaDbm >= -100) {
-            cdmaAsuLevel = 1;
         } else {
-            cdmaAsuLevel = 99;
+            cdmaAsuLevel = cdmaDbm >= -100 ? 1 : 99;
         }
         if (cdmaEcio == Integer.MAX_VALUE) {
             ecioAsuLevel = 99;
@@ -121,7 +128,12 @@ public final class CellSignalStrengthCdma extends CellSignalStrength implements 
         } else if (cdmaEcio >= -150) {
             ecioAsuLevel = 1;
         }
-        return cdmaAsuLevel < ecioAsuLevel ? cdmaAsuLevel : ecioAsuLevel;
+        if (cdmaAsuLevel < ecioAsuLevel) {
+            int level = cdmaAsuLevel;
+            return level;
+        }
+        int level2 = ecioAsuLevel;
+        return level2;
     }
 
     public int getCdmaLevel() {
@@ -137,10 +149,8 @@ public final class CellSignalStrengthCdma extends CellSignalStrength implements 
             levelDbm = 3;
         } else if (cdmaDbm >= -95) {
             levelDbm = 2;
-        } else if (cdmaDbm >= -100) {
-            levelDbm = 1;
         } else {
-            levelDbm = 0;
+            levelDbm = cdmaDbm >= -100 ? 1 : 0;
         }
         if (cdmaEcio == Integer.MAX_VALUE) {
             levelEcio = 0;
@@ -153,7 +163,12 @@ public final class CellSignalStrengthCdma extends CellSignalStrength implements 
         } else if (cdmaEcio >= -150) {
             levelEcio = 1;
         }
-        return levelDbm < levelEcio ? levelDbm : levelEcio;
+        if (levelDbm < levelEcio) {
+            int level = levelDbm;
+            return level;
+        }
+        int level2 = levelEcio;
+        return level2;
     }
 
     public int getEvdoLevel() {
@@ -169,10 +184,8 @@ public final class CellSignalStrengthCdma extends CellSignalStrength implements 
             levelEvdoDbm = 3;
         } else if (evdoDbm >= -90) {
             levelEvdoDbm = 2;
-        } else if (evdoDbm >= -105) {
-            levelEvdoDbm = 1;
         } else {
-            levelEvdoDbm = 0;
+            levelEvdoDbm = evdoDbm >= -105 ? 1 : 0;
         }
         if (evdoSnr == Integer.MAX_VALUE) {
             levelEvdoSnr = 0;
@@ -185,7 +198,12 @@ public final class CellSignalStrengthCdma extends CellSignalStrength implements 
         } else if (evdoSnr >= 1) {
             levelEvdoSnr = 1;
         }
-        return levelEvdoDbm < levelEvdoSnr ? levelEvdoDbm : levelEvdoSnr;
+        if (levelEvdoDbm < levelEvdoSnr) {
+            int level = levelEvdoDbm;
+            return level;
+        }
+        int level2 = levelEvdoSnr;
+        return level2;
     }
 
     public int getEvdoAsuLevel() {
@@ -201,10 +219,8 @@ public final class CellSignalStrengthCdma extends CellSignalStrength implements 
             levelEvdoDbm = 4;
         } else if (evdoDbm >= -95) {
             levelEvdoDbm = 2;
-        } else if (evdoDbm >= -105) {
-            levelEvdoDbm = 1;
         } else {
-            levelEvdoDbm = 99;
+            levelEvdoDbm = evdoDbm >= -105 ? 1 : 99;
         }
         if (evdoSnr >= 7) {
             levelEvdoSnr = 16;
@@ -217,9 +233,15 @@ public final class CellSignalStrengthCdma extends CellSignalStrength implements 
         } else if (evdoSnr >= 1) {
             levelEvdoSnr = 1;
         }
-        return levelEvdoDbm < levelEvdoSnr ? levelEvdoDbm : levelEvdoSnr;
+        if (levelEvdoDbm < levelEvdoSnr) {
+            int level = levelEvdoDbm;
+            return level;
+        }
+        int level2 = levelEvdoSnr;
+        return level2;
     }
 
+    @Override // android.telephony.CellSignalStrength
     public int getDbm() {
         int cdmaDbm = getCdmaDbm();
         int evdoDbm = getEvdoDbm();
@@ -266,21 +288,21 @@ public final class CellSignalStrengthCdma extends CellSignalStrength implements 
         this.mEvdoSnr = evdoSnr;
     }
 
+    @Override // android.telephony.CellSignalStrength
     public int hashCode() {
-        return Objects.hash(new Object[]{Integer.valueOf(this.mCdmaDbm), Integer.valueOf(this.mCdmaEcio), Integer.valueOf(this.mEvdoDbm), Integer.valueOf(this.mEvdoEcio), Integer.valueOf(this.mEvdoSnr), Integer.valueOf(this.mLevel)});
+        return Objects.hash(Integer.valueOf(this.mCdmaDbm), Integer.valueOf(this.mCdmaEcio), Integer.valueOf(this.mEvdoDbm), Integer.valueOf(this.mEvdoEcio), Integer.valueOf(this.mEvdoSnr), Integer.valueOf(this.mLevel));
     }
 
+    @Override // android.telephony.CellSignalStrength
     public boolean isValid() {
         return !equals(sInvalid);
     }
 
+    @Override // android.telephony.CellSignalStrength
     public boolean equals(Object o) {
-        if (!(o instanceof CellSignalStrengthCdma)) {
-            return false;
-        }
-        CellSignalStrengthCdma s = (CellSignalStrengthCdma) o;
-        if (this.mCdmaDbm == s.mCdmaDbm && this.mCdmaEcio == s.mCdmaEcio && this.mEvdoDbm == s.mEvdoDbm && this.mEvdoEcio == s.mEvdoEcio && this.mEvdoSnr == s.mEvdoSnr && this.mLevel == s.mLevel) {
-            return true;
+        if (o instanceof CellSignalStrengthCdma) {
+            CellSignalStrengthCdma s = (CellSignalStrengthCdma) o;
+            return this.mCdmaDbm == s.mCdmaDbm && this.mCdmaEcio == s.mCdmaEcio && this.mEvdoDbm == s.mEvdoDbm && this.mEvdoEcio == s.mEvdoEcio && this.mEvdoSnr == s.mEvdoSnr && this.mLevel == s.mLevel;
         }
         return false;
     }
@@ -289,6 +311,7 @@ public final class CellSignalStrengthCdma extends CellSignalStrength implements 
         return "CellSignalStrengthCdma: cdmaDbm=" + this.mCdmaDbm + " cdmaEcio=" + this.mCdmaEcio + " evdoDbm=" + this.mEvdoDbm + " evdoEcio=" + this.mEvdoEcio + " evdoSnr=" + this.mEvdoSnr + " level=" + this.mLevel;
     }
 
+    @Override // android.p007os.Parcelable
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeInt(this.mCdmaDbm);
         dest.writeInt(this.mCdmaEcio);
@@ -307,11 +330,12 @@ public final class CellSignalStrengthCdma extends CellSignalStrength implements 
         this.mLevel = in.readInt();
     }
 
+    @Override // android.p007os.Parcelable
     public int describeContents() {
         return 0;
     }
 
     private static void log(String s) {
-        Rlog.w(LOG_TAG, s);
+        Rlog.m80w(LOG_TAG, s);
     }
 }

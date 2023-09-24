@@ -2,8 +2,8 @@ package android.media;
 
 import android.annotation.UnsupportedAppUsage;
 import android.media.audiofx.AudioEffect;
-import android.os.Parcel;
-import android.os.Parcelable;
+import android.p007os.Parcel;
+import android.p007os.Parcelable;
 import android.util.Log;
 import java.io.PrintWriter;
 import java.lang.annotation.Retention;
@@ -13,17 +13,8 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 
+/* loaded from: classes3.dex */
 public final class AudioRecordingConfiguration implements Parcelable {
-    public static final Parcelable.Creator<AudioRecordingConfiguration> CREATOR = new Parcelable.Creator<AudioRecordingConfiguration>() {
-        public AudioRecordingConfiguration createFromParcel(Parcel p) {
-            return new AudioRecordingConfiguration(p);
-        }
-
-        public AudioRecordingConfiguration[] newArray(int size) {
-            return new AudioRecordingConfiguration[size];
-        }
-    };
-    private static final String TAG = new String("AudioRecordingConfiguration");
     private final AudioEffect.Descriptor[] mClientEffects;
     private final AudioFormat mClientFormat;
     private final String mClientPackageName;
@@ -36,8 +27,23 @@ public final class AudioRecordingConfiguration implements Parcelable {
     private final AudioFormat mDeviceFormat;
     private final int mDeviceSource;
     private final int mPatchHandle;
+    private static final String TAG = new String("AudioRecordingConfiguration");
+    public static final Parcelable.Creator<AudioRecordingConfiguration> CREATOR = new Parcelable.Creator<AudioRecordingConfiguration>() { // from class: android.media.AudioRecordingConfiguration.1
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
+        public AudioRecordingConfiguration createFromParcel(Parcel p) {
+            return new AudioRecordingConfiguration(p);
+        }
+
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
+        public AudioRecordingConfiguration[] newArray(int size) {
+            return new AudioRecordingConfiguration[size];
+        }
+    };
 
     @Retention(RetentionPolicy.SOURCE)
+    /* loaded from: classes3.dex */
     public @interface AudioSource {
     }
 
@@ -65,15 +71,18 @@ public final class AudioRecordingConfiguration implements Parcelable {
     }
 
     public static String toLogFriendlyString(AudioRecordingConfiguration arc) {
+        AudioEffect.Descriptor[] descriptorArr;
+        AudioEffect.Descriptor[] descriptorArr2;
         String clientEffects = new String();
+        String clientEffects2 = clientEffects;
         for (AudioEffect.Descriptor desc : arc.mClientEffects) {
-            clientEffects = clientEffects + "'" + desc.name + "' ";
+            clientEffects2 = clientEffects2 + "'" + desc.name + "' ";
         }
         String deviceEffects = new String();
         for (AudioEffect.Descriptor desc2 : arc.mDeviceEffects) {
             deviceEffects = deviceEffects + "'" + desc2.name + "' ";
         }
-        return new String("session:" + arc.mClientSessionId + " -- source client=" + MediaRecorder.toLogFriendlyAudioSource(arc.mClientSource) + ", dev=" + arc.mDeviceFormat.toLogFriendlyString() + " -- uid:" + arc.mClientUid + " -- patch:" + arc.mPatchHandle + " -- pack:" + arc.mClientPackageName + " -- format client=" + arc.mClientFormat.toLogFriendlyString() + ", dev=" + arc.mDeviceFormat.toLogFriendlyString() + " -- silenced:" + arc.mClientSilenced + " -- effects client=" + clientEffects + ", dev=" + deviceEffects);
+        return new String("session:" + arc.mClientSessionId + " -- source client=" + MediaRecorder.toLogFriendlyAudioSource(arc.mClientSource) + ", dev=" + arc.mDeviceFormat.toLogFriendlyString() + " -- uid:" + arc.mClientUid + " -- patch:" + arc.mPatchHandle + " -- pack:" + arc.mClientPackageName + " -- format client=" + arc.mClientFormat.toLogFriendlyString() + ", dev=" + arc.mDeviceFormat.toLogFriendlyString() + " -- silenced:" + arc.mClientSilenced + " -- effects client=" + clientEffects2 + ", dev=" + deviceEffects);
     }
 
     public static AudioRecordingConfiguration anonymizedCopy(AudioRecordingConfiguration in) {
@@ -109,7 +118,7 @@ public final class AudioRecordingConfiguration implements Parcelable {
     public AudioDeviceInfo getAudioDevice() {
         ArrayList<AudioPatch> patches = new ArrayList<>();
         if (AudioManager.listAudioPatches(patches) != 0) {
-            Log.e(TAG, "Error retrieving list of audio patches");
+            Log.m70e(TAG, "Error retrieving list of audio patches");
             return null;
         }
         int i = 0;
@@ -118,10 +127,12 @@ public final class AudioRecordingConfiguration implements Parcelable {
                 break;
             }
             AudioPatch patch = patches.get(i);
-            if (patch.id() == this.mPatchHandle) {
+            if (patch.m115id() != this.mPatchHandle) {
+                i++;
+            } else {
                 AudioPortConfig[] sources = patch.sources();
                 if (sources != null && sources.length > 0) {
-                    int devId = sources[0].port().id();
+                    int devId = sources[0].port().m114id();
                     AudioDeviceInfo[] devices = AudioManager.getDevicesStatic(1);
                     for (int j = 0; j < devices.length; j++) {
                         if (devices[j].getId() == devId) {
@@ -129,11 +140,9 @@ public final class AudioRecordingConfiguration implements Parcelable {
                         }
                     }
                 }
-            } else {
-                i++;
             }
         }
-        Log.e(TAG, "Couldn't find device for recording, did recording end already?");
+        Log.m70e(TAG, "Couldn't find device for recording, did recording end already?");
         return null;
     }
 
@@ -158,13 +167,15 @@ public final class AudioRecordingConfiguration implements Parcelable {
     }
 
     public int hashCode() {
-        return Objects.hash(new Object[]{Integer.valueOf(this.mClientSessionId), Integer.valueOf(this.mClientSource)});
+        return Objects.hash(Integer.valueOf(this.mClientSessionId), Integer.valueOf(this.mClientSource));
     }
 
+    @Override // android.p007os.Parcelable
     public int describeContents() {
         return 0;
     }
 
+    @Override // android.p007os.Parcelable
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeInt(this.mClientSessionId);
         dest.writeInt(this.mClientSource);
@@ -178,15 +189,15 @@ public final class AudioRecordingConfiguration implements Parcelable {
         dest.writeBoolean(this.mClientSilenced);
         dest.writeInt(this.mDeviceSource);
         dest.writeInt(this.mClientEffects.length);
-        for (AudioEffect.Descriptor writeToParcel : this.mClientEffects) {
-            writeToParcel.writeToParcel(dest);
+        for (int i2 = 0; i2 < this.mClientEffects.length; i2++) {
+            this.mClientEffects[i2].writeToParcel(dest);
         }
         dest.writeInt(this.mDeviceEffects.length);
         while (true) {
-            int i2 = i;
-            if (i2 < this.mDeviceEffects.length) {
-                this.mDeviceEffects[i2].writeToParcel(dest);
-                i = i2 + 1;
+            int i3 = i;
+            if (i3 < this.mDeviceEffects.length) {
+                this.mDeviceEffects[i3].writeToParcel(dest);
+                i = i3 + 1;
             } else {
                 return;
             }
@@ -208,9 +219,10 @@ public final class AudioRecordingConfiguration implements Parcelable {
         for (int i = 0; i < this.mClientEffects.length; i++) {
             this.mClientEffects[i] = new AudioEffect.Descriptor(in);
         }
-        this.mDeviceEffects = new AudioEffect.Descriptor[in.readInt()];
-        for (int i2 = 0; i2 < this.mDeviceEffects.length; i2++) {
-            this.mDeviceEffects[i2] = new AudioEffect.Descriptor(in);
+        int i2 = in.readInt();
+        this.mDeviceEffects = new AudioEffect.Descriptor[i2];
+        for (int i3 = 0; i3 < this.mDeviceEffects.length; i3++) {
+            this.mDeviceEffects[i3] = new AudioEffect.Descriptor(in);
         }
     }
 

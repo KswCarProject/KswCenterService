@@ -1,11 +1,14 @@
 package android.telephony;
 
-import android.os.Parcel;
-import android.os.Parcelable;
+import android.p007os.Parcel;
+import android.p007os.Parcelable;
 import java.util.Arrays;
 
+/* loaded from: classes.dex */
 public class ModemActivityInfo implements Parcelable {
-    public static final Parcelable.Creator<ModemActivityInfo> CREATOR = new Parcelable.Creator<ModemActivityInfo>() {
+    public static final Parcelable.Creator<ModemActivityInfo> CREATOR = new Parcelable.Creator<ModemActivityInfo>() { // from class: android.telephony.ModemActivityInfo.1
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public ModemActivityInfo createFromParcel(Parcel in) {
             long timestamp = in.readLong();
             int sleepTimeMs = in.readInt();
@@ -14,9 +17,13 @@ public class ModemActivityInfo implements Parcelable {
             for (int i = 0; i < 5; i++) {
                 txTimeMs[i] = in.readInt();
             }
-            return new ModemActivityInfo(timestamp, sleepTimeMs, idleTimeMs, txTimeMs, in.readInt(), in.readInt());
+            int rxTimeMs = in.readInt();
+            int energyUsed = in.readInt();
+            return new ModemActivityInfo(timestamp, sleepTimeMs, idleTimeMs, txTimeMs, rxTimeMs, energyUsed);
         }
 
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public ModemActivityInfo[] newArray(int size) {
             return new ModemActivityInfo[size];
         }
@@ -44,10 +51,12 @@ public class ModemActivityInfo implements Parcelable {
         return "ModemActivityInfo{ mTimestamp=" + this.mTimestamp + " mSleepTimeMs=" + this.mSleepTimeMs + " mIdleTimeMs=" + this.mIdleTimeMs + " mTxTimeMs[]=" + Arrays.toString(this.mTxTimeMs) + " mRxTimeMs=" + this.mRxTimeMs + " mEnergyUsed=" + this.mEnergyUsed + "}";
     }
 
+    @Override // android.p007os.Parcelable
     public int describeContents() {
         return 0;
     }
 
+    @Override // android.p007os.Parcelable
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeLong(this.mTimestamp);
         dest.writeInt(this.mSleepTimeMs);
@@ -55,7 +64,8 @@ public class ModemActivityInfo implements Parcelable {
         for (int i = 0; i < 5; i++) {
             dest.writeInt(this.mTxTimeMs[i]);
         }
-        dest.writeInt(this.mRxTimeMs);
+        int i2 = this.mRxTimeMs;
+        dest.writeInt(i2);
         dest.writeInt(this.mEnergyUsed);
     }
 
@@ -108,26 +118,22 @@ public class ModemActivityInfo implements Parcelable {
     }
 
     public boolean isValid() {
+        int[] txTimeMillis;
         for (int txVal : getTxTimeMillis()) {
             if (txVal < 0) {
                 return false;
             }
         }
-        if (getIdleTimeMillis() < 0 || getSleepTimeMillis() < 0 || getRxTimeMillis() < 0 || getEnergyUsed() < 0 || isEmpty()) {
-            return false;
-        }
-        return true;
+        return getIdleTimeMillis() >= 0 && getSleepTimeMillis() >= 0 && getRxTimeMillis() >= 0 && getEnergyUsed() >= 0 && !isEmpty();
     }
 
     private boolean isEmpty() {
+        int[] txTimeMillis;
         for (int txVal : getTxTimeMillis()) {
             if (txVal != 0) {
                 return false;
             }
         }
-        if (getIdleTimeMillis() == 0 && getSleepTimeMillis() == 0 && getRxTimeMillis() == 0 && getEnergyUsed() == 0) {
-            return true;
-        }
-        return false;
+        return getIdleTimeMillis() == 0 && getSleepTimeMillis() == 0 && getRxTimeMillis() == 0 && getEnergyUsed() == 0;
     }
 }

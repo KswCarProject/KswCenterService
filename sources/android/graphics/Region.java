@@ -1,32 +1,37 @@
 package android.graphics;
 
 import android.annotation.UnsupportedAppUsage;
-import android.os.Parcel;
-import android.os.Parcelable;
+import android.p007os.Parcel;
+import android.p007os.Parcelable;
 import android.util.Pools;
 
+/* loaded from: classes.dex */
 public class Region implements Parcelable {
-    public static final Parcelable.Creator<Region> CREATOR = new Parcelable.Creator<Region>() {
+    private static final int MAX_POOL_SIZE = 10;
+    @UnsupportedAppUsage
+    public long mNativeRegion;
+    private static final Pools.SynchronizedPool<Region> sPool = new Pools.SynchronizedPool<>(10);
+    public static final Parcelable.Creator<Region> CREATOR = new Parcelable.Creator<Region>() { // from class: android.graphics.Region.1
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public Region createFromParcel(Parcel p) {
             long ni = Region.nativeCreateFromParcel(p);
-            if (ni != 0) {
-                return new Region(ni);
+            if (ni == 0) {
+                throw new RuntimeException();
             }
-            throw new RuntimeException();
+            return new Region(ni);
         }
 
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public Region[] newArray(int size) {
             return new Region[size];
         }
     };
-    private static final int MAX_POOL_SIZE = 10;
-    private static final Pools.SynchronizedPool<Region> sPool = new Pools.SynchronizedPool<>(10);
-    @UnsupportedAppUsage
-    public long mNativeRegion;
 
     private static native long nativeConstructor();
 
-    /* access modifiers changed from: private */
+    /* JADX INFO: Access modifiers changed from: private */
     public static native long nativeCreateFromParcel(Parcel parcel);
 
     private static native void nativeDestructor(long j);
@@ -71,7 +76,9 @@ public class Region implements Parcelable {
 
     public native void translate(int i, int i2, Region region);
 
-    public enum Op {
+    /* renamed from: android.graphics.Region$Op */
+    /* loaded from: classes.dex */
+    public enum EnumC0685Op {
         DIFFERENCE(0),
         INTERSECT(1),
         UNION(2),
@@ -82,8 +89,8 @@ public class Region implements Parcelable {
         @UnsupportedAppUsage
         public final int nativeInt;
 
-        private Op(int nativeInt2) {
-            this.nativeInt = nativeInt2;
+        EnumC0685Op(int nativeInt) {
+            this.nativeInt = nativeInt;
         }
     }
 
@@ -134,10 +141,10 @@ public class Region implements Parcelable {
     }
 
     public boolean getBounds(Rect r) {
-        if (r != null) {
-            return nativeGetBounds(this.mNativeRegion, r);
+        if (r == null) {
+            throw new NullPointerException();
         }
-        throw new NullPointerException();
+        return nativeGetBounds(this.mNativeRegion, r);
     }
 
     public Path getBoundaryPath() {
@@ -159,35 +166,40 @@ public class Region implements Parcelable {
     }
 
     public void translate(int dx, int dy) {
-        translate(dx, dy, (Region) null);
+        translate(dx, dy, null);
     }
 
     @UnsupportedAppUsage
     public void scale(float scale) {
-        scale(scale, (Region) null);
+        scale(scale, null);
     }
 
     public final boolean union(Rect r) {
-        return op(r, Op.UNION);
+        return m125op(r, EnumC0685Op.UNION);
     }
 
-    public boolean op(Rect r, Op op) {
+    /* renamed from: op */
+    public boolean m125op(Rect r, EnumC0685Op op) {
         return nativeOp(this.mNativeRegion, r.left, r.top, r.right, r.bottom, op.nativeInt);
     }
 
-    public boolean op(int left, int top, int right, int bottom, Op op) {
+    /* renamed from: op */
+    public boolean m126op(int left, int top, int right, int bottom, EnumC0685Op op) {
         return nativeOp(this.mNativeRegion, left, top, right, bottom, op.nativeInt);
     }
 
-    public boolean op(Region region, Op op) {
-        return op(this, region, op);
+    /* renamed from: op */
+    public boolean m123op(Region region, EnumC0685Op op) {
+        return m122op(this, region, op);
     }
 
-    public boolean op(Rect rect, Region region, Op op) {
+    /* renamed from: op */
+    public boolean m124op(Rect rect, Region region, EnumC0685Op op) {
         return nativeOp(this.mNativeRegion, rect, region.mNativeRegion, op.nativeInt);
     }
 
-    public boolean op(Region region1, Region region2, Op op) {
+    /* renamed from: op */
+    public boolean m122op(Region region1, Region region2, EnumC0685Op op) {
         return nativeOp(this.mNativeRegion, region1.mNativeRegion, region2.mNativeRegion, op.nativeInt);
     }
 
@@ -212,10 +224,12 @@ public class Region implements Parcelable {
         sPool.release(this);
     }
 
+    @Override // android.p007os.Parcelable
     public int describeContents() {
         return 0;
     }
 
+    @Override // android.p007os.Parcelable
     public void writeToParcel(Parcel p, int flags) {
         if (!nativeWriteToParcel(this.mNativeRegion, p)) {
             throw new RuntimeException();
@@ -226,25 +240,24 @@ public class Region implements Parcelable {
         if (obj == null || !(obj instanceof Region)) {
             return false;
         }
-        return nativeEquals(this.mNativeRegion, ((Region) obj).mNativeRegion);
+        Region peer = (Region) obj;
+        return nativeEquals(this.mNativeRegion, peer.mNativeRegion);
     }
 
-    /* access modifiers changed from: protected */
-    public void finalize() throws Throwable {
+    protected void finalize() throws Throwable {
         try {
             nativeDestructor(this.mNativeRegion);
-            this.mNativeRegion = 0;
+            this.mNativeRegion = 0L;
         } finally {
             super.finalize();
         }
     }
 
     Region(long ni) {
-        if (ni != 0) {
-            this.mNativeRegion = ni;
-            return;
+        if (ni == 0) {
+            throw new RuntimeException();
         }
-        throw new RuntimeException();
+        this.mNativeRegion = ni;
     }
 
     @UnsupportedAppUsage
@@ -252,8 +265,8 @@ public class Region implements Parcelable {
         this(ni);
     }
 
-    /* access modifiers changed from: package-private */
-    public final long ni() {
+    /* renamed from: ni */
+    final long m127ni() {
         return this.mNativeRegion;
     }
 }

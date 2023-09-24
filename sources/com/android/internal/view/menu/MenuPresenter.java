@@ -2,11 +2,13 @@ package com.android.internal.view.menu;
 
 import android.annotation.UnsupportedAppUsage;
 import android.content.Context;
-import android.os.Parcelable;
+import android.p007os.Parcelable;
 import android.view.ViewGroup;
 
+/* loaded from: classes4.dex */
 public interface MenuPresenter {
 
+    /* loaded from: classes4.dex */
     public interface Callback {
         void onCloseMenu(MenuBuilder menuBuilder, boolean z);
 

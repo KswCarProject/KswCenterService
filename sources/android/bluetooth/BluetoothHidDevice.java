@@ -5,14 +5,15 @@ import android.bluetooth.BluetoothProfile;
 import android.bluetooth.IBluetoothHidDevice;
 import android.bluetooth.IBluetoothHidDeviceCallback;
 import android.content.Context;
-import android.os.Binder;
-import android.os.IBinder;
-import android.os.RemoteException;
+import android.p007os.Binder;
+import android.p007os.IBinder;
+import android.p007os.RemoteException;
 import android.util.Log;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.Executor;
 
+/* loaded from: classes.dex */
 public final class BluetoothHidDevice implements BluetoothProfile {
     public static final String ACTION_CONNECTION_STATE_CHANGED = "android.bluetooth.hiddevice.profile.action.CONNECTION_STATE_CHANGED";
     public static final byte ERROR_RSP_INVALID_PARAM = 4;
@@ -38,45 +39,48 @@ public final class BluetoothHidDevice implements BluetoothProfile {
     public static final byte SUBCLASS2_SENSING_DEVICE = 4;
     public static final byte SUBCLASS2_UNCATEGORIZED = 0;
     private static final String TAG = BluetoothHidDevice.class.getSimpleName();
-    private BluetoothAdapter mAdapter = BluetoothAdapter.getDefaultAdapter();
-    private final BluetoothProfileConnector<IBluetoothHidDevice> mProfileConnector = new BluetoothProfileConnector(this, 19, "BluetoothHidDevice", IBluetoothHidDevice.class.getName()) {
+    private final BluetoothProfileConnector<IBluetoothHidDevice> mProfileConnector = new BluetoothProfileConnector(this, 19, "BluetoothHidDevice", IBluetoothHidDevice.class.getName()) { // from class: android.bluetooth.BluetoothHidDevice.1
+        @Override // android.bluetooth.BluetoothProfileConnector
         public IBluetoothHidDevice getServiceInterface(IBinder service) {
             return IBluetoothHidDevice.Stub.asInterface(Binder.allowBlocking(service));
         }
     };
+    private BluetoothAdapter mAdapter = BluetoothAdapter.getDefaultAdapter();
 
+    /* loaded from: classes.dex */
     public static abstract class Callback {
         private static final String TAG = "BluetoothHidDevCallback";
 
         public void onAppStatusChanged(BluetoothDevice pluggedDevice, boolean registered) {
-            Log.d(TAG, "onAppStatusChanged: pluggedDevice=" + pluggedDevice + " registered=" + registered);
+            Log.m72d(TAG, "onAppStatusChanged: pluggedDevice=" + pluggedDevice + " registered=" + registered);
         }
 
         public void onConnectionStateChanged(BluetoothDevice device, int state) {
-            Log.d(TAG, "onConnectionStateChanged: device=" + device + " state=" + state);
+            Log.m72d(TAG, "onConnectionStateChanged: device=" + device + " state=" + state);
         }
 
         public void onGetReport(BluetoothDevice device, byte type, byte id, int bufferSize) {
-            Log.d(TAG, "onGetReport: device=" + device + " type=" + type + " id=" + id + " bufferSize=" + bufferSize);
+            Log.m72d(TAG, "onGetReport: device=" + device + " type=" + ((int) type) + " id=" + ((int) id) + " bufferSize=" + bufferSize);
         }
 
         public void onSetReport(BluetoothDevice device, byte type, byte id, byte[] data) {
-            Log.d(TAG, "onSetReport: device=" + device + " type=" + type + " id=" + id);
+            Log.m72d(TAG, "onSetReport: device=" + device + " type=" + ((int) type) + " id=" + ((int) id));
         }
 
         public void onSetProtocol(BluetoothDevice device, byte protocol) {
-            Log.d(TAG, "onSetProtocol: device=" + device + " protocol=" + protocol);
+            Log.m72d(TAG, "onSetProtocol: device=" + device + " protocol=" + ((int) protocol));
         }
 
         public void onInterruptData(BluetoothDevice device, byte reportId, byte[] data) {
-            Log.d(TAG, "onInterruptData: device=" + device + " reportId=" + reportId);
+            Log.m72d(TAG, "onInterruptData: device=" + device + " reportId=" + ((int) reportId));
         }
 
         public void onVirtualCableUnplug(BluetoothDevice device) {
-            Log.d(TAG, "onVirtualCableUnplug: device=" + device);
+            Log.m72d(TAG, "onVirtualCableUnplug: device=" + device);
         }
     }
 
+    /* loaded from: classes.dex */
     private static class CallbackWrapper extends IBluetoothHidDeviceCallback.Stub {
         private final Callback mCallback;
         private final Executor mExecutor;
@@ -86,129 +90,79 @@ public final class BluetoothHidDevice implements BluetoothProfile {
             this.mCallback = callback;
         }
 
-        public void onAppStatusChanged(BluetoothDevice pluggedDevice, boolean registered) {
+        @Override // android.bluetooth.IBluetoothHidDeviceCallback
+        public void onAppStatusChanged(final BluetoothDevice pluggedDevice, final boolean registered) {
             clearCallingIdentity();
-            this.mExecutor.execute(new Runnable(pluggedDevice, registered) {
-                private final /* synthetic */ BluetoothDevice f$1;
-                private final /* synthetic */ boolean f$2;
-
-                {
-                    this.f$1 = r2;
-                    this.f$2 = r3;
-                }
-
+            this.mExecutor.execute(new Runnable() { // from class: android.bluetooth.-$$Lambda$BluetoothHidDevice$CallbackWrapper$NFluHjT4zTfYBRXClu_2k6mPKFI
+                @Override // java.lang.Runnable
                 public final void run() {
-                    BluetoothHidDevice.CallbackWrapper.this.mCallback.onAppStatusChanged(this.f$1, this.f$2);
+                    BluetoothHidDevice.CallbackWrapper.this.mCallback.onAppStatusChanged(pluggedDevice, registered);
                 }
             });
         }
 
-        public void onConnectionStateChanged(BluetoothDevice device, int state) {
+        @Override // android.bluetooth.IBluetoothHidDeviceCallback
+        public void onConnectionStateChanged(final BluetoothDevice device, final int state) {
             clearCallingIdentity();
-            this.mExecutor.execute(new Runnable(device, state) {
-                private final /* synthetic */ BluetoothDevice f$1;
-                private final /* synthetic */ int f$2;
-
-                {
-                    this.f$1 = r2;
-                    this.f$2 = r3;
-                }
-
+            this.mExecutor.execute(new Runnable() { // from class: android.bluetooth.-$$Lambda$BluetoothHidDevice$CallbackWrapper$qtStwQVkGfOs2iJIiePWqJJpi0w
+                @Override // java.lang.Runnable
                 public final void run() {
-                    BluetoothHidDevice.CallbackWrapper.this.mCallback.onConnectionStateChanged(this.f$1, this.f$2);
+                    BluetoothHidDevice.CallbackWrapper.this.mCallback.onConnectionStateChanged(device, state);
                 }
             });
         }
 
-        public void onGetReport(BluetoothDevice device, byte type, byte id, int bufferSize) {
+        @Override // android.bluetooth.IBluetoothHidDeviceCallback
+        public void onGetReport(final BluetoothDevice device, final byte type, final byte id, final int bufferSize) {
             clearCallingIdentity();
-            this.mExecutor.execute(new Runnable(device, type, id, bufferSize) {
-                private final /* synthetic */ BluetoothDevice f$1;
-                private final /* synthetic */ byte f$2;
-                private final /* synthetic */ byte f$3;
-                private final /* synthetic */ int f$4;
-
-                {
-                    this.f$1 = r2;
-                    this.f$2 = r3;
-                    this.f$3 = r4;
-                    this.f$4 = r5;
-                }
-
+            this.mExecutor.execute(new Runnable() { // from class: android.bluetooth.-$$Lambda$BluetoothHidDevice$CallbackWrapper$Eyz_qG6mvTlh6a8Bp41ZoEJzQCQ
+                @Override // java.lang.Runnable
                 public final void run() {
-                    BluetoothHidDevice.CallbackWrapper.this.mCallback.onGetReport(this.f$1, this.f$2, this.f$3, this.f$4);
+                    BluetoothHidDevice.CallbackWrapper.this.mCallback.onGetReport(device, type, id, bufferSize);
                 }
             });
         }
 
-        public void onSetReport(BluetoothDevice device, byte type, byte id, byte[] data) {
+        @Override // android.bluetooth.IBluetoothHidDeviceCallback
+        public void onSetReport(final BluetoothDevice device, final byte type, final byte id, final byte[] data) {
             clearCallingIdentity();
-            this.mExecutor.execute(new Runnable(device, type, id, data) {
-                private final /* synthetic */ BluetoothDevice f$1;
-                private final /* synthetic */ byte f$2;
-                private final /* synthetic */ byte f$3;
-                private final /* synthetic */ byte[] f$4;
-
-                {
-                    this.f$1 = r2;
-                    this.f$2 = r3;
-                    this.f$3 = r4;
-                    this.f$4 = r5;
-                }
-
+            this.mExecutor.execute(new Runnable() { // from class: android.bluetooth.-$$Lambda$BluetoothHidDevice$CallbackWrapper$3bTGVlfKj7Y0SZdifW_Ya2myDKs
+                @Override // java.lang.Runnable
                 public final void run() {
-                    BluetoothHidDevice.CallbackWrapper.this.mCallback.onSetReport(this.f$1, this.f$2, this.f$3, this.f$4);
+                    BluetoothHidDevice.CallbackWrapper.this.mCallback.onSetReport(device, type, id, data);
                 }
             });
         }
 
-        public void onSetProtocol(BluetoothDevice device, byte protocol) {
+        @Override // android.bluetooth.IBluetoothHidDeviceCallback
+        public void onSetProtocol(final BluetoothDevice device, final byte protocol) {
             clearCallingIdentity();
-            this.mExecutor.execute(new Runnable(device, protocol) {
-                private final /* synthetic */ BluetoothDevice f$1;
-                private final /* synthetic */ byte f$2;
-
-                {
-                    this.f$1 = r2;
-                    this.f$2 = r3;
-                }
-
+            this.mExecutor.execute(new Runnable() { // from class: android.bluetooth.-$$Lambda$BluetoothHidDevice$CallbackWrapper$ypkr5GGxsAkGSBiLjIRwg-PzqCM
+                @Override // java.lang.Runnable
                 public final void run() {
-                    BluetoothHidDevice.CallbackWrapper.this.mCallback.onSetProtocol(this.f$1, this.f$2);
+                    BluetoothHidDevice.CallbackWrapper.this.mCallback.onSetProtocol(device, protocol);
                 }
             });
         }
 
-        public void onInterruptData(BluetoothDevice device, byte reportId, byte[] data) {
+        @Override // android.bluetooth.IBluetoothHidDeviceCallback
+        public void onInterruptData(final BluetoothDevice device, final byte reportId, final byte[] data) {
             clearCallingIdentity();
-            this.mExecutor.execute(new Runnable(device, reportId, data) {
-                private final /* synthetic */ BluetoothDevice f$1;
-                private final /* synthetic */ byte f$2;
-                private final /* synthetic */ byte[] f$3;
-
-                {
-                    this.f$1 = r2;
-                    this.f$2 = r3;
-                    this.f$3 = r4;
-                }
-
+            this.mExecutor.execute(new Runnable() { // from class: android.bluetooth.-$$Lambda$BluetoothHidDevice$CallbackWrapper$xW99-tc95OmGApoKnpQ9q1TXb9k
+                @Override // java.lang.Runnable
                 public final void run() {
-                    BluetoothHidDevice.CallbackWrapper.this.mCallback.onInterruptData(this.f$1, this.f$2, this.f$3);
+                    BluetoothHidDevice.CallbackWrapper.this.mCallback.onInterruptData(device, reportId, data);
                 }
             });
         }
 
-        public void onVirtualCableUnplug(BluetoothDevice device) {
+        @Override // android.bluetooth.IBluetoothHidDeviceCallback
+        public void onVirtualCableUnplug(final BluetoothDevice device) {
             clearCallingIdentity();
-            this.mExecutor.execute(new Runnable(device) {
-                private final /* synthetic */ BluetoothDevice f$1;
-
-                {
-                    this.f$1 = r2;
-                }
-
+            this.mExecutor.execute(new Runnable() { // from class: android.bluetooth.-$$Lambda$BluetoothHidDevice$CallbackWrapper$jiodzbAJAcleQCwlDcBjvDddELM
+                @Override // java.lang.Runnable
                 public final void run() {
-                    BluetoothHidDevice.CallbackWrapper.this.mCallback.onVirtualCableUnplug(this.f$1);
+                    BluetoothHidDevice.CallbackWrapper.this.mCallback.onVirtualCableUnplug(device);
                 }
             });
         }
@@ -218,8 +172,7 @@ public final class BluetoothHidDevice implements BluetoothProfile {
         this.mProfileConnector.connect(context, listener);
     }
 
-    /* access modifiers changed from: package-private */
-    public void close() {
+    void close() {
         this.mProfileConnector.disconnect();
     }
 
@@ -227,130 +180,134 @@ public final class BluetoothHidDevice implements BluetoothProfile {
         return this.mProfileConnector.getService();
     }
 
+    @Override // android.bluetooth.BluetoothProfile
     public List<BluetoothDevice> getConnectedDevices() {
         IBluetoothHidDevice service = getService();
         if (service != null) {
             try {
                 return service.getConnectedDevices();
             } catch (RemoteException e) {
-                Log.e(TAG, e.toString());
+                Log.m70e(TAG, e.toString());
             }
         } else {
-            Log.w(TAG, "Proxy not attached to service");
-            return new ArrayList();
+            Log.m64w(TAG, "Proxy not attached to service");
         }
+        return new ArrayList();
     }
 
+    @Override // android.bluetooth.BluetoothProfile
     public List<BluetoothDevice> getDevicesMatchingConnectionStates(int[] states) {
         IBluetoothHidDevice service = getService();
         if (service != null) {
             try {
                 return service.getDevicesMatchingConnectionStates(states);
             } catch (RemoteException e) {
-                Log.e(TAG, e.toString());
+                Log.m70e(TAG, e.toString());
             }
         } else {
-            Log.w(TAG, "Proxy not attached to service");
-            return new ArrayList();
+            Log.m64w(TAG, "Proxy not attached to service");
         }
+        return new ArrayList();
     }
 
+    @Override // android.bluetooth.BluetoothProfile
     public int getConnectionState(BluetoothDevice device) {
         IBluetoothHidDevice service = getService();
         if (service != null) {
             try {
                 return service.getConnectionState(device);
             } catch (RemoteException e) {
-                Log.e(TAG, e.toString());
+                Log.m70e(TAG, e.toString());
                 return 0;
             }
-        } else {
-            Log.w(TAG, "Proxy not attached to service");
-            return 0;
         }
+        Log.m64w(TAG, "Proxy not attached to service");
+        return 0;
     }
 
     public boolean registerApp(BluetoothHidDeviceAppSdpSettings sdp, BluetoothHidDeviceAppQosSettings inQos, BluetoothHidDeviceAppQosSettings outQos, Executor executor, Callback callback) {
         if (sdp == null) {
             throw new IllegalArgumentException("sdp parameter cannot be null");
-        } else if (executor == null) {
+        }
+        if (executor == null) {
             throw new IllegalArgumentException("executor parameter cannot be null");
-        } else if (callback != null) {
-            IBluetoothHidDevice service = getService();
-            if (service != null) {
-                try {
-                    return service.registerApp(sdp, inQos, outQos, new CallbackWrapper(executor, callback));
-                } catch (RemoteException e) {
-                    Log.e(TAG, e.toString());
-                    return false;
-                }
-            } else {
-                Log.w(TAG, "Proxy not attached to service");
-                return false;
-            }
-        } else {
+        }
+        if (callback == null) {
             throw new IllegalArgumentException("callback parameter cannot be null");
         }
+        IBluetoothHidDevice service = getService();
+        if (service != null) {
+            try {
+                CallbackWrapper cbw = new CallbackWrapper(executor, callback);
+                boolean result = service.registerApp(sdp, inQos, outQos, cbw);
+                return result;
+            } catch (RemoteException e) {
+                Log.m70e(TAG, e.toString());
+                return false;
+            }
+        }
+        Log.m64w(TAG, "Proxy not attached to service");
+        return false;
     }
 
     public boolean unregisterApp() {
         IBluetoothHidDevice service = getService();
         if (service != null) {
             try {
-                return service.unregisterApp();
+                boolean result = service.unregisterApp();
+                return result;
             } catch (RemoteException e) {
-                Log.e(TAG, e.toString());
+                Log.m70e(TAG, e.toString());
                 return false;
             }
-        } else {
-            Log.w(TAG, "Proxy not attached to service");
-            return false;
         }
+        Log.m64w(TAG, "Proxy not attached to service");
+        return false;
     }
 
     public boolean sendReport(BluetoothDevice device, int id, byte[] data) {
         IBluetoothHidDevice service = getService();
         if (service != null) {
             try {
-                return service.sendReport(device, id, data);
+                boolean result = service.sendReport(device, id, data);
+                return result;
             } catch (RemoteException e) {
-                Log.e(TAG, e.toString());
+                Log.m70e(TAG, e.toString());
                 return false;
             }
-        } else {
-            Log.w(TAG, "Proxy not attached to service");
-            return false;
         }
+        Log.m64w(TAG, "Proxy not attached to service");
+        return false;
     }
 
     public boolean replyReport(BluetoothDevice device, byte type, byte id, byte[] data) {
         IBluetoothHidDevice service = getService();
         if (service != null) {
             try {
-                return service.replyReport(device, type, id, data);
+                boolean result = service.replyReport(device, type, id, data);
+                return result;
             } catch (RemoteException e) {
-                Log.e(TAG, e.toString());
+                Log.m70e(TAG, e.toString());
                 return false;
             }
-        } else {
-            Log.w(TAG, "Proxy not attached to service");
-            return false;
         }
+        Log.m64w(TAG, "Proxy not attached to service");
+        return false;
     }
 
     public boolean reportError(BluetoothDevice device, byte error) {
         IBluetoothHidDevice service = getService();
         if (service != null) {
             try {
-                return service.reportError(device, error);
+                boolean result = service.reportError(device, error);
+                return result;
             } catch (RemoteException e) {
-                Log.e(TAG, e.toString());
+                Log.m70e(TAG, e.toString());
                 return false;
             }
-        } else {
-            Log.w(TAG, "Proxy not attached to service");
-            return false;
         }
+        Log.m64w(TAG, "Proxy not attached to service");
+        return false;
     }
 
     public String getUserAppName() {
@@ -359,42 +316,41 @@ public final class BluetoothHidDevice implements BluetoothProfile {
             try {
                 return service.getUserAppName();
             } catch (RemoteException e) {
-                Log.e(TAG, e.toString());
+                Log.m70e(TAG, e.toString());
                 return "";
             }
-        } else {
-            Log.w(TAG, "Proxy not attached to service");
-            return "";
         }
+        Log.m64w(TAG, "Proxy not attached to service");
+        return "";
     }
 
     public boolean connect(BluetoothDevice device) {
         IBluetoothHidDevice service = getService();
         if (service != null) {
             try {
-                return service.connect(device);
+                boolean result = service.connect(device);
+                return result;
             } catch (RemoteException e) {
-                Log.e(TAG, e.toString());
+                Log.m70e(TAG, e.toString());
                 return false;
             }
-        } else {
-            Log.w(TAG, "Proxy not attached to service");
-            return false;
         }
+        Log.m64w(TAG, "Proxy not attached to service");
+        return false;
     }
 
     public boolean disconnect(BluetoothDevice device) {
         IBluetoothHidDevice service = getService();
         if (service != null) {
             try {
-                return service.disconnect(device);
+                boolean result = service.disconnect(device);
+                return result;
             } catch (RemoteException e) {
-                Log.e(TAG, e.toString());
+                Log.m70e(TAG, e.toString());
                 return false;
             }
-        } else {
-            Log.w(TAG, "Proxy not attached to service");
-            return false;
         }
+        Log.m64w(TAG, "Proxy not attached to service");
+        return false;
     }
 }

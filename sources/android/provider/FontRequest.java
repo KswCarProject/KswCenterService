@@ -6,6 +6,7 @@ import com.android.internal.util.Preconditions;
 import java.util.Collections;
 import java.util.List;
 
+/* loaded from: classes3.dex */
 public final class FontRequest {
     private final List<List<byte[]>> mCertificates;
     private final String mIdentifier;
@@ -57,7 +58,8 @@ public final class FontRequest {
             List<byte[]> set = this.mCertificates.get(i);
             for (int j = 0; j < set.size(); j++) {
                 builder.append(" \"");
-                builder.append(Base64.encodeToString(set.get(j), 0));
+                byte[] array = set.get(j);
+                builder.append(Base64.encodeToString(array, 0));
                 builder.append("\"");
             }
             builder.append(" ]");

@@ -1,18 +1,23 @@
 package android.telephony;
 
-import android.os.Parcel;
-import android.os.Parcelable;
+import android.p007os.Parcel;
+import android.p007os.Parcelable;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 
+/* loaded from: classes.dex */
 public final class AvailableNetworkInfo implements Parcelable {
-    public static final Parcelable.Creator<AvailableNetworkInfo> CREATOR = new Parcelable.Creator<AvailableNetworkInfo>() {
+    public static final Parcelable.Creator<AvailableNetworkInfo> CREATOR = new Parcelable.Creator<AvailableNetworkInfo>() { // from class: android.telephony.AvailableNetworkInfo.1
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public AvailableNetworkInfo createFromParcel(Parcel in) {
             return new AvailableNetworkInfo(in);
         }
 
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public AvailableNetworkInfo[] newArray(int size) {
             return new AvailableNetworkInfo[size];
         }
@@ -41,10 +46,12 @@ public final class AvailableNetworkInfo implements Parcelable {
         return (List) this.mBands.clone();
     }
 
+    @Override // android.p007os.Parcelable
     public int describeContents() {
         return 0;
     }
 
+    @Override // android.p007os.Parcelable
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeInt(this.mSubId);
         dest.writeInt(this.mPriority);
@@ -71,17 +78,14 @@ public final class AvailableNetworkInfo implements Parcelable {
     public boolean equals(Object o) {
         try {
             AvailableNetworkInfo ani = (AvailableNetworkInfo) o;
-            if (o != null && this.mSubId == ani.mSubId && this.mPriority == ani.mPriority && this.mMccMncs != null && this.mMccMncs.equals(ani.mMccMncs) && this.mBands.equals(ani.mBands)) {
-                return true;
-            }
-            return false;
+            return o != null && this.mSubId == ani.mSubId && this.mPriority == ani.mPriority && this.mMccMncs != null && this.mMccMncs.equals(ani.mMccMncs) && this.mBands.equals(ani.mBands);
         } catch (ClassCastException e) {
             return false;
         }
     }
 
     public int hashCode() {
-        return Objects.hash(new Object[]{Integer.valueOf(this.mSubId), Integer.valueOf(this.mPriority), this.mMccMncs, this.mBands});
+        return Objects.hash(Integer.valueOf(this.mSubId), Integer.valueOf(this.mPriority), this.mMccMncs, this.mBands);
     }
 
     public String toString() {

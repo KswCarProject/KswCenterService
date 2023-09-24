@@ -1,13 +1,14 @@
 package android.app;
 
-import android.os.Bundle;
+import android.p007os.Bundle;
 import android.view.View;
 import android.widget.TabHost;
 import android.widget.TabWidget;
 import android.widget.TextView;
-import com.android.internal.R;
+import com.android.internal.C3132R;
 
 @Deprecated
+/* loaded from: classes.dex */
 public class TabActivity extends ActivityGroup {
     private String mDefaultTab = null;
     private int mDefaultTabIndex = -1;
@@ -23,26 +24,25 @@ public class TabActivity extends ActivityGroup {
         this.mDefaultTabIndex = index;
     }
 
-    /* access modifiers changed from: protected */
-    public void onRestoreInstanceState(Bundle state) {
+    @Override // android.app.Activity
+    protected void onRestoreInstanceState(Bundle state) {
         super.onRestoreInstanceState(state);
         ensureTabHost();
         String cur = state.getString("currentTab");
         if (cur != null) {
             this.mTabHost.setCurrentTabByTag(cur);
         }
-        if (this.mTabHost.getCurrentTab() >= 0) {
-            return;
-        }
-        if (this.mDefaultTab != null) {
-            this.mTabHost.setCurrentTabByTag(this.mDefaultTab);
-        } else if (this.mDefaultTabIndex >= 0) {
-            this.mTabHost.setCurrentTab(this.mDefaultTabIndex);
+        if (this.mTabHost.getCurrentTab() < 0) {
+            if (this.mDefaultTab != null) {
+                this.mTabHost.setCurrentTabByTag(this.mDefaultTab);
+            } else if (this.mDefaultTabIndex >= 0) {
+                this.mTabHost.setCurrentTab(this.mDefaultTabIndex);
+            }
         }
     }
 
-    /* access modifiers changed from: protected */
-    public void onPostCreate(Bundle icicle) {
+    @Override // android.app.Activity
+    protected void onPostCreate(Bundle icicle) {
         super.onPostCreate(icicle);
         ensureTabHost();
         if (this.mTabHost.getCurrentTab() == -1) {
@@ -50,8 +50,8 @@ public class TabActivity extends ActivityGroup {
         }
     }
 
-    /* access modifiers changed from: protected */
-    public void onSaveInstanceState(Bundle outState) {
+    @Override // android.app.ActivityGroup, android.app.Activity
+    protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         String currentTabTag = this.mTabHost.getCurrentTabTag();
         if (currentTabTag != null) {
@@ -59,24 +59,24 @@ public class TabActivity extends ActivityGroup {
         }
     }
 
+    @Override // android.app.Activity, android.view.Window.Callback
     public void onContentChanged() {
         super.onContentChanged();
         this.mTabHost = (TabHost) findViewById(16908306);
-        if (this.mTabHost != null) {
-            this.mTabHost.setup(getLocalActivityManager());
-            return;
+        if (this.mTabHost == null) {
+            throw new RuntimeException("Your content must have a TabHost whose id attribute is 'android.R.id.tabhost'");
         }
-        throw new RuntimeException("Your content must have a TabHost whose id attribute is 'android.R.id.tabhost'");
+        this.mTabHost.setup(getLocalActivityManager());
     }
 
     private void ensureTabHost() {
         if (this.mTabHost == null) {
-            setContentView((int) R.layout.tab_content);
+            setContentView(C3132R.layout.tab_content);
         }
     }
 
-    /* access modifiers changed from: protected */
-    public void onChildTitleChanged(Activity childActivity, CharSequence title) {
+    @Override // android.app.Activity
+    protected void onChildTitleChanged(Activity childActivity, CharSequence title) {
         View tabView;
         if (getLocalActivityManager().getCurrentActivity() == childActivity && (tabView = this.mTabHost.getCurrentTabView()) != null && (tabView instanceof TextView)) {
             ((TextView) tabView).setText(title);

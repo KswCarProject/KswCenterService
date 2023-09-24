@@ -4,30 +4,33 @@ import android.media.audiofx.AudioEffect;
 import android.util.Log;
 import java.util.StringTokenizer;
 
+/* loaded from: classes3.dex */
 public class BassBoost extends AudioEffect {
     public static final int PARAM_STRENGTH = 1;
     public static final int PARAM_STRENGTH_SUPPORTED = 0;
     private static final String TAG = "BassBoost";
-    private BaseParameterListener mBaseParamListener = null;
-    /* access modifiers changed from: private */
-    public OnParameterChangeListener mParamListener = null;
-    /* access modifiers changed from: private */
-    public final Object mParamListenerLock = new Object();
-    private boolean mStrengthSupported = false;
+    private BaseParameterListener mBaseParamListener;
+    private OnParameterChangeListener mParamListener;
+    private final Object mParamListenerLock;
+    private boolean mStrengthSupported;
 
+    /* loaded from: classes3.dex */
     public interface OnParameterChangeListener {
         void onParameterChange(BassBoost bassBoost, int i, int i2, short s);
     }
 
     public BassBoost(int priority, int audioSession) throws IllegalStateException, IllegalArgumentException, UnsupportedOperationException, RuntimeException {
         super(EFFECT_TYPE_BASS_BOOST, EFFECT_TYPE_NULL, priority, audioSession);
-        boolean z = false;
+        this.mStrengthSupported = false;
+        this.mParamListener = null;
+        this.mBaseParamListener = null;
+        this.mParamListenerLock = new Object();
         if (audioSession == 0) {
-            Log.w(TAG, "WARNING: attaching a BassBoost to global output mix is deprecated!");
+            Log.m64w(TAG, "WARNING: attaching a BassBoost to global output mix is deprecated!");
         }
         int[] value = new int[1];
         checkStatus(getParameter(0, value));
-        this.mStrengthSupported = value[0] != 0 ? true : z;
+        this.mStrengthSupported = value[0] != 0;
     }
 
     public boolean getStrengthSupported() {
@@ -44,10 +47,12 @@ public class BassBoost extends AudioEffect {
         return value[0];
     }
 
+    /* loaded from: classes3.dex */
     private class BaseParameterListener implements AudioEffect.OnParameterChangeListener {
         private BaseParameterListener() {
         }
 
+        @Override // android.media.audiofx.AudioEffect.OnParameterChangeListener
         public void onParameterChange(AudioEffect effect, int status, byte[] param, byte[] value) {
             OnParameterChangeListener l = null;
             synchronized (BassBoost.this.mParamListenerLock) {
@@ -81,6 +86,7 @@ public class BassBoost extends AudioEffect {
         }
     }
 
+    /* loaded from: classes3.dex */
     public static class Settings {
         public short strength;
 
@@ -89,30 +95,28 @@ public class BassBoost extends AudioEffect {
 
         public Settings(String settings) {
             StringTokenizer st = new StringTokenizer(settings, "=;");
-            int countTokens = st.countTokens();
-            if (st.countTokens() == 3) {
-                String key = st.nextToken();
-                if (key.equals(BassBoost.TAG)) {
-                    try {
-                        String key2 = st.nextToken();
-                        if (key2.equals("strength")) {
-                            this.strength = Short.parseShort(st.nextToken());
-                            return;
-                        }
-                        throw new IllegalArgumentException("invalid key name: " + key2);
-                    } catch (NumberFormatException e) {
-                        throw new IllegalArgumentException("invalid value for key: " + key);
-                    }
-                } else {
-                    throw new IllegalArgumentException("invalid settings for BassBoost: " + key);
-                }
-            } else {
+            st.countTokens();
+            if (st.countTokens() != 3) {
                 throw new IllegalArgumentException("settings: " + settings);
+            }
+            String key = st.nextToken();
+            if (!key.equals(BassBoost.TAG)) {
+                throw new IllegalArgumentException("invalid settings for BassBoost: " + key);
+            }
+            try {
+                String key2 = st.nextToken();
+                if (!key2.equals("strength")) {
+                    throw new IllegalArgumentException("invalid key name: " + key2);
+                }
+                this.strength = Short.parseShort(st.nextToken());
+            } catch (NumberFormatException e) {
+                throw new IllegalArgumentException("invalid value for key: " + key);
             }
         }
 
         public String toString() {
-            return new String("BassBoost;strength=" + Short.toString(this.strength));
+            String str = new String("BassBoost;strength=" + Short.toString(this.strength));
+            return str;
         }
     }
 

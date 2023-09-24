@@ -5,9 +5,11 @@ import android.text.InputFilter;
 import android.text.Spanned;
 import android.widget.TextView;
 
+/* loaded from: classes4.dex */
 public class TextViewInputDisabler {
     private InputFilter[] mDefaultFilters;
-    private InputFilter[] mNoInputFilters = {new InputFilter() {
+    private InputFilter[] mNoInputFilters = {new InputFilter() { // from class: com.android.internal.widget.TextViewInputDisabler.1
+        @Override // android.text.InputFilter
         public CharSequence filter(CharSequence source, int start, int end, Spanned dest, int dstart, int dend) {
             return "";
         }

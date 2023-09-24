@@ -4,6 +4,7 @@ import android.annotation.UnsupportedAppUsage;
 import android.content.Context;
 import android.media.SubtitleController;
 
+/* loaded from: classes3.dex */
 public class WebVttRenderer extends SubtitleController.Renderer {
     private final Context mContext;
     private WebVttRenderingWidget mRenderingWidget;
@@ -13,6 +14,7 @@ public class WebVttRenderer extends SubtitleController.Renderer {
         this.mContext = context;
     }
 
+    @Override // android.media.SubtitleController.Renderer
     public boolean supports(MediaFormat format) {
         if (format.containsKey(MediaFormat.KEY_MIME)) {
             return format.getString(MediaFormat.KEY_MIME).equals("text/vtt");
@@ -20,6 +22,7 @@ public class WebVttRenderer extends SubtitleController.Renderer {
         return false;
     }
 
+    @Override // android.media.SubtitleController.Renderer
     public SubtitleTrack createTrack(MediaFormat format) {
         if (this.mRenderingWidget == null) {
             this.mRenderingWidget = new WebVttRenderingWidget(this.mContext);

@@ -2,22 +2,24 @@ package android.printservice;
 
 import android.annotation.SystemApi;
 import android.content.ComponentName;
-import android.content.pm.ResolveInfo;
-import android.os.Parcel;
-import android.os.Parcelable;
+import android.content.Context;
+import android.content.p002pm.PackageManager;
+import android.content.p002pm.ResolveInfo;
+import android.content.res.Resources;
+import android.content.res.TypedArray;
+import android.content.res.XmlResourceParser;
+import android.p007os.Parcel;
+import android.p007os.Parcelable;
+import android.util.AttributeSet;
+import android.util.Log;
+import android.util.Xml;
+import com.android.internal.C3132R;
+import java.io.IOException;
+import org.xmlpull.v1.XmlPullParserException;
 
 @SystemApi
+/* loaded from: classes3.dex */
 public final class PrintServiceInfo implements Parcelable {
-    public static final Parcelable.Creator<PrintServiceInfo> CREATOR = new Parcelable.Creator<PrintServiceInfo>() {
-        public PrintServiceInfo createFromParcel(Parcel parcel) {
-            return new PrintServiceInfo(parcel);
-        }
-
-        public PrintServiceInfo[] newArray(int size) {
-            return new PrintServiceInfo[size];
-        }
-    };
-    private static final String LOG_TAG = PrintServiceInfo.class.getSimpleName();
     private static final String TAG_PRINT_SERVICE = "print-service";
     private final String mAddPrintersActivityName;
     private final String mAdvancedPrintOptionsActivityName;
@@ -25,11 +27,25 @@ public final class PrintServiceInfo implements Parcelable {
     private boolean mIsEnabled;
     private final ResolveInfo mResolveInfo;
     private final String mSettingsActivityName;
+    private static final String LOG_TAG = PrintServiceInfo.class.getSimpleName();
+    public static final Parcelable.Creator<PrintServiceInfo> CREATOR = new Parcelable.Creator<PrintServiceInfo>() { // from class: android.printservice.PrintServiceInfo.1
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
+        public PrintServiceInfo createFromParcel(Parcel parcel) {
+            return new PrintServiceInfo(parcel);
+        }
+
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
+        public PrintServiceInfo[] newArray(int size) {
+            return new PrintServiceInfo[size];
+        }
+    };
 
     public PrintServiceInfo(Parcel parcel) {
         this.mId = parcel.readString();
         this.mIsEnabled = parcel.readByte() != 0;
-        this.mResolveInfo = (ResolveInfo) parcel.readParcelable((ClassLoader) null);
+        this.mResolveInfo = (ResolveInfo) parcel.readParcelable(null);
         this.mSettingsActivityName = parcel.readString();
         this.mAddPrintersActivityName = parcel.readString();
         this.mAdvancedPrintOptionsActivityName = parcel.readString();
@@ -47,115 +63,57 @@ public final class PrintServiceInfo implements Parcelable {
         return new ComponentName(this.mResolveInfo.serviceInfo.packageName, this.mResolveInfo.serviceInfo.name);
     }
 
-    /* JADX WARNING: Code restructure failed: missing block: B:13:0x005a, code lost:
-        if (r3 != null) goto L_0x005c;
+    /* JADX WARN: Code restructure failed: missing block: B:28:0x00b1, code lost:
+        if (r3 == null) goto L34;
      */
-    /* JADX WARNING: Code restructure failed: missing block: B:27:0x00b1, code lost:
-        if (r3 == null) goto L_0x00ba;
-     */
-    /* Code decompiled incorrectly, please refer to instructions dump. */
-    public static android.printservice.PrintServiceInfo create(android.content.Context r12, android.content.pm.ResolveInfo r13) {
-        /*
-            r0 = 0
-            r1 = 0
-            r2 = 0
-            r3 = 0
-            android.content.pm.PackageManager r4 = r12.getPackageManager()
-            android.content.pm.ServiceInfo r5 = r13.serviceInfo
-            java.lang.String r6 = "android.printservice"
-            android.content.res.XmlResourceParser r3 = r5.loadXmlMetaData(r4, r6)
-            if (r3 == 0) goto L_0x00ba
-            r5 = 0
-            r6 = r5
-        L_0x0014:
-            r7 = 1
-            if (r6 == r7) goto L_0x0020
-            r8 = 2
-            if (r6 == r8) goto L_0x0020
-            int r7 = r3.next()     // Catch:{ IOException -> 0x009a, XmlPullParserException -> 0x0080, NameNotFoundException -> 0x0062 }
-            r6 = r7
-            goto L_0x0014
-        L_0x0020:
-            java.lang.String r8 = r3.getName()     // Catch:{ IOException -> 0x009a, XmlPullParserException -> 0x0080, NameNotFoundException -> 0x0062 }
-            java.lang.String r9 = "print-service"
-            boolean r9 = r9.equals(r8)     // Catch:{ IOException -> 0x009a, XmlPullParserException -> 0x0080, NameNotFoundException -> 0x0062 }
-            if (r9 != 0) goto L_0x0035
-            java.lang.String r5 = LOG_TAG     // Catch:{ IOException -> 0x009a, XmlPullParserException -> 0x0080, NameNotFoundException -> 0x0062 }
-            java.lang.String r7 = "Ignoring meta-data that does not start with print-service tag"
-            android.util.Log.e(r5, r7)     // Catch:{ IOException -> 0x009a, XmlPullParserException -> 0x0080, NameNotFoundException -> 0x0062 }
-            goto L_0x005a
-        L_0x0035:
-            android.content.pm.ServiceInfo r9 = r13.serviceInfo     // Catch:{ IOException -> 0x009a, XmlPullParserException -> 0x0080, NameNotFoundException -> 0x0062 }
-            android.content.pm.ApplicationInfo r9 = r9.applicationInfo     // Catch:{ IOException -> 0x009a, XmlPullParserException -> 0x0080, NameNotFoundException -> 0x0062 }
-            android.content.res.Resources r9 = r4.getResourcesForApplication((android.content.pm.ApplicationInfo) r9)     // Catch:{ IOException -> 0x009a, XmlPullParserException -> 0x0080, NameNotFoundException -> 0x0062 }
-            android.util.AttributeSet r10 = android.util.Xml.asAttributeSet(r3)     // Catch:{ IOException -> 0x009a, XmlPullParserException -> 0x0080, NameNotFoundException -> 0x0062 }
-            int[] r11 = com.android.internal.R.styleable.PrintService     // Catch:{ IOException -> 0x009a, XmlPullParserException -> 0x0080, NameNotFoundException -> 0x0062 }
-            android.content.res.TypedArray r11 = r9.obtainAttributes(r10, r11)     // Catch:{ IOException -> 0x009a, XmlPullParserException -> 0x0080, NameNotFoundException -> 0x0062 }
-            java.lang.String r5 = r11.getString(r5)     // Catch:{ IOException -> 0x009a, XmlPullParserException -> 0x0080, NameNotFoundException -> 0x0062 }
-            r0 = r5
-            java.lang.String r5 = r11.getString(r7)     // Catch:{ IOException -> 0x009a, XmlPullParserException -> 0x0080, NameNotFoundException -> 0x0062 }
-            r1 = r5
-            r5 = 3
-            java.lang.String r5 = r11.getString(r5)     // Catch:{ IOException -> 0x009a, XmlPullParserException -> 0x0080, NameNotFoundException -> 0x0062 }
-            r2 = r5
-            r11.recycle()     // Catch:{ IOException -> 0x009a, XmlPullParserException -> 0x0080, NameNotFoundException -> 0x0062 }
-        L_0x005a:
-            if (r3 == 0) goto L_0x00ba
-        L_0x005c:
-            r3.close()
-            goto L_0x00ba
-        L_0x0060:
-            r5 = move-exception
-            goto L_0x00b4
-        L_0x0062:
-            r5 = move-exception
-            java.lang.String r6 = LOG_TAG     // Catch:{ all -> 0x0060 }
-            java.lang.StringBuilder r7 = new java.lang.StringBuilder     // Catch:{ all -> 0x0060 }
-            r7.<init>()     // Catch:{ all -> 0x0060 }
-            java.lang.String r8 = "Unable to load resources for: "
-            r7.append(r8)     // Catch:{ all -> 0x0060 }
-            android.content.pm.ServiceInfo r8 = r13.serviceInfo     // Catch:{ all -> 0x0060 }
-            java.lang.String r8 = r8.packageName     // Catch:{ all -> 0x0060 }
-            r7.append(r8)     // Catch:{ all -> 0x0060 }
-            java.lang.String r7 = r7.toString()     // Catch:{ all -> 0x0060 }
-            android.util.Log.e(r6, r7)     // Catch:{ all -> 0x0060 }
-            if (r3 == 0) goto L_0x00ba
-            goto L_0x005c
-        L_0x0080:
-            r5 = move-exception
-            java.lang.String r6 = LOG_TAG     // Catch:{ all -> 0x0060 }
-            java.lang.StringBuilder r7 = new java.lang.StringBuilder     // Catch:{ all -> 0x0060 }
-            r7.<init>()     // Catch:{ all -> 0x0060 }
-            java.lang.String r8 = "Error reading meta-data:"
-            r7.append(r8)     // Catch:{ all -> 0x0060 }
-            r7.append(r5)     // Catch:{ all -> 0x0060 }
-            java.lang.String r7 = r7.toString()     // Catch:{ all -> 0x0060 }
-            android.util.Log.w((java.lang.String) r6, (java.lang.String) r7)     // Catch:{ all -> 0x0060 }
-            if (r3 == 0) goto L_0x00ba
-            goto L_0x005c
-        L_0x009a:
-            r5 = move-exception
-            java.lang.String r6 = LOG_TAG     // Catch:{ all -> 0x0060 }
-            java.lang.StringBuilder r7 = new java.lang.StringBuilder     // Catch:{ all -> 0x0060 }
-            r7.<init>()     // Catch:{ all -> 0x0060 }
-            java.lang.String r8 = "Error reading meta-data:"
-            r7.append(r8)     // Catch:{ all -> 0x0060 }
-            r7.append(r5)     // Catch:{ all -> 0x0060 }
-            java.lang.String r7 = r7.toString()     // Catch:{ all -> 0x0060 }
-            android.util.Log.w((java.lang.String) r6, (java.lang.String) r7)     // Catch:{ all -> 0x0060 }
-            if (r3 == 0) goto L_0x00ba
-            goto L_0x005c
-        L_0x00b4:
-            if (r3 == 0) goto L_0x00b9
-            r3.close()
-        L_0x00b9:
-            throw r5
-        L_0x00ba:
-            android.printservice.PrintServiceInfo r5 = new android.printservice.PrintServiceInfo
-            r5.<init>(r13, r0, r1, r2)
-            return r5
-        */
-        throw new UnsupportedOperationException("Method not decompiled: android.printservice.PrintServiceInfo.create(android.content.Context, android.content.pm.ResolveInfo):android.printservice.PrintServiceInfo");
+    /*
+        Code decompiled incorrectly, please refer to instructions dump.
+    */
+    public static PrintServiceInfo create(Context context, ResolveInfo resolveInfo) {
+        String settingsActivityName = null;
+        String addPrintersActivityName = null;
+        String advancedPrintOptionsActivityName = null;
+        PackageManager packageManager = context.getPackageManager();
+        XmlResourceParser parser = resolveInfo.serviceInfo.loadXmlMetaData(packageManager, PrintService.SERVICE_META_DATA);
+        if (parser != null) {
+            for (int type = 0; type != 1 && type != 2; type = parser.next()) {
+                try {
+                    try {
+                        try {
+                            try {
+                            } catch (PackageManager.NameNotFoundException e) {
+                                Log.m70e(LOG_TAG, "Unable to load resources for: " + resolveInfo.serviceInfo.packageName);
+                                if (parser != null) {
+                                }
+                            }
+                        } catch (XmlPullParserException xppe) {
+                            Log.m64w(LOG_TAG, "Error reading meta-data:" + xppe);
+                            if (parser != null) {
+                            }
+                        }
+                    } catch (IOException ioe) {
+                        Log.m64w(LOG_TAG, "Error reading meta-data:" + ioe);
+                    }
+                } finally {
+                    if (parser != null) {
+                        parser.close();
+                    }
+                }
+            }
+            String nodeName = parser.getName();
+            if (TAG_PRINT_SERVICE.equals(nodeName)) {
+                Resources resources = packageManager.getResourcesForApplication(resolveInfo.serviceInfo.applicationInfo);
+                AttributeSet allAttributes = Xml.asAttributeSet(parser);
+                TypedArray attributes = resources.obtainAttributes(allAttributes, C3132R.styleable.PrintService);
+                settingsActivityName = attributes.getString(0);
+                addPrintersActivityName = attributes.getString(1);
+                advancedPrintOptionsActivityName = attributes.getString(3);
+                attributes.recycle();
+            } else {
+                Log.m70e(LOG_TAG, "Ignoring meta-data that does not start with print-service tag");
+            }
+        }
+        return new PrintServiceInfo(resolveInfo, settingsActivityName, addPrintersActivityName, advancedPrintOptionsActivityName);
     }
 
     public String getId() {
@@ -186,13 +144,15 @@ public final class PrintServiceInfo implements Parcelable {
         return this.mAdvancedPrintOptionsActivityName;
     }
 
+    @Override // android.p007os.Parcelable
     public int describeContents() {
         return 0;
     }
 
+    @Override // android.p007os.Parcelable
     public void writeToParcel(Parcel parcel, int flagz) {
         parcel.writeString(this.mId);
-        parcel.writeByte(this.mIsEnabled ? (byte) 1 : 0);
+        parcel.writeByte(this.mIsEnabled ? (byte) 1 : (byte) 0);
         parcel.writeParcelable(this.mResolveInfo, 0);
         parcel.writeString(this.mSettingsActivityName);
         parcel.writeString(this.mAddPrintersActivityName);
@@ -222,6 +182,6 @@ public final class PrintServiceInfo implements Parcelable {
     }
 
     public String toString() {
-        return "PrintServiceInfo{" + "id=" + this.mId + "isEnabled=" + this.mIsEnabled + ", resolveInfo=" + this.mResolveInfo + ", settingsActivityName=" + this.mSettingsActivityName + ", addPrintersActivityName=" + this.mAddPrintersActivityName + ", advancedPrintOptionsActivityName=" + this.mAdvancedPrintOptionsActivityName + "}";
+        return "PrintServiceInfo{id=" + this.mId + "isEnabled=" + this.mIsEnabled + ", resolveInfo=" + this.mResolveInfo + ", settingsActivityName=" + this.mSettingsActivityName + ", addPrintersActivityName=" + this.mAddPrintersActivityName + ", advancedPrintOptionsActivityName=" + this.mAdvancedPrintOptionsActivityName + "}";
     }
 }

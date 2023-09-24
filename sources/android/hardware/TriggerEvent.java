@@ -1,5 +1,6 @@
 package android.hardware;
 
+/* loaded from: classes.dex */
 public final class TriggerEvent {
     public Sensor sensor;
     public long timestamp;

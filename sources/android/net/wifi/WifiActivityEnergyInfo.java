@@ -1,15 +1,28 @@
 package android.net.wifi;
 
-import android.os.Parcel;
-import android.os.Parcelable;
+import android.p007os.Parcel;
+import android.p007os.Parcelable;
 import java.util.Arrays;
 
+/* loaded from: classes3.dex */
 public final class WifiActivityEnergyInfo implements Parcelable {
-    public static final Parcelable.Creator<WifiActivityEnergyInfo> CREATOR = new Parcelable.Creator<WifiActivityEnergyInfo>() {
+    public static final Parcelable.Creator<WifiActivityEnergyInfo> CREATOR = new Parcelable.Creator<WifiActivityEnergyInfo>() { // from class: android.net.wifi.WifiActivityEnergyInfo.1
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public WifiActivityEnergyInfo createFromParcel(Parcel in) {
-            return new WifiActivityEnergyInfo(in.readLong(), in.readInt(), in.readLong(), in.createLongArray(), in.readLong(), in.readLong(), in.readLong(), in.readLong());
+            long timestamp = in.readLong();
+            int stackState = in.readInt();
+            long txTime = in.readLong();
+            long[] txTimePerLevel = in.createLongArray();
+            long rxTime = in.readLong();
+            long scanTime = in.readLong();
+            long idleTime = in.readLong();
+            long energyUsed = in.readLong();
+            return new WifiActivityEnergyInfo(timestamp, stackState, txTime, txTimePerLevel, rxTime, scanTime, idleTime, energyUsed);
         }
 
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public WifiActivityEnergyInfo[] newArray(int size) {
             return new WifiActivityEnergyInfo[size];
         }
@@ -42,6 +55,7 @@ public final class WifiActivityEnergyInfo implements Parcelable {
         return "WifiActivityEnergyInfo{ timestamp=" + this.mTimestamp + " mStackState=" + this.mStackState + " mControllerTxTimeMs=" + this.mControllerTxTimeMs + " mControllerTxTimePerLevelMs=" + Arrays.toString(this.mControllerTxTimePerLevelMs) + " mControllerRxTimeMs=" + this.mControllerRxTimeMs + " mControllerScanTimeMs=" + this.mControllerScanTimeMs + " mControllerIdleTimeMs=" + this.mControllerIdleTimeMs + " mControllerEnergyUsed=" + this.mControllerEnergyUsed + " }";
     }
 
+    @Override // android.p007os.Parcelable
     public void writeToParcel(Parcel out, int flags) {
         out.writeLong(this.mTimestamp);
         out.writeInt(this.mStackState);
@@ -53,6 +67,7 @@ public final class WifiActivityEnergyInfo implements Parcelable {
         out.writeLong(this.mControllerEnergyUsed);
     }
 
+    @Override // android.p007os.Parcelable
     public int describeContents() {
         return 0;
     }
@@ -69,7 +84,7 @@ public final class WifiActivityEnergyInfo implements Parcelable {
         if (level < this.mControllerTxTimePerLevelMs.length) {
             return this.mControllerTxTimePerLevelMs[level];
         }
-        return 0;
+        return 0L;
     }
 
     public long getControllerRxTimeMillis() {

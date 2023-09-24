@@ -3,6 +3,7 @@ package android.hardware.camera2.params;
 import android.graphics.Point;
 import android.graphics.Rect;
 
+/* loaded from: classes.dex */
 public final class Face {
     public static final int ID_UNSUPPORTED = -1;
     public static final int SCORE_MAX = 100;
@@ -18,25 +19,25 @@ public final class Face {
         checkNotNull("bounds", bounds);
         if (score < 1 || score > 100) {
             throw new IllegalArgumentException("Confidence out of range");
-        } else if (id >= 0 || id == -1) {
-            if (id == -1) {
-                checkNull("leftEyePosition", leftEyePosition);
-                checkNull("rightEyePosition", rightEyePosition);
-                checkNull("mouthPosition", mouthPosition);
-            }
-            this.mBounds = bounds;
-            this.mScore = score;
-            this.mId = id;
-            this.mLeftEye = leftEyePosition;
-            this.mRightEye = rightEyePosition;
-            this.mMouth = mouthPosition;
-        } else {
+        }
+        if (id < 0 && id != -1) {
             throw new IllegalArgumentException("Id out of range");
         }
+        if (id == -1) {
+            checkNull("leftEyePosition", leftEyePosition);
+            checkNull("rightEyePosition", rightEyePosition);
+            checkNull("mouthPosition", mouthPosition);
+        }
+        this.mBounds = bounds;
+        this.mScore = score;
+        this.mId = id;
+        this.mLeftEye = leftEyePosition;
+        this.mRightEye = rightEyePosition;
+        this.mMouth = mouthPosition;
     }
 
     public Face(Rect bounds, int score) {
-        this(bounds, score, -1, (Point) null, (Point) null, (Point) null);
+        this(bounds, score, -1, null, null, null);
     }
 
     public Rect getBounds() {
@@ -64,7 +65,7 @@ public final class Face {
     }
 
     public String toString() {
-        return String.format("{ bounds: %s, score: %s, id: %d, leftEyePosition: %s, rightEyePosition: %s, mouthPosition: %s }", new Object[]{this.mBounds, Integer.valueOf(this.mScore), Integer.valueOf(this.mId), this.mLeftEye, this.mRightEye, this.mMouth});
+        return String.format("{ bounds: %s, score: %s, id: %d, leftEyePosition: %s, rightEyePosition: %s, mouthPosition: %s }", this.mBounds, Integer.valueOf(this.mScore), Integer.valueOf(this.mId), this.mLeftEye, this.mRightEye, this.mMouth);
     }
 
     private static void checkNotNull(String name, Object obj) {

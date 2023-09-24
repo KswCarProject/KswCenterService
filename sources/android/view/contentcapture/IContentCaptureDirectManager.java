@@ -1,25 +1,30 @@
 package android.view.contentcapture;
 
 import android.content.ContentCaptureOptions;
-import android.content.pm.ParceledListSlice;
-import android.os.Binder;
-import android.os.IBinder;
-import android.os.IInterface;
-import android.os.Parcel;
-import android.os.RemoteException;
+import android.content.p002pm.ParceledListSlice;
+import android.p007os.Binder;
+import android.p007os.IBinder;
+import android.p007os.IInterface;
+import android.p007os.Parcel;
+import android.p007os.RemoteException;
 
+/* loaded from: classes4.dex */
 public interface IContentCaptureDirectManager extends IInterface {
     void sendEvents(ParceledListSlice parceledListSlice, int i, ContentCaptureOptions contentCaptureOptions) throws RemoteException;
 
+    /* loaded from: classes4.dex */
     public static class Default implements IContentCaptureDirectManager {
+        @Override // android.view.contentcapture.IContentCaptureDirectManager
         public void sendEvents(ParceledListSlice events, int reason, ContentCaptureOptions options) throws RemoteException {
         }
 
+        @Override // android.p007os.IInterface
         public IBinder asBinder() {
             return null;
         }
     }
 
+    /* loaded from: classes4.dex */
     public static abstract class Stub extends Binder implements IContentCaptureDirectManager {
         private static final String DESCRIPTOR = "android.view.contentcapture.IContentCaptureDirectManager";
         static final int TRANSACTION_sendEvents = 1;
@@ -33,51 +38,52 @@ public interface IContentCaptureDirectManager extends IInterface {
                 return null;
             }
             IInterface iin = obj.queryLocalInterface(DESCRIPTOR);
-            if (iin == null || !(iin instanceof IContentCaptureDirectManager)) {
-                return new Proxy(obj);
+            if (iin != null && (iin instanceof IContentCaptureDirectManager)) {
+                return (IContentCaptureDirectManager) iin;
             }
-            return (IContentCaptureDirectManager) iin;
+            return new Proxy(obj);
         }
 
+        @Override // android.p007os.IInterface
         public IBinder asBinder() {
             return this;
         }
 
         public static String getDefaultTransactionName(int transactionCode) {
-            if (transactionCode != 1) {
-                return null;
+            if (transactionCode == 1) {
+                return "sendEvents";
             }
-            return "sendEvents";
+            return null;
         }
 
+        @Override // android.p007os.Binder
         public String getTransactionName(int transactionCode) {
             return getDefaultTransactionName(transactionCode);
         }
 
+        @Override // android.p007os.Binder
         public boolean onTransact(int code, Parcel data, Parcel reply, int flags) throws RemoteException {
             ParceledListSlice _arg0;
-            if (code == 1) {
-                data.enforceInterface(DESCRIPTOR);
-                ContentCaptureOptions _arg2 = null;
-                if (data.readInt() != 0) {
-                    _arg0 = ParceledListSlice.CREATOR.createFromParcel(data);
-                } else {
-                    _arg0 = null;
+            if (code != 1) {
+                if (code == 1598968902) {
+                    reply.writeString(DESCRIPTOR);
+                    return true;
                 }
-                int _arg1 = data.readInt();
-                if (data.readInt() != 0) {
-                    _arg2 = ContentCaptureOptions.CREATOR.createFromParcel(data);
-                }
-                sendEvents(_arg0, _arg1, _arg2);
-                return true;
-            } else if (code != 1598968902) {
                 return super.onTransact(code, data, reply, flags);
-            } else {
-                reply.writeString(DESCRIPTOR);
-                return true;
             }
+            data.enforceInterface(DESCRIPTOR);
+            if (data.readInt() != 0) {
+                _arg0 = ParceledListSlice.CREATOR.createFromParcel(data);
+            } else {
+                _arg0 = null;
+            }
+            int _arg1 = data.readInt();
+            ContentCaptureOptions _arg2 = data.readInt() != 0 ? ContentCaptureOptions.CREATOR.createFromParcel(data) : null;
+            sendEvents(_arg0, _arg1, _arg2);
+            return true;
         }
 
+        /* loaded from: classes4.dex */
         private static class Proxy implements IContentCaptureDirectManager {
             public static IContentCaptureDirectManager sDefaultImpl;
             private IBinder mRemote;
@@ -86,6 +92,7 @@ public interface IContentCaptureDirectManager extends IInterface {
                 this.mRemote = remote;
             }
 
+            @Override // android.p007os.IInterface
             public IBinder asBinder() {
                 return this.mRemote;
             }
@@ -94,6 +101,7 @@ public interface IContentCaptureDirectManager extends IInterface {
                 return Stub.DESCRIPTOR;
             }
 
+            @Override // android.view.contentcapture.IContentCaptureDirectManager
             public void sendEvents(ParceledListSlice events, int reason, ContentCaptureOptions options) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
@@ -111,9 +119,8 @@ public interface IContentCaptureDirectManager extends IInterface {
                     } else {
                         _data.writeInt(0);
                     }
-                    if (this.mRemote.transact(1, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    boolean _status = this.mRemote.transact(1, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().sendEvents(events, reason, options);
                     }
                 } finally {
@@ -123,11 +130,11 @@ public interface IContentCaptureDirectManager extends IInterface {
         }
 
         public static boolean setDefaultImpl(IContentCaptureDirectManager impl) {
-            if (Proxy.sDefaultImpl != null || impl == null) {
-                return false;
+            if (Proxy.sDefaultImpl == null && impl != null) {
+                Proxy.sDefaultImpl = impl;
+                return true;
             }
-            Proxy.sDefaultImpl = impl;
-            return true;
+            return false;
         }
 
         public static IContentCaptureDirectManager getDefaultImpl() {

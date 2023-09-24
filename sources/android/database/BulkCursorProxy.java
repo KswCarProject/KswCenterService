@@ -1,12 +1,13 @@
 package android.database;
 
 import android.annotation.UnsupportedAppUsage;
-import android.os.Bundle;
-import android.os.IBinder;
-import android.os.Parcel;
-import android.os.RemoteException;
+import android.p007os.Bundle;
+import android.p007os.IBinder;
+import android.p007os.Parcel;
+import android.p007os.RemoteException;
 
-/* compiled from: BulkCursorNative */
+/* compiled from: BulkCursorNative.java */
+/* loaded from: classes.dex */
 final class BulkCursorProxy implements IBulkCursor {
     private Bundle mExtras = null;
     @UnsupportedAppUsage
@@ -16,10 +17,12 @@ final class BulkCursorProxy implements IBulkCursor {
         this.mRemote = remote;
     }
 
+    @Override // android.p007os.IInterface
     public IBinder asBinder() {
         return this.mRemote;
     }
 
+    @Override // android.database.IBulkCursor
     public CursorWindow getWindow(int position) throws RemoteException {
         Parcel data = Parcel.obtain();
         Parcel reply = Parcel.obtain();
@@ -39,6 +42,7 @@ final class BulkCursorProxy implements IBulkCursor {
         }
     }
 
+    @Override // android.database.IBulkCursor
     public void onMove(int position) throws RemoteException {
         Parcel data = Parcel.obtain();
         Parcel reply = Parcel.obtain();
@@ -53,6 +57,7 @@ final class BulkCursorProxy implements IBulkCursor {
         }
     }
 
+    @Override // android.database.IBulkCursor
     public void deactivate() throws RemoteException {
         Parcel data = Parcel.obtain();
         Parcel reply = Parcel.obtain();
@@ -66,6 +71,7 @@ final class BulkCursorProxy implements IBulkCursor {
         }
     }
 
+    @Override // android.database.IBulkCursor
     public void close() throws RemoteException {
         Parcel data = Parcel.obtain();
         Parcel reply = Parcel.obtain();
@@ -79,6 +85,7 @@ final class BulkCursorProxy implements IBulkCursor {
         }
     }
 
+    @Override // android.database.IBulkCursor
     public int requery(IContentObserver observer) throws RemoteException {
         int count;
         Parcel data = Parcel.obtain();
@@ -101,6 +108,7 @@ final class BulkCursorProxy implements IBulkCursor {
         }
     }
 
+    @Override // android.database.IBulkCursor
     public Bundle getExtras() throws RemoteException {
         if (this.mExtras == null) {
             Parcel data = Parcel.obtain();
@@ -118,6 +126,7 @@ final class BulkCursorProxy implements IBulkCursor {
         return this.mExtras;
     }
 
+    @Override // android.database.IBulkCursor
     public Bundle respond(Bundle extras) throws RemoteException {
         Parcel data = Parcel.obtain();
         Parcel reply = Parcel.obtain();
@@ -126,7 +135,8 @@ final class BulkCursorProxy implements IBulkCursor {
             data.writeBundle(extras);
             this.mRemote.transact(6, data, reply, 0);
             DatabaseUtils.readExceptionFromParcel(reply);
-            return reply.readBundle();
+            Bundle returnExtras = reply.readBundle();
+            return returnExtras;
         } finally {
             data.recycle();
             reply.recycle();

@@ -2,21 +2,22 @@ package android.location;
 
 import android.annotation.UnsupportedAppUsage;
 import android.location.ICountryListener;
-import android.os.Handler;
-import android.os.Looper;
-import android.os.RemoteException;
+import android.p007os.Handler;
+import android.p007os.Looper;
+import android.p007os.RemoteException;
 import android.util.Log;
 import java.util.HashMap;
 
+/* loaded from: classes.dex */
 public class CountryDetector {
     private static final String TAG = "CountryDetector";
     private final HashMap<CountryListener, ListenerTransport> mListeners = new HashMap<>();
     private final ICountryDetector mService;
 
+    /* loaded from: classes.dex */
     private static final class ListenerTransport extends ICountryListener.Stub {
         private final Handler mHandler;
-        /* access modifiers changed from: private */
-        public final CountryListener mListener;
+        private final CountryListener mListener;
 
         public ListenerTransport(CountryListener listener, Looper looper) {
             this.mListener = listener;
@@ -27,8 +28,10 @@ public class CountryDetector {
             }
         }
 
+        @Override // android.location.ICountryListener
         public void onCountryDetected(final Country country) {
-            this.mHandler.post(new Runnable() {
+            this.mHandler.post(new Runnable() { // from class: android.location.CountryDetector.ListenerTransport.1
+                @Override // java.lang.Runnable
                 public void run() {
                     ListenerTransport.this.mListener.onCountryDetected(country);
                 }
@@ -46,7 +49,7 @@ public class CountryDetector {
         try {
             return this.mService.detectCountry();
         } catch (RemoteException e) {
-            Log.e(TAG, "detectCountry: RemoteException", e);
+            Log.m69e(TAG, "detectCountry: RemoteException", e);
             return null;
         }
     }
@@ -60,7 +63,7 @@ public class CountryDetector {
                     this.mService.addCountryListener(transport);
                     this.mListeners.put(listener, transport);
                 } catch (RemoteException e) {
-                    Log.e(TAG, "addCountryListener: RemoteException", e);
+                    Log.m69e(TAG, "addCountryListener: RemoteException", e);
                 }
             }
         }
@@ -75,7 +78,7 @@ public class CountryDetector {
                     this.mListeners.remove(listener);
                     this.mService.removeCountryListener(transport);
                 } catch (RemoteException e) {
-                    Log.e(TAG, "removeCountryListener: RemoteException", e);
+                    Log.m69e(TAG, "removeCountryListener: RemoteException", e);
                 }
             }
         }

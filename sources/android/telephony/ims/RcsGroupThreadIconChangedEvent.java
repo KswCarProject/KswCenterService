@@ -4,6 +4,7 @@ import android.net.Uri;
 import android.telephony.ims.RcsControllerCall;
 import android.telephony.ims.aidl.IRcs;
 
+/* loaded from: classes4.dex */
 public final class RcsGroupThreadIconChangedEvent extends RcsGroupThreadEvent {
     private final Uri mNewIcon;
 
@@ -16,11 +17,14 @@ public final class RcsGroupThreadIconChangedEvent extends RcsGroupThreadEvent {
         return this.mNewIcon;
     }
 
-    /* access modifiers changed from: package-private */
-    public void persist(RcsControllerCall rcsControllerCall) throws RcsMessageStoreException {
-        rcsControllerCall.call(new RcsControllerCall.RcsServiceCall() {
+    @Override // android.telephony.ims.RcsEvent
+    void persist(RcsControllerCall rcsControllerCall) throws RcsMessageStoreException {
+        rcsControllerCall.call(new RcsControllerCall.RcsServiceCall() { // from class: android.telephony.ims.-$$Lambda$RcsGroupThreadIconChangedEvent$XfKd9jzuhr_hAT3mvSOBgWj08Js
+            @Override // android.telephony.ims.RcsControllerCall.RcsServiceCall
             public final Object methodOnIRcs(IRcs iRcs, String str) {
-                return Integer.valueOf(iRcs.createGroupThreadIconChangedEvent(RcsGroupThreadIconChangedEvent.this.getTimestamp(), RcsGroupThreadIconChangedEvent.this.getRcsGroupThread().getThreadId(), RcsGroupThreadIconChangedEvent.this.getOriginatingParticipant().getId(), RcsGroupThreadIconChangedEvent.this.mNewIcon, str));
+                Integer valueOf;
+                valueOf = Integer.valueOf(iRcs.createGroupThreadIconChangedEvent(r0.getTimestamp(), r0.getRcsGroupThread().getThreadId(), r0.getOriginatingParticipant().getId(), RcsGroupThreadIconChangedEvent.this.mNewIcon, str));
+                return valueOf;
             }
         });
     }

@@ -1,12 +1,13 @@
 package android.telephony;
 
 import android.annotation.SystemApi;
-import android.os.RemoteException;
+import android.p007os.RemoteException;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.ref.WeakReference;
 
 @SystemApi
+/* loaded from: classes.dex */
 public class NetworkServiceCallback {
     public static final int RESULT_ERROR_BUSY = 3;
     public static final int RESULT_ERROR_FAILED = 5;
@@ -18,6 +19,7 @@ public class NetworkServiceCallback {
     private final WeakReference<INetworkServiceCallback> mCallback;
 
     @Retention(RetentionPolicy.SOURCE)
+    /* loaded from: classes.dex */
     public @interface Result {
     }
 
@@ -26,15 +28,16 @@ public class NetworkServiceCallback {
     }
 
     public void onRequestNetworkRegistrationInfoComplete(int result, NetworkRegistrationInfo state) {
-        INetworkServiceCallback callback = (INetworkServiceCallback) this.mCallback.get();
+        INetworkServiceCallback callback = this.mCallback.get();
         if (callback != null) {
             try {
                 callback.onRequestNetworkRegistrationInfoComplete(result, state);
+                return;
             } catch (RemoteException e) {
-                Rlog.e(mTag, "Failed to onRequestNetworkRegistrationInfoComplete on the remote");
+                Rlog.m86e(mTag, "Failed to onRequestNetworkRegistrationInfoComplete on the remote");
+                return;
             }
-        } else {
-            Rlog.e(mTag, "Weak reference of callback is null.");
         }
+        Rlog.m86e(mTag, "Weak reference of callback is null.");
     }
 }

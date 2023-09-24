@@ -1,16 +1,30 @@
 package com.android.internal.widget;
 
-import android.os.Parcel;
-import android.os.Parcelable;
+import android.p007os.Parcel;
+import android.p007os.Parcelable;
 import android.service.gatekeeper.GateKeeperResponse;
 import android.util.Slog;
 
+/* loaded from: classes4.dex */
 public final class VerifyCredentialResponse implements Parcelable {
-    public static final Parcelable.Creator<VerifyCredentialResponse> CREATOR = new Parcelable.Creator<VerifyCredentialResponse>() {
+    public static final int RESPONSE_ERROR = -1;
+    public static final int RESPONSE_OK = 0;
+    public static final int RESPONSE_RETRY = 1;
+    private static final String TAG = "VerifyCredentialResponse";
+    private byte[] mPayload;
+    private int mResponseCode;
+    private int mTimeout;
+
+    /* renamed from: OK */
+    public static final VerifyCredentialResponse f2498OK = new VerifyCredentialResponse();
+    public static final VerifyCredentialResponse ERROR = new VerifyCredentialResponse(-1, 0, null);
+    public static final Parcelable.Creator<VerifyCredentialResponse> CREATOR = new Parcelable.Creator<VerifyCredentialResponse>() { // from class: com.android.internal.widget.VerifyCredentialResponse.1
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public VerifyCredentialResponse createFromParcel(Parcel source) {
             int size;
             int responseCode = source.readInt();
-            VerifyCredentialResponse response = new VerifyCredentialResponse(responseCode, 0, (byte[]) null);
+            VerifyCredentialResponse response = new VerifyCredentialResponse(responseCode, 0, null);
             if (responseCode == 1) {
                 response.setTimeout(source.readInt());
             } else if (responseCode == 0 && (size = source.readInt()) > 0) {
@@ -21,19 +35,12 @@ public final class VerifyCredentialResponse implements Parcelable {
             return response;
         }
 
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public VerifyCredentialResponse[] newArray(int size) {
             return new VerifyCredentialResponse[size];
         }
     };
-    public static final VerifyCredentialResponse ERROR = new VerifyCredentialResponse(-1, 0, (byte[]) null);
-    public static final VerifyCredentialResponse OK = new VerifyCredentialResponse();
-    public static final int RESPONSE_ERROR = -1;
-    public static final int RESPONSE_OK = 0;
-    public static final int RESPONSE_RETRY = 1;
-    private static final String TAG = "VerifyCredentialResponse";
-    private byte[] mPayload;
-    private int mResponseCode;
-    private int mTimeout;
 
     public VerifyCredentialResponse() {
         this.mResponseCode = 0;
@@ -57,12 +64,12 @@ public final class VerifyCredentialResponse implements Parcelable {
         this.mPayload = payload;
     }
 
+    @Override // android.p007os.Parcelable
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeInt(this.mResponseCode);
         if (this.mResponseCode == 1) {
             dest.writeInt(this.mTimeout);
-        } else if (this.mResponseCode != 0) {
-        } else {
+        } else if (this.mResponseCode == 0) {
             if (this.mPayload != null) {
                 dest.writeInt(this.mPayload.length);
                 dest.writeByteArray(this.mPayload);
@@ -72,6 +79,7 @@ public final class VerifyCredentialResponse implements Parcelable {
         }
     }
 
+    @Override // android.p007os.Parcelable
     public int describeContents() {
         return 0;
     }
@@ -88,12 +96,12 @@ public final class VerifyCredentialResponse implements Parcelable {
         return this.mResponseCode;
     }
 
-    /* access modifiers changed from: private */
+    /* JADX INFO: Access modifiers changed from: private */
     public void setTimeout(int timeout) {
         this.mTimeout = timeout;
     }
 
-    /* access modifiers changed from: private */
+    /* JADX INFO: Access modifiers changed from: private */
     public void setPayload(byte[] payload) {
         this.mPayload = payload;
     }
@@ -106,18 +114,20 @@ public final class VerifyCredentialResponse implements Parcelable {
         VerifyCredentialResponse response;
         int responseCode = gateKeeperResponse.getResponseCode();
         if (responseCode == 1) {
-            return new VerifyCredentialResponse(gateKeeperResponse.getTimeout());
-        }
-        if (responseCode != 0) {
-            return ERROR;
-        }
-        byte[] token = gateKeeperResponse.getPayload();
-        if (token == null) {
-            Slog.e(TAG, "verifyChallenge response had no associated payload");
-            response = ERROR;
+            VerifyCredentialResponse response2 = new VerifyCredentialResponse(gateKeeperResponse.getTimeout());
+            return response2;
+        } else if (responseCode == 0) {
+            byte[] token = gateKeeperResponse.getPayload();
+            if (token == null) {
+                Slog.m56e(TAG, "verifyChallenge response had no associated payload");
+                response = ERROR;
+            } else {
+                response = new VerifyCredentialResponse(token);
+            }
+            return response;
         } else {
-            response = new VerifyCredentialResponse(token);
+            VerifyCredentialResponse response3 = ERROR;
+            return response3;
         }
-        return response;
     }
 }

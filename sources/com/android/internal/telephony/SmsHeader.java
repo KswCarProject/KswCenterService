@@ -7,6 +7,7 @@ import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
 import java.util.Iterator;
 
+/* loaded from: classes4.dex */
 public class SmsHeader {
     public static final int ELT_ID_APPLICATION_PORT_ADDRESSING_16_BIT = 5;
     public static final int ELT_ID_APPLICATION_PORT_ADDRESSING_8_BIT = 4;
@@ -47,11 +48,12 @@ public class SmsHeader {
     public int languageShiftTable;
     @UnsupportedAppUsage
     public int languageTable;
-    public ArrayList<MiscElt> miscEltList = new ArrayList<>();
     @UnsupportedAppUsage
     public PortAddrs portAddrs;
     public ArrayList<SpecialSmsMsg> specialSmsMsgList = new ArrayList<>();
+    public ArrayList<MiscElt> miscEltList = new ArrayList<>();
 
+    /* loaded from: classes4.dex */
     public static class ConcatRef {
         public boolean isEightBits;
         @UnsupportedAppUsage
@@ -62,11 +64,15 @@ public class SmsHeader {
         public int seqNumber;
     }
 
+    /* loaded from: classes4.dex */
     public static class MiscElt {
         public byte[] data;
-        public int id;
+
+        /* renamed from: id */
+        public int f2493id;
     }
 
+    /* loaded from: classes4.dex */
     public static class PortAddrs {
         public boolean areEightBits;
         @UnsupportedAppUsage
@@ -75,6 +81,7 @@ public class SmsHeader {
         public int origPort;
     }
 
+    /* loaded from: classes4.dex */
     public static class SpecialSmsMsg {
         public int msgCount;
         public int msgIndType;
@@ -89,15 +96,16 @@ public class SmsHeader {
             int length = inStream.read();
             switch (id) {
                 case 0:
-                    ConcatRef concatRef2 = new ConcatRef();
-                    concatRef2.refNumber = inStream.read();
-                    concatRef2.msgCount = inStream.read();
-                    concatRef2.seqNumber = inStream.read();
-                    concatRef2.isEightBits = true;
-                    if (!(concatRef2.msgCount == 0 || concatRef2.seqNumber == 0 || concatRef2.seqNumber > concatRef2.msgCount)) {
-                        smsHeader.concatRef = concatRef2;
+                    ConcatRef concatRef = new ConcatRef();
+                    concatRef.refNumber = inStream.read();
+                    concatRef.msgCount = inStream.read();
+                    concatRef.seqNumber = inStream.read();
+                    concatRef.isEightBits = true;
+                    if (concatRef.msgCount != 0 && concatRef.seqNumber != 0 && concatRef.seqNumber <= concatRef.msgCount) {
+                        smsHeader.concatRef = concatRef;
                         break;
                     }
+                    break;
                 case 1:
                     SpecialSmsMsg specialSmsMsg = new SpecialSmsMsg();
                     specialSmsMsg.msgIndType = inStream.read();
@@ -105,29 +113,30 @@ public class SmsHeader {
                     smsHeader.specialSmsMsgList.add(specialSmsMsg);
                     break;
                 case 4:
-                    PortAddrs portAddrs2 = new PortAddrs();
-                    portAddrs2.destPort = inStream.read();
-                    portAddrs2.origPort = inStream.read();
-                    portAddrs2.areEightBits = true;
-                    smsHeader.portAddrs = portAddrs2;
+                    PortAddrs portAddrs = new PortAddrs();
+                    portAddrs.destPort = inStream.read();
+                    portAddrs.origPort = inStream.read();
+                    portAddrs.areEightBits = true;
+                    smsHeader.portAddrs = portAddrs;
                     break;
                 case 5:
-                    PortAddrs portAddrs3 = new PortAddrs();
-                    portAddrs3.destPort = (inStream.read() << 8) | inStream.read();
-                    portAddrs3.origPort = (inStream.read() << 8) | inStream.read();
-                    portAddrs3.areEightBits = false;
-                    smsHeader.portAddrs = portAddrs3;
+                    PortAddrs portAddrs2 = new PortAddrs();
+                    portAddrs2.destPort = (inStream.read() << 8) | inStream.read();
+                    portAddrs2.origPort = (inStream.read() << 8) | inStream.read();
+                    portAddrs2.areEightBits = false;
+                    smsHeader.portAddrs = portAddrs2;
                     break;
                 case 8:
-                    ConcatRef concatRef3 = new ConcatRef();
-                    concatRef3.refNumber = (inStream.read() << 8) | inStream.read();
-                    concatRef3.msgCount = inStream.read();
-                    concatRef3.seqNumber = inStream.read();
-                    concatRef3.isEightBits = false;
-                    if (!(concatRef3.msgCount == 0 || concatRef3.seqNumber == 0 || concatRef3.seqNumber > concatRef3.msgCount)) {
-                        smsHeader.concatRef = concatRef3;
+                    ConcatRef concatRef2 = new ConcatRef();
+                    concatRef2.refNumber = (inStream.read() << 8) | inStream.read();
+                    concatRef2.msgCount = inStream.read();
+                    concatRef2.seqNumber = inStream.read();
+                    concatRef2.isEightBits = false;
+                    if (concatRef2.msgCount != 0 && concatRef2.seqNumber != 0 && concatRef2.seqNumber <= concatRef2.msgCount) {
+                        smsHeader.concatRef = concatRef2;
                         break;
                     }
+                    break;
                 case 36:
                     smsHeader.languageShiftTable = inStream.read();
                     break;
@@ -136,7 +145,7 @@ public class SmsHeader {
                     break;
                 default:
                     MiscElt miscElt = new MiscElt();
-                    miscElt.id = id;
+                    miscElt.f2493id = id;
                     miscElt.data = new byte[length];
                     inStream.read(miscElt.data, 0, length);
                     smsHeader.miscEltList.add(miscElt);
@@ -152,35 +161,35 @@ public class SmsHeader {
             return null;
         }
         ByteArrayOutputStream outStream = new ByteArrayOutputStream(140);
-        ConcatRef concatRef2 = smsHeader.concatRef;
-        if (concatRef2 != null) {
-            if (concatRef2.isEightBits) {
+        ConcatRef concatRef = smsHeader.concatRef;
+        if (concatRef != null) {
+            if (concatRef.isEightBits) {
                 outStream.write(0);
                 outStream.write(3);
-                outStream.write(concatRef2.refNumber);
+                outStream.write(concatRef.refNumber);
             } else {
                 outStream.write(8);
                 outStream.write(4);
-                outStream.write(concatRef2.refNumber >>> 8);
-                outStream.write(concatRef2.refNumber & 255);
+                outStream.write(concatRef.refNumber >>> 8);
+                outStream.write(concatRef.refNumber & 255);
             }
-            outStream.write(concatRef2.msgCount);
-            outStream.write(concatRef2.seqNumber);
+            outStream.write(concatRef.msgCount);
+            outStream.write(concatRef.seqNumber);
         }
-        PortAddrs portAddrs2 = smsHeader.portAddrs;
-        if (portAddrs2 != null) {
-            if (portAddrs2.areEightBits) {
+        PortAddrs portAddrs = smsHeader.portAddrs;
+        if (portAddrs != null) {
+            if (portAddrs.areEightBits) {
                 outStream.write(4);
                 outStream.write(2);
-                outStream.write(portAddrs2.destPort);
-                outStream.write(portAddrs2.origPort);
+                outStream.write(portAddrs.destPort);
+                outStream.write(portAddrs.origPort);
             } else {
                 outStream.write(5);
                 outStream.write(4);
-                outStream.write(portAddrs2.destPort >>> 8);
-                outStream.write(portAddrs2.destPort & 255);
-                outStream.write(portAddrs2.origPort >>> 8);
-                outStream.write(portAddrs2.origPort & 255);
+                outStream.write(portAddrs.destPort >>> 8);
+                outStream.write(portAddrs.destPort & 255);
+                outStream.write(portAddrs.origPort >>> 8);
+                outStream.write(portAddrs.origPort & 255);
             }
         }
         if (smsHeader.languageShiftTable != 0) {
@@ -204,7 +213,7 @@ public class SmsHeader {
         Iterator<MiscElt> it2 = smsHeader.miscEltList.iterator();
         while (it2.hasNext()) {
             MiscElt miscElt = it2.next();
-            outStream.write(miscElt.id);
+            outStream.write(miscElt.f2493id);
             outStream.write(miscElt.data.length);
             outStream.write(miscElt.data, 0, miscElt.data.length);
         }
@@ -251,7 +260,7 @@ public class SmsHeader {
         while (it2.hasNext()) {
             MiscElt miscElt = it2.next();
             builder.append(", MiscElt ");
-            builder.append("{ id=" + miscElt.id);
+            builder.append("{ id=" + miscElt.f2493id);
             builder.append(", length=" + miscElt.data.length);
             builder.append(", data=" + HexDump.toHexString(miscElt.data));
             builder.append(" }");

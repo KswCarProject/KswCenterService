@@ -3,33 +3,32 @@ package android.media;
 import java.util.Arrays;
 import java.util.UUID;
 
+/* loaded from: classes3.dex */
 public abstract class DrmInitData {
     public abstract SchemeInitData get(UUID uuid);
 
     DrmInitData() {
     }
 
+    /* loaded from: classes3.dex */
     public static final class SchemeInitData {
         public final byte[] data;
         public final String mimeType;
 
-        public SchemeInitData(String mimeType2, byte[] data2) {
-            this.mimeType = mimeType2;
-            this.data = data2;
+        public SchemeInitData(String mimeType, byte[] data) {
+            this.mimeType = mimeType;
+            this.data = data;
         }
 
         public boolean equals(Object obj) {
-            if (!(obj instanceof SchemeInitData)) {
-                return false;
+            if (obj instanceof SchemeInitData) {
+                if (obj == this) {
+                    return true;
+                }
+                SchemeInitData other = (SchemeInitData) obj;
+                return this.mimeType.equals(other.mimeType) && Arrays.equals(this.data, other.data);
             }
-            if (obj == this) {
-                return true;
-            }
-            SchemeInitData other = (SchemeInitData) obj;
-            if (!this.mimeType.equals(other.mimeType) || !Arrays.equals(this.data, other.data)) {
-                return false;
-            }
-            return true;
+            return false;
         }
 
         public int hashCode() {

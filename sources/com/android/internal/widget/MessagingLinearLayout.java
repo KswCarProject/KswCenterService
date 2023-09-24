@@ -8,35 +8,39 @@ import android.view.RemotableViewMethod;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.RemoteViews;
-import com.android.internal.R;
+import com.android.internal.C3132R;
 
 @RemoteViews.RemoteView
+/* loaded from: classes4.dex */
 public class MessagingLinearLayout extends ViewGroup {
-    private int mMaxDisplayedLines = Integer.MAX_VALUE;
+    private int mMaxDisplayedLines;
     private MessagingLayout mMessagingLayout;
     private int mSpacing;
 
     public MessagingLinearLayout(Context context, AttributeSet attrs) {
         super(context, attrs);
-        TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.MessagingLinearLayout, 0, 0);
+        this.mMaxDisplayedLines = Integer.MAX_VALUE;
+        TypedArray a = context.obtainStyledAttributes(attrs, C3132R.styleable.MessagingLinearLayout, 0, 0);
         int N = a.getIndexCount();
         for (int i = 0; i < N; i++) {
-            if (a.getIndex(i) == 0) {
+            int attr = a.getIndex(i);
+            if (attr == 0) {
                 this.mSpacing = a.getDimensionPixelSize(i, 0);
             }
         }
         a.recycle();
     }
 
-    /* access modifiers changed from: protected */
-    public void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
+    @Override // android.view.View
+    protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
         boolean z;
         int targetHeight = View.MeasureSpec.getSize(heightMeasureSpec);
         if (View.MeasureSpec.getMode(heightMeasureSpec) == 0) {
             targetHeight = Integer.MAX_VALUE;
         }
         int targetHeight2 = targetHeight;
-        int measuredWidth = this.mPaddingLeft + this.mPaddingRight;
+        int targetHeight3 = this.mPaddingLeft;
+        int measuredWidth = targetHeight3 + this.mPaddingRight;
         int count = getChildCount();
         int i = 0;
         while (true) {
@@ -47,71 +51,74 @@ public class MessagingLinearLayout extends ViewGroup {
             ((LayoutParams) getChildAt(i).getLayoutParams()).hide = true;
             i++;
         }
-        int i2 = count - 1;
-        int measuredWidth2 = measuredWidth;
-        int totalHeight = this.mPaddingTop + this.mPaddingBottom;
-        boolean first = true;
+        int i2 = this.mPaddingTop;
+        int totalHeight = i2 + this.mPaddingBottom;
         int linesRemaining = this.mMaxDisplayedLines;
+        int i3 = count - 1;
+        int measuredWidth2 = measuredWidth;
+        int totalHeight2 = totalHeight;
+        boolean first = true;
+        int linesRemaining2 = linesRemaining;
         while (true) {
-            int i3 = i2;
-            if (i3 < 0 || totalHeight >= targetHeight2) {
+            int i4 = i3;
+            if (i4 < 0 || totalHeight2 >= targetHeight2) {
                 break;
             }
-            if (getChildAt(i3).getVisibility() != 8) {
-                View child = getChildAt(i3);
-                LayoutParams lp = (LayoutParams) getChildAt(i3).getLayoutParams();
+            if (getChildAt(i4).getVisibility() != 8) {
+                View child = getChildAt(i4);
+                LayoutParams lp = (LayoutParams) getChildAt(i4).getLayoutParams();
                 MessagingChild messagingChild = null;
                 int spacing = this.mSpacing;
                 if (child instanceof MessagingChild) {
                     messagingChild = (MessagingChild) child;
-                    messagingChild.setMaxDisplayedLines(linesRemaining);
+                    messagingChild.setMaxDisplayedLines(linesRemaining2);
                     spacing += messagingChild.getExtraSpacing();
                 }
                 MessagingChild messagingChild2 = messagingChild;
                 int spacing2 = first ? 0 : spacing;
-                LayoutParams lp2 = lp;
-                View child2 = child;
-                measureChildWithMargins(child, widthMeasureSpec, 0, heightMeasureSpec, ((totalHeight - this.mPaddingTop) - this.mPaddingBottom) + spacing2);
-                int newHeight = Math.max(totalHeight, totalHeight + child2.getMeasuredHeight() + lp2.topMargin + lp2.bottomMargin + spacing2);
+                measureChildWithMargins(child, widthMeasureSpec, 0, heightMeasureSpec, ((totalHeight2 - this.mPaddingTop) - this.mPaddingBottom) + spacing2);
+                int childHeight = child.getMeasuredHeight();
+                int newHeight = Math.max(totalHeight2, totalHeight2 + childHeight + lp.topMargin + lp.bottomMargin + spacing2);
                 int measureType = 0;
                 if (messagingChild2 != null) {
                     measureType = messagingChild2.getMeasuredType();
-                    linesRemaining -= messagingChild2.getConsumedLines();
+                    linesRemaining2 -= messagingChild2.getConsumedLines();
                 }
                 boolean isTooSmall = (measureType != 2 || first) ? false : z;
                 boolean isShortened = (measureType == z || (measureType == 2 && first)) ? z : false;
                 if (newHeight > targetHeight2 || isTooSmall) {
                     break;
                 }
-                totalHeight = newHeight;
-                measuredWidth2 = Math.max(measuredWidth2, child2.getMeasuredWidth() + lp2.leftMargin + lp2.rightMargin + this.mPaddingLeft + this.mPaddingRight);
-                lp2.hide = false;
-                if (isShortened || linesRemaining <= 0) {
+                totalHeight2 = newHeight;
+                measuredWidth2 = Math.max(measuredWidth2, child.getMeasuredWidth() + lp.leftMargin + lp.rightMargin + this.mPaddingLeft + this.mPaddingRight);
+                lp.hide = false;
+                if (isShortened || linesRemaining2 <= 0) {
                     break;
                 }
                 first = false;
             }
-            i2 = i3 - 1;
+            i3 = i4 - 1;
             z = true;
         }
-        setMeasuredDimension(resolveSize(Math.max(getSuggestedMinimumWidth(), measuredWidth2), widthMeasureSpec), Math.max(getSuggestedMinimumHeight(), totalHeight));
+        setMeasuredDimension(resolveSize(Math.max(getSuggestedMinimumWidth(), measuredWidth2), widthMeasureSpec), Math.max(getSuggestedMinimumHeight(), totalHeight2));
     }
 
-    /* access modifiers changed from: protected */
-    public void onLayout(boolean changed, int left, int top, int right, int bottom) {
-        int paddingLeft;
+    @Override // android.view.ViewGroup, android.view.View
+    protected void onLayout(boolean changed, int left, int top, int right, int bottom) {
         int childLeft;
+        int paddingLeft;
         int paddingLeft2 = this.mPaddingLeft;
-        int childRight = (right - left) - this.mPaddingRight;
+        int width = right - left;
+        int childRight = width - this.mPaddingRight;
         int layoutDirection = getLayoutDirection();
         int count = getChildCount();
         int childTop = this.mPaddingTop;
         boolean shown = isShown();
         boolean first = true;
         int childTop2 = childTop;
-        int i = 0;
-        while (i < count) {
-            View child = getChildAt(i);
+        int childTop3 = 0;
+        while (childTop3 < count) {
+            View child = getChildAt(childTop3);
             if (child.getVisibility() == 8) {
                 paddingLeft = paddingLeft2;
             } else {
@@ -126,7 +133,7 @@ public class MessagingLinearLayout extends ViewGroup {
                 }
                 int childLeft2 = childLeft;
                 paddingLeft = paddingLeft2;
-                if (lp.hide != 0) {
+                if (lp.hide) {
                     if (shown && lp.visibleBefore) {
                         child.layout(childLeft2, childTop2, childLeft2 + childWidth, lp.lastVisibleHeight + childTop2);
                         messagingChild.hideAnimated();
@@ -138,35 +145,42 @@ public class MessagingLinearLayout extends ViewGroup {
                     if (!first) {
                         childTop2 += this.mSpacing;
                     }
-                    int childTop3 = childTop2 + lp.topMargin;
-                    child.layout(childLeft2, childTop3, childLeft2 + childWidth, childTop3 + childHeight);
-                    childTop2 = childTop3 + lp.bottomMargin + childHeight;
+                    int childTop4 = childTop2 + lp.topMargin;
+                    child.layout(childLeft2, childTop4, childLeft2 + childWidth, childTop4 + childHeight);
+                    childTop2 = childTop4 + lp.bottomMargin + childHeight;
                     first = false;
                 }
             }
-            i++;
+            childTop3++;
             paddingLeft2 = paddingLeft;
         }
     }
 
-    /* access modifiers changed from: protected */
-    public boolean drawChild(Canvas canvas, View child, long drawingTime) {
-        if (!((LayoutParams) child.getLayoutParams()).hide || ((MessagingChild) child).isHidingAnimated()) {
-            return super.drawChild(canvas, child, drawingTime);
+    @Override // android.view.ViewGroup
+    protected boolean drawChild(Canvas canvas, View child, long drawingTime) {
+        LayoutParams lp = (LayoutParams) child.getLayoutParams();
+        if (lp.hide) {
+            MessagingChild messagingChild = (MessagingChild) child;
+            if (!messagingChild.isHidingAnimated()) {
+                return true;
+            }
         }
-        return true;
+        return super.drawChild(canvas, child, drawingTime);
     }
 
+    @Override // android.view.ViewGroup
     public LayoutParams generateLayoutParams(AttributeSet attrs) {
         return new LayoutParams(this.mContext, attrs);
     }
 
-    /* access modifiers changed from: protected */
+    /* JADX INFO: Access modifiers changed from: protected */
+    @Override // android.view.ViewGroup
     public LayoutParams generateDefaultLayoutParams() {
         return new LayoutParams(-1, -2);
     }
 
-    /* access modifiers changed from: protected */
+    /* JADX INFO: Access modifiers changed from: protected */
+    @Override // android.view.ViewGroup
     public LayoutParams generateLayoutParams(ViewGroup.LayoutParams lp) {
         LayoutParams copy = new LayoutParams(lp.width, lp.height);
         if (lp instanceof ViewGroup.MarginLayoutParams) {
@@ -180,10 +194,7 @@ public class MessagingLinearLayout extends ViewGroup {
             return true;
         }
         ViewGroup.LayoutParams lp = view.getLayoutParams();
-        if (!(lp instanceof LayoutParams) || !((LayoutParams) lp).hide) {
-            return false;
-        }
-        return true;
+        return (lp instanceof LayoutParams) && ((LayoutParams) lp).hide;
     }
 
     @RemotableViewMethod
@@ -199,6 +210,7 @@ public class MessagingLinearLayout extends ViewGroup {
         return this.mMessagingLayout;
     }
 
+    /* loaded from: classes4.dex */
     public interface MessagingChild {
         public static final int MEASURED_NORMAL = 0;
         public static final int MEASURED_SHORTENED = 1;
@@ -214,22 +226,27 @@ public class MessagingLinearLayout extends ViewGroup {
 
         void setMaxDisplayedLines(int i);
 
-        int getExtraSpacing() {
+        default int getExtraSpacing() {
             return 0;
         }
     }
 
+    /* loaded from: classes4.dex */
     public static class LayoutParams extends ViewGroup.MarginLayoutParams {
-        public boolean hide = false;
+        public boolean hide;
         public int lastVisibleHeight;
-        public boolean visibleBefore = false;
+        public boolean visibleBefore;
 
         public LayoutParams(Context c, AttributeSet attrs) {
             super(c, attrs);
+            this.hide = false;
+            this.visibleBefore = false;
         }
 
         public LayoutParams(int width, int height) {
             super(width, height);
+            this.hide = false;
+            this.visibleBefore = false;
         }
     }
 }

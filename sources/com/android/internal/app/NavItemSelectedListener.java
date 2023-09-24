@@ -4,6 +4,7 @@ import android.app.ActionBar;
 import android.view.View;
 import android.widget.AdapterView;
 
+/* loaded from: classes4.dex */
 class NavItemSelectedListener implements AdapterView.OnItemSelectedListener {
     private final ActionBar.OnNavigationListener mListener;
 
@@ -11,12 +12,14 @@ class NavItemSelectedListener implements AdapterView.OnItemSelectedListener {
         this.mListener = listener;
     }
 
-    public void onItemSelected(AdapterView<?> adapterView, View view, int position, long id) {
+    @Override // android.widget.AdapterView.OnItemSelectedListener
+    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
         if (this.mListener != null) {
             this.mListener.onNavigationItemSelected(position, id);
         }
     }
 
-    public void onNothingSelected(AdapterView<?> adapterView) {
+    @Override // android.widget.AdapterView.OnItemSelectedListener
+    public void onNothingSelected(AdapterView<?> parent) {
     }
 }

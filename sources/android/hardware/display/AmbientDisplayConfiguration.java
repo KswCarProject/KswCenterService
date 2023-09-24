@@ -1,18 +1,20 @@
 package android.hardware.display;
 
 import android.content.Context;
-import android.os.Build;
-import android.os.SystemProperties;
+import android.p007os.Build;
+import android.p007os.SystemProperties;
 import android.provider.Settings;
 import android.text.TextUtils;
-import com.android.internal.R;
+import com.android.internal.C3132R;
 
+/* loaded from: classes.dex */
 public class AmbientDisplayConfiguration {
-    private final boolean mAlwaysOnByDefault = this.mContext.getResources().getBoolean(R.bool.config_dozeAlwaysOnEnabled);
+    private final boolean mAlwaysOnByDefault;
     private final Context mContext;
 
     public AmbientDisplayConfiguration(Context context) {
         this.mContext = context;
+        this.mAlwaysOnByDefault = this.mContext.getResources().getBoolean(C3132R.bool.config_dozeAlwaysOnEnabled);
     }
 
     public boolean enabled(int user) {
@@ -32,7 +34,7 @@ public class AmbientDisplayConfiguration {
     }
 
     public boolean dozePickupSensorAvailable() {
-        return this.mContext.getResources().getBoolean(R.bool.config_dozePulsePickup);
+        return this.mContext.getResources().getBoolean(C3132R.bool.config_dozePulsePickup);
     }
 
     public boolean tapGestureEnabled(int user) {
@@ -52,7 +54,7 @@ public class AmbientDisplayConfiguration {
     }
 
     public boolean wakeScreenGestureAvailable() {
-        return this.mContext.getResources().getBoolean(R.bool.config_dozeWakeLockScreenSensorAvailable);
+        return this.mContext.getResources().getBoolean(C3132R.bool.config_dozeWakeLockScreenSensorAvailable);
     }
 
     public boolean wakeScreenGestureEnabled(int user) {
@@ -60,19 +62,19 @@ public class AmbientDisplayConfiguration {
     }
 
     public long getWakeLockScreenDebounce() {
-        return (long) this.mContext.getResources().getInteger(R.integer.config_dozeWakeLockScreenDebounce);
+        return this.mContext.getResources().getInteger(C3132R.integer.config_dozeWakeLockScreenDebounce);
     }
 
     public String doubleTapSensorType() {
-        return this.mContext.getResources().getString(R.string.config_dozeDoubleTapSensorType);
+        return this.mContext.getResources().getString(C3132R.string.config_dozeDoubleTapSensorType);
     }
 
     public String tapSensorType() {
-        return this.mContext.getResources().getString(R.string.config_dozeTapSensorType);
+        return this.mContext.getResources().getString(C3132R.string.config_dozeTapSensorType);
     }
 
     public String longPressSensorType() {
-        return this.mContext.getResources().getString(R.string.config_dozeLongPressSensorType);
+        return this.mContext.getResources().getString(C3132R.string.config_dozeLongPressSensorType);
     }
 
     public boolean pulseOnLongPressEnabled(int user) {
@@ -96,7 +98,7 @@ public class AmbientDisplayConfiguration {
     }
 
     public String ambientDisplayComponent() {
-        return this.mContext.getResources().getString(R.string.config_dozeComponent);
+        return this.mContext.getResources().getString(C3132R.string.config_dozeComponent);
     }
 
     public boolean accessibilityInversionEnabled(int user) {
@@ -108,7 +110,7 @@ public class AmbientDisplayConfiguration {
     }
 
     private boolean alwaysOnDisplayAvailable() {
-        return this.mContext.getResources().getBoolean(R.bool.config_dozeAlwaysOnDisplayAvailable);
+        return this.mContext.getResources().getBoolean(C3132R.bool.config_dozeAlwaysOnDisplayAvailable);
     }
 
     private boolean alwaysOnDisplayDebuggingEnabled() {

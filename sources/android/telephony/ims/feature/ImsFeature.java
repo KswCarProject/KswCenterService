@@ -2,9 +2,9 @@ package android.telephony.ims.feature;
 
 import android.annotation.SystemApi;
 import android.content.Context;
-import android.os.IInterface;
-import android.os.RemoteCallbackList;
-import android.os.RemoteException;
+import android.p007os.IInterface;
+import android.p007os.RemoteCallbackList;
+import android.p007os.RemoteException;
 import android.telephony.ims.aidl.IImsCapabilityCallback;
 import android.util.Log;
 import com.android.ims.internal.IImsFeatureStatusCallback;
@@ -17,6 +17,7 @@ import java.util.Set;
 import java.util.WeakHashMap;
 
 @SystemApi
+/* loaded from: classes4.dex */
 public abstract class ImsFeature {
     public static final String ACTION_IMS_SERVICE_DOWN = "com.android.ims.IMS_SERVICE_DOWN";
     public static final String ACTION_IMS_SERVICE_UP = "com.android.ims.IMS_SERVICE_UP";
@@ -32,35 +33,38 @@ public abstract class ImsFeature {
     public static final int STATE_INITIALIZING = 1;
     public static final int STATE_READY = 2;
     public static final int STATE_UNAVAILABLE = 0;
-    private final RemoteCallbackList<IImsCapabilityCallback> mCapabilityCallbacks = new RemoteCallbackList<>();
-    private Capabilities mCapabilityStatus = new Capabilities();
     protected Context mContext;
     protected final Object mLock = new Object();
-    private int mSlotId = -1;
-    private int mState = 0;
     private final Set<IImsFeatureStatusCallback> mStatusCallbacks = Collections.newSetFromMap(new WeakHashMap());
+    private int mState = 0;
+    private int mSlotId = -1;
+    private final RemoteCallbackList<IImsCapabilityCallback> mCapabilityCallbacks = new RemoteCallbackList<>();
+    private Capabilities mCapabilityStatus = new Capabilities();
 
     @Retention(RetentionPolicy.SOURCE)
+    /* loaded from: classes4.dex */
     public @interface FeatureType {
     }
 
     @Retention(RetentionPolicy.SOURCE)
+    /* loaded from: classes4.dex */
     public @interface ImsCapabilityError {
     }
 
     @Retention(RetentionPolicy.SOURCE)
+    /* loaded from: classes4.dex */
     public @interface ImsState {
     }
 
     public abstract void changeEnabledCapabilities(CapabilityChangeRequest capabilityChangeRequest, CapabilityCallbackProxy capabilityCallbackProxy);
 
-    /* access modifiers changed from: protected */
-    public abstract IInterface getBinder();
+    protected abstract IInterface getBinder();
 
     public abstract void onFeatureReady();
 
     public abstract void onFeatureRemoved();
 
+    /* loaded from: classes4.dex */
     protected static class CapabilityCallbackProxy {
         private final IImsCapabilityCallback mCallback;
 
@@ -69,24 +73,28 @@ public abstract class ImsFeature {
         }
 
         public void onChangeCapabilityConfigurationError(int capability, int radioTech, int reason) {
-            if (this.mCallback != null) {
-                try {
-                    this.mCallback.onChangeCapabilityConfigurationError(capability, radioTech, reason);
-                } catch (RemoteException e) {
-                    Log.e(ImsFeature.LOG_TAG, "onChangeCapabilityConfigurationError called on dead binder.");
-                }
+            if (this.mCallback == null) {
+                return;
+            }
+            try {
+                this.mCallback.onChangeCapabilityConfigurationError(capability, radioTech, reason);
+            } catch (RemoteException e) {
+                Log.m70e(ImsFeature.LOG_TAG, "onChangeCapabilityConfigurationError called on dead binder.");
             }
         }
     }
 
     @SystemApi
+    /* loaded from: classes4.dex */
     public static class Capabilities {
-        protected int mCapabilities = 0;
+        protected int mCapabilities;
 
         public Capabilities() {
+            this.mCapabilities = 0;
         }
 
         protected Capabilities(int capabilities) {
+            this.mCapabilities = 0;
             this.mCapabilities = capabilities;
         }
 
@@ -114,11 +122,9 @@ public abstract class ImsFeature {
             if (this == o) {
                 return true;
             }
-            if (!(o instanceof Capabilities)) {
-                return false;
-            }
-            if (this.mCapabilities == ((Capabilities) o).mCapabilities) {
-                return true;
+            if (o instanceof Capabilities) {
+                Capabilities that = (Capabilities) o;
+                return this.mCapabilities == that.mCapabilities;
             }
             return false;
         }
@@ -162,7 +168,7 @@ public abstract class ImsFeature {
                 this.mStatusCallbacks.add(c);
             }
         } catch (RemoteException e) {
-            Log.w(LOG_TAG, "Couldn't notify feature state: " + e.getMessage());
+            Log.m64w(LOG_TAG, "Couldn't notify feature state: " + e.getMessage());
         }
     }
 
@@ -179,11 +185,11 @@ public abstract class ImsFeature {
             while (iter.hasNext()) {
                 IImsFeatureStatusCallback callback = iter.next();
                 try {
-                    Log.i(LOG_TAG, "notifying ImsFeatureState=" + state);
+                    Log.m68i(LOG_TAG, "notifying ImsFeatureState=" + state);
                     callback.notifyImsFeatureStatus(state);
                 } catch (RemoteException e) {
                     iter.remove();
-                    Log.w(LOG_TAG, "Couldn't notify feature state: " + e.getMessage());
+                    Log.m64w(LOG_TAG, "Couldn't notify feature state: " + e.getMessage());
                 }
             }
         }
@@ -194,7 +200,7 @@ public abstract class ImsFeature {
         try {
             c.onCapabilitiesStatusChanged(queryCapabilityStatus().mCapabilities);
         } catch (RemoteException e) {
-            Log.w(LOG_TAG, "addCapabilityCallback: error accessing callback: " + e.getMessage());
+            Log.m64w(LOG_TAG, "addCapabilityCallback: error accessing callback: " + e.getMessage());
         }
     }
 
@@ -213,29 +219,27 @@ public abstract class ImsFeature {
 
     @VisibleForTesting
     public final void requestChangeEnabledCapabilities(CapabilityChangeRequest request, IImsCapabilityCallback c) {
-        if (request != null) {
-            changeEnabledCapabilities(request, new CapabilityCallbackProxy(c));
-            return;
+        if (request == null) {
+            throw new IllegalArgumentException("ImsFeature#requestChangeEnabledCapabilities called with invalid params.");
         }
-        throw new IllegalArgumentException("ImsFeature#requestChangeEnabledCapabilities called with invalid params.");
+        changeEnabledCapabilities(request, new CapabilityCallbackProxy(c));
     }
 
-    /* access modifiers changed from: protected */
-    public final void notifyCapabilitiesStatusChanged(Capabilities c) {
+    protected final void notifyCapabilitiesStatusChanged(Capabilities c) {
         synchronized (this.mLock) {
             this.mCapabilityStatus = c.copy();
         }
         int count = this.mCapabilityCallbacks.beginBroadcast();
         for (int i = 0; i < count; i++) {
             try {
-                this.mCapabilityCallbacks.getBroadcastItem(i).onCapabilitiesStatusChanged(c.mCapabilities);
-            } catch (RemoteException e) {
-                Log.w(LOG_TAG, e + " notifyCapabilitiesStatusChanged() - Skipping callback.");
-            } catch (Throwable th) {
+                try {
+                    this.mCapabilityCallbacks.getBroadcastItem(i).onCapabilitiesStatusChanged(c.mCapabilities);
+                } catch (RemoteException e) {
+                    Log.m64w(LOG_TAG, e + " notifyCapabilitiesStatusChanged() - Skipping callback.");
+                }
+            } finally {
                 this.mCapabilityCallbacks.finishBroadcast();
-                throw th;
             }
         }
-        this.mCapabilityCallbacks.finishBroadcast();
     }
 }

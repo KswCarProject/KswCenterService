@@ -9,6 +9,7 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 
+/* loaded from: classes4.dex */
 public abstract class VerityBuilder {
     private static final int CHUNK_SIZE_BYTES = 4096;
     private static final byte[] DEFAULT_SALT = new byte[8];
@@ -22,20 +23,21 @@ public abstract class VerityBuilder {
     private VerityBuilder() {
     }
 
+    /* loaded from: classes4.dex */
     public static class VerityResult {
         public final int merkleTreeSize;
         public final byte[] rootHash;
         public final ByteBuffer verityData;
 
-        private VerityResult(ByteBuffer verityData2, int merkleTreeSize2, byte[] rootHash2) {
-            this.verityData = verityData2;
-            this.merkleTreeSize = merkleTreeSize2;
-            this.rootHash = rootHash2;
+        private VerityResult(ByteBuffer verityData, int merkleTreeSize, byte[] rootHash) {
+            this.verityData = verityData;
+            this.merkleTreeSize = merkleTreeSize;
+            this.rootHash = rootHash;
         }
     }
 
     public static VerityResult generateFsVerityTree(RandomAccessFile apk, ByteBufferFactory bufferFactory) throws IOException, SecurityException, NoSuchAlgorithmException, DigestException {
-        return generateVerityTreeInternal(apk, bufferFactory, (SignatureInfo) null, false);
+        return generateVerityTreeInternal(apk, bufferFactory, null, false);
     }
 
     public static VerityResult generateApkVerityTree(RandomAccessFile apk, SignatureInfo signatureInfo, ByteBufferFactory bufferFactory) throws IOException, SecurityException, NoSuchAlgorithmException, DigestException {
@@ -43,22 +45,26 @@ public abstract class VerityBuilder {
     }
 
     private static VerityResult generateVerityTreeInternal(RandomAccessFile apk, ByteBufferFactory bufferFactory, SignatureInfo signatureInfo, boolean skipSigningBlock) throws IOException, SecurityException, NoSuchAlgorithmException, DigestException {
-        SignatureInfo signatureInfo2 = signatureInfo;
         long dataSize = apk.length();
         if (skipSigningBlock) {
-            dataSize -= signatureInfo2.centralDirOffset - signatureInfo2.apkSigningBlockOffset;
+            long signingBlockSize = signatureInfo.centralDirOffset - signatureInfo.apkSigningBlockOffset;
+            dataSize -= signingBlockSize;
         }
         int[] levelOffset = calculateVerityLevelOffset(dataSize);
         int merkleTreeSize = levelOffset[levelOffset.length - 1];
         ByteBuffer output = bufferFactory.create(merkleTreeSize + 4096);
         output.order(ByteOrder.LITTLE_ENDIAN);
-        return new VerityResult(output, merkleTreeSize, generateVerityTreeInternal(apk, signatureInfo, skipSigningBlock ? DEFAULT_SALT : null, levelOffset, slice(output, 0, merkleTreeSize), skipSigningBlock));
+        ByteBuffer tree = slice(output, 0, merkleTreeSize);
+        byte[] salt = skipSigningBlock ? DEFAULT_SALT : null;
+        byte[] apkRootHash = generateVerityTreeInternal(apk, signatureInfo, salt, levelOffset, tree, skipSigningBlock);
+        return new VerityResult(output, merkleTreeSize, apkRootHash);
     }
 
     static void generateApkVerityFooter(RandomAccessFile apk, SignatureInfo signatureInfo, ByteBuffer footerOutput) throws IOException {
         footerOutput.order(ByteOrder.LITTLE_ENDIAN);
         generateApkVerityHeader(footerOutput, apk.length(), DEFAULT_SALT);
-        generateApkVerityExtensions(footerOutput, signatureInfo.apkSigningBlockOffset, signatureInfo.centralDirOffset - signatureInfo.apkSigningBlockOffset, signatureInfo.eocdOffset);
+        long signingBlockSize = signatureInfo.centralDirOffset - signatureInfo.apkSigningBlockOffset;
+        generateApkVerityExtensions(footerOutput, signatureInfo.apkSigningBlockOffset, signingBlockSize, signatureInfo.eocdOffset);
     }
 
     static byte[] generateApkVerityRootHash(RandomAccessFile apk, ByteBuffer apkDigest, SignatureInfo signatureInfo) throws NoSuchAlgorithmException, DigestException, IOException {
@@ -73,7 +79,6 @@ public abstract class VerityBuilder {
     }
 
     static byte[] generateApkVerity(String apkPath, ByteBufferFactory bufferFactory, SignatureInfo signatureInfo) throws IOException, SignatureNotFoundException, SecurityException, DigestException, NoSuchAlgorithmException {
-        Throwable th;
         RandomAccessFile apk = new RandomAccessFile(apkPath, "r");
         try {
             VerityResult result = generateVerityTreeInternal(apk, bufferFactory, signatureInfo, true);
@@ -84,12 +89,25 @@ public abstract class VerityBuilder {
             byte[] bArr = result.rootHash;
             apk.close();
             return bArr;
-        } catch (Throwable th2) {
-            th.addSuppressed(th2);
+        } catch (Throwable th) {
+            try {
+                throw th;
+            } catch (Throwable th2) {
+                if (th != null) {
+                    try {
+                        apk.close();
+                    } catch (Throwable th3) {
+                        th.addSuppressed(th3);
+                    }
+                } else {
+                    apk.close();
+                }
+                throw th2;
+            }
         }
-        throw th;
     }
 
+    /* loaded from: classes4.dex */
     private static class BufferedDigester implements DataDigester {
         private static final int BUFFER_SIZE = 4096;
         private int mBytesDigestedSinceReset;
@@ -109,6 +127,7 @@ public abstract class VerityBuilder {
             this.mBytesDigestedSinceReset = 0;
         }
 
+        @Override // android.util.apk.DataDigester
         public void consume(ByteBuffer buffer) throws DigestException {
             int offset = buffer.position();
             int remaining = buffer.remaining();
@@ -136,29 +155,31 @@ public abstract class VerityBuilder {
             }
         }
 
-        /* access modifiers changed from: private */
+        /* JADX INFO: Access modifiers changed from: private */
         public void fillUpLastOutputChunk() {
             int lastBlockSize = this.mOutput.position() % 4096;
-            if (lastBlockSize != 0) {
-                this.mOutput.put(ByteBuffer.allocate(4096 - lastBlockSize));
+            if (lastBlockSize == 0) {
+                return;
             }
+            this.mOutput.put(ByteBuffer.allocate(4096 - lastBlockSize));
         }
     }
 
     private static void consumeByChunk(DataDigester digester, DataSource source, int chunkSize) throws IOException, DigestException {
         long inputRemaining = source.size();
-        long inputOffset = 0;
-        while (inputRemaining > 0) {
-            int size = (int) Math.min(inputRemaining, (long) chunkSize);
-            source.feedIntoDataDigester(digester, inputOffset, size);
-            inputOffset += (long) size;
-            inputRemaining -= (long) size;
+        long inputRemaining2 = inputRemaining;
+        long inputRemaining3 = 0;
+        while (inputRemaining2 > 0) {
+            int size = (int) Math.min(inputRemaining2, chunkSize);
+            source.feedIntoDataDigester(digester, inputRemaining3, size);
+            inputRemaining3 += size;
+            inputRemaining2 -= size;
         }
     }
 
     private static void generateFsVerityDigestAtLeafLevel(RandomAccessFile file, ByteBuffer output) throws IOException, NoSuchAlgorithmException, DigestException {
-        BufferedDigester digester = new BufferedDigester((byte[]) null, output);
-        consumeByChunk(digester, new MemoryMappedFileDataSource(file.getFD(), 0, file.length()), 1048576);
+        BufferedDigester digester = new BufferedDigester(null, output);
+        consumeByChunk(digester, new MemoryMappedFileDataSource(file.getFD(), 0L, file.length()), 1048576);
         int lastIncompleteChunkSize = (int) (file.length() % 4096);
         if (lastIncompleteChunkSize != 0) {
             digester.consume(ByteBuffer.allocate(4096 - lastIncompleteChunkSize));
@@ -168,19 +189,16 @@ public abstract class VerityBuilder {
     }
 
     private static void generateApkVerityDigestAtLeafLevel(RandomAccessFile apk, SignatureInfo signatureInfo, byte[] salt, ByteBuffer output) throws IOException, NoSuchAlgorithmException, DigestException {
-        SignatureInfo signatureInfo2 = signatureInfo;
         BufferedDigester digester = new BufferedDigester(salt, output);
-        consumeByChunk(digester, new MemoryMappedFileDataSource(apk.getFD(), 0, signatureInfo2.apkSigningBlockOffset), 1048576);
-        long eocdCdOffsetFieldPosition = signatureInfo2.eocdOffset + 16;
-        consumeByChunk(digester, new MemoryMappedFileDataSource(apk.getFD(), signatureInfo2.centralDirOffset, eocdCdOffsetFieldPosition - signatureInfo2.centralDirOffset), 1048576);
+        consumeByChunk(digester, new MemoryMappedFileDataSource(apk.getFD(), 0L, signatureInfo.apkSigningBlockOffset), 1048576);
+        long eocdCdOffsetFieldPosition = signatureInfo.eocdOffset + 16;
+        consumeByChunk(digester, new MemoryMappedFileDataSource(apk.getFD(), signatureInfo.centralDirOffset, eocdCdOffsetFieldPosition - signatureInfo.centralDirOffset), 1048576);
         ByteBuffer alternativeCentralDirOffset = ByteBuffer.allocate(4).order(ByteOrder.LITTLE_ENDIAN);
-        alternativeCentralDirOffset.putInt(Math.toIntExact(signatureInfo2.apkSigningBlockOffset));
+        alternativeCentralDirOffset.putInt(Math.toIntExact(signatureInfo.apkSigningBlockOffset));
         alternativeCentralDirOffset.flip();
         digester.consume(alternativeCentralDirOffset);
         long offsetAfterEocdCdOffsetField = 4 + eocdCdOffsetFieldPosition;
-        MemoryMappedFileDataSource memoryMappedFileDataSource = r10;
-        MemoryMappedFileDataSource memoryMappedFileDataSource2 = new MemoryMappedFileDataSource(apk.getFD(), offsetAfterEocdCdOffsetField, apk.length() - offsetAfterEocdCdOffsetField);
-        consumeByChunk(digester, memoryMappedFileDataSource, 1048576);
+        consumeByChunk(digester, new MemoryMappedFileDataSource(apk.getFD(), offsetAfterEocdCdOffsetField, apk.length() - offsetAfterEocdCdOffsetField), 1048576);
         int lastIncompleteChunkSize = (int) (apk.length() % 4096);
         if (lastIncompleteChunkSize != 0) {
             digester.consume(ByteBuffer.allocate(4096 - lastIncompleteChunkSize));
@@ -213,34 +231,34 @@ public abstract class VerityBuilder {
     }
 
     private static ByteBuffer generateApkVerityHeader(ByteBuffer buffer, long fileSize, byte[] salt) {
-        if (salt.length == 8) {
-            buffer.put("TrueBrew".getBytes());
-            buffer.put((byte) 1);
-            buffer.put((byte) 0);
-            buffer.put((byte) 12);
-            buffer.put((byte) 7);
-            buffer.putShort(1);
-            buffer.putShort(1);
-            buffer.putInt(0);
-            buffer.putInt(0);
-            buffer.putLong(fileSize);
-            buffer.put((byte) 2);
-            buffer.put((byte) 0);
-            buffer.put(salt);
-            skip(buffer, 22);
-            return buffer;
+        if (salt.length != 8) {
+            throw new IllegalArgumentException("salt is not 8 bytes long");
         }
-        throw new IllegalArgumentException("salt is not 8 bytes long");
+        buffer.put("TrueBrew".getBytes());
+        buffer.put((byte) 1);
+        buffer.put((byte) 0);
+        buffer.put((byte) 12);
+        buffer.put((byte) 7);
+        buffer.putShort((short) 1);
+        buffer.putShort((short) 1);
+        buffer.putInt(0);
+        buffer.putInt(0);
+        buffer.putLong(fileSize);
+        buffer.put((byte) 2);
+        buffer.put((byte) 0);
+        buffer.put(salt);
+        skip(buffer, 22);
+        return buffer;
     }
 
     private static ByteBuffer generateApkVerityExtensions(ByteBuffer buffer, long signingBlockOffset, long signingBlockSize, long eocdOffset) {
         buffer.putInt(24);
-        buffer.putShort(1);
+        buffer.putShort((short) 1);
         skip(buffer, 2);
         buffer.putLong(signingBlockOffset);
         buffer.putLong(signingBlockSize);
         buffer.putInt(20);
-        buffer.putShort(2);
+        buffer.putShort((short) 2);
         skip(buffer, 2);
         buffer.putLong(16 + eocdOffset);
         buffer.putInt(Math.toIntExact(signingBlockOffset));
@@ -255,14 +273,15 @@ public abstract class VerityBuilder {
     private static int[] calculateVerityLevelOffset(long fileSize) {
         ArrayList<Long> levelSize = new ArrayList<>();
         while (true) {
-            long levelDigestSize = divideRoundup(fileSize, 4096) * 32;
-            levelSize.add(Long.valueOf(divideRoundup(levelDigestSize, 4096) * 4096));
+            long levelDigestSize = divideRoundup(fileSize, 4096L) * 32;
+            long chunksSize = divideRoundup(levelDigestSize, 4096L) * 4096;
+            levelSize.add(Long.valueOf(chunksSize));
             if (levelDigestSize <= 4096) {
                 break;
             }
             fileSize = levelDigestSize;
         }
-        int[] levelOffset = new int[(levelSize.size() + 1)];
+        int[] levelOffset = new int[levelSize.size() + 1];
         levelOffset[0] = 0;
         for (int i = 0; i < levelSize.size(); i++) {
             levelOffset[i + 1] = levelOffset[i] + Math.toIntExact(levelSize.get((levelSize.size() - i) - 1).longValue());

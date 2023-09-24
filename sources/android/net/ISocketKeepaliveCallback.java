@@ -1,11 +1,12 @@
 package android.net;
 
-import android.os.Binder;
-import android.os.IBinder;
-import android.os.IInterface;
-import android.os.Parcel;
-import android.os.RemoteException;
+import android.p007os.Binder;
+import android.p007os.IBinder;
+import android.p007os.IInterface;
+import android.p007os.Parcel;
+import android.p007os.RemoteException;
 
+/* loaded from: classes3.dex */
 public interface ISocketKeepaliveCallback extends IInterface {
     void onDataReceived() throws RemoteException;
 
@@ -15,24 +16,31 @@ public interface ISocketKeepaliveCallback extends IInterface {
 
     void onStopped() throws RemoteException;
 
+    /* loaded from: classes3.dex */
     public static class Default implements ISocketKeepaliveCallback {
+        @Override // android.net.ISocketKeepaliveCallback
         public void onStarted(int slot) throws RemoteException {
         }
 
+        @Override // android.net.ISocketKeepaliveCallback
         public void onStopped() throws RemoteException {
         }
 
+        @Override // android.net.ISocketKeepaliveCallback
         public void onError(int error) throws RemoteException {
         }
 
+        @Override // android.net.ISocketKeepaliveCallback
         public void onDataReceived() throws RemoteException {
         }
 
+        @Override // android.p007os.IInterface
         public IBinder asBinder() {
             return null;
         }
     }
 
+    /* loaded from: classes3.dex */
     public static abstract class Stub extends Binder implements ISocketKeepaliveCallback {
         private static final String DESCRIPTOR = "android.net.ISocketKeepaliveCallback";
         static final int TRANSACTION_onDataReceived = 4;
@@ -49,12 +57,13 @@ public interface ISocketKeepaliveCallback extends IInterface {
                 return null;
             }
             IInterface iin = obj.queryLocalInterface(DESCRIPTOR);
-            if (iin == null || !(iin instanceof ISocketKeepaliveCallback)) {
-                return new Proxy(obj);
+            if (iin != null && (iin instanceof ISocketKeepaliveCallback)) {
+                return (ISocketKeepaliveCallback) iin;
             }
-            return (ISocketKeepaliveCallback) iin;
+            return new Proxy(obj);
         }
 
+        @Override // android.p007os.IInterface
         public IBinder asBinder() {
             return this;
         }
@@ -74,38 +83,42 @@ public interface ISocketKeepaliveCallback extends IInterface {
             }
         }
 
+        @Override // android.p007os.Binder
         public String getTransactionName(int transactionCode) {
             return getDefaultTransactionName(transactionCode);
         }
 
+        @Override // android.p007os.Binder
         public boolean onTransact(int code, Parcel data, Parcel reply, int flags) throws RemoteException {
-            if (code != 1598968902) {
-                switch (code) {
-                    case 1:
-                        data.enforceInterface(DESCRIPTOR);
-                        onStarted(data.readInt());
-                        return true;
-                    case 2:
-                        data.enforceInterface(DESCRIPTOR);
-                        onStopped();
-                        return true;
-                    case 3:
-                        data.enforceInterface(DESCRIPTOR);
-                        onError(data.readInt());
-                        return true;
-                    case 4:
-                        data.enforceInterface(DESCRIPTOR);
-                        onDataReceived();
-                        return true;
-                    default:
-                        return super.onTransact(code, data, reply, flags);
-                }
-            } else {
+            if (code == 1598968902) {
                 reply.writeString(DESCRIPTOR);
                 return true;
             }
+            switch (code) {
+                case 1:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg0 = data.readInt();
+                    onStarted(_arg0);
+                    return true;
+                case 2:
+                    data.enforceInterface(DESCRIPTOR);
+                    onStopped();
+                    return true;
+                case 3:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg02 = data.readInt();
+                    onError(_arg02);
+                    return true;
+                case 4:
+                    data.enforceInterface(DESCRIPTOR);
+                    onDataReceived();
+                    return true;
+                default:
+                    return super.onTransact(code, data, reply, flags);
+            }
         }
 
+        /* loaded from: classes3.dex */
         private static class Proxy implements ISocketKeepaliveCallback {
             public static ISocketKeepaliveCallback sDefaultImpl;
             private IBinder mRemote;
@@ -114,6 +127,7 @@ public interface ISocketKeepaliveCallback extends IInterface {
                 this.mRemote = remote;
             }
 
+            @Override // android.p007os.IInterface
             public IBinder asBinder() {
                 return this.mRemote;
             }
@@ -122,14 +136,14 @@ public interface ISocketKeepaliveCallback extends IInterface {
                 return Stub.DESCRIPTOR;
             }
 
+            @Override // android.net.ISocketKeepaliveCallback
             public void onStarted(int slot) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeInt(slot);
-                    if (this.mRemote.transact(1, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    boolean _status = this.mRemote.transact(1, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().onStarted(slot);
                     }
                 } finally {
@@ -137,13 +151,13 @@ public interface ISocketKeepaliveCallback extends IInterface {
                 }
             }
 
+            @Override // android.net.ISocketKeepaliveCallback
             public void onStopped() throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    if (this.mRemote.transact(2, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    boolean _status = this.mRemote.transact(2, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().onStopped();
                     }
                 } finally {
@@ -151,14 +165,14 @@ public interface ISocketKeepaliveCallback extends IInterface {
                 }
             }
 
+            @Override // android.net.ISocketKeepaliveCallback
             public void onError(int error) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeInt(error);
-                    if (this.mRemote.transact(3, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    boolean _status = this.mRemote.transact(3, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().onError(error);
                     }
                 } finally {
@@ -166,13 +180,13 @@ public interface ISocketKeepaliveCallback extends IInterface {
                 }
             }
 
+            @Override // android.net.ISocketKeepaliveCallback
             public void onDataReceived() throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    if (this.mRemote.transact(4, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    boolean _status = this.mRemote.transact(4, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().onDataReceived();
                     }
                 } finally {
@@ -182,11 +196,11 @@ public interface ISocketKeepaliveCallback extends IInterface {
         }
 
         public static boolean setDefaultImpl(ISocketKeepaliveCallback impl) {
-            if (Proxy.sDefaultImpl != null || impl == null) {
-                return false;
+            if (Proxy.sDefaultImpl == null && impl != null) {
+                Proxy.sDefaultImpl = impl;
+                return true;
             }
-            Proxy.sDefaultImpl = impl;
-            return true;
+            return false;
         }
 
         public static ISocketKeepaliveCallback getDefaultImpl() {

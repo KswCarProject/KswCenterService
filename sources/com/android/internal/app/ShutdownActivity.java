@@ -3,23 +3,22 @@ package com.android.internal.app;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.os.Bundle;
-import android.os.IPowerManager;
-import android.os.PowerManager;
-import android.os.RemoteException;
-import android.os.ServiceManager;
+import android.p007os.Bundle;
+import android.p007os.IPowerManager;
+import android.p007os.PowerManager;
+import android.p007os.RemoteException;
+import android.p007os.ServiceManager;
 import android.util.Slog;
 
+/* loaded from: classes4.dex */
 public class ShutdownActivity extends Activity {
     private static final String TAG = "ShutdownActivity";
-    /* access modifiers changed from: private */
-    public boolean mConfirm;
-    /* access modifiers changed from: private */
-    public boolean mReboot;
+    private boolean mConfirm;
+    private boolean mReboot;
     private boolean mUserRequested;
 
-    /* access modifiers changed from: protected */
-    public void onCreate(Bundle savedInstanceState) {
+    @Override // android.app.Activity
+    protected void onCreate(Bundle savedInstanceState) {
         final String reason;
         super.onCreate(savedInstanceState);
         Intent intent = getIntent();
@@ -31,13 +30,14 @@ public class ShutdownActivity extends Activity {
         } else {
             reason = intent.getStringExtra(Intent.EXTRA_REASON);
         }
-        Slog.i(TAG, "onCreate(): confirm=" + this.mConfirm);
-        Thread thr = new Thread(TAG) {
+        Slog.m54i(TAG, "onCreate(): confirm=" + this.mConfirm);
+        Thread thr = new Thread(TAG) { // from class: com.android.internal.app.ShutdownActivity.1
+            @Override // java.lang.Thread, java.lang.Runnable
             public void run() {
                 IPowerManager pm = IPowerManager.Stub.asInterface(ServiceManager.getService(Context.POWER_SERVICE));
                 try {
                     if (ShutdownActivity.this.mReboot) {
-                        pm.reboot(ShutdownActivity.this.mConfirm, (String) null, false);
+                        pm.reboot(ShutdownActivity.this.mConfirm, null, false);
                     } else {
                         pm.shutdown(ShutdownActivity.this.mConfirm, reason, false);
                     }

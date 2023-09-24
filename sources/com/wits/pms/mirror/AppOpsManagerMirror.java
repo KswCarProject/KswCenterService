@@ -5,9 +5,10 @@ import com.wits.reflect.MethodName;
 import com.wits.reflect.RefClass;
 import com.wits.reflect.RefMethod;
 
+/* loaded from: classes2.dex */
 public class AppOpsManagerMirror {
     public static final String TAG = AppOpsManagerMirror.class.getSimpleName();
-    public static final Class<?> TYPE = RefClass.load((Class<?>) AppOpsManagerMirror.class, "android.app.AppOpsManager");
+    public static final Class<?> TYPE = RefClass.load(AppOpsManagerMirror.class, "android.app.AppOpsManager");
     @MethodName(name = "setMode", params = {int.class, int.class, String.class, int.class})
     public static RefMethod<Void> setMode;
     public AppOpsManager mAppOpsManager;

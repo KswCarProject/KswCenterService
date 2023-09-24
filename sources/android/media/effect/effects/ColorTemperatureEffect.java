@@ -5,6 +5,7 @@ import android.filterpacks.imageproc.ColorTemperatureFilter;
 import android.media.effect.EffectContext;
 import android.media.effect.SingleFilterEffect;
 
+/* loaded from: classes3.dex */
 public class ColorTemperatureEffect extends SingleFilterEffect {
     public ColorTemperatureEffect(EffectContext context, String name) {
         super(context, name, ColorTemperatureFilter.class, SliceItem.FORMAT_IMAGE, SliceItem.FORMAT_IMAGE, new Object[0]);

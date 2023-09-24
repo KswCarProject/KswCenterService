@@ -11,6 +11,7 @@ import java.util.Collections;
 import java.util.List;
 
 @VisibleForTesting(visibility = VisibleForTesting.Visibility.PACKAGE)
+/* loaded from: classes4.dex */
 public final class TemplateClassificationIntentFactory implements ClassificationIntentFactory {
     private static final String TAG = "androidtc";
     private final ClassificationIntentFactory mFallback;
@@ -21,13 +22,14 @@ public final class TemplateClassificationIntentFactory implements Classification
         this.mFallback = (ClassificationIntentFactory) Preconditions.checkNotNull(fallback);
     }
 
+    @Override // android.view.textclassifier.intent.ClassificationIntentFactory
     public List<LabeledIntent> create(Context context, String text, boolean foreignText, Instant referenceTime, AnnotatorModel.ClassificationResult classification) {
         if (classification == null) {
             return Collections.emptyList();
         }
         RemoteActionTemplate[] remoteActionTemplates = classification.getRemoteActionTemplates();
         if (remoteActionTemplates == null) {
-            Log.w("androidtc", "RemoteActionTemplate is missing, fallback to LegacyClassificationIntentFactory.");
+            Log.m37w("androidtc", "RemoteActionTemplate is missing, fallback to LegacyClassificationIntentFactory.");
             return this.mFallback.create(context, text, foreignText, referenceTime, classification);
         }
         List<LabeledIntent> labeledIntents = this.mTemplateIntentFactory.create(remoteActionTemplates);

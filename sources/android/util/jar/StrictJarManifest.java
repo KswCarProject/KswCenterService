@@ -15,23 +15,25 @@ import java.util.jar.Attributes;
 import libcore.io.Streams;
 import org.mozilla.universalchardet.prober.HebrewProber;
 
+/* loaded from: classes4.dex */
 public class StrictJarManifest implements Cloneable {
-    static final Attributes.Name ATTRIBUTE_NAME_NAME = new Attributes.Name("Name");
     static final int LINE_LENGTH_LIMIT = 72;
-    private static final byte[] LINE_SEPARATOR = {13, 10};
-    private static final byte[] VALUE_SEPARATOR = {58, HebrewProber.SPACE};
     private HashMap<String, Chunk> chunks;
     private final HashMap<String, Attributes> entries;
     private final Attributes mainAttributes;
     private int mainEnd;
+    private static final byte[] LINE_SEPARATOR = {13, 10};
+    private static final byte[] VALUE_SEPARATOR = {58, HebrewProber.SPACE};
+    static final Attributes.Name ATTRIBUTE_NAME_NAME = new Attributes.Name("Name");
 
+    /* loaded from: classes4.dex */
     static final class Chunk {
         final int end;
         final int start;
 
-        Chunk(int start2, int end2) {
-            this.start = start2;
-            this.end = end2;
+        Chunk(int start, int end) {
+            this.start = start;
+            this.end = end;
         }
     }
 
@@ -88,11 +90,12 @@ public class StrictJarManifest implements Cloneable {
     }
 
     private void read(byte[] buf) throws IOException {
-        if (buf.length != 0) {
-            StrictJarManifestReader im = new StrictJarManifestReader(buf, this.mainAttributes);
-            this.mainEnd = im.getEndOfMainSection();
-            im.readEntries(this.entries, this.chunks);
+        if (buf.length == 0) {
+            return;
         }
+        StrictJarManifestReader im = new StrictJarManifestReader(buf, this.mainAttributes);
+        this.mainEnd = im.getEndOfMainSection();
+        im.readEntries(this.entries, this.chunks);
     }
 
     public int hashCode() {
@@ -100,24 +103,21 @@ public class StrictJarManifest implements Cloneable {
     }
 
     public boolean equals(Object o) {
-        if (o != null && o.getClass() == getClass() && this.mainAttributes.equals(((StrictJarManifest) o).mainAttributes)) {
-            return getEntries().equals(((StrictJarManifest) o).getEntries());
+        if (o == null || o.getClass() != getClass() || !this.mainAttributes.equals(((StrictJarManifest) o).mainAttributes)) {
+            return false;
         }
-        return false;
+        return getEntries().equals(((StrictJarManifest) o).getEntries());
     }
 
-    /* access modifiers changed from: package-private */
-    public Chunk getChunk(String name) {
+    Chunk getChunk(String name) {
         return this.chunks.get(name);
     }
 
-    /* access modifiers changed from: package-private */
-    public void removeChunks() {
+    void removeChunks() {
         this.chunks = null;
     }
 
-    /* access modifiers changed from: package-private */
-    public int getMainAttributesEnd() {
+    int getMainAttributesEnd() {
         return this.mainEnd;
     }
 
@@ -132,9 +132,9 @@ public class StrictJarManifest implements Cloneable {
         }
         if (version != null) {
             writeEntry(out, versionName, version, encoder, buffer);
-            Iterator<Object> it = manifest.mainAttributes.keySet().iterator();
-            while (it.hasNext()) {
-                Attributes.Name name = (Attributes.Name) it.next();
+            Iterator<?> entries = manifest.mainAttributes.keySet().iterator();
+            while (entries.hasNext()) {
+                Attributes.Name name = (Attributes.Name) entries.next();
                 if (!name.equals(versionName)) {
                     writeEntry(out, name, manifest.mainAttributes.getValue(name), encoder, buffer);
                 }
@@ -144,9 +144,9 @@ public class StrictJarManifest implements Cloneable {
         for (String key : manifest.getEntries().keySet()) {
             writeEntry(out, ATTRIBUTE_NAME_NAME, key, encoder, buffer);
             Attributes attributes = manifest.entries.get(key);
-            Iterator<Object> it2 = attributes.keySet().iterator();
-            while (it2.hasNext()) {
-                Attributes.Name name2 = (Attributes.Name) it2.next();
+            Iterator<?> entries2 = attributes.keySet().iterator();
+            while (entries2.hasNext()) {
+                Attributes.Name name2 = (Attributes.Name) entries2.next();
                 writeEntry(out, name2, attributes.getValue(name2), encoder, buffer);
             }
             out.write(LINE_SEPARATOR);

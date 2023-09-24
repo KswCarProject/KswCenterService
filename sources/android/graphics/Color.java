@@ -9,6 +9,7 @@ import java.util.HashMap;
 import java.util.Locale;
 import java.util.function.DoubleUnaryOperator;
 
+/* loaded from: classes.dex */
 public class Color {
     public static final int BLACK = -16777216;
     public static final int BLUE = -16776961;
@@ -87,8 +88,7 @@ public class Color {
         float[] color = {this.mComponents[0], this.mComponents[1], this.mComponents[2], this.mComponents[3]};
         ColorSpace.connect(this.mColorSpace).transform(color);
         int i = ((int) ((color[0] * 255.0f) + 0.5f)) << 16;
-        int i2 = ((int) ((color[1] * 255.0f) + 0.5f)) << 8;
-        return ((int) ((color[2] * 255.0f) + 0.5f)) | i2 | i | (((int) ((color[3] * 255.0f) + 0.5f)) << 24);
+        return ((int) ((color[2] * 255.0f) + 0.5f)) | (((int) ((color[1] * 255.0f) + 0.5f)) << 8) | i | (((int) ((color[3] * 255.0f) + 0.5f)) << 24);
     }
 
     public float red() {
@@ -115,11 +115,11 @@ public class Color {
         if (components == null) {
             return Arrays.copyOf(this.mComponents, this.mComponents.length);
         }
-        if (components.length >= this.mComponents.length) {
-            System.arraycopy(this.mComponents, 0, components, 0, this.mComponents.length);
-            return components;
+        if (components.length < this.mComponents.length) {
+            throw new IllegalArgumentException("The specified array's length must be at least " + this.mComponents.length);
         }
-        throw new IllegalArgumentException("The specified array's length must be at least " + this.mComponents.length);
+        System.arraycopy(this.mComponents, 0, components, 0, this.mComponents.length);
+        return components;
     }
 
     public float getComponent(int component) {
@@ -127,11 +127,14 @@ public class Color {
     }
 
     public float luminance() {
-        if (this.mColorSpace.getModel() == ColorSpace.Model.RGB) {
-            DoubleUnaryOperator eotf = ((ColorSpace.Rgb) this.mColorSpace).getEotf();
-            return saturate((float) ((0.2126d * eotf.applyAsDouble((double) this.mComponents[0])) + (0.7152d * eotf.applyAsDouble((double) this.mComponents[1])) + (0.0722d * eotf.applyAsDouble((double) this.mComponents[2]))));
+        if (this.mColorSpace.getModel() != ColorSpace.Model.RGB) {
+            throw new IllegalArgumentException("The specified color must be encoded in an RGB color space. The supplied color space is " + this.mColorSpace.getModel());
         }
-        throw new IllegalArgumentException("The specified color must be encoded in an RGB color space. The supplied color space is " + this.mColorSpace.getModel());
+        DoubleUnaryOperator eotf = ((ColorSpace.Rgb) this.mColorSpace).getEotf();
+        double r = eotf.applyAsDouble(this.mComponents[0]);
+        double g = eotf.applyAsDouble(this.mComponents[1]);
+        double b = eotf.applyAsDouble(this.mComponents[2]);
+        return saturate((float) ((0.2126d * r) + (0.7152d * g) + (0.0722d * b)));
     }
 
     public boolean equals(Object o) {
@@ -149,10 +152,12 @@ public class Color {
     }
 
     public int hashCode() {
-        return (Arrays.hashCode(this.mComponents) * 31) + this.mColorSpace.hashCode();
+        int result = Arrays.hashCode(this.mComponents);
+        return (result * 31) + this.mColorSpace.hashCode();
     }
 
     public String toString() {
+        float[] fArr;
         StringBuilder b = new StringBuilder("Color(");
         for (float c : this.mComponents) {
             b.append(c);
@@ -168,31 +173,19 @@ public class Color {
     }
 
     public static float red(long color) {
-        if ((63 & color) == 0) {
-            return ((float) ((color >> 48) & 255)) / 255.0f;
-        }
-        return Half.toFloat((short) ((int) ((color >> 48) & 65535)));
+        return (63 & color) == 0 ? ((float) ((color >> 48) & 255)) / 255.0f : Half.toFloat((short) ((color >> 48) & 65535));
     }
 
     public static float green(long color) {
-        if ((63 & color) == 0) {
-            return ((float) ((color >> 40) & 255)) / 255.0f;
-        }
-        return Half.toFloat((short) ((int) ((color >> 32) & 65535)));
+        return (63 & color) == 0 ? ((float) ((color >> 40) & 255)) / 255.0f : Half.toFloat((short) ((color >> 32) & 65535));
     }
 
     public static float blue(long color) {
-        if ((63 & color) == 0) {
-            return ((float) ((color >> 32) & 255)) / 255.0f;
-        }
-        return Half.toFloat((short) ((int) ((color >> 16) & 65535)));
+        return (63 & color) == 0 ? ((float) ((color >> 32) & 255)) / 255.0f : Half.toFloat((short) ((color >> 16) & 65535));
     }
 
     public static float alpha(long color) {
-        if ((63 & color) == 0) {
-            return ((float) ((color >> 56) & 255)) / 255.0f;
-        }
-        return ((float) ((color >> 6) & 1023)) / 1023.0f;
+        return (63 & color) == 0 ? ((float) ((color >> 56) & 255)) / 255.0f : ((float) ((color >> 6) & 1023)) / 1023.0f;
     }
 
     public static boolean isSrgb(long color) {
@@ -220,7 +213,11 @@ public class Color {
     }
 
     public static Color valueOf(int color) {
-        return new Color(((float) ((color >> 16) & 255)) / 255.0f, ((float) ((color >> 8) & 255)) / 255.0f, ((float) (color & 255)) / 255.0f, ((float) ((color >> 24) & 255)) / 255.0f, ColorSpace.get(ColorSpace.Named.SRGB));
+        float r = ((color >> 16) & 255) / 255.0f;
+        float g = ((color >> 8) & 255) / 255.0f;
+        float b = (color & 255) / 255.0f;
+        float a = ((color >> 24) & 255) / 255.0f;
+        return new Color(r, g, b, a, ColorSpace.get(ColorSpace.Named.SRGB));
     }
 
     public static Color valueOf(long color) {
@@ -236,21 +233,21 @@ public class Color {
     }
 
     public static Color valueOf(float r, float g, float b, float a, ColorSpace colorSpace) {
-        if (colorSpace.getComponentCount() <= 3) {
-            return new Color(r, g, b, a, colorSpace);
+        if (colorSpace.getComponentCount() > 3) {
+            throw new IllegalArgumentException("The specified color space must use a color model with at most 3 color components");
         }
-        throw new IllegalArgumentException("The specified color space must use a color model with at most 3 color components");
+        return new Color(r, g, b, a, colorSpace);
     }
 
     public static Color valueOf(float[] components, ColorSpace colorSpace) {
-        if (components.length >= colorSpace.getComponentCount() + 1) {
-            return new Color(Arrays.copyOf(components, colorSpace.getComponentCount() + 1), colorSpace);
+        if (components.length < colorSpace.getComponentCount() + 1) {
+            throw new IllegalArgumentException("Received a component array of length " + components.length + " but the color model requires " + (colorSpace.getComponentCount() + 1) + " (including alpha)");
         }
-        throw new IllegalArgumentException("Received a component array of length " + components.length + " but the color model requires " + (colorSpace.getComponentCount() + 1) + " (including alpha)");
+        return new Color(Arrays.copyOf(components, colorSpace.getComponentCount() + 1), colorSpace);
     }
 
     public static long pack(int color) {
-        return (((long) color) & 4294967295L) << 32;
+        return (color & 4294967295L) << 32;
     }
 
     public static long pack(float red, float green, float blue) {
@@ -262,28 +259,41 @@ public class Color {
     }
 
     public static long pack(float red, float green, float blue, float alpha, ColorSpace colorSpace) {
-        float f = alpha;
         if (colorSpace.isSrgb()) {
-            return (((long) (((int) ((255.0f * blue) + 0.5f)) | (((((int) ((red * 255.0f) + 0.5f)) << 16) | (((int) ((f * 255.0f) + 0.5f)) << 24)) | (((int) ((green * 255.0f) + 0.5f)) << 8)))) & 4294967295L) << 32;
+            int i = (int) ((255.0f * blue) + 0.5f);
+            int argb = i | (((int) ((red * 255.0f) + 0.5f)) << 16) | (((int) ((alpha * 255.0f) + 0.5f)) << 24) | (((int) ((green * 255.0f) + 0.5f)) << 8);
+            return (argb & 4294967295L) << 32;
         }
         int id = colorSpace.getId();
         if (id == -1) {
             throw new IllegalArgumentException("Unknown color space, please use a color space returned by ColorSpace.get()");
-        } else if (colorSpace.getComponentCount() <= 3) {
-            short r = Half.toHalf(red);
-            short g = Half.toHalf(green);
-            return ((((long) g) & 65535) << 32) | ((((long) r) & 65535) << 48) | ((((long) Half.toHalf(blue)) & 65535) << 16) | ((((long) ((int) ((Math.max(0.0f, Math.min(f, 1.0f)) * 1023.0f) + 0.5f))) & 1023) << 6) | (((long) id) & 63);
-        } else {
+        }
+        if (colorSpace.getComponentCount() > 3) {
             throw new IllegalArgumentException("The color space must use a color model with at most 3 components");
         }
+        short r = Half.toHalf(red);
+        short g = Half.toHalf(green);
+        short b = Half.toHalf(blue);
+        int a = (int) ((Math.max(0.0f, Math.min(alpha, 1.0f)) * 1023.0f) + 0.5f);
+        return ((g & 65535) << 32) | ((r & 65535) << 48) | ((b & 65535) << 16) | ((a & 1023) << 6) | (id & 63);
     }
 
     public static long convert(int color, ColorSpace colorSpace) {
-        return convert(((float) ((color >> 16) & 255)) / 255.0f, ((float) ((color >> 8) & 255)) / 255.0f, ((float) (color & 255)) / 255.0f, ((float) ((color >> 24) & 255)) / 255.0f, ColorSpace.get(ColorSpace.Named.SRGB), colorSpace);
+        float r = ((color >> 16) & 255) / 255.0f;
+        float g = ((color >> 8) & 255) / 255.0f;
+        float b = (color & 255) / 255.0f;
+        float a = ((color >> 24) & 255) / 255.0f;
+        ColorSpace source = ColorSpace.get(ColorSpace.Named.SRGB);
+        return convert(r, g, b, a, source, colorSpace);
     }
 
     public static long convert(long color, ColorSpace colorSpace) {
-        return convert(red(color), green(color), blue(color), alpha(color), colorSpace(color), colorSpace);
+        float r = red(color);
+        float g = green(color);
+        float b = blue(color);
+        float a = alpha(color);
+        ColorSpace source = colorSpace(color);
+        return convert(r, g, b, a, source, colorSpace);
     }
 
     public static long convert(float r, float g, float b, float a, ColorSpace source, ColorSpace destination) {
@@ -292,7 +302,11 @@ public class Color {
     }
 
     public static long convert(long color, ColorSpace.Connector connector) {
-        return convert(red(color), green(color), blue(color), alpha(color), connector);
+        float r = red(color);
+        float g = green(color);
+        float b = blue(color);
+        float a = alpha(color);
+        return convert(r, g, b, a, connector);
     }
 
     public static long convert(float r, float g, float b, float a, ColorSpace.Connector connector) {
@@ -302,11 +316,14 @@ public class Color {
 
     public static float luminance(long color) {
         ColorSpace colorSpace = colorSpace(color);
-        if (colorSpace.getModel() == ColorSpace.Model.RGB) {
-            DoubleUnaryOperator eotf = ((ColorSpace.Rgb) colorSpace).getEotf();
-            return saturate((float) ((0.2126d * eotf.applyAsDouble((double) red(color))) + (0.7152d * eotf.applyAsDouble((double) green(color))) + (0.0722d * eotf.applyAsDouble((double) blue(color)))));
+        if (colorSpace.getModel() != ColorSpace.Model.RGB) {
+            throw new IllegalArgumentException("The specified color must be encoded in an RGB color space. The supplied color space is " + colorSpace.getModel());
         }
-        throw new IllegalArgumentException("The specified color must be encoded in an RGB color space. The supplied color space is " + colorSpace.getModel());
+        DoubleUnaryOperator eotf = ((ColorSpace.Rgb) colorSpace).getEotf();
+        double r = eotf.applyAsDouble(red(color));
+        double g = eotf.applyAsDouble(green(color));
+        double b = eotf.applyAsDouble(blue(color));
+        return saturate((float) ((0.2126d * r) + (0.7152d * g) + (0.0722d * b)));
     }
 
     private static float saturate(float v) {
@@ -336,11 +353,11 @@ public class Color {
     }
 
     public static int rgb(int red, int green, int blue) {
-        return (red << 16) | -16777216 | (green << 8) | blue;
+        return (red << 16) | (-16777216) | (green << 8) | blue;
     }
 
     public static int rgb(float red, float green, float blue) {
-        return ((int) ((255.0f * blue) + 0.5f)) | (((int) ((red * 255.0f) + 0.5f)) << 16) | -16777216 | (((int) ((green * 255.0f) + 0.5f)) << 8);
+        return ((int) ((255.0f * blue) + 0.5f)) | (((int) ((red * 255.0f) + 0.5f)) << 16) | (-16777216) | (((int) ((green * 255.0f) + 0.5f)) << 8);
     }
 
     public static int argb(int alpha, int red, int green, int blue) {
@@ -352,8 +369,12 @@ public class Color {
     }
 
     public static float luminance(int color) {
-        DoubleUnaryOperator eotf = ((ColorSpace.Rgb) ColorSpace.get(ColorSpace.Named.SRGB)).getEotf();
-        return (float) ((0.2126d * eotf.applyAsDouble(((double) red(color)) / 255.0d)) + (0.7152d * eotf.applyAsDouble(((double) green(color)) / 255.0d)) + (0.0722d * eotf.applyAsDouble(((double) blue(color)) / 255.0d)));
+        ColorSpace.Rgb cs = (ColorSpace.Rgb) ColorSpace.get(ColorSpace.Named.SRGB);
+        DoubleUnaryOperator eotf = cs.getEotf();
+        double r = eotf.applyAsDouble(red(color) / 255.0d);
+        double g = eotf.applyAsDouble(green(color) / 255.0d);
+        double b = eotf.applyAsDouble(blue(color) / 255.0d);
+        return (float) ((0.2126d * r) + (0.7152d * g) + (0.0722d * b));
     }
 
     public static int parseColor(String colorString) {
@@ -374,11 +395,10 @@ public class Color {
     }
 
     public static void RGBToHSV(int red, int green, int blue, float[] hsv) {
-        if (hsv.length >= 3) {
-            nativeRGBToHSV(red, green, blue, hsv);
-            return;
+        if (hsv.length < 3) {
+            throw new RuntimeException("3 components required for hsv");
         }
-        throw new RuntimeException("3 components required for hsv");
+        nativeRGBToHSV(red, green, blue, hsv);
     }
 
     public static void colorToHSV(int color, float[] hsv) {
@@ -390,10 +410,10 @@ public class Color {
     }
 
     public static int HSVToColor(int alpha, float[] hsv) {
-        if (hsv.length >= 3) {
-            return nativeHSVToColor(alpha, hsv);
+        if (hsv.length < 3) {
+            throw new RuntimeException("3 components required for hsv");
         }
-        throw new RuntimeException("3 components required for hsv");
+        return nativeHSVToColor(alpha, hsv);
     }
 
     public static int getHtmlColor(String color) {
@@ -410,22 +430,22 @@ public class Color {
 
     static {
         sColorNameMap.put("black", -16777216);
-        sColorNameMap.put("darkgray", Integer.valueOf(DKGRAY));
-        sColorNameMap.put("gray", Integer.valueOf(GRAY));
-        sColorNameMap.put("lightgray", Integer.valueOf(LTGRAY));
+        sColorNameMap.put("darkgray", Integer.valueOf((int) DKGRAY));
+        sColorNameMap.put("gray", Integer.valueOf((int) GRAY));
+        sColorNameMap.put("lightgray", Integer.valueOf((int) LTGRAY));
         sColorNameMap.put("white", -1);
         sColorNameMap.put("red", -65536);
-        sColorNameMap.put("green", Integer.valueOf(GREEN));
+        sColorNameMap.put("green", Integer.valueOf((int) GREEN));
         sColorNameMap.put("blue", -16776961);
         sColorNameMap.put("yellow", -256);
-        sColorNameMap.put("cyan", Integer.valueOf(CYAN));
-        sColorNameMap.put("magenta", Integer.valueOf(MAGENTA));
-        sColorNameMap.put(Camera.Parameters.EFFECT_AQUA, Integer.valueOf(CYAN));
-        sColorNameMap.put("fuchsia", Integer.valueOf(MAGENTA));
-        sColorNameMap.put("darkgrey", Integer.valueOf(DKGRAY));
-        sColorNameMap.put("grey", Integer.valueOf(GRAY));
-        sColorNameMap.put("lightgrey", Integer.valueOf(LTGRAY));
-        sColorNameMap.put("lime", Integer.valueOf(GREEN));
+        sColorNameMap.put("cyan", Integer.valueOf((int) CYAN));
+        sColorNameMap.put("magenta", Integer.valueOf((int) MAGENTA));
+        sColorNameMap.put(Camera.Parameters.EFFECT_AQUA, Integer.valueOf((int) CYAN));
+        sColorNameMap.put("fuchsia", Integer.valueOf((int) MAGENTA));
+        sColorNameMap.put("darkgrey", Integer.valueOf((int) DKGRAY));
+        sColorNameMap.put("grey", Integer.valueOf((int) GRAY));
+        sColorNameMap.put("lightgrey", Integer.valueOf((int) LTGRAY));
+        sColorNameMap.put("lime", Integer.valueOf((int) GREEN));
         sColorNameMap.put("maroon", -8388608);
         sColorNameMap.put("navy", -16777088);
         sColorNameMap.put("olive", -8355840);

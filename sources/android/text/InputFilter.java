@@ -4,9 +4,11 @@ import android.annotation.UnsupportedAppUsage;
 import com.android.internal.util.Preconditions;
 import java.util.Locale;
 
+/* loaded from: classes4.dex */
 public interface InputFilter {
     CharSequence filter(CharSequence charSequence, int i, int i2, Spanned spanned, int i3, int i4);
 
+    /* loaded from: classes4.dex */
     public static class AllCaps implements InputFilter {
         private final Locale mLocale;
 
@@ -19,6 +21,7 @@ public interface InputFilter {
             this.mLocale = locale;
         }
 
+        @Override // android.text.InputFilter
         public CharSequence filter(CharSequence source, int start, int end, Spanned dest, int dstart, int dend) {
             boolean copySpans;
             CharSequence upper;
@@ -26,24 +29,22 @@ public interface InputFilter {
             boolean lowerOrTitleFound = false;
             int length = end - start;
             int i = 0;
-            while (true) {
-                if (i >= length) {
+            while (i < length) {
+                int cp = Character.codePointAt(wrapper, i);
+                if (!Character.isLowerCase(cp) && !Character.isTitleCase(cp)) {
+                    i += Character.charCount(cp);
+                } else {
+                    lowerOrTitleFound = true;
                     break;
                 }
-                int cp = Character.codePointAt(wrapper, i);
-                if (Character.isLowerCase(cp) || Character.isTitleCase(cp)) {
-                    lowerOrTitleFound = true;
-                } else {
-                    i += Character.charCount(cp);
-                }
             }
-            lowerOrTitleFound = true;
-            if (lowerOrTitleFound && (upper = TextUtils.toUpperCase(this.mLocale, wrapper, copySpans)) != wrapper) {
-                return (copySpans = source instanceof Spanned) ? new SpannableString(upper) : upper.toString();
+            if (lowerOrTitleFound && (upper = TextUtils.toUpperCase(this.mLocale, wrapper, (copySpans = source instanceof Spanned))) != wrapper) {
+                return copySpans ? new SpannableString(upper) : upper.toString();
             }
             return null;
         }
 
+        /* loaded from: classes4.dex */
         private static class CharSequenceWrapper implements CharSequence, Spanned {
             private final int mEnd;
             private final int mLength;
@@ -57,50 +58,60 @@ public interface InputFilter {
                 this.mLength = end - start;
             }
 
+            @Override // java.lang.CharSequence
             public int length() {
                 return this.mLength;
             }
 
+            @Override // java.lang.CharSequence
             public char charAt(int index) {
-                if (index >= 0 && index < this.mLength) {
-                    return this.mSource.charAt(this.mStart + index);
+                if (index < 0 || index >= this.mLength) {
+                    throw new IndexOutOfBoundsException();
                 }
-                throw new IndexOutOfBoundsException();
+                return this.mSource.charAt(this.mStart + index);
             }
 
+            @Override // java.lang.CharSequence
             public CharSequence subSequence(int start, int end) {
-                if (start >= 0 && end >= 0 && end <= this.mLength && start <= end) {
-                    return new CharSequenceWrapper(this.mSource, this.mStart + start, this.mStart + end);
+                if (start < 0 || end < 0 || end > this.mLength || start > end) {
+                    throw new IndexOutOfBoundsException();
                 }
-                throw new IndexOutOfBoundsException();
+                return new CharSequenceWrapper(this.mSource, this.mStart + start, this.mStart + end);
             }
 
+            @Override // java.lang.CharSequence
             public String toString() {
                 return this.mSource.subSequence(this.mStart, this.mEnd).toString();
             }
 
+            @Override // android.text.Spanned
             public <T> T[] getSpans(int start, int end, Class<T> type) {
-                return ((Spanned) this.mSource).getSpans(this.mStart + start, this.mStart + end, type);
+                return (T[]) ((Spanned) this.mSource).getSpans(this.mStart + start, this.mStart + end, type);
             }
 
+            @Override // android.text.Spanned
             public int getSpanStart(Object tag) {
                 return ((Spanned) this.mSource).getSpanStart(tag) - this.mStart;
             }
 
+            @Override // android.text.Spanned
             public int getSpanEnd(Object tag) {
                 return ((Spanned) this.mSource).getSpanEnd(tag) - this.mStart;
             }
 
+            @Override // android.text.Spanned
             public int getSpanFlags(Object tag) {
                 return ((Spanned) this.mSource).getSpanFlags(tag);
             }
 
+            @Override // android.text.Spanned
             public int nextSpanTransition(int start, int limit, Class type) {
                 return ((Spanned) this.mSource).nextSpanTransition(this.mStart + start, this.mStart + limit, type) - this.mStart;
             }
         }
     }
 
+    /* loaded from: classes4.dex */
     public static class LengthFilter implements InputFilter {
         @UnsupportedAppUsage
         private final int mMax;
@@ -109,6 +120,7 @@ public interface InputFilter {
             this.mMax = max;
         }
 
+        @Override // android.text.InputFilter
         public CharSequence filter(CharSequence source, int start, int end, Spanned dest, int dstart, int dend) {
             int keep = this.mMax - (dest.length() - (dend - dstart));
             if (keep <= 0) {
@@ -118,10 +130,10 @@ public interface InputFilter {
                 return null;
             }
             int keep2 = keep + start;
-            if (!Character.isHighSurrogate(source.charAt(keep2 - 1)) || keep2 - 1 != start) {
-                return source.subSequence(start, keep2);
+            if (Character.isHighSurrogate(source.charAt(keep2 - 1)) && keep2 - 1 == start) {
+                return "";
             }
-            return "";
+            return source.subSequence(start, keep2);
         }
 
         public int getMax() {

@@ -4,45 +4,54 @@ import android.content.Context;
 import android.location.GnssNavigationMessage;
 import android.location.IGnssNavigationMessageListener;
 import android.location.LocalListenerHelper;
-import android.os.RemoteException;
+import android.p007os.RemoteException;
 
+/* loaded from: classes.dex */
 class GnssNavigationMessageCallbackTransport extends LocalListenerHelper<GnssNavigationMessage.Callback> {
-    private final IGnssNavigationMessageListener mListenerTransport = new ListenerTransport();
+    private final IGnssNavigationMessageListener mListenerTransport;
     private final ILocationManager mLocationManager;
 
     public GnssNavigationMessageCallbackTransport(Context context, ILocationManager locationManager) {
         super(context, "GnssNavigationMessageCallbackTransport");
+        this.mListenerTransport = new ListenerTransport();
         this.mLocationManager = locationManager;
     }
 
-    /* access modifiers changed from: protected */
-    public boolean registerWithServer() throws RemoteException {
+    @Override // android.location.LocalListenerHelper
+    protected boolean registerWithServer() throws RemoteException {
         return this.mLocationManager.addGnssNavigationMessageListener(this.mListenerTransport, getContext().getPackageName());
     }
 
-    /* access modifiers changed from: protected */
-    public void unregisterFromServer() throws RemoteException {
+    @Override // android.location.LocalListenerHelper
+    protected void unregisterFromServer() throws RemoteException {
         this.mLocationManager.removeGnssNavigationMessageListener(this.mListenerTransport);
     }
 
+    /* loaded from: classes.dex */
     private class ListenerTransport extends IGnssNavigationMessageListener.Stub {
         private ListenerTransport() {
         }
 
+        @Override // android.location.IGnssNavigationMessageListener
         public void onGnssNavigationMessageReceived(final GnssNavigationMessage event) {
-            GnssNavigationMessageCallbackTransport.this.foreach(new LocalListenerHelper.ListenerOperation<GnssNavigationMessage.Callback>() {
+            LocalListenerHelper.ListenerOperation<GnssNavigationMessage.Callback> operation = new LocalListenerHelper.ListenerOperation<GnssNavigationMessage.Callback>() { // from class: android.location.GnssNavigationMessageCallbackTransport.ListenerTransport.1
+                @Override // android.location.LocalListenerHelper.ListenerOperation
                 public void execute(GnssNavigationMessage.Callback callback) throws RemoteException {
                     callback.onGnssNavigationMessageReceived(event);
                 }
-            });
+            };
+            GnssNavigationMessageCallbackTransport.this.foreach(operation);
         }
 
+        @Override // android.location.IGnssNavigationMessageListener
         public void onStatusChanged(final int status) {
-            GnssNavigationMessageCallbackTransport.this.foreach(new LocalListenerHelper.ListenerOperation<GnssNavigationMessage.Callback>() {
+            LocalListenerHelper.ListenerOperation<GnssNavigationMessage.Callback> operation = new LocalListenerHelper.ListenerOperation<GnssNavigationMessage.Callback>() { // from class: android.location.GnssNavigationMessageCallbackTransport.ListenerTransport.2
+                @Override // android.location.LocalListenerHelper.ListenerOperation
                 public void execute(GnssNavigationMessage.Callback callback) throws RemoteException {
                     callback.onStatusChanged(status);
                 }
-            });
+            };
+            GnssNavigationMessageCallbackTransport.this.foreach(operation);
         }
     }
 }

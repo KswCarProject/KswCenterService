@@ -1,7 +1,6 @@
 package android.media;
 
 import android.content.Context;
-import android.graphics.Paint;
 import android.media.SubtitleTrack;
 import android.text.Layout;
 import android.text.SpannableStringBuilder;
@@ -15,26 +14,25 @@ import com.android.internal.widget.SubtitleView;
 import java.util.ArrayList;
 import java.util.Vector;
 
-/* compiled from: WebVttRenderer */
+/* compiled from: WebVttRenderer.java */
+/* loaded from: classes3.dex */
 class WebVttRenderingWidget extends ViewGroup implements SubtitleTrack.RenderingWidget {
     private static final boolean DEBUG = false;
     private static final int DEBUG_CUE_BACKGROUND = -2130771968;
     private static final int DEBUG_REGION_BACKGROUND = -2147483393;
     private static final CaptioningManager.CaptionStyle DEFAULT_CAPTION_STYLE = CaptioningManager.CaptionStyle.DEFAULT;
     private static final float LINE_HEIGHT_RATIO = 0.0533f;
-    /* access modifiers changed from: private */
-    public CaptioningManager.CaptionStyle mCaptionStyle;
+    private CaptioningManager.CaptionStyle mCaptionStyle;
     private final CaptioningManager.CaptioningChangeListener mCaptioningListener;
     private final ArrayMap<TextTrackCue, CueLayout> mCueBoxes;
-    /* access modifiers changed from: private */
-    public float mFontSize;
+    private float mFontSize;
     private boolean mHasChangeListener;
     private SubtitleTrack.RenderingWidget.OnChangedListener mListener;
     private final CaptioningManager mManager;
     private final ArrayMap<TextTrackRegion, RegionLayout> mRegionBoxes;
 
     public WebVttRenderingWidget(Context context) {
-        this(context, (AttributeSet) null);
+        this(context, null);
     }
 
     public WebVttRenderingWidget(Context context, AttributeSet attrs) {
@@ -49,40 +47,50 @@ class WebVttRenderingWidget extends ViewGroup implements SubtitleTrack.Rendering
         super(context, attrs, defStyleAttr, defStyleRes);
         this.mRegionBoxes = new ArrayMap<>();
         this.mCueBoxes = new ArrayMap<>();
-        this.mCaptioningListener = new CaptioningManager.CaptioningChangeListener() {
+        this.mCaptioningListener = new CaptioningManager.CaptioningChangeListener() { // from class: android.media.WebVttRenderingWidget.1
+            @Override // android.view.accessibility.CaptioningManager.CaptioningChangeListener
             public void onFontScaleChanged(float fontScale) {
-                WebVttRenderingWidget.this.setCaptionStyle(WebVttRenderingWidget.this.mCaptionStyle, ((float) WebVttRenderingWidget.this.getHeight()) * fontScale * WebVttRenderingWidget.LINE_HEIGHT_RATIO);
+                float fontSize = WebVttRenderingWidget.this.getHeight() * fontScale * WebVttRenderingWidget.LINE_HEIGHT_RATIO;
+                WebVttRenderingWidget.this.setCaptionStyle(WebVttRenderingWidget.this.mCaptionStyle, fontSize);
             }
 
+            @Override // android.view.accessibility.CaptioningManager.CaptioningChangeListener
             public void onUserStyleChanged(CaptioningManager.CaptionStyle userStyle) {
                 WebVttRenderingWidget.this.setCaptionStyle(userStyle, WebVttRenderingWidget.this.mFontSize);
             }
         };
-        setLayerType(1, (Paint) null);
+        setLayerType(1, null);
         this.mManager = (CaptioningManager) context.getSystemService(Context.CAPTIONING_SERVICE);
         this.mCaptionStyle = this.mManager.getUserStyle();
-        this.mFontSize = this.mManager.getFontScale() * ((float) getHeight()) * LINE_HEIGHT_RATIO;
+        this.mFontSize = this.mManager.getFontScale() * getHeight() * LINE_HEIGHT_RATIO;
     }
 
+    @Override // android.media.SubtitleTrack.RenderingWidget
     public void setSize(int width, int height) {
-        measure(View.MeasureSpec.makeMeasureSpec(width, 1073741824), View.MeasureSpec.makeMeasureSpec(height, 1073741824));
+        int widthSpec = View.MeasureSpec.makeMeasureSpec(width, 1073741824);
+        int heightSpec = View.MeasureSpec.makeMeasureSpec(height, 1073741824);
+        measure(widthSpec, heightSpec);
         layout(0, 0, width, height);
     }
 
+    @Override // android.view.ViewGroup, android.view.View
     public void onAttachedToWindow() {
         super.onAttachedToWindow();
         manageChangeListener();
     }
 
+    @Override // android.view.ViewGroup, android.view.View
     public void onDetachedFromWindow() {
         super.onDetachedFromWindow();
         manageChangeListener();
     }
 
+    @Override // android.media.SubtitleTrack.RenderingWidget
     public void setOnChangedListener(SubtitleTrack.RenderingWidget.OnChangedListener listener) {
         this.mListener = listener;
     }
 
+    @Override // android.media.SubtitleTrack.RenderingWidget
     public void setVisible(boolean visible) {
         if (visible) {
             setVisibility(0);
@@ -98,7 +106,9 @@ class WebVttRenderingWidget extends ViewGroup implements SubtitleTrack.Rendering
             this.mHasChangeListener = needsListener;
             if (needsListener) {
                 this.mManager.addCaptioningChangeListener(this.mCaptioningListener);
-                setCaptionStyle(this.mManager.getUserStyle(), this.mManager.getFontScale() * ((float) getHeight()) * LINE_HEIGHT_RATIO);
+                CaptioningManager.CaptionStyle captionStyle = this.mManager.getUserStyle();
+                float fontSize = this.mManager.getFontScale() * getHeight() * LINE_HEIGHT_RATIO;
+                setCaptionStyle(captionStyle, fontSize);
                 return;
             }
             this.mManager.removeCaptioningChangeListener(this.mCaptioningListener);
@@ -119,7 +129,7 @@ class WebVttRenderingWidget extends ViewGroup implements SubtitleTrack.Rendering
                 if (regionBox == null) {
                     regionBox = new RegionLayout(context, region, captionStyle, fontSize);
                     this.mRegionBoxes.put(region, regionBox);
-                    addView((View) regionBox, -2, -2);
+                    addView(regionBox, -2, -2);
                 }
                 regionBox.put(cue);
             } else {
@@ -127,44 +137,49 @@ class WebVttRenderingWidget extends ViewGroup implements SubtitleTrack.Rendering
                 if (cueBox == null) {
                     cueBox = new CueLayout(context, cue, captionStyle, fontSize);
                     this.mCueBoxes.put(cue, cueBox);
-                    addView((View) cueBox, -2, -2);
+                    addView(cueBox, -2, -2);
                 }
                 cueBox.update();
                 cueBox.setOrder(i);
             }
         }
         prune();
-        setSize(getWidth(), getHeight());
+        int width = getWidth();
+        int height = getHeight();
+        setSize(width, height);
         if (this.mListener != null) {
             this.mListener.onChanged(this);
         }
     }
 
-    /* access modifiers changed from: private */
+    /* JADX INFO: Access modifiers changed from: private */
     public void setCaptionStyle(CaptioningManager.CaptionStyle captionStyle, float fontSize) {
         CaptioningManager.CaptionStyle captionStyle2 = DEFAULT_CAPTION_STYLE.applyStyle(captionStyle);
         this.mCaptionStyle = captionStyle2;
         this.mFontSize = fontSize;
         int cueCount = this.mCueBoxes.size();
         for (int i = 0; i < cueCount; i++) {
-            this.mCueBoxes.valueAt(i).setCaptionStyle(captionStyle2, fontSize);
+            CueLayout cueBox = this.mCueBoxes.valueAt(i);
+            cueBox.setCaptionStyle(captionStyle2, fontSize);
         }
         int regionCount = this.mRegionBoxes.size();
         for (int i2 = 0; i2 < regionCount; i2++) {
-            this.mRegionBoxes.valueAt(i2).setCaptionStyle(captionStyle2, fontSize);
+            RegionLayout regionBox = this.mRegionBoxes.valueAt(i2);
+            regionBox.setCaptionStyle(captionStyle2, fontSize);
         }
     }
 
     private void prune() {
-        int i = 0;
         int regionCount = this.mRegionBoxes.size();
+        int i = 0;
+        int regionCount2 = regionCount;
         int i2 = 0;
-        while (i2 < regionCount) {
+        while (i2 < regionCount2) {
             RegionLayout regionBox = this.mRegionBoxes.valueAt(i2);
             if (regionBox.prune()) {
                 removeView(regionBox);
                 this.mRegionBoxes.removeAt(i2);
-                regionCount--;
+                regionCount2--;
                 i2--;
             }
             i2++;
@@ -185,39 +200,45 @@ class WebVttRenderingWidget extends ViewGroup implements SubtitleTrack.Rendering
     private void prepForPrune() {
         int regionCount = this.mRegionBoxes.size();
         for (int i = 0; i < regionCount; i++) {
-            this.mRegionBoxes.valueAt(i).prepForPrune();
+            RegionLayout regionBox = this.mRegionBoxes.valueAt(i);
+            regionBox.prepForPrune();
         }
         int cueCount = this.mCueBoxes.size();
         for (int i2 = 0; i2 < cueCount; i2++) {
-            this.mCueBoxes.valueAt(i2).prepForPrune();
+            CueLayout cueBox = this.mCueBoxes.valueAt(i2);
+            cueBox.prepForPrune();
         }
     }
 
-    /* access modifiers changed from: protected */
-    public void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
+    @Override // android.view.View
+    protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
         super.onMeasure(widthMeasureSpec, heightMeasureSpec);
         int regionCount = this.mRegionBoxes.size();
         for (int i = 0; i < regionCount; i++) {
-            this.mRegionBoxes.valueAt(i).measureForParent(widthMeasureSpec, heightMeasureSpec);
+            RegionLayout regionBox = this.mRegionBoxes.valueAt(i);
+            regionBox.measureForParent(widthMeasureSpec, heightMeasureSpec);
         }
         int cueCount = this.mCueBoxes.size();
         for (int i2 = 0; i2 < cueCount; i2++) {
-            this.mCueBoxes.valueAt(i2).measureForParent(widthMeasureSpec, heightMeasureSpec);
+            CueLayout cueBox = this.mCueBoxes.valueAt(i2);
+            cueBox.measureForParent(widthMeasureSpec, heightMeasureSpec);
         }
     }
 
-    /* access modifiers changed from: protected */
-    public void onLayout(boolean changed, int l, int t, int r, int b) {
+    @Override // android.view.ViewGroup, android.view.View
+    protected void onLayout(boolean changed, int l, int t, int r, int b) {
         int viewportWidth = r - l;
         int viewportHeight = b - t;
-        setCaptionStyle(this.mCaptionStyle, this.mManager.getFontScale() * LINE_HEIGHT_RATIO * ((float) viewportHeight));
+        setCaptionStyle(this.mCaptionStyle, this.mManager.getFontScale() * LINE_HEIGHT_RATIO * viewportHeight);
         int regionCount = this.mRegionBoxes.size();
         for (int i = 0; i < regionCount; i++) {
-            layoutRegion(viewportWidth, viewportHeight, this.mRegionBoxes.valueAt(i));
+            RegionLayout regionBox = this.mRegionBoxes.valueAt(i);
+            layoutRegion(viewportWidth, viewportHeight, regionBox);
         }
         int cueCount = this.mCueBoxes.size();
         for (int i2 = 0; i2 < cueCount; i2++) {
-            layoutCue(viewportWidth, viewportHeight, this.mCueBoxes.valueAt(i2));
+            CueLayout cueBox = this.mCueBoxes.valueAt(i2);
+            layoutCue(viewportWidth, viewportHeight, cueBox);
         }
     }
 
@@ -225,15 +246,16 @@ class WebVttRenderingWidget extends ViewGroup implements SubtitleTrack.Rendering
         TextTrackRegion region = regionBox.getRegion();
         int regionHeight = regionBox.getMeasuredHeight();
         int regionWidth = regionBox.getMeasuredWidth();
-        int left = (int) ((((float) (viewportWidth - regionWidth)) * region.mViewportAnchorPointX) / 100.0f);
-        int top = (int) ((((float) (viewportHeight - regionHeight)) * region.mViewportAnchorPointY) / 100.0f);
+        float x = region.mViewportAnchorPointX;
+        float y = region.mViewportAnchorPointY;
+        int left = (int) (((viewportWidth - regionWidth) * x) / 100.0f);
+        int top = (int) (((viewportHeight - regionHeight) * y) / 100.0f);
         regionBox.layout(left, top, left + regionWidth, top + regionHeight);
     }
 
     private void layoutCue(int viewportWidth, int viewportHeight, CueLayout cueBox) {
         int xPosition;
         int top;
-        CueLayout cueLayout = cueBox;
         TextTrackCue cue = cueBox.getCue();
         int direction = getLayoutDirection();
         int absAlignment = resolveCueAlignment(direction, cue.mAlignment);
@@ -260,21 +282,21 @@ class WebVttRenderingWidget extends ViewGroup implements SubtitleTrack.Rendering
                 xPosition += paddingLeft;
                 size -= paddingLeft;
             }
-            float rightEdge = (float) (100 - paddingRight);
-            if (((float) xPosition) < rightEdge && ((float) (xPosition + size)) > rightEdge) {
+            float rightEdge = 100 - paddingRight;
+            if (xPosition < rightEdge && xPosition + size > rightEdge) {
                 size -= paddingRight;
             }
         }
         int left = (xPosition * viewportWidth) / 100;
         int width = (size * viewportWidth) / 100;
-        int yPosition = calculateLinePosition(cueLayout);
+        int yPosition = calculateLinePosition(cueBox);
         int height = cueBox.getMeasuredHeight();
         if (yPosition < 0) {
             top = viewportHeight + (yPosition * height);
         } else {
             top = ((viewportHeight - height) * yPosition) / 100;
         }
-        cueLayout.layout(left, top, left + width, top + height);
+        cueBox.layout(left, top, left + width, top + height);
     }
 
     private int calculateLinePosition(CueLayout cueBox) {
@@ -288,39 +310,35 @@ class WebVttRenderingWidget extends ViewGroup implements SubtitleTrack.Rendering
         if (!autoPosition) {
             return linePosition.intValue();
         }
-        if (!snapToLines) {
-            return 100;
+        if (snapToLines) {
+            return -(cueBox.mOrder + 1);
         }
-        return -(cueBox.mOrder + 1);
+        return 100;
     }
 
-    /* access modifiers changed from: private */
+    /* JADX INFO: Access modifiers changed from: private */
     public static int resolveCueAlignment(int layoutDirection, int alignment) {
         switch (alignment) {
             case 201:
-                if (layoutDirection == 0) {
-                    return 203;
-                }
-                return 204;
+                return layoutDirection == 0 ? 203 : 204;
             case 202:
-                if (layoutDirection == 0) {
-                    return 204;
-                }
-                return 203;
+                return layoutDirection == 0 ? 204 : 203;
             default:
                 return alignment;
         }
     }
 
-    /* compiled from: WebVttRenderer */
+    /* compiled from: WebVttRenderer.java */
+    /* loaded from: classes3.dex */
     private static class RegionLayout extends LinearLayout {
         private CaptioningManager.CaptionStyle mCaptionStyle;
         private float mFontSize;
         private final TextTrackRegion mRegion;
-        private final ArrayList<CueLayout> mRegionCueBoxes = new ArrayList<>();
+        private final ArrayList<CueLayout> mRegionCueBoxes;
 
         public RegionLayout(Context context, TextTrackRegion region, CaptioningManager.CaptionStyle captionStyle, float fontSize) {
             super(context);
+            this.mRegionCueBoxes = new ArrayList<>();
             this.mRegion = region;
             this.mCaptionStyle = captionStyle;
             this.mFontSize = fontSize;
@@ -333,20 +351,29 @@ class WebVttRenderingWidget extends ViewGroup implements SubtitleTrack.Rendering
             this.mFontSize = fontSize;
             int cueCount = this.mRegionCueBoxes.size();
             for (int i = 0; i < cueCount; i++) {
-                this.mRegionCueBoxes.get(i).setCaptionStyle(captionStyle, fontSize);
+                CueLayout cueBox = this.mRegionCueBoxes.get(i);
+                cueBox.setCaptionStyle(captionStyle, fontSize);
             }
-            setBackgroundColor(captionStyle.windowColor);
+            int i2 = captionStyle.windowColor;
+            setBackgroundColor(i2);
         }
 
         public void measureForParent(int widthMeasureSpec, int heightMeasureSpec) {
             TextTrackRegion region = this.mRegion;
-            measure(View.MeasureSpec.makeMeasureSpec((((int) region.mWidth) * View.MeasureSpec.getSize(widthMeasureSpec)) / 100, Integer.MIN_VALUE), View.MeasureSpec.makeMeasureSpec(View.MeasureSpec.getSize(heightMeasureSpec), Integer.MIN_VALUE));
+            int specWidth = View.MeasureSpec.getSize(widthMeasureSpec);
+            int specHeight = View.MeasureSpec.getSize(heightMeasureSpec);
+            int width = (int) region.mWidth;
+            int size = (width * specWidth) / 100;
+            int widthMeasureSpec2 = View.MeasureSpec.makeMeasureSpec(size, Integer.MIN_VALUE);
+            int heightMeasureSpec2 = View.MeasureSpec.makeMeasureSpec(specHeight, Integer.MIN_VALUE);
+            measure(widthMeasureSpec2, heightMeasureSpec2);
         }
 
         public void prepForPrune() {
             int cueCount = this.mRegionCueBoxes.size();
             for (int i = 0; i < cueCount; i++) {
-                this.mRegionCueBoxes.get(i).prepForPrune();
+                CueLayout cueBox = this.mRegionCueBoxes.get(i);
+                cueBox.prepForPrune();
             }
         }
 
@@ -361,7 +388,7 @@ class WebVttRenderingWidget extends ViewGroup implements SubtitleTrack.Rendering
             }
             CueLayout cueBox2 = new CueLayout(getContext(), cue, this.mCaptionStyle, this.mFontSize);
             this.mRegionCueBoxes.add(cueBox2);
-            addView((View) cueBox2, -2, -2);
+            addView(cueBox2, -2, -2);
             if (getChildCount() > this.mRegion.mLines) {
                 removeViewAt(0);
             }
@@ -388,27 +415,25 @@ class WebVttRenderingWidget extends ViewGroup implements SubtitleTrack.Rendering
         }
     }
 
-    /* compiled from: WebVttRenderer */
+    /* compiled from: WebVttRenderer.java */
+    /* loaded from: classes3.dex */
     private static class CueLayout extends LinearLayout {
         private boolean mActive;
         private CaptioningManager.CaptionStyle mCaptionStyle;
         public final TextTrackCue mCue;
         private float mFontSize;
-        /* access modifiers changed from: private */
-        public int mOrder;
+        private int mOrder;
 
         public CueLayout(Context context, TextTrackCue cue, CaptioningManager.CaptionStyle captionStyle, float fontSize) {
             super(context);
             this.mCue = cue;
             this.mCaptionStyle = captionStyle;
             this.mFontSize = fontSize;
-            int i = 0;
-            int i2 = 1;
             boolean horizontal = cue.mWritingDirection == 100;
-            setOrientation(horizontal ? 1 : i);
+            setOrientation(horizontal ? 1 : 0);
             switch (cue.mAlignment) {
                 case 200:
-                    setGravity(!horizontal ? 16 : i2);
+                    setGravity(horizontal ? 1 : 16);
                     break;
                 case 201:
                     setGravity(8388611);
@@ -446,7 +471,8 @@ class WebVttRenderingWidget extends ViewGroup implements SubtitleTrack.Rendering
             Layout.Alignment alignment;
             this.mActive = true;
             removeAllViews();
-            switch (WebVttRenderingWidget.resolveCueAlignment(getLayoutDirection(), this.mCue.mAlignment)) {
+            int cueAlignment = WebVttRenderingWidget.resolveCueAlignment(getLayoutDirection(), this.mCue.mAlignment);
+            switch (cueAlignment) {
                 case 203:
                     alignment = Layout.Alignment.ALIGN_LEFT;
                     break;
@@ -459,16 +485,17 @@ class WebVttRenderingWidget extends ViewGroup implements SubtitleTrack.Rendering
             }
             CaptioningManager.CaptionStyle captionStyle = this.mCaptionStyle;
             float fontSize = this.mFontSize;
-            for (TextTrackCueSpan[] spanLayout : this.mCue.mLines) {
-                SpanLayout lineBox = new SpanLayout(getContext(), spanLayout);
+            TextTrackCueSpan[][] lines = this.mCue.mLines;
+            for (TextTrackCueSpan[] textTrackCueSpanArr : lines) {
+                SpanLayout lineBox = new SpanLayout(getContext(), textTrackCueSpanArr);
                 lineBox.setAlignment(alignment);
                 lineBox.setCaptionStyle(captionStyle, fontSize);
-                addView((View) lineBox, -2, -2);
+                addView(lineBox, -2, -2);
             }
         }
 
-        /* access modifiers changed from: protected */
-        public void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
+        @Override // android.widget.LinearLayout, android.view.View
+        protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
             super.onMeasure(widthMeasureSpec, heightMeasureSpec);
         }
 
@@ -477,11 +504,13 @@ class WebVttRenderingWidget extends ViewGroup implements SubtitleTrack.Rendering
             TextTrackCue cue = this.mCue;
             int specWidth = View.MeasureSpec.getSize(widthMeasureSpec);
             int specHeight = View.MeasureSpec.getSize(heightMeasureSpec);
-            int absAlignment = WebVttRenderingWidget.resolveCueAlignment(getLayoutDirection(), cue.mAlignment);
+            int direction = getLayoutDirection();
+            int absAlignment = WebVttRenderingWidget.resolveCueAlignment(direction, cue.mAlignment);
             if (absAlignment != 200) {
                 switch (absAlignment) {
                     case 203:
-                        maximumSize = 100 - cue.mTextPosition;
+                        int maximumSize2 = cue.mTextPosition;
+                        maximumSize = 100 - maximumSize2;
                         break;
                     case 204:
                         maximumSize = cue.mTextPosition;
@@ -490,12 +519,18 @@ class WebVttRenderingWidget extends ViewGroup implements SubtitleTrack.Rendering
                         maximumSize = 0;
                         break;
                 }
-            } else if (cue.mTextPosition <= 50) {
-                maximumSize = cue.mTextPosition * 2;
             } else {
-                maximumSize = (100 - cue.mTextPosition) * 2;
+                int maximumSize3 = cue.mTextPosition;
+                if (maximumSize3 <= 50) {
+                    maximumSize = cue.mTextPosition * 2;
+                } else {
+                    maximumSize = (100 - cue.mTextPosition) * 2;
+                }
             }
-            measure(View.MeasureSpec.makeMeasureSpec((Math.min(cue.mSize, maximumSize) * specWidth) / 100, Integer.MIN_VALUE), View.MeasureSpec.makeMeasureSpec(specHeight, Integer.MIN_VALUE));
+            int size = (Math.min(cue.mSize, maximumSize) * specWidth) / 100;
+            int widthMeasureSpec2 = View.MeasureSpec.makeMeasureSpec(size, Integer.MIN_VALUE);
+            int heightMeasureSpec2 = View.MeasureSpec.makeMeasureSpec(specHeight, Integer.MIN_VALUE);
+            measure(widthMeasureSpec2, heightMeasureSpec2);
         }
 
         public void setOrder(int order) {
@@ -511,13 +546,15 @@ class WebVttRenderingWidget extends ViewGroup implements SubtitleTrack.Rendering
         }
     }
 
-    /* compiled from: WebVttRenderer */
+    /* compiled from: WebVttRenderer.java */
+    /* loaded from: classes3.dex */
     private static class SpanLayout extends SubtitleView {
-        private final SpannableStringBuilder mBuilder = new SpannableStringBuilder();
+        private final SpannableStringBuilder mBuilder;
         private final TextTrackCueSpan[] mSpans;
 
         public SpanLayout(Context context, TextTrackCueSpan[] spans) {
             super(context);
+            this.mBuilder = new SpannableStringBuilder();
             this.mSpans = spans;
             update();
         }
@@ -529,11 +566,12 @@ class WebVttRenderingWidget extends ViewGroup implements SubtitleTrack.Rendering
             builder.clearSpans();
             int spanCount = spans.length;
             for (int i = 0; i < spanCount; i++) {
-                if (spans[i].mEnabled) {
+                TextTrackCueSpan span = spans[i];
+                if (span.mEnabled) {
                     builder.append((CharSequence) spans[i].mText);
                 }
             }
-            setText((CharSequence) builder);
+            setText(builder);
         }
 
         public void setCaptionStyle(CaptioningManager.CaptionStyle captionStyle, float fontSize) {

@@ -2,6 +2,7 @@ package android.view.accessibility;
 
 import android.view.View;
 
+/* loaded from: classes4.dex */
 public final class AccessibilityNodeIdManager {
     private static AccessibilityNodeIdManager sIdManager;
     private WeakSparseArray<View> mIdsToViews = new WeakSparseArray<>();

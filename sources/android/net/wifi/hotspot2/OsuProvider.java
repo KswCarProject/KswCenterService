@@ -4,9 +4,9 @@ import android.annotation.SystemApi;
 import android.graphics.drawable.Icon;
 import android.net.Uri;
 import android.net.wifi.WifiSsid;
-import android.os.Bundle;
-import android.os.Parcel;
-import android.os.Parcelable;
+import android.p007os.Bundle;
+import android.p007os.Parcel;
+import android.p007os.Parcelable;
 import android.text.TextUtils;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -16,17 +16,26 @@ import java.util.Map;
 import java.util.Objects;
 
 @SystemApi
+/* loaded from: classes3.dex */
 public final class OsuProvider implements Parcelable {
-    public static final Parcelable.Creator<OsuProvider> CREATOR = new Parcelable.Creator<OsuProvider>() {
+    public static final Parcelable.Creator<OsuProvider> CREATOR = new Parcelable.Creator<OsuProvider>() { // from class: android.net.wifi.hotspot2.OsuProvider.1
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public OsuProvider createFromParcel(Parcel in) {
-            Parcel parcel = in;
+            WifiSsid osuSsid = (WifiSsid) in.readParcelable(null);
             String serviceDescription = in.readString();
+            Uri serverUri = (Uri) in.readParcelable(null);
             String nai = in.readString();
             List<Integer> methodList = new ArrayList<>();
-            parcel.readList(methodList, (ClassLoader) null);
-            return new OsuProvider((WifiSsid) parcel.readParcelable((ClassLoader) null), (HashMap) in.readBundle().getSerializable("friendlyNameMap"), serviceDescription, (Uri) parcel.readParcelable((ClassLoader) null), nai, methodList, (Icon) parcel.readParcelable((ClassLoader) null));
+            in.readList(methodList, null);
+            Icon icon = (Icon) in.readParcelable(null);
+            Bundle bundle = in.readBundle();
+            Map<String, String> friendlyNamesMap = (HashMap) bundle.getSerializable("friendlyNameMap");
+            return new OsuProvider(osuSsid, friendlyNamesMap, serviceDescription, serverUri, nai, methodList, icon);
         }
 
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public OsuProvider[] newArray(int size) {
             return new OsuProvider[size];
         }
@@ -91,7 +100,8 @@ public final class OsuProvider implements Parcelable {
         if (this.mFriendlyNames == null || this.mFriendlyNames.isEmpty()) {
             return null;
         }
-        String friendlyName = this.mFriendlyNames.get(Locale.getDefault().getLanguage());
+        String lang = Locale.getDefault().getLanguage();
+        String friendlyName = this.mFriendlyNames.get(lang);
         if (friendlyName != null) {
             return friendlyName;
         }
@@ -126,10 +136,12 @@ public final class OsuProvider implements Parcelable {
         return this.mIcon;
     }
 
+    @Override // android.p007os.Parcelable
     public int describeContents() {
         return 0;
     }
 
+    @Override // android.p007os.Parcelable
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeParcelable(this.mOsuSsid, flags);
         dest.writeString(this.mServiceDescription);
@@ -146,32 +158,32 @@ public final class OsuProvider implements Parcelable {
         if (this == thatObject) {
             return true;
         }
-        if (!(thatObject instanceof OsuProvider)) {
+        if (thatObject instanceof OsuProvider) {
+            OsuProvider that = (OsuProvider) thatObject;
+            if (this.mOsuSsid != null ? this.mOsuSsid.equals(that.mOsuSsid) : that.mOsuSsid == null) {
+                if (this.mFriendlyNames == null) {
+                    if (that.mFriendlyNames == null) {
+                        return true;
+                    }
+                    return false;
+                }
+            }
+            if (this.mFriendlyNames.equals(that.mFriendlyNames) && TextUtils.equals(this.mServiceDescription, that.mServiceDescription) && (this.mServerUri != null ? this.mServerUri.equals(that.mServerUri) : that.mServerUri == null) && TextUtils.equals(this.mNetworkAccessIdentifier, that.mNetworkAccessIdentifier) && (this.mMethodList != null ? this.mMethodList.equals(that.mMethodList) : that.mMethodList == null)) {
+                if (this.mIcon == null) {
+                    if (that.mIcon == null) {
+                        return true;
+                    }
+                } else if (this.mIcon.sameAs(that.mIcon)) {
+                    return true;
+                }
+            }
             return false;
-        }
-        OsuProvider that = (OsuProvider) thatObject;
-        if (this.mOsuSsid != null ? this.mOsuSsid.equals(that.mOsuSsid) : that.mOsuSsid == null) {
-            if (this.mFriendlyNames == null) {
-                if (that.mFriendlyNames == null) {
-                    return true;
-                }
-                return false;
-            }
-        }
-        if (this.mFriendlyNames.equals(that.mFriendlyNames) && TextUtils.equals(this.mServiceDescription, that.mServiceDescription) && (this.mServerUri != null ? this.mServerUri.equals(that.mServerUri) : that.mServerUri == null) && TextUtils.equals(this.mNetworkAccessIdentifier, that.mNetworkAccessIdentifier) && (this.mMethodList != null ? this.mMethodList.equals(that.mMethodList) : that.mMethodList == null)) {
-            if (this.mIcon == null) {
-                if (that.mIcon == null) {
-                    return true;
-                }
-            } else if (this.mIcon.sameAs(that.mIcon)) {
-                return true;
-            }
         }
         return false;
     }
 
     public int hashCode() {
-        return Objects.hash(new Object[]{this.mOsuSsid, this.mServiceDescription, this.mFriendlyNames, this.mServerUri, this.mNetworkAccessIdentifier, this.mMethodList});
+        return Objects.hash(this.mOsuSsid, this.mServiceDescription, this.mFriendlyNames, this.mServerUri, this.mNetworkAccessIdentifier, this.mMethodList);
     }
 
     public String toString() {

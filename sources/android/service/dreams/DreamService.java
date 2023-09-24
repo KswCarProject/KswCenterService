@@ -4,12 +4,11 @@ import android.annotation.UnsupportedAppUsage;
 import android.app.Service;
 import android.content.Intent;
 import android.graphics.drawable.ColorDrawable;
-import android.os.Bundle;
-import android.os.Handler;
-import android.os.IBinder;
-import android.os.IRemoteCallback;
-import android.os.RemoteException;
-import android.os.ServiceManager;
+import android.p007os.Handler;
+import android.p007os.IBinder;
+import android.p007os.IRemoteCallback;
+import android.p007os.RemoteException;
+import android.p007os.ServiceManager;
 import android.service.dreams.IDreamManager;
 import android.service.dreams.IDreamService;
 import android.util.MathUtils;
@@ -27,169 +26,187 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.view.WindowManagerGlobal;
 import android.view.accessibility.AccessibilityEvent;
-import com.android.internal.R;
+import com.android.internal.C3132R;
 import com.android.internal.policy.PhoneWindow;
 import com.android.internal.util.DumpUtils;
 import com.ibm.icu.text.PluralRules;
 import java.io.FileDescriptor;
 import java.io.PrintWriter;
 
+/* loaded from: classes3.dex */
 public class DreamService extends Service implements Window.Callback {
     public static final String DREAM_META_DATA = "android.service.dream";
     public static final String DREAM_SERVICE = "dreams";
     public static final String SERVICE_INTERFACE = "android.service.dreams.DreamService";
-    /* access modifiers changed from: private */
-    public final String TAG = (DreamService.class.getSimpleName() + "[" + getClass().getSimpleName() + "]");
     private boolean mCanDoze;
-    /* access modifiers changed from: private */
-    public boolean mDebug = false;
-    private int mDozeScreenBrightness = -1;
-    private int mDozeScreenState = 0;
     private boolean mDozing;
     private boolean mFinished;
     private boolean mFullscreen;
-    /* access modifiers changed from: private */
-    public final Handler mHandler = new Handler();
     private boolean mInteractive;
-    private boolean mLowProfile = true;
-    private final IDreamManager mSandman = IDreamManager.Stub.asInterface(ServiceManager.getService(DREAM_SERVICE));
-    private boolean mScreenBright = true;
-    /* access modifiers changed from: private */
-    public boolean mStarted;
+    private boolean mStarted;
     private boolean mWaking;
-    /* access modifiers changed from: private */
-    public Window mWindow;
+    private Window mWindow;
     private IBinder mWindowToken;
-    /* access modifiers changed from: private */
-    public boolean mWindowless;
+    private boolean mWindowless;
+    private final String TAG = DreamService.class.getSimpleName() + "[" + getClass().getSimpleName() + "]";
+    private final Handler mHandler = new Handler();
+    private boolean mLowProfile = true;
+    private boolean mScreenBright = true;
+    private int mDozeScreenState = 0;
+    private int mDozeScreenBrightness = -1;
+    private boolean mDebug = false;
+    private final IDreamManager mSandman = IDreamManager.Stub.asInterface(ServiceManager.getService(DREAM_SERVICE));
 
     public void setDebug(boolean dbg) {
         this.mDebug = dbg;
     }
 
+    @Override // android.view.Window.Callback
     public boolean dispatchKeyEvent(KeyEvent event) {
         if (!this.mInteractive) {
             if (this.mDebug) {
-                Slog.v(this.TAG, "Waking up on keyEvent");
+                Slog.m52v(this.TAG, "Waking up on keyEvent");
             }
             wakeUp();
             return true;
-        } else if (event.getKeyCode() != 4) {
-            return this.mWindow.superDispatchKeyEvent(event);
-        } else {
+        } else if (event.getKeyCode() == 4) {
             if (this.mDebug) {
-                Slog.v(this.TAG, "Waking up on back key");
+                Slog.m52v(this.TAG, "Waking up on back key");
+            }
+            wakeUp();
+            return true;
+        } else {
+            return this.mWindow.superDispatchKeyEvent(event);
+        }
+    }
+
+    @Override // android.view.Window.Callback
+    public boolean dispatchKeyShortcutEvent(KeyEvent event) {
+        if (!this.mInteractive) {
+            if (this.mDebug) {
+                Slog.m52v(this.TAG, "Waking up on keyShortcutEvent");
             }
             wakeUp();
             return true;
         }
+        return this.mWindow.superDispatchKeyShortcutEvent(event);
     }
 
-    public boolean dispatchKeyShortcutEvent(KeyEvent event) {
-        if (this.mInteractive) {
-            return this.mWindow.superDispatchKeyShortcutEvent(event);
-        }
-        if (this.mDebug) {
-            Slog.v(this.TAG, "Waking up on keyShortcutEvent");
-        }
-        wakeUp();
-        return true;
-    }
-
+    @Override // android.view.Window.Callback
     public boolean dispatchTouchEvent(MotionEvent event) {
-        if (this.mInteractive) {
-            return this.mWindow.superDispatchTouchEvent(event);
+        if (!this.mInteractive) {
+            if (this.mDebug) {
+                Slog.m52v(this.TAG, "Waking up on touchEvent");
+            }
+            wakeUp();
+            return true;
         }
-        if (this.mDebug) {
-            Slog.v(this.TAG, "Waking up on touchEvent");
-        }
-        wakeUp();
-        return true;
+        return this.mWindow.superDispatchTouchEvent(event);
     }
 
+    @Override // android.view.Window.Callback
     public boolean dispatchTrackballEvent(MotionEvent event) {
-        if (this.mInteractive) {
-            return this.mWindow.superDispatchTrackballEvent(event);
+        if (!this.mInteractive) {
+            if (this.mDebug) {
+                Slog.m52v(this.TAG, "Waking up on trackballEvent");
+            }
+            wakeUp();
+            return true;
         }
-        if (this.mDebug) {
-            Slog.v(this.TAG, "Waking up on trackballEvent");
-        }
-        wakeUp();
-        return true;
+        return this.mWindow.superDispatchTrackballEvent(event);
     }
 
+    @Override // android.view.Window.Callback
     public boolean dispatchGenericMotionEvent(MotionEvent event) {
-        if (this.mInteractive) {
-            return this.mWindow.superDispatchGenericMotionEvent(event);
+        if (!this.mInteractive) {
+            if (this.mDebug) {
+                Slog.m52v(this.TAG, "Waking up on genericMotionEvent");
+            }
+            wakeUp();
+            return true;
         }
-        if (this.mDebug) {
-            Slog.v(this.TAG, "Waking up on genericMotionEvent");
-        }
-        wakeUp();
-        return true;
+        return this.mWindow.superDispatchGenericMotionEvent(event);
     }
 
+    @Override // android.view.Window.Callback
     public boolean dispatchPopulateAccessibilityEvent(AccessibilityEvent event) {
         return false;
     }
 
+    @Override // android.view.Window.Callback
     public View onCreatePanelView(int featureId) {
         return null;
     }
 
+    @Override // android.view.Window.Callback
     public boolean onCreatePanelMenu(int featureId, Menu menu) {
         return false;
     }
 
+    @Override // android.view.Window.Callback
     public boolean onPreparePanel(int featureId, View view, Menu menu) {
         return false;
     }
 
+    @Override // android.view.Window.Callback
     public boolean onMenuOpened(int featureId, Menu menu) {
         return false;
     }
 
+    @Override // android.view.Window.Callback
     public boolean onMenuItemSelected(int featureId, MenuItem item) {
         return false;
     }
 
+    @Override // android.view.Window.Callback
     public void onWindowAttributesChanged(WindowManager.LayoutParams attrs) {
     }
 
+    @Override // android.view.Window.Callback
     public void onContentChanged() {
     }
 
+    @Override // android.view.Window.Callback
     public void onWindowFocusChanged(boolean hasFocus) {
     }
 
+    @Override // android.view.Window.Callback
     public void onAttachedToWindow() {
     }
 
+    @Override // android.view.Window.Callback
     public void onDetachedFromWindow() {
     }
 
+    @Override // android.view.Window.Callback
     public void onPanelClosed(int featureId, Menu menu) {
     }
 
+    @Override // android.view.Window.Callback
     public boolean onSearchRequested(SearchEvent event) {
         return onSearchRequested();
     }
 
+    @Override // android.view.Window.Callback
     public boolean onSearchRequested() {
         return false;
     }
 
+    @Override // android.view.Window.Callback
     public ActionMode onWindowStartingActionMode(ActionMode.Callback callback) {
         return null;
     }
 
+    @Override // android.view.Window.Callback
     public ActionMode onWindowStartingActionMode(ActionMode.Callback callback, int type) {
         return null;
     }
 
+    @Override // android.view.Window.Callback
     public void onActionModeStarted(ActionMode mode) {
     }
 
+    @Override // android.view.Window.Callback
     public void onActionModeFinished(ActionMode mode) {
     }
 
@@ -221,15 +238,15 @@ public class DreamService extends Service implements Window.Callback {
     }
 
     public <T extends View> T findViewById(int id) {
-        return getWindow().findViewById(id);
+        return (T) getWindow().findViewById(id);
     }
 
     public final <T extends View> T requireViewById(int id) {
-        T view = findViewById(id);
-        if (view != null) {
-            return view;
+        T view = (T) findViewById(id);
+        if (view == null) {
+            throw new IllegalArgumentException("ID does not reference a View inside this DreamService");
         }
-        throw new IllegalArgumentException("ID does not reference a View inside this DreamService");
+        return view;
     }
 
     public void setInteractive(boolean interactive) {
@@ -297,7 +314,7 @@ public class DreamService extends Service implements Window.Callback {
 
     private void updateDoze() {
         if (this.mWindowToken == null) {
-            Slog.w(this.TAG, "Updating doze without a window token.");
+            Slog.m50w(this.TAG, "Updating doze without a window token.");
         } else if (this.mDozing) {
             try {
                 this.mSandman.startDozing(this.mWindowToken, this.mDozeScreenState, this.mDozeScreenBrightness);
@@ -350,22 +367,23 @@ public class DreamService extends Service implements Window.Callback {
         }
     }
 
+    @Override // android.app.Service
     public void onCreate() {
         if (this.mDebug) {
-            Slog.v(this.TAG, "onCreate()");
+            Slog.m52v(this.TAG, "onCreate()");
         }
         super.onCreate();
     }
 
     public void onDreamingStarted() {
         if (this.mDebug) {
-            Slog.v(this.TAG, "onDreamingStarted()");
+            Slog.m52v(this.TAG, "onDreamingStarted()");
         }
     }
 
     public void onDreamingStopped() {
         if (this.mDebug) {
-            Slog.v(this.TAG, "onDreamingStopped()");
+            Slog.m52v(this.TAG, "onDreamingStopped()");
         }
     }
 
@@ -373,10 +391,11 @@ public class DreamService extends Service implements Window.Callback {
         finish();
     }
 
+    @Override // android.app.Service
     public final IBinder onBind(Intent intent) {
         if (this.mDebug) {
             String str = this.TAG;
-            Slog.v(str, "onBind() intent = " + intent);
+            Slog.m52v(str, "onBind() intent = " + intent);
         }
         return new DreamServiceWrapper();
     }
@@ -384,17 +403,17 @@ public class DreamService extends Service implements Window.Callback {
     public final void finish() {
         if (this.mDebug) {
             String str = this.TAG;
-            Slog.v(str, "finish(): mFinished=" + this.mFinished);
+            Slog.m52v(str, "finish(): mFinished=" + this.mFinished);
         }
         if (!this.mFinished) {
             this.mFinished = true;
-            if (this.mWindowToken == null) {
-                Slog.w(this.TAG, "Finish was called before the dream was attached.");
-            } else {
+            if (this.mWindowToken != null) {
                 try {
                     this.mSandman.finishSelf(this.mWindowToken, true);
                 } catch (RemoteException e) {
                 }
+            } else {
+                Slog.m50w(this.TAG, "Finish was called before the dream was attached.");
             }
             stopSelf();
         }
@@ -404,18 +423,18 @@ public class DreamService extends Service implements Window.Callback {
         wakeUp(false);
     }
 
-    /* access modifiers changed from: private */
+    /* JADX INFO: Access modifiers changed from: private */
     public void wakeUp(boolean fromSystem) {
         if (this.mDebug) {
             String str = this.TAG;
-            Slog.v(str, "wakeUp(): fromSystem=" + fromSystem + ", mWaking=" + this.mWaking + ", mFinished=" + this.mFinished);
+            Slog.m52v(str, "wakeUp(): fromSystem=" + fromSystem + ", mWaking=" + this.mWaking + ", mFinished=" + this.mFinished);
         }
         if (!this.mWaking && !this.mFinished) {
             this.mWaking = true;
             onWakeUp();
             if (!fromSystem && !this.mFinished) {
                 if (this.mWindowToken == null) {
-                    Slog.w(this.TAG, "WakeUp was called before the dream was attached.");
+                    Slog.m50w(this.TAG, "WakeUp was called before the dream was attached.");
                     return;
                 }
                 try {
@@ -426,26 +445,27 @@ public class DreamService extends Service implements Window.Callback {
         }
     }
 
+    @Override // android.app.Service
     public void onDestroy() {
         if (this.mDebug) {
-            Slog.v(this.TAG, "onDestroy()");
+            Slog.m52v(this.TAG, "onDestroy()");
         }
         detach();
         super.onDestroy();
     }
 
-    /* access modifiers changed from: private */
+    /* JADX INFO: Access modifiers changed from: private */
     public final void detach() {
         if (this.mStarted) {
             if (this.mDebug) {
-                Slog.v(this.TAG, "detach(): Calling onDreamingStopped()");
+                Slog.m52v(this.TAG, "detach(): Calling onDreamingStopped()");
             }
             this.mStarted = false;
             onDreamingStopped();
         }
         if (this.mWindow != null) {
             if (this.mDebug) {
-                Slog.v(this.TAG, "detach(): Removing window from window manager");
+                Slog.m52v(this.TAG, "detach(): Removing window from window manager");
             }
             this.mWindow.getWindowManager().removeViewImmediate(this.mWindow.getDecorView());
             this.mWindow = null;
@@ -457,13 +477,12 @@ public class DreamService extends Service implements Window.Callback {
         }
     }
 
-    /* access modifiers changed from: private */
+    /* JADX INFO: Access modifiers changed from: private */
     public final void attach(IBinder windowToken, boolean canDoze, final IRemoteCallback started) {
         if (this.mWindowToken != null) {
-            String str = this.TAG;
-            Slog.e(str, "attach() called when already attached with token=" + this.mWindowToken);
+            Slog.m56e(this.TAG, "attach() called when already attached with token=" + this.mWindowToken);
         } else if (this.mFinished || this.mWaking) {
-            Slog.w(this.TAG, "attach() called after dream already finished");
+            Slog.m50w(this.TAG, "attach() called after dream already finished");
             try {
                 this.mSandman.finishSelf(windowToken, true);
             } catch (RemoteException e) {
@@ -471,73 +490,66 @@ public class DreamService extends Service implements Window.Callback {
         } else {
             this.mWindowToken = windowToken;
             this.mCanDoze = canDoze;
-            if (!this.mWindowless || this.mCanDoze) {
-                if (!this.mWindowless) {
-                    this.mWindow = new PhoneWindow(this);
-                    this.mWindow.setCallback(this);
-                    this.mWindow.requestFeature(1);
-                    this.mWindow.setBackgroundDrawable(new ColorDrawable(-16777216));
-                    this.mWindow.setFormat(-1);
-                    int i = 0;
-                    if (this.mDebug) {
-                        Slog.v(this.TAG, String.format("Attaching window token: %s to window of type %s", new Object[]{windowToken, 2023}));
-                    }
-                    WindowManager.LayoutParams lp = this.mWindow.getAttributes();
-                    lp.type = 2023;
-                    lp.token = windowToken;
-                    lp.windowAnimations = R.style.Animation_Dream;
-                    int i2 = lp.flags;
-                    int i3 = 4784385 | (this.mFullscreen ? 1024 : 0);
-                    if (this.mScreenBright) {
-                        i = 128;
-                    }
-                    lp.flags = i2 | i | i3;
-                    this.mWindow.setAttributes(lp);
-                    this.mWindow.clearFlags(Integer.MIN_VALUE);
-                    this.mWindow.setWindowManager((WindowManager) null, windowToken, "dream", true);
-                    applySystemUiVisibilityFlags(this.mLowProfile ? 1 : 0, 1);
-                    try {
-                        getWindowManager().addView(this.mWindow.getDecorView(), this.mWindow.getAttributes());
-                    } catch (WindowManager.BadTokenException e2) {
-                        Slog.i(this.TAG, "attach() called after window token already removed, dream will finish soon");
-                        this.mWindow = null;
-                        return;
-                    }
+            if (this.mWindowless && !this.mCanDoze) {
+                throw new IllegalStateException("Only doze dreams can be windowless");
+            }
+            if (!this.mWindowless) {
+                this.mWindow = new PhoneWindow(this);
+                this.mWindow.setCallback(this);
+                this.mWindow.requestFeature(1);
+                this.mWindow.setBackgroundDrawable(new ColorDrawable(-16777216));
+                this.mWindow.setFormat(-1);
+                if (this.mDebug) {
+                    Slog.m52v(this.TAG, String.format("Attaching window token: %s to window of type %s", windowToken, 2023));
                 }
-                this.mHandler.post(new Runnable() {
-                    public void run() {
-                        if (DreamService.this.mWindow != null || DreamService.this.mWindowless) {
-                            if (DreamService.this.mDebug) {
-                                Slog.v(DreamService.this.TAG, "Calling onDreamingStarted()");
-                            }
-                            boolean unused = DreamService.this.mStarted = true;
+                WindowManager.LayoutParams lp = this.mWindow.getAttributes();
+                lp.type = 2023;
+                lp.token = windowToken;
+                lp.windowAnimations = C3132R.C3136style.Animation_Dream;
+                lp.flags |= (this.mScreenBright ? 128 : 0) | 4784385 | (this.mFullscreen ? 1024 : 0);
+                this.mWindow.setAttributes(lp);
+                this.mWindow.clearFlags(Integer.MIN_VALUE);
+                this.mWindow.setWindowManager(null, windowToken, "dream", true);
+                applySystemUiVisibilityFlags(this.mLowProfile ? 1 : 0, 1);
+                try {
+                    getWindowManager().addView(this.mWindow.getDecorView(), this.mWindow.getAttributes());
+                } catch (WindowManager.BadTokenException e2) {
+                    Slog.m54i(this.TAG, "attach() called after window token already removed, dream will finish soon");
+                    this.mWindow = null;
+                    return;
+                }
+            }
+            this.mHandler.post(new Runnable() { // from class: android.service.dreams.DreamService.1
+                @Override // java.lang.Runnable
+                public void run() {
+                    if (DreamService.this.mWindow != null || DreamService.this.mWindowless) {
+                        if (DreamService.this.mDebug) {
+                            Slog.m52v(DreamService.this.TAG, "Calling onDreamingStarted()");
+                        }
+                        DreamService.this.mStarted = true;
+                        try {
+                            DreamService.this.onDreamingStarted();
                             try {
-                                DreamService.this.onDreamingStarted();
-                                try {
-                                } catch (RemoteException e) {
-                                    throw e.rethrowFromSystemServer();
-                                }
-                            } finally {
-                                try {
-                                    started.sendResult((Bundle) null);
-                                } catch (RemoteException e2) {
-                                    throw e2.rethrowFromSystemServer();
-                                }
+                                started.sendResult(null);
+                            } catch (RemoteException e3) {
+                                throw e3.rethrowFromSystemServer();
+                            }
+                        } catch (Throwable th) {
+                            try {
+                                started.sendResult(null);
+                                throw th;
+                            } catch (RemoteException e4) {
+                                throw e4.rethrowFromSystemServer();
                             }
                         }
                     }
-                });
-                return;
-            }
-            throw new IllegalStateException("Only doze dreams can be windowless");
+                }
+            });
         }
     }
 
     private boolean getWindowFlagValue(int flag, boolean defaultValue) {
-        if (this.mWindow == null) {
-            return defaultValue;
-        }
-        return (this.mWindow.getAttributes().flags & flag) != 0;
+        return this.mWindow == null ? defaultValue : (this.mWindow.getAttributes().flags & flag) != 0;
     }
 
     private void applyWindowFlags(int flags, int mask) {
@@ -551,10 +563,7 @@ public class DreamService extends Service implements Window.Callback {
 
     private boolean getSystemUiVisibilityFlagValue(int flag, boolean defaultValue) {
         View v = this.mWindow == null ? null : this.mWindow.getDecorView();
-        if (v == null) {
-            return defaultValue;
-        }
-        return (v.getSystemUiVisibility() & flag) != 0;
+        return v == null ? defaultValue : (v.getSystemUiVisibility() & flag) != 0;
     }
 
     private void applySystemUiVisibilityFlags(int flags, int mask) {
@@ -568,17 +577,17 @@ public class DreamService extends Service implements Window.Callback {
         return ((~mask) & oldFlags) | (flags & mask);
     }
 
-    /* access modifiers changed from: protected */
-    public void dump(final FileDescriptor fd, PrintWriter pw, final String[] args) {
-        DumpUtils.dumpAsync(this.mHandler, new DumpUtils.Dump() {
-            public void dump(PrintWriter pw, String prefix) {
-                DreamService.this.dumpOnHandler(fd, pw, args);
+    @Override // android.app.Service
+    protected void dump(final FileDescriptor fd, PrintWriter pw, final String[] args) {
+        DumpUtils.dumpAsync(this.mHandler, new DumpUtils.Dump() { // from class: android.service.dreams.DreamService.2
+            @Override // com.android.internal.util.DumpUtils.Dump
+            public void dump(PrintWriter pw2, String prefix) {
+                DreamService.this.dumpOnHandler(fd, pw2, args);
             }
-        }, pw, "", 1000);
+        }, pw, "", 1000L);
     }
 
-    /* access modifiers changed from: protected */
-    public void dumpOnHandler(FileDescriptor fd, PrintWriter pw, String[] args) {
+    protected void dumpOnHandler(FileDescriptor fd, PrintWriter pw, String[] args) {
         pw.print(this.TAG + PluralRules.KEYWORD_RULE_SEPARATOR);
         if (this.mWindowToken == null) {
             pw.println("stopped");
@@ -618,28 +627,35 @@ public class DreamService extends Service implements Window.Callback {
         return MathUtils.constrain(value, 0, 255);
     }
 
+    /* loaded from: classes3.dex */
     private final class DreamServiceWrapper extends IDreamService.Stub {
         private DreamServiceWrapper() {
         }
 
+        @Override // android.service.dreams.IDreamService
         public void attach(final IBinder windowToken, final boolean canDoze, final IRemoteCallback started) {
-            DreamService.this.mHandler.post(new Runnable() {
+            DreamService.this.mHandler.post(new Runnable() { // from class: android.service.dreams.DreamService.DreamServiceWrapper.1
+                @Override // java.lang.Runnable
                 public void run() {
                     DreamService.this.attach(windowToken, canDoze, started);
                 }
             });
         }
 
+        @Override // android.service.dreams.IDreamService
         public void detach() {
-            DreamService.this.mHandler.post(new Runnable() {
+            DreamService.this.mHandler.post(new Runnable() { // from class: android.service.dreams.DreamService.DreamServiceWrapper.2
+                @Override // java.lang.Runnable
                 public void run() {
                     DreamService.this.detach();
                 }
             });
         }
 
+        @Override // android.service.dreams.IDreamService
         public void wakeUp() {
-            DreamService.this.mHandler.post(new Runnable() {
+            DreamService.this.mHandler.post(new Runnable() { // from class: android.service.dreams.DreamService.DreamServiceWrapper.3
+                @Override // java.lang.Runnable
                 public void run() {
                     DreamService.this.wakeUp(true);
                 }

@@ -3,17 +3,18 @@ package android.hardware.location;
 import android.annotation.SystemApi;
 
 @SystemApi
+/* loaded from: classes.dex */
 public final class GeofenceHardwareRequest {
     static final int GEOFENCE_TYPE_CIRCLE = 0;
-    private int mLastTransition = 4;
     private double mLatitude;
     private double mLongitude;
+    private double mRadius;
+    private int mType;
+    private int mLastTransition = 4;
+    private int mUnknownTimer = 30000;
     private int mMonitorTransitions = 7;
     private int mNotificationResponsiveness = 5000;
-    private double mRadius;
     private int mSourceTechnologies = 1;
-    private int mType;
-    private int mUnknownTimer = 30000;
 
     private void setCircularGeofence(double latitude, double longitude, double radius) {
         this.mLatitude = latitude;
@@ -46,11 +47,10 @@ public final class GeofenceHardwareRequest {
 
     public void setSourceTechnologies(int sourceTechnologies) {
         int sanitizedSourceTechnologies = sourceTechnologies & 31;
-        if (sanitizedSourceTechnologies != 0) {
-            this.mSourceTechnologies = sanitizedSourceTechnologies;
-            return;
+        if (sanitizedSourceTechnologies == 0) {
+            throw new IllegalArgumentException("At least one valid source technology must be set.");
         }
-        throw new IllegalArgumentException("At least one valid source technology must be set.");
+        this.mSourceTechnologies = sanitizedSourceTechnologies;
     }
 
     public double getLatitude() {
@@ -85,8 +85,7 @@ public final class GeofenceHardwareRequest {
         return this.mSourceTechnologies;
     }
 
-    /* access modifiers changed from: package-private */
-    public int getType() {
+    int getType() {
         return this.mType;
     }
 }

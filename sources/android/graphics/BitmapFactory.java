@@ -5,7 +5,7 @@ import android.content.res.AssetManager;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.ColorSpace;
-import android.os.Trace;
+import android.p007os.Trace;
 import android.util.Log;
 import android.util.TypedValue;
 import java.io.FileDescriptor;
@@ -13,6 +13,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 
+/* loaded from: classes.dex */
 public class BitmapFactory {
     private static final int DECODE_BUFFER_SIZE = 16384;
 
@@ -30,6 +31,7 @@ public class BitmapFactory {
 
     private static native boolean nativeIsSeekable(FileDescriptor fileDescriptor);
 
+    /* loaded from: classes.dex */
     public static class Options {
         public Bitmap inBitmap;
         public int inDensity;
@@ -40,13 +42,9 @@ public class BitmapFactory {
         public boolean inMutable;
         @Deprecated
         public boolean inPreferQualityOverSpeed;
-        public ColorSpace inPreferredColorSpace = null;
-        public Bitmap.Config inPreferredConfig = Bitmap.Config.ARGB_8888;
-        public boolean inPremultiplied = true;
         @Deprecated
         public boolean inPurgeable;
         public int inSampleSize;
-        public boolean inScaled = true;
         public int inScreenDensity;
         public int inTargetDensity;
         public byte[] inTempStorage;
@@ -57,6 +55,10 @@ public class BitmapFactory {
         public int outHeight;
         public String outMimeType;
         public int outWidth;
+        public Bitmap.Config inPreferredConfig = Bitmap.Config.ARGB_8888;
+        public ColorSpace inPreferredColorSpace = null;
+        public boolean inScaled = true;
+        public boolean inPremultiplied = true;
 
         @Deprecated
         public void requestCancelDecode() {
@@ -64,72 +66,78 @@ public class BitmapFactory {
         }
 
         static void validate(Options opts) {
-            if (opts != null) {
-                if (opts.inBitmap != null) {
-                    if (opts.inBitmap.getConfig() == Bitmap.Config.HARDWARE) {
-                        throw new IllegalArgumentException("Bitmaps with Config.HARDWARE are always immutable");
-                    } else if (opts.inBitmap.isRecycled()) {
-                        throw new IllegalArgumentException("Cannot reuse a recycled Bitmap");
-                    }
+            if (opts == null) {
+                return;
+            }
+            if (opts.inBitmap != null) {
+                if (opts.inBitmap.getConfig() == Bitmap.Config.HARDWARE) {
+                    throw new IllegalArgumentException("Bitmaps with Config.HARDWARE are always immutable");
                 }
-                if (opts.inMutable && opts.inPreferredConfig == Bitmap.Config.HARDWARE) {
-                    throw new IllegalArgumentException("Bitmaps with Config.HARDWARE cannot be decoded into - they are immutable");
-                } else if (opts.inPreferredColorSpace == null) {
-                } else {
-                    if (!(opts.inPreferredColorSpace instanceof ColorSpace.Rgb)) {
-                        throw new IllegalArgumentException("The destination color space must use the RGB color model");
-                    } else if (((ColorSpace.Rgb) opts.inPreferredColorSpace).getTransferParameters() == null) {
-                        throw new IllegalArgumentException("The destination color space must use an ICC parametric transfer function");
-                    }
+                if (opts.inBitmap.isRecycled()) {
+                    throw new IllegalArgumentException("Cannot reuse a recycled Bitmap");
+                }
+            }
+            if (opts.inMutable && opts.inPreferredConfig == Bitmap.Config.HARDWARE) {
+                throw new IllegalArgumentException("Bitmaps with Config.HARDWARE cannot be decoded into - they are immutable");
+            }
+            if (opts.inPreferredColorSpace != null) {
+                if (!(opts.inPreferredColorSpace instanceof ColorSpace.Rgb)) {
+                    throw new IllegalArgumentException("The destination color space must use the RGB color model");
+                }
+                if (((ColorSpace.Rgb) opts.inPreferredColorSpace).getTransferParameters() == null) {
+                    throw new IllegalArgumentException("The destination color space must use an ICC parametric transfer function");
                 }
             }
         }
 
         static long nativeInBitmap(Options opts) {
             if (opts == null || opts.inBitmap == null) {
-                return 0;
+                return 0L;
             }
             return opts.inBitmap.getNativeInstance();
         }
 
         static long nativeColorSpace(Options opts) {
             if (opts == null || opts.inPreferredColorSpace == null) {
-                return 0;
+                return 0L;
             }
             return opts.inPreferredColorSpace.getNativeInstance();
         }
     }
 
+    /* JADX WARN: Unsupported multi-entry loop pattern (BACK_EDGE: B:7:0x0016 -> B:22:0x0037). Please submit an issue!!! */
     public static Bitmap decodeFile(String pathName, Options opts) {
         Options.validate(opts);
         Bitmap bm = null;
         InputStream stream = null;
         try {
-            InputStream stream2 = new FileInputStream(pathName);
-            bm = decodeStream(stream2, (Rect) null, opts);
             try {
-                stream2.close();
-            } catch (IOException e) {
-            }
-        } catch (Exception e2) {
-            Log.e("BitmapFactory", "Unable to decode stream: " + e2);
-            if (stream != null) {
-                stream.close();
-            }
-        } catch (Throwable th) {
-            if (stream != null) {
                 try {
+                    stream = new FileInputStream(pathName);
+                    bm = decodeStream(stream, null, opts);
                     stream.close();
-                } catch (IOException e3) {
+                } catch (Throwable th) {
+                    if (stream != null) {
+                        try {
+                            stream.close();
+                        } catch (IOException e) {
+                        }
+                    }
+                    throw th;
+                }
+            } catch (Exception e2) {
+                Log.m70e("BitmapFactory", "Unable to decode stream: " + e2);
+                if (stream != null) {
+                    stream.close();
                 }
             }
-            throw th;
+        } catch (IOException e3) {
         }
         return bm;
     }
 
     public static Bitmap decodeFile(String pathName) {
-        return decodeFile(pathName, (Options) null);
+        return decodeFile(pathName, null);
     }
 
     public static Bitmap decodeResourceStream(Resources res, TypedValue value, InputStream is, Rect pad, Options opts) {
@@ -151,41 +159,42 @@ public class BitmapFactory {
         return decodeStream(is, pad, opts);
     }
 
+    /* JADX WARN: Unsupported multi-entry loop pattern (BACK_EDGE: B:8:0x001b -> B:31:0x002f). Please submit an issue!!! */
     public static Bitmap decodeResource(Resources res, int id, Options opts) {
         Options.validate(opts);
         Bitmap bm = null;
         InputStream is = null;
         try {
-            TypedValue value = new TypedValue();
-            InputStream is2 = res.openRawResource(id, value);
-            bm = decodeResourceStream(res, value, is2, (Rect) null, opts);
-            if (is2 != null) {
-                try {
-                    is2.close();
-                } catch (IOException e) {
-                }
-            }
-        } catch (Exception e2) {
-            if (is != null) {
-                is.close();
-            }
-        } catch (Throwable th) {
-            if (is != null) {
-                try {
+            try {
+                TypedValue value = new TypedValue();
+                is = res.openRawResource(id, value);
+                bm = decodeResourceStream(res, value, is, null, opts);
+                if (is != null) {
                     is.close();
-                } catch (IOException e3) {
                 }
+            } catch (Exception e) {
+                if (is != null) {
+                    is.close();
+                }
+            } catch (Throwable th) {
+                if (is != null) {
+                    try {
+                        is.close();
+                    } catch (IOException e2) {
+                    }
+                }
+                throw th;
             }
-            throw th;
+        } catch (IOException e3) {
         }
-        if (bm != null || opts == null || opts.inBitmap == null) {
-            return bm;
+        if (bm == null && opts != null && opts.inBitmap != null) {
+            throw new IllegalArgumentException("Problem decoding into existing bitmap");
         }
-        throw new IllegalArgumentException("Problem decoding into existing bitmap");
+        return bm;
     }
 
     public static Bitmap decodeResource(Resources res, int id) {
-        return decodeResource(res, id, (Options) null);
+        return decodeResource(res, id, null);
     }
 
     public static Bitmap decodeByteArray(byte[] data, int offset, int length, Options opts) {
@@ -193,41 +202,41 @@ public class BitmapFactory {
             throw new ArrayIndexOutOfBoundsException();
         }
         Options.validate(opts);
-        Trace.traceBegin(2, "decodeBitmap");
+        Trace.traceBegin(2L, "decodeBitmap");
         try {
             Bitmap bm = nativeDecodeByteArray(data, offset, length, opts, Options.nativeInBitmap(opts), Options.nativeColorSpace(opts));
-            if (bm == null && opts != null) {
-                if (opts.inBitmap != null) {
-                    throw new IllegalArgumentException("Problem decoding into existing bitmap");
-                }
+            if (bm == null && opts != null && opts.inBitmap != null) {
+                throw new IllegalArgumentException("Problem decoding into existing bitmap");
             }
             setDensityFromOptions(bm, opts);
             return bm;
         } finally {
-            Trace.traceEnd(2);
+            Trace.traceEnd(2L);
         }
     }
 
     public static Bitmap decodeByteArray(byte[] data, int offset, int length) {
-        return decodeByteArray(data, offset, length, (Options) null);
+        return decodeByteArray(data, offset, length, null);
     }
 
     private static void setDensityFromOptions(Bitmap outputBitmap, Options opts) {
-        if (outputBitmap != null && opts != null) {
-            int density = opts.inDensity;
-            if (density != 0) {
-                outputBitmap.setDensity(density);
-                int targetDensity = opts.inTargetDensity;
-                if (targetDensity != 0 && density != targetDensity && density != opts.inScreenDensity) {
-                    byte[] np = outputBitmap.getNinePatchChunk();
-                    boolean isNinePatch = np != null && NinePatch.isNinePatchChunk(np);
-                    if (opts.inScaled || isNinePatch) {
-                        outputBitmap.setDensity(targetDensity);
-                    }
-                }
-            } else if (opts.inBitmap != null) {
-                outputBitmap.setDensity(Bitmap.getDefaultDensity());
+        if (outputBitmap == null || opts == null) {
+            return;
+        }
+        int density = opts.inDensity;
+        if (density != 0) {
+            outputBitmap.setDensity(density);
+            int targetDensity = opts.inTargetDensity;
+            if (targetDensity == 0 || density == targetDensity || density == opts.inScreenDensity) {
+                return;
             }
+            byte[] np = outputBitmap.getNinePatchChunk();
+            boolean isNinePatch = np != null && NinePatch.isNinePatchChunk(np);
+            if (opts.inScaled || isNinePatch) {
+                outputBitmap.setDensity(targetDensity);
+            }
+        } else if (opts.inBitmap != null) {
+            outputBitmap.setDensity(Bitmap.getDefaultDensity());
         }
     }
 
@@ -237,30 +246,26 @@ public class BitmapFactory {
             return null;
         }
         Options.validate(opts);
-        Trace.traceBegin(2, "decodeBitmap");
+        Trace.traceBegin(2L, "decodeBitmap");
         try {
             if (is instanceof AssetManager.AssetInputStream) {
-                bm = nativeDecodeAsset(((AssetManager.AssetInputStream) is).getNativeAsset(), outPadding, opts, Options.nativeInBitmap(opts), Options.nativeColorSpace(opts));
+                long asset = ((AssetManager.AssetInputStream) is).getNativeAsset();
+                bm = nativeDecodeAsset(asset, outPadding, opts, Options.nativeInBitmap(opts), Options.nativeColorSpace(opts));
             } else {
                 bm = decodeStreamInternal(is, outPadding, opts);
             }
-            if (bm == null && opts != null) {
-                if (opts.inBitmap != null) {
-                    throw new IllegalArgumentException("Problem decoding into existing bitmap");
-                }
+            if (bm == null && opts != null && opts.inBitmap != null) {
+                throw new IllegalArgumentException("Problem decoding into existing bitmap");
             }
             setDensityFromOptions(bm, opts);
             return bm;
         } finally {
-            Trace.traceEnd(2);
+            Trace.traceEnd(2L);
         }
     }
 
     private static Bitmap decodeStreamInternal(InputStream is, Rect outPadding, Options opts) {
-        byte[] tempStorage = null;
-        if (opts != null) {
-            tempStorage = opts.inTempStorage;
-        }
+        byte[] tempStorage = opts != null ? opts.inTempStorage : null;
         if (tempStorage == null) {
             tempStorage = new byte[16384];
         }
@@ -268,19 +273,18 @@ public class BitmapFactory {
     }
 
     public static Bitmap decodeStream(InputStream is) {
-        return decodeStream(is, (Rect) null, (Options) null);
+        return decodeStream(is, null, null);
     }
 
     public static Bitmap decodeFileDescriptor(FileDescriptor fd, Rect outPadding, Options opts) {
         Bitmap bm;
-        FileInputStream fis;
         Options.validate(opts);
-        Trace.traceBegin(2, "decodeFileDescriptor");
+        Trace.traceBegin(2L, "decodeFileDescriptor");
         try {
             if (nativeIsSeekable(fd)) {
                 bm = nativeDecodeFileDescriptor(fd, outPadding, opts, Options.nativeInBitmap(opts), Options.nativeColorSpace(opts));
             } else {
-                fis = new FileInputStream(fd);
+                FileInputStream fis = new FileInputStream(fd);
                 Bitmap bm2 = decodeStreamInternal(fis, outPadding, opts);
                 try {
                     fis.close();
@@ -288,22 +292,17 @@ public class BitmapFactory {
                 }
                 bm = bm2;
             }
-            if (bm == null && opts != null) {
-                if (opts.inBitmap != null) {
-                    throw new IllegalArgumentException("Problem decoding into existing bitmap");
-                }
+            if (bm == null && opts != null && opts.inBitmap != null) {
+                throw new IllegalArgumentException("Problem decoding into existing bitmap");
             }
             setDensityFromOptions(bm, opts);
-            Trace.traceEnd(2);
             return bm;
-        } catch (Throwable th2) {
-            Trace.traceEnd(2);
-            throw th2;
+        } finally {
+            Trace.traceEnd(2L);
         }
-        throw th;
     }
 
     public static Bitmap decodeFileDescriptor(FileDescriptor fd) {
-        return decodeFileDescriptor(fd, (Rect) null, (Options) null);
+        return decodeFileDescriptor(fd, null, null);
     }
 }

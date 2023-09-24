@@ -1,5 +1,6 @@
 package com.android.server;
 
+/* loaded from: classes4.dex */
 public final class AlarmClockMetadataProto {
     public static final long IS_PENDING_SEND = 1133871366146L;
     public static final long TRIGGER_TIME_MS = 1112396529667L;

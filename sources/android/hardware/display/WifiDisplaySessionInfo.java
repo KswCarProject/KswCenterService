@@ -1,14 +1,24 @@
 package android.hardware.display;
 
-import android.os.Parcel;
-import android.os.Parcelable;
+import android.p007os.Parcel;
+import android.p007os.Parcelable;
 
+/* loaded from: classes.dex */
 public final class WifiDisplaySessionInfo implements Parcelable {
-    public static final Parcelable.Creator<WifiDisplaySessionInfo> CREATOR = new Parcelable.Creator<WifiDisplaySessionInfo>() {
+    public static final Parcelable.Creator<WifiDisplaySessionInfo> CREATOR = new Parcelable.Creator<WifiDisplaySessionInfo>() { // from class: android.hardware.display.WifiDisplaySessionInfo.1
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public WifiDisplaySessionInfo createFromParcel(Parcel in) {
-            return new WifiDisplaySessionInfo(in.readInt() != 0, in.readInt(), in.readString(), in.readString(), in.readString());
+            boolean client = in.readInt() != 0;
+            int session = in.readInt();
+            String group = in.readString();
+            String pp = in.readString();
+            String ip = in.readString();
+            return new WifiDisplaySessionInfo(client, session, group, pp, ip);
         }
 
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public WifiDisplaySessionInfo[] newArray(int size) {
             return new WifiDisplaySessionInfo[size];
         }
@@ -51,6 +61,7 @@ public final class WifiDisplaySessionInfo implements Parcelable {
         return this.mIP;
     }
 
+    @Override // android.p007os.Parcelable
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeInt(this.mClient ? 1 : 0);
         dest.writeInt(this.mSessionId);
@@ -59,6 +70,7 @@ public final class WifiDisplaySessionInfo implements Parcelable {
         dest.writeString(this.mIP);
     }
 
+    @Override // android.p007os.Parcelable
     public int describeContents() {
         return 0;
     }

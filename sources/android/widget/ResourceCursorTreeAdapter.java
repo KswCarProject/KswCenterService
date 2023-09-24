@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+/* loaded from: classes4.dex */
 public abstract class ResourceCursorTreeAdapter extends CursorTreeAdapter {
     private int mChildLayout;
     private int mCollapsedGroupLayout;
@@ -30,10 +31,12 @@ public abstract class ResourceCursorTreeAdapter extends CursorTreeAdapter {
         this(context, cursor, groupLayout, groupLayout, childLayout, childLayout);
     }
 
+    @Override // android.widget.CursorTreeAdapter
     public View newChildView(Context context, Cursor cursor, boolean isLastChild, ViewGroup parent) {
         return this.mInflater.inflate(isLastChild ? this.mLastChildLayout : this.mChildLayout, parent, false);
     }
 
+    @Override // android.widget.CursorTreeAdapter
     public View newGroupView(Context context, Cursor cursor, boolean isExpanded, ViewGroup parent) {
         return this.mInflater.inflate(isExpanded ? this.mExpandedGroupLayout : this.mCollapsedGroupLayout, parent, false);
     }

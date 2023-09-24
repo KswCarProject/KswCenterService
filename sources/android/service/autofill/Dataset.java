@@ -1,8 +1,8 @@
 package android.service.autofill;
 
 import android.content.IntentSender;
-import android.os.Parcel;
-import android.os.Parcelable;
+import android.p007os.Parcel;
+import android.p007os.Parcelable;
 import android.view.autofill.AutofillId;
 import android.view.autofill.AutofillValue;
 import android.view.autofill.Helper;
@@ -11,11 +11,14 @@ import com.android.internal.util.Preconditions;
 import java.util.ArrayList;
 import java.util.regex.Pattern;
 
+/* loaded from: classes3.dex */
 public final class Dataset implements Parcelable {
-    public static final Parcelable.Creator<Dataset> CREATOR = new Parcelable.Creator<Dataset>() {
+    public static final Parcelable.Creator<Dataset> CREATOR = new Parcelable.Creator<Dataset>() { // from class: android.service.autofill.Dataset.1
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public Dataset createFromParcel(Parcel parcel) {
             Builder builder;
-            RemoteViews presentation = (RemoteViews) parcel.readParcelable((ClassLoader) null);
+            RemoteViews presentation = (RemoteViews) parcel.readParcelable(null);
             if (presentation == null) {
                 builder = new Builder();
             } else {
@@ -26,13 +29,19 @@ public final class Dataset implements Parcelable {
             ArrayList<RemoteViews> presentations = parcel.createTypedArrayList(RemoteViews.CREATOR);
             ArrayList<DatasetFieldFilter> filters = parcel.createTypedArrayList(DatasetFieldFilter.CREATOR);
             for (int i = 0; i < ids.size(); i++) {
-                builder.setLifeTheUniverseAndEverything(ids.get(i), values.get(i), presentations.get(i), filters.get(i));
+                AutofillId id = ids.get(i);
+                AutofillValue value = values.get(i);
+                RemoteViews fieldPresentation = presentations.get(i);
+                DatasetFieldFilter filter = filters.get(i);
+                builder.setLifeTheUniverseAndEverything(id, value, fieldPresentation, filter);
             }
-            builder.setAuthentication((IntentSender) parcel.readParcelable((ClassLoader) null));
+            builder.setAuthentication((IntentSender) parcel.readParcelable(null));
             builder.setId(parcel.readString());
             return builder.build();
         }
 
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public Dataset[] newArray(int size) {
             return new Dataset[size];
         }
@@ -81,63 +90,57 @@ public final class Dataset implements Parcelable {
     }
 
     public String toString() {
-        if (!Helper.sDebug) {
-            return super.toString();
+        if (Helper.sDebug) {
+            StringBuilder builder = new StringBuilder("Dataset[");
+            if (this.mId == null) {
+                builder.append("noId");
+            } else {
+                builder.append("id=");
+                builder.append(this.mId.length());
+                builder.append("_chars");
+            }
+            if (this.mFieldIds != null) {
+                builder.append(", fieldIds=");
+                builder.append(this.mFieldIds);
+            }
+            if (this.mFieldValues != null) {
+                builder.append(", fieldValues=");
+                builder.append(this.mFieldValues);
+            }
+            if (this.mFieldPresentations != null) {
+                builder.append(", fieldPresentations=");
+                builder.append(this.mFieldPresentations.size());
+            }
+            if (this.mFieldFilters != null) {
+                builder.append(", fieldFilters=");
+                builder.append(this.mFieldFilters.size());
+            }
+            if (this.mPresentation != null) {
+                builder.append(", hasPresentation");
+            }
+            if (this.mAuthentication != null) {
+                builder.append(", hasAuthentication");
+            }
+            builder.append(']');
+            return builder.toString();
         }
-        StringBuilder builder = new StringBuilder("Dataset[");
-        if (this.mId == null) {
-            builder.append("noId");
-        } else {
-            builder.append("id=");
-            builder.append(this.mId.length());
-            builder.append("_chars");
-        }
-        if (this.mFieldIds != null) {
-            builder.append(", fieldIds=");
-            builder.append(this.mFieldIds);
-        }
-        if (this.mFieldValues != null) {
-            builder.append(", fieldValues=");
-            builder.append(this.mFieldValues);
-        }
-        if (this.mFieldPresentations != null) {
-            builder.append(", fieldPresentations=");
-            builder.append(this.mFieldPresentations.size());
-        }
-        if (this.mFieldFilters != null) {
-            builder.append(", fieldFilters=");
-            builder.append(this.mFieldFilters.size());
-        }
-        if (this.mPresentation != null) {
-            builder.append(", hasPresentation");
-        }
-        if (this.mAuthentication != null) {
-            builder.append(", hasAuthentication");
-        }
-        builder.append(']');
-        return builder.toString();
+        return super.toString();
     }
 
     public String getId() {
         return this.mId;
     }
 
+    /* loaded from: classes3.dex */
     public static final class Builder {
-        /* access modifiers changed from: private */
-        public IntentSender mAuthentication;
+        private IntentSender mAuthentication;
         private boolean mDestroyed;
-        /* access modifiers changed from: private */
-        public ArrayList<DatasetFieldFilter> mFieldFilters;
-        /* access modifiers changed from: private */
-        public ArrayList<AutofillId> mFieldIds;
-        /* access modifiers changed from: private */
-        public ArrayList<RemoteViews> mFieldPresentations;
-        /* access modifiers changed from: private */
-        public ArrayList<AutofillValue> mFieldValues;
-        /* access modifiers changed from: private */
-        public String mId;
-        /* access modifiers changed from: private */
-        public RemoteViews mPresentation;
+        private ArrayList<DatasetFieldFilter> mFieldFilters;
+        private ArrayList<AutofillId> mFieldIds;
+        private ArrayList<RemoteViews> mFieldPresentations;
+        private ArrayList<AutofillValue> mFieldValues;
+        private String mId;
+        private RemoteViews mPresentation;
 
         public Builder(RemoteViews presentation) {
             Preconditions.checkNotNull(presentation, "presentation must be non-null");
@@ -161,21 +164,21 @@ public final class Dataset implements Parcelable {
 
         public Builder setValue(AutofillId id, AutofillValue value) {
             throwIfDestroyed();
-            setLifeTheUniverseAndEverything(id, value, (RemoteViews) null, (DatasetFieldFilter) null);
+            setLifeTheUniverseAndEverything(id, value, null, null);
             return this;
         }
 
         public Builder setValue(AutofillId id, AutofillValue value, RemoteViews presentation) {
             throwIfDestroyed();
             Preconditions.checkNotNull(presentation, "presentation cannot be null");
-            setLifeTheUniverseAndEverything(id, value, presentation, (DatasetFieldFilter) null);
+            setLifeTheUniverseAndEverything(id, value, presentation, null);
             return this;
         }
 
         public Builder setValue(AutofillId id, AutofillValue value, Pattern filter) {
             throwIfDestroyed();
             Preconditions.checkState(this.mPresentation != null, "Dataset presentation not set on constructor");
-            setLifeTheUniverseAndEverything(id, value, (RemoteViews) null, new DatasetFieldFilter(filter));
+            setLifeTheUniverseAndEverything(id, value, null, new DatasetFieldFilter(filter));
             return this;
         }
 
@@ -186,7 +189,7 @@ public final class Dataset implements Parcelable {
             return this;
         }
 
-        /* access modifiers changed from: private */
+        /* JADX INFO: Access modifiers changed from: private */
         public void setLifeTheUniverseAndEverything(AutofillId id, AutofillValue value, RemoteViews presentation, DatasetFieldFilter filter) {
             Preconditions.checkNotNull(id, "id cannot be null");
             if (this.mFieldIds != null) {
@@ -212,10 +215,10 @@ public final class Dataset implements Parcelable {
         public Dataset build() {
             throwIfDestroyed();
             this.mDestroyed = true;
-            if (this.mFieldIds != null) {
-                return new Dataset(this);
+            if (this.mFieldIds == null) {
+                throw new IllegalStateException("at least one value must be set");
             }
-            throw new IllegalStateException("at least one value must be set");
+            return new Dataset(this);
         }
 
         private void throwIfDestroyed() {
@@ -225,10 +228,12 @@ public final class Dataset implements Parcelable {
         }
     }
 
+    @Override // android.p007os.Parcelable
     public int describeContents() {
         return 0;
     }
 
+    @Override // android.p007os.Parcelable
     public void writeToParcel(Parcel parcel, int flags) {
         parcel.writeParcelable(this.mPresentation, flags);
         parcel.writeTypedList(this.mFieldIds, flags);
@@ -239,36 +244,43 @@ public final class Dataset implements Parcelable {
         parcel.writeString(this.mId);
     }
 
+    /* loaded from: classes3.dex */
     public static final class DatasetFieldFilter implements Parcelable {
-        public static final Parcelable.Creator<DatasetFieldFilter> CREATOR = new Parcelable.Creator<DatasetFieldFilter>() {
+        public static final Parcelable.Creator<DatasetFieldFilter> CREATOR = new Parcelable.Creator<DatasetFieldFilter>() { // from class: android.service.autofill.Dataset.DatasetFieldFilter.1
+            /* JADX WARN: Can't rename method to resolve collision */
+            @Override // android.p007os.Parcelable.Creator
             public DatasetFieldFilter createFromParcel(Parcel parcel) {
                 return new DatasetFieldFilter((Pattern) parcel.readSerializable());
             }
 
+            /* JADX WARN: Can't rename method to resolve collision */
+            @Override // android.p007os.Parcelable.Creator
             public DatasetFieldFilter[] newArray(int size) {
                 return new DatasetFieldFilter[size];
             }
         };
         public final Pattern pattern;
 
-        private DatasetFieldFilter(Pattern pattern2) {
-            this.pattern = pattern2;
+        private DatasetFieldFilter(Pattern pattern) {
+            this.pattern = pattern;
         }
 
         public String toString() {
-            if (!Helper.sDebug) {
-                return super.toString();
+            if (Helper.sDebug) {
+                if (this.pattern == null) {
+                    return "null";
+                }
+                return this.pattern.pattern().length() + "_chars";
             }
-            if (this.pattern == null) {
-                return "null";
-            }
-            return this.pattern.pattern().length() + "_chars";
+            return super.toString();
         }
 
+        @Override // android.p007os.Parcelable
         public int describeContents() {
             return 0;
         }
 
+        @Override // android.p007os.Parcelable
         public void writeToParcel(Parcel parcel, int flags) {
             parcel.writeSerializable(this.pattern);
         }

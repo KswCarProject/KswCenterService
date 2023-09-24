@@ -2,8 +2,8 @@ package com.android.internal.notification;
 
 import android.content.ComponentName;
 import android.content.Intent;
-import android.os.Parcelable;
 
+/* loaded from: classes4.dex */
 public final class NotificationAccessConfirmationActivityContract {
     private static final ComponentName COMPONENT_NAME = new ComponentName("com.android.settings", "com.android.settings.notification.NotificationAccessConfirmationActivity");
     public static final String EXTRA_COMPONENT_NAME = "component_name";
@@ -11,6 +11,6 @@ public final class NotificationAccessConfirmationActivityContract {
     public static final String EXTRA_USER_ID = "user_id";
 
     public static Intent launcherIntent(int userId, ComponentName component, String packageTitle) {
-        return new Intent().setComponent(COMPONENT_NAME).putExtra("user_id", userId).putExtra(EXTRA_COMPONENT_NAME, (Parcelable) component).putExtra(EXTRA_PACKAGE_TITLE, packageTitle);
+        return new Intent().setComponent(COMPONENT_NAME).putExtra("user_id", userId).putExtra(EXTRA_COMPONENT_NAME, component).putExtra(EXTRA_PACKAGE_TITLE, packageTitle);
     }
 }

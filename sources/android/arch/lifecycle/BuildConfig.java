@@ -1,5 +1,6 @@
 package android.arch.lifecycle;
 
+/* loaded from: classes.dex */
 public final class BuildConfig {
     public static final String APPLICATION_ID = "android.arch.lifecycle";
     public static final String BUILD_TYPE = "release";

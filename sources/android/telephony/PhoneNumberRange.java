@@ -1,20 +1,25 @@
 package android.telephony;
 
 import android.annotation.SystemApi;
-import android.os.Parcel;
-import android.os.Parcelable;
+import android.p007os.Parcel;
+import android.p007os.Parcelable;
 import android.text.format.DateFormat;
 import android.util.Log;
 import java.util.Objects;
 import java.util.regex.Pattern;
 
 @SystemApi
+/* loaded from: classes.dex */
 public final class PhoneNumberRange implements Parcelable {
-    public static final Parcelable.Creator<PhoneNumberRange> CREATOR = new Parcelable.Creator<PhoneNumberRange>() {
+    public static final Parcelable.Creator<PhoneNumberRange> CREATOR = new Parcelable.Creator<PhoneNumberRange>() { // from class: android.telephony.PhoneNumberRange.1
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public PhoneNumberRange createFromParcel(Parcel in) {
             return new PhoneNumberRange(in);
         }
 
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public PhoneNumberRange[] newArray(int size) {
             return new PhoneNumberRange[size];
         }
@@ -28,14 +33,14 @@ public final class PhoneNumberRange implements Parcelable {
         validateLowerAndUpperBounds(lowerBound, upperBound);
         if (!Pattern.matches("[0-9]*", countryCode)) {
             throw new IllegalArgumentException("Country code must be all numeric");
-        } else if (Pattern.matches("[0-9]*", prefix)) {
-            this.mCountryCode = countryCode;
-            this.mPrefix = prefix;
-            this.mLowerBound = lowerBound;
-            this.mUpperBound = upperBound;
-        } else {
+        }
+        if (!Pattern.matches("[0-9]*", prefix)) {
             throw new IllegalArgumentException("Prefix must be all numeric");
         }
+        this.mCountryCode = countryCode;
+        this.mPrefix = prefix;
+        this.mLowerBound = lowerBound;
+        this.mUpperBound = upperBound;
     }
 
     private PhoneNumberRange(Parcel in) {
@@ -45,6 +50,7 @@ public final class PhoneNumberRange implements Parcelable {
         this.mUpperBound = in.readStringNoHelper();
     }
 
+    @Override // android.p007os.Parcelable
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeStringNoHelper(this.mCountryCode);
         dest.writeStringNoHelper(this.mPrefix);
@@ -52,6 +58,7 @@ public final class PhoneNumberRange implements Parcelable {
         dest.writeStringNoHelper(this.mUpperBound);
     }
 
+    @Override // android.p007os.Parcelable
     public int describeContents() {
         return 0;
     }
@@ -64,14 +71,14 @@ public final class PhoneNumberRange implements Parcelable {
             return false;
         }
         PhoneNumberRange that = (PhoneNumberRange) o;
-        if (!Objects.equals(this.mCountryCode, that.mCountryCode) || !Objects.equals(this.mPrefix, that.mPrefix) || !Objects.equals(this.mLowerBound, that.mLowerBound) || !Objects.equals(this.mUpperBound, that.mUpperBound)) {
-            return false;
+        if (Objects.equals(this.mCountryCode, that.mCountryCode) && Objects.equals(this.mPrefix, that.mPrefix) && Objects.equals(this.mLowerBound, that.mLowerBound) && Objects.equals(this.mUpperBound, that.mUpperBound)) {
+            return true;
         }
-        return true;
+        return false;
     }
 
     public int hashCode() {
-        return Objects.hash(new Object[]{this.mCountryCode, this.mPrefix, this.mLowerBound, this.mUpperBound});
+        return Objects.hash(this.mCountryCode, this.mPrefix, this.mLowerBound, this.mUpperBound);
     }
 
     public String toString() {
@@ -81,11 +88,14 @@ public final class PhoneNumberRange implements Parcelable {
     private void validateLowerAndUpperBounds(String lowerBound, String upperBound) {
         if (lowerBound.length() != upperBound.length()) {
             throw new IllegalArgumentException("Lower and upper bounds must have the same length");
-        } else if (!Pattern.matches("[0-9]*", lowerBound)) {
+        }
+        if (!Pattern.matches("[0-9]*", lowerBound)) {
             throw new IllegalArgumentException("Lower bound must be all numeric");
-        } else if (!Pattern.matches("[0-9]*", upperBound)) {
+        }
+        if (!Pattern.matches("[0-9]*", upperBound)) {
             throw new IllegalArgumentException("Upper bound must be all numeric");
-        } else if (Integer.parseInt(lowerBound) > Integer.parseInt(upperBound)) {
+        }
+        if (Integer.parseInt(lowerBound) > Integer.parseInt(upperBound)) {
             throw new IllegalArgumentException("Lower bound must be lower than upper bound");
         }
     }
@@ -105,12 +115,9 @@ public final class PhoneNumberRange implements Parcelable {
             int lower = Integer.parseInt(this.mLowerBound);
             int upper = Integer.parseInt(this.mUpperBound);
             int numberToCheck = Integer.parseInt(numberPostfix);
-            if (numberToCheck > upper || numberToCheck < lower) {
-                return false;
-            }
-            return true;
+            return numberToCheck <= upper && numberToCheck >= lower;
         } catch (NumberFormatException e) {
-            Log.e(PhoneNumberRange.class.getSimpleName(), "Invalid bounds or number.", e);
+            Log.m69e(PhoneNumberRange.class.getSimpleName(), "Invalid bounds or number.", e);
             return false;
         }
     }

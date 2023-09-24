@@ -6,16 +6,17 @@ import android.app.PendingIntent;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
-import android.content.pm.ParceledListSlice;
-import android.os.Bundle;
-import android.os.RemoteException;
-import android.os.UserHandle;
+import android.content.p002pm.ParceledListSlice;
+import android.p007os.Bundle;
+import android.p007os.RemoteException;
+import android.p007os.UserHandle;
 import android.util.DisplayMetrics;
 import android.widget.RemoteViews;
 import com.android.internal.appwidget.IAppWidgetService;
 import java.util.Collections;
 import java.util.List;
 
+/* loaded from: classes.dex */
 public class AppWidgetManager {
     public static final String ACTION_APPWIDGET_BIND = "android.appwidget.action.APPWIDGET_BIND";
     public static final String ACTION_APPWIDGET_CONFIGURE = "android.appwidget.action.APPWIDGET_CONFIGURE";
@@ -65,22 +66,24 @@ public class AppWidgetManager {
     }
 
     public void updateAppWidget(int[] appWidgetIds, RemoteViews views) {
-        if (this.mService != null) {
-            try {
-                this.mService.updateAppWidgetIds(this.mPackageName, appWidgetIds, views);
-            } catch (RemoteException e) {
-                throw e.rethrowFromSystemServer();
-            }
+        if (this.mService == null) {
+            return;
+        }
+        try {
+            this.mService.updateAppWidgetIds(this.mPackageName, appWidgetIds, views);
+        } catch (RemoteException e) {
+            throw e.rethrowFromSystemServer();
         }
     }
 
     public void updateAppWidgetOptions(int appWidgetId, Bundle options) {
-        if (this.mService != null) {
-            try {
-                this.mService.updateAppWidgetOptions(this.mPackageName, appWidgetId, options);
-            } catch (RemoteException e) {
-                throw e.rethrowFromSystemServer();
-            }
+        if (this.mService == null) {
+            return;
+        }
+        try {
+            this.mService.updateAppWidgetOptions(this.mPackageName, appWidgetId, options);
+        } catch (RemoteException e) {
+            throw e.rethrowFromSystemServer();
         }
     }
 
@@ -96,85 +99,92 @@ public class AppWidgetManager {
     }
 
     public void updateAppWidget(int appWidgetId, RemoteViews views) {
-        if (this.mService != null) {
-            updateAppWidget(new int[]{appWidgetId}, views);
+        if (this.mService == null) {
+            return;
         }
+        updateAppWidget(new int[]{appWidgetId}, views);
     }
 
     public void partiallyUpdateAppWidget(int[] appWidgetIds, RemoteViews views) {
-        if (this.mService != null) {
-            try {
-                this.mService.partiallyUpdateAppWidgetIds(this.mPackageName, appWidgetIds, views);
-            } catch (RemoteException e) {
-                throw e.rethrowFromSystemServer();
-            }
+        if (this.mService == null) {
+            return;
+        }
+        try {
+            this.mService.partiallyUpdateAppWidgetIds(this.mPackageName, appWidgetIds, views);
+        } catch (RemoteException e) {
+            throw e.rethrowFromSystemServer();
         }
     }
 
     public void partiallyUpdateAppWidget(int appWidgetId, RemoteViews views) {
-        if (this.mService != null) {
-            partiallyUpdateAppWidget(new int[]{appWidgetId}, views);
+        if (this.mService == null) {
+            return;
         }
+        partiallyUpdateAppWidget(new int[]{appWidgetId}, views);
     }
 
     public void updateAppWidget(ComponentName provider, RemoteViews views) {
-        if (this.mService != null) {
-            try {
-                this.mService.updateAppWidgetProvider(provider, views);
-            } catch (RemoteException e) {
-                throw e.rethrowFromSystemServer();
-            }
+        if (this.mService == null) {
+            return;
+        }
+        try {
+            this.mService.updateAppWidgetProvider(provider, views);
+        } catch (RemoteException e) {
+            throw e.rethrowFromSystemServer();
         }
     }
 
     public void updateAppWidgetProviderInfo(ComponentName provider, String metaDataKey) {
-        if (this.mService != null) {
-            try {
-                this.mService.updateAppWidgetProviderInfo(provider, metaDataKey);
-            } catch (RemoteException e) {
-                throw e.rethrowFromSystemServer();
-            }
+        if (this.mService == null) {
+            return;
+        }
+        try {
+            this.mService.updateAppWidgetProviderInfo(provider, metaDataKey);
+        } catch (RemoteException e) {
+            throw e.rethrowFromSystemServer();
         }
     }
 
     public void notifyAppWidgetViewDataChanged(int[] appWidgetIds, int viewId) {
-        if (this.mService != null) {
-            try {
-                this.mService.notifyAppWidgetViewDataChanged(this.mPackageName, appWidgetIds, viewId);
-            } catch (RemoteException e) {
-                throw e.rethrowFromSystemServer();
-            }
+        if (this.mService == null) {
+            return;
+        }
+        try {
+            this.mService.notifyAppWidgetViewDataChanged(this.mPackageName, appWidgetIds, viewId);
+        } catch (RemoteException e) {
+            throw e.rethrowFromSystemServer();
         }
     }
 
     public void notifyAppWidgetViewDataChanged(int appWidgetId, int viewId) {
-        if (this.mService != null) {
-            notifyAppWidgetViewDataChanged(new int[]{appWidgetId}, viewId);
+        if (this.mService == null) {
+            return;
         }
+        notifyAppWidgetViewDataChanged(new int[]{appWidgetId}, viewId);
     }
 
     public List<AppWidgetProviderInfo> getInstalledProvidersForProfile(UserHandle profile) {
         if (this.mService == null) {
             return Collections.emptyList();
         }
-        return getInstalledProvidersForProfile(1, profile, (String) null);
+        return getInstalledProvidersForProfile(1, profile, null);
     }
 
     public List<AppWidgetProviderInfo> getInstalledProvidersForPackage(String packageName, UserHandle profile) {
         if (packageName == null) {
             throw new NullPointerException("A non-null package must be passed to this method. If you want all widgets regardless of package, see getInstalledProvidersForProfile(UserHandle)");
-        } else if (this.mService == null) {
-            return Collections.emptyList();
-        } else {
-            return getInstalledProvidersForProfile(1, profile, packageName);
         }
+        if (this.mService == null) {
+            return Collections.emptyList();
+        }
+        return getInstalledProvidersForProfile(1, profile, packageName);
     }
 
     public List<AppWidgetProviderInfo> getInstalledProviders() {
         if (this.mService == null) {
             return Collections.emptyList();
         }
-        return getInstalledProvidersForProfile(1, (UserHandle) null, (String) null);
+        return getInstalledProvidersForProfile(1, null, null);
     }
 
     @UnsupportedAppUsage
@@ -182,7 +192,7 @@ public class AppWidgetManager {
         if (this.mService == null) {
             return Collections.emptyList();
         }
-        return getInstalledProvidersForProfile(categoryFilter, (UserHandle) null, (String) null);
+        return getInstalledProvidersForProfile(categoryFilter, null, null);
     }
 
     @UnsupportedAppUsage
@@ -224,16 +234,18 @@ public class AppWidgetManager {
 
     @UnsupportedAppUsage
     public void bindAppWidgetId(int appWidgetId, ComponentName provider) {
-        if (this.mService != null) {
-            bindAppWidgetId(appWidgetId, provider, (Bundle) null);
+        if (this.mService == null) {
+            return;
         }
+        bindAppWidgetId(appWidgetId, provider, null);
     }
 
     @UnsupportedAppUsage
     public void bindAppWidgetId(int appWidgetId, ComponentName provider, Bundle options) {
-        if (this.mService != null) {
-            bindAppWidgetIdIfAllowed(appWidgetId, this.mContext.getUser(), provider, options);
+        if (this.mService == null) {
+            return;
         }
+        bindAppWidgetIdIfAllowed(appWidgetId, this.mContext.getUser(), provider, options);
     }
 
     public boolean bindAppWidgetIdIfAllowed(int appWidgetId, ComponentName provider) {
@@ -280,18 +292,20 @@ public class AppWidgetManager {
     }
 
     public void setBindAppWidgetPermission(String packageName, boolean permission) {
-        if (this.mService != null) {
-            setBindAppWidgetPermission(packageName, this.mContext.getUserId(), permission);
+        if (this.mService == null) {
+            return;
         }
+        setBindAppWidgetPermission(packageName, this.mContext.getUserId(), permission);
     }
 
     public void setBindAppWidgetPermission(String packageName, int userId, boolean permission) {
-        if (this.mService != null) {
-            try {
-                this.mService.setBindAppWidgetPermission(packageName, userId, permission);
-            } catch (RemoteException e) {
-                throw e.rethrowFromSystemServer();
-            }
+        if (this.mService == null) {
+            return;
+        }
+        try {
+            this.mService.setBindAppWidgetPermission(packageName, userId, permission);
+        } catch (RemoteException e) {
+            throw e.rethrowFromSystemServer();
         }
     }
 
@@ -350,7 +364,7 @@ public class AppWidgetManager {
     }
 
     public boolean requestPinAppWidget(ComponentName provider, PendingIntent successCallback) {
-        return requestPinAppWidget(provider, (Bundle) null, successCallback);
+        return requestPinAppWidget(provider, null, successCallback);
     }
 
     public boolean requestPinAppWidget(ComponentName provider, Bundle extras, PendingIntent successCallback) {

@@ -1,8 +1,8 @@
 package android.net.lowpan;
 
 import android.net.lowpan.LowpanIdentity;
-import android.os.Parcel;
-import android.os.Parcelable;
+import android.p007os.Parcel;
+import android.p007os.Parcelable;
 import com.android.internal.util.HexDump;
 import java.util.Arrays;
 import java.util.Collection;
@@ -10,8 +10,11 @@ import java.util.Iterator;
 import java.util.Objects;
 import java.util.TreeSet;
 
+/* loaded from: classes3.dex */
 public class LowpanBeaconInfo implements Parcelable {
-    public static final Parcelable.Creator<LowpanBeaconInfo> CREATOR = new Parcelable.Creator<LowpanBeaconInfo>() {
+    public static final Parcelable.Creator<LowpanBeaconInfo> CREATOR = new Parcelable.Creator<LowpanBeaconInfo>() { // from class: android.net.lowpan.LowpanBeaconInfo.1
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public LowpanBeaconInfo createFromParcel(Parcel in) {
             Builder builder = new Builder();
             builder.setLowpanIdentity(LowpanIdentity.CREATOR.createFromParcel(in));
@@ -24,6 +27,8 @@ public class LowpanBeaconInfo implements Parcelable {
             return builder.build();
         }
 
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public LowpanBeaconInfo[] newArray(int size) {
             return new LowpanBeaconInfo[size];
         }
@@ -31,20 +36,16 @@ public class LowpanBeaconInfo implements Parcelable {
     public static final int FLAG_CAN_ASSIST = 1;
     public static final int UNKNOWN_LQI = 0;
     public static final int UNKNOWN_RSSI = Integer.MAX_VALUE;
-    /* access modifiers changed from: private */
-    public byte[] mBeaconAddress;
-    /* access modifiers changed from: private */
-    public final TreeSet<Integer> mFlags;
-    /* access modifiers changed from: private */
-    public LowpanIdentity mIdentity;
-    /* access modifiers changed from: private */
-    public int mLqi;
-    /* access modifiers changed from: private */
-    public int mRssi;
+    private byte[] mBeaconAddress;
+    private final TreeSet<Integer> mFlags;
+    private LowpanIdentity mIdentity;
+    private int mLqi;
+    private int mRssi;
 
+    /* loaded from: classes3.dex */
     public static class Builder {
-        final LowpanBeaconInfo mBeaconInfo = new LowpanBeaconInfo();
         final LowpanIdentity.Builder mIdentityBuilder = new LowpanIdentity.Builder();
+        final LowpanBeaconInfo mBeaconInfo = new LowpanBeaconInfo();
 
         public Builder setLowpanIdentity(LowpanIdentity x) {
             this.mIdentityBuilder.setLowpanIdentity(x);
@@ -77,17 +78,17 @@ public class LowpanBeaconInfo implements Parcelable {
         }
 
         public Builder setRssi(int x) {
-            int unused = this.mBeaconInfo.mRssi = x;
+            this.mBeaconInfo.mRssi = x;
             return this;
         }
 
         public Builder setLqi(int x) {
-            int unused = this.mBeaconInfo.mLqi = x;
+            this.mBeaconInfo.mLqi = x;
             return this;
         }
 
         public Builder setBeaconAddress(byte[] x) {
-            byte[] unused = this.mBeaconInfo.mBeaconAddress = x != null ? (byte[]) x.clone() : null;
+            this.mBeaconInfo.mBeaconAddress = x != null ? (byte[]) x.clone() : null;
             return this;
         }
 
@@ -102,9 +103,9 @@ public class LowpanBeaconInfo implements Parcelable {
         }
 
         public LowpanBeaconInfo build() {
-            LowpanIdentity unused = this.mBeaconInfo.mIdentity = this.mIdentityBuilder.build();
+            this.mBeaconInfo.mIdentity = this.mIdentityBuilder.build();
             if (this.mBeaconInfo.mBeaconAddress == null) {
-                byte[] unused2 = this.mBeaconInfo.mBeaconAddress = new byte[0];
+                this.mBeaconInfo.mBeaconAddress = new byte[0];
             }
             return this.mBeaconInfo;
         }
@@ -160,35 +161,34 @@ public class LowpanBeaconInfo implements Parcelable {
         Iterator<Integer> it = this.mFlags.iterator();
         while (it.hasNext()) {
             Integer flag = it.next();
-            if (flag.intValue() != 1) {
+            if (flag.intValue() == 1) {
+                sb.append(", CAN_ASSIST");
+            } else {
                 sb.append(", FLAG_");
                 sb.append(Integer.toHexString(flag.intValue()));
-            } else {
-                sb.append(", CAN_ASSIST");
             }
         }
         return sb.toString();
     }
 
     public int hashCode() {
-        return Objects.hash(new Object[]{this.mIdentity, Integer.valueOf(this.mRssi), Integer.valueOf(this.mLqi), Integer.valueOf(Arrays.hashCode(this.mBeaconAddress)), this.mFlags});
+        return Objects.hash(this.mIdentity, Integer.valueOf(this.mRssi), Integer.valueOf(this.mLqi), Integer.valueOf(Arrays.hashCode(this.mBeaconAddress)), this.mFlags);
     }
 
     public boolean equals(Object obj) {
-        if (!(obj instanceof LowpanBeaconInfo)) {
-            return false;
+        if (obj instanceof LowpanBeaconInfo) {
+            LowpanBeaconInfo rhs = (LowpanBeaconInfo) obj;
+            return this.mIdentity.equals(rhs.mIdentity) && Arrays.equals(this.mBeaconAddress, rhs.mBeaconAddress) && this.mRssi == rhs.mRssi && this.mLqi == rhs.mLqi && this.mFlags.equals(rhs.mFlags);
         }
-        LowpanBeaconInfo rhs = (LowpanBeaconInfo) obj;
-        if (!this.mIdentity.equals(rhs.mIdentity) || !Arrays.equals(this.mBeaconAddress, rhs.mBeaconAddress) || this.mRssi != rhs.mRssi || this.mLqi != rhs.mLqi || !this.mFlags.equals(rhs.mFlags)) {
-            return false;
-        }
-        return true;
+        return false;
     }
 
+    @Override // android.p007os.Parcelable
     public int describeContents() {
         return 0;
     }
 
+    @Override // android.p007os.Parcelable
     public void writeToParcel(Parcel dest, int flags) {
         this.mIdentity.writeToParcel(dest, flags);
         dest.writeInt(this.mRssi);
@@ -197,7 +197,8 @@ public class LowpanBeaconInfo implements Parcelable {
         dest.writeInt(this.mFlags.size());
         Iterator<Integer> it = this.mFlags.iterator();
         while (it.hasNext()) {
-            dest.writeInt(it.next().intValue());
+            Integer val = it.next();
+            dest.writeInt(val.intValue());
         }
     }
 }

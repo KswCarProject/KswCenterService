@@ -3,6 +3,7 @@ package android.hardware.camera2.marshal;
 import android.util.Rational;
 import com.android.internal.util.Preconditions;
 
+/* loaded from: classes.dex */
 public final class MarshalHelpers {
     public static final int SIZEOF_BYTE = 1;
     public static final int SIZEOF_DOUBLE = 8;
@@ -42,10 +43,7 @@ public final class MarshalHelpers {
         if (klass == null) {
             return false;
         }
-        if (klass == Byte.TYPE || klass == Byte.class || klass == Integer.TYPE || klass == Integer.class || klass == Float.TYPE || klass == Float.class || klass == Long.TYPE || klass == Long.class || klass == Double.TYPE || klass == Double.class || klass == Rational.class) {
-            return true;
-        }
-        return false;
+        return klass == Byte.TYPE || klass == Byte.class || klass == Integer.TYPE || klass == Integer.class || klass == Float.TYPE || klass == Float.class || klass == Long.TYPE || klass == Long.class || klass == Double.TYPE || klass == Double.class || klass == Rational.class;
     }
 
     public static <T> Class<T> wrapClassIfPrimitive(Class<T> klass) {
@@ -101,10 +99,10 @@ public final class MarshalHelpers {
     }
 
     public static int checkNativeTypeEquals(int expectedNativeType, int actualNativeType) {
-        if (expectedNativeType == actualNativeType) {
-            return actualNativeType;
+        if (expectedNativeType != actualNativeType) {
+            throw new UnsupportedOperationException(String.format("Expected native type %d, but got %d", Integer.valueOf(expectedNativeType), Integer.valueOf(actualNativeType)));
         }
-        throw new UnsupportedOperationException(String.format("Expected native type %d, but got %d", new Object[]{Integer.valueOf(expectedNativeType), Integer.valueOf(actualNativeType)}));
+        return actualNativeType;
     }
 
     private MarshalHelpers() {

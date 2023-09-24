@@ -4,6 +4,7 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 
 @Retention(RetentionPolicy.SOURCE)
+/* loaded from: classes4.dex */
 public @interface StartInputReason {
     public static final int ACTIVATED_BY_IMMS = 7;
     public static final int APP_CALLED_RESTART_INPUT_API = 3;

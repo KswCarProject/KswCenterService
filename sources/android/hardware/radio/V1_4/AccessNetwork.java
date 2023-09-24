@@ -3,6 +3,7 @@ package android.hardware.radio.V1_4;
 import com.android.internal.telephony.IccCardConstants;
 import java.util.ArrayList;
 
+/* loaded from: classes.dex */
 public final class AccessNetwork {
     public static final int CDMA2000 = 4;
     public static final int EUTRAN = 3;

@@ -1,11 +1,11 @@
 package com.android.internal.telephony;
 
-import android.os.Binder;
-import android.os.Bundle;
-import android.os.IBinder;
-import android.os.IInterface;
-import android.os.Parcel;
-import android.os.RemoteException;
+import android.p007os.Binder;
+import android.p007os.Bundle;
+import android.p007os.IBinder;
+import android.p007os.IInterface;
+import android.p007os.Parcel;
+import android.p007os.RemoteException;
 import android.telephony.CallAttributes;
 import android.telephony.CellInfo;
 import android.telephony.DataConnectionRealTimeInfo;
@@ -19,6 +19,7 @@ import android.telephony.ims.ImsReasonInfo;
 import java.util.List;
 import java.util.Map;
 
+/* loaded from: classes4.dex */
 public interface IPhoneStateListener extends IInterface {
     void onActiveDataSubIdChanged(int i) throws RemoteException;
 
@@ -76,96 +77,127 @@ public interface IPhoneStateListener extends IInterface {
 
     void onVoiceActivationStateChanged(int i) throws RemoteException;
 
+    /* loaded from: classes4.dex */
     public static class Default implements IPhoneStateListener {
+        @Override // com.android.internal.telephony.IPhoneStateListener
         public void onServiceStateChanged(ServiceState serviceState) throws RemoteException {
         }
 
+        @Override // com.android.internal.telephony.IPhoneStateListener
         public void onSignalStrengthChanged(int asu) throws RemoteException {
         }
 
+        @Override // com.android.internal.telephony.IPhoneStateListener
         public void onMessageWaitingIndicatorChanged(boolean mwi) throws RemoteException {
         }
 
+        @Override // com.android.internal.telephony.IPhoneStateListener
         public void onCallForwardingIndicatorChanged(boolean cfi) throws RemoteException {
         }
 
+        @Override // com.android.internal.telephony.IPhoneStateListener
         public void onCellLocationChanged(Bundle location) throws RemoteException {
         }
 
+        @Override // com.android.internal.telephony.IPhoneStateListener
         public void onCallStateChanged(int state, String incomingNumber) throws RemoteException {
         }
 
+        @Override // com.android.internal.telephony.IPhoneStateListener
         public void onDataConnectionStateChanged(int state, int networkType) throws RemoteException {
         }
 
+        @Override // com.android.internal.telephony.IPhoneStateListener
         public void onDataActivity(int direction) throws RemoteException {
         }
 
+        @Override // com.android.internal.telephony.IPhoneStateListener
         public void onSignalStrengthsChanged(SignalStrength signalStrength) throws RemoteException {
         }
 
-        public void onPhysicalChannelConfigurationChanged(List<PhysicalChannelConfig> list) throws RemoteException {
+        @Override // com.android.internal.telephony.IPhoneStateListener
+        public void onPhysicalChannelConfigurationChanged(List<PhysicalChannelConfig> configs) throws RemoteException {
         }
 
+        @Override // com.android.internal.telephony.IPhoneStateListener
         public void onOtaspChanged(int otaspMode) throws RemoteException {
         }
 
-        public void onCellInfoChanged(List<CellInfo> list) throws RemoteException {
+        @Override // com.android.internal.telephony.IPhoneStateListener
+        public void onCellInfoChanged(List<CellInfo> cellInfo) throws RemoteException {
         }
 
+        @Override // com.android.internal.telephony.IPhoneStateListener
         public void onPreciseCallStateChanged(PreciseCallState callState) throws RemoteException {
         }
 
+        @Override // com.android.internal.telephony.IPhoneStateListener
         public void onPreciseDataConnectionStateChanged(PreciseDataConnectionState dataConnectionState) throws RemoteException {
         }
 
+        @Override // com.android.internal.telephony.IPhoneStateListener
         public void onDataConnectionRealTimeInfoChanged(DataConnectionRealTimeInfo dcRtInfo) throws RemoteException {
         }
 
+        @Override // com.android.internal.telephony.IPhoneStateListener
         public void onSrvccStateChanged(int state) throws RemoteException {
         }
 
+        @Override // com.android.internal.telephony.IPhoneStateListener
         public void onVoiceActivationStateChanged(int activationState) throws RemoteException {
         }
 
+        @Override // com.android.internal.telephony.IPhoneStateListener
         public void onDataActivationStateChanged(int activationState) throws RemoteException {
         }
 
+        @Override // com.android.internal.telephony.IPhoneStateListener
         public void onOemHookRawEvent(byte[] rawData) throws RemoteException {
         }
 
+        @Override // com.android.internal.telephony.IPhoneStateListener
         public void onCarrierNetworkChange(boolean active) throws RemoteException {
         }
 
+        @Override // com.android.internal.telephony.IPhoneStateListener
         public void onUserMobileDataStateChanged(boolean enabled) throws RemoteException {
         }
 
+        @Override // com.android.internal.telephony.IPhoneStateListener
         public void onPhoneCapabilityChanged(PhoneCapability capability) throws RemoteException {
         }
 
+        @Override // com.android.internal.telephony.IPhoneStateListener
         public void onActiveDataSubIdChanged(int subId) throws RemoteException {
         }
 
+        @Override // com.android.internal.telephony.IPhoneStateListener
         public void onRadioPowerStateChanged(int state) throws RemoteException {
         }
 
+        @Override // com.android.internal.telephony.IPhoneStateListener
         public void onCallAttributesChanged(CallAttributes callAttributes) throws RemoteException {
         }
 
+        @Override // com.android.internal.telephony.IPhoneStateListener
         public void onEmergencyNumberListChanged(Map emergencyNumberList) throws RemoteException {
         }
 
+        @Override // com.android.internal.telephony.IPhoneStateListener
         public void onCallDisconnectCauseChanged(int disconnectCause, int preciseDisconnectCause) throws RemoteException {
         }
 
+        @Override // com.android.internal.telephony.IPhoneStateListener
         public void onImsCallDisconnectCauseChanged(ImsReasonInfo imsReasonInfo) throws RemoteException {
         }
 
+        @Override // android.p007os.IInterface
         public IBinder asBinder() {
             return null;
         }
     }
 
+    /* loaded from: classes4.dex */
     public static abstract class Stub extends Binder implements IPhoneStateListener {
         private static final String DESCRIPTOR = "com.android.internal.telephony.IPhoneStateListener";
         static final int TRANSACTION_onActiveDataSubIdChanged = 23;
@@ -206,12 +238,13 @@ public interface IPhoneStateListener extends IInterface {
                 return null;
             }
             IInterface iin = obj.queryLocalInterface(DESCRIPTOR);
-            if (iin == null || !(iin instanceof IPhoneStateListener)) {
-                return new Proxy(obj);
+            if (iin != null && (iin instanceof IPhoneStateListener)) {
+                return (IPhoneStateListener) iin;
             }
-            return (IPhoneStateListener) iin;
+            return new Proxy(obj);
         }
 
+        @Override // android.p007os.IInterface
         public IBinder asBinder() {
             return this;
         }
@@ -279,337 +312,151 @@ public interface IPhoneStateListener extends IInterface {
             }
         }
 
+        @Override // android.p007os.Binder
         public String getTransactionName(int transactionCode) {
             return getDefaultTransactionName(transactionCode);
         }
 
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r3v0, resolved type: android.telephony.ServiceState} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r3v1, resolved type: android.telephony.ServiceState} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r3v6, resolved type: android.telephony.ServiceState} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r1v12, resolved type: android.os.Bundle} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r3v11, resolved type: android.telephony.ServiceState} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r1v19, resolved type: android.telephony.SignalStrength} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r3v14, resolved type: android.telephony.ServiceState} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r1v28, resolved type: android.telephony.PreciseCallState} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r3v17, resolved type: android.telephony.ServiceState} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r1v32, resolved type: android.telephony.PreciseDataConnectionState} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r3v20, resolved type: android.telephony.ServiceState} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r1v36, resolved type: android.telephony.DataConnectionRealTimeInfo} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r3v25, resolved type: android.telephony.ServiceState} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r1v48, resolved type: android.telephony.PhoneCapability} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r3v28, resolved type: android.telephony.ServiceState} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r1v54, resolved type: android.telephony.CallAttributes} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r3v33, resolved type: android.telephony.ServiceState} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r1v61, resolved type: android.telephony.ims.ImsReasonInfo} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r3v36, resolved type: android.telephony.ServiceState} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r3v37, resolved type: android.telephony.ServiceState} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r3v38, resolved type: android.telephony.ServiceState} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r3v39, resolved type: android.telephony.ServiceState} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r3v40, resolved type: android.telephony.ServiceState} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r3v41, resolved type: android.telephony.ServiceState} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r3v42, resolved type: android.telephony.ServiceState} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r3v43, resolved type: android.telephony.ServiceState} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r3v44, resolved type: android.telephony.ServiceState} */
-        /* JADX WARNING: type inference failed for: r3v8, types: [android.os.Bundle] */
-        /* JADX WARNING: type inference failed for: r3v13, types: [android.telephony.SignalStrength] */
-        /* JADX WARNING: type inference failed for: r3v16, types: [android.telephony.PreciseCallState] */
-        /* JADX WARNING: type inference failed for: r3v19, types: [android.telephony.PreciseDataConnectionState] */
-        /* JADX WARNING: type inference failed for: r3v22, types: [android.telephony.DataConnectionRealTimeInfo] */
-        /* JADX WARNING: type inference failed for: r3v27, types: [android.telephony.PhoneCapability] */
-        /* JADX WARNING: type inference failed for: r3v30, types: [android.telephony.CallAttributes] */
-        /* JADX WARNING: type inference failed for: r3v35, types: [android.telephony.ims.ImsReasonInfo] */
-        /* JADX WARNING: Multi-variable type inference failed */
-        /* Code decompiled incorrectly, please refer to instructions dump. */
-        public boolean onTransact(int r5, android.os.Parcel r6, android.os.Parcel r7, int r8) throws android.os.RemoteException {
-            /*
-                r4 = this;
-                java.lang.String r0 = "com.android.internal.telephony.IPhoneStateListener"
-                r1 = 1598968902(0x5f4e5446, float:1.4867585E19)
-                r2 = 1
-                if (r5 == r1) goto L_0x01ec
-                r1 = 0
-                r3 = 0
-                switch(r5) {
-                    case 1: goto L_0x01d3;
-                    case 2: goto L_0x01c8;
-                    case 3: goto L_0x01b9;
-                    case 4: goto L_0x01aa;
-                    case 5: goto L_0x0191;
-                    case 6: goto L_0x0182;
-                    case 7: goto L_0x0173;
-                    case 8: goto L_0x0168;
-                    case 9: goto L_0x014f;
-                    case 10: goto L_0x0142;
-                    case 11: goto L_0x0137;
-                    case 12: goto L_0x012a;
-                    case 13: goto L_0x0111;
-                    case 14: goto L_0x00f8;
-                    case 15: goto L_0x00df;
-                    case 16: goto L_0x00d4;
-                    case 17: goto L_0x00c9;
-                    case 18: goto L_0x00be;
-                    case 19: goto L_0x00b3;
-                    case 20: goto L_0x00a4;
-                    case 21: goto L_0x0095;
-                    case 22: goto L_0x007c;
-                    case 23: goto L_0x0071;
-                    case 24: goto L_0x0066;
-                    case 25: goto L_0x004d;
-                    case 26: goto L_0x003a;
-                    case 27: goto L_0x002b;
-                    case 28: goto L_0x0012;
-                    default: goto L_0x000d;
-                }
-            L_0x000d:
-                boolean r1 = super.onTransact(r5, r6, r7, r8)
-                return r1
-            L_0x0012:
-                r6.enforceInterface(r0)
-                int r1 = r6.readInt()
-                if (r1 == 0) goto L_0x0025
-                android.os.Parcelable$Creator<android.telephony.ims.ImsReasonInfo> r1 = android.telephony.ims.ImsReasonInfo.CREATOR
-                java.lang.Object r1 = r1.createFromParcel(r6)
-                r3 = r1
-                android.telephony.ims.ImsReasonInfo r3 = (android.telephony.ims.ImsReasonInfo) r3
-                goto L_0x0026
-            L_0x0025:
-            L_0x0026:
-                r1 = r3
-                r4.onImsCallDisconnectCauseChanged(r1)
-                return r2
-            L_0x002b:
-                r6.enforceInterface(r0)
-                int r1 = r6.readInt()
-                int r3 = r6.readInt()
-                r4.onCallDisconnectCauseChanged(r1, r3)
-                return r2
-            L_0x003a:
-                r6.enforceInterface(r0)
-                java.lang.Class r1 = r4.getClass()
-                java.lang.ClassLoader r1 = r1.getClassLoader()
-                java.util.HashMap r3 = r6.readHashMap(r1)
-                r4.onEmergencyNumberListChanged(r3)
-                return r2
-            L_0x004d:
-                r6.enforceInterface(r0)
-                int r1 = r6.readInt()
-                if (r1 == 0) goto L_0x0060
-                android.os.Parcelable$Creator<android.telephony.CallAttributes> r1 = android.telephony.CallAttributes.CREATOR
-                java.lang.Object r1 = r1.createFromParcel(r6)
-                r3 = r1
-                android.telephony.CallAttributes r3 = (android.telephony.CallAttributes) r3
-                goto L_0x0061
-            L_0x0060:
-            L_0x0061:
-                r1 = r3
-                r4.onCallAttributesChanged(r1)
-                return r2
-            L_0x0066:
-                r6.enforceInterface(r0)
-                int r1 = r6.readInt()
-                r4.onRadioPowerStateChanged(r1)
-                return r2
-            L_0x0071:
-                r6.enforceInterface(r0)
-                int r1 = r6.readInt()
-                r4.onActiveDataSubIdChanged(r1)
-                return r2
-            L_0x007c:
-                r6.enforceInterface(r0)
-                int r1 = r6.readInt()
-                if (r1 == 0) goto L_0x008f
-                android.os.Parcelable$Creator<android.telephony.PhoneCapability> r1 = android.telephony.PhoneCapability.CREATOR
-                java.lang.Object r1 = r1.createFromParcel(r6)
-                r3 = r1
-                android.telephony.PhoneCapability r3 = (android.telephony.PhoneCapability) r3
-                goto L_0x0090
-            L_0x008f:
-            L_0x0090:
-                r1 = r3
-                r4.onPhoneCapabilityChanged(r1)
-                return r2
-            L_0x0095:
-                r6.enforceInterface(r0)
-                int r3 = r6.readInt()
-                if (r3 == 0) goto L_0x00a0
-                r1 = r2
-            L_0x00a0:
-                r4.onUserMobileDataStateChanged(r1)
-                return r2
-            L_0x00a4:
-                r6.enforceInterface(r0)
-                int r3 = r6.readInt()
-                if (r3 == 0) goto L_0x00af
-                r1 = r2
-            L_0x00af:
-                r4.onCarrierNetworkChange(r1)
-                return r2
-            L_0x00b3:
-                r6.enforceInterface(r0)
-                byte[] r1 = r6.createByteArray()
-                r4.onOemHookRawEvent(r1)
-                return r2
-            L_0x00be:
-                r6.enforceInterface(r0)
-                int r1 = r6.readInt()
-                r4.onDataActivationStateChanged(r1)
-                return r2
-            L_0x00c9:
-                r6.enforceInterface(r0)
-                int r1 = r6.readInt()
-                r4.onVoiceActivationStateChanged(r1)
-                return r2
-            L_0x00d4:
-                r6.enforceInterface(r0)
-                int r1 = r6.readInt()
-                r4.onSrvccStateChanged(r1)
-                return r2
-            L_0x00df:
-                r6.enforceInterface(r0)
-                int r1 = r6.readInt()
-                if (r1 == 0) goto L_0x00f2
-                android.os.Parcelable$Creator<android.telephony.DataConnectionRealTimeInfo> r1 = android.telephony.DataConnectionRealTimeInfo.CREATOR
-                java.lang.Object r1 = r1.createFromParcel(r6)
-                r3 = r1
-                android.telephony.DataConnectionRealTimeInfo r3 = (android.telephony.DataConnectionRealTimeInfo) r3
-                goto L_0x00f3
-            L_0x00f2:
-            L_0x00f3:
-                r1 = r3
-                r4.onDataConnectionRealTimeInfoChanged(r1)
-                return r2
-            L_0x00f8:
-                r6.enforceInterface(r0)
-                int r1 = r6.readInt()
-                if (r1 == 0) goto L_0x010b
-                android.os.Parcelable$Creator<android.telephony.PreciseDataConnectionState> r1 = android.telephony.PreciseDataConnectionState.CREATOR
-                java.lang.Object r1 = r1.createFromParcel(r6)
-                r3 = r1
-                android.telephony.PreciseDataConnectionState r3 = (android.telephony.PreciseDataConnectionState) r3
-                goto L_0x010c
-            L_0x010b:
-            L_0x010c:
-                r1 = r3
-                r4.onPreciseDataConnectionStateChanged(r1)
-                return r2
-            L_0x0111:
-                r6.enforceInterface(r0)
-                int r1 = r6.readInt()
-                if (r1 == 0) goto L_0x0124
-                android.os.Parcelable$Creator<android.telephony.PreciseCallState> r1 = android.telephony.PreciseCallState.CREATOR
-                java.lang.Object r1 = r1.createFromParcel(r6)
-                r3 = r1
-                android.telephony.PreciseCallState r3 = (android.telephony.PreciseCallState) r3
-                goto L_0x0125
-            L_0x0124:
-            L_0x0125:
-                r1 = r3
-                r4.onPreciseCallStateChanged(r1)
-                return r2
-            L_0x012a:
-                r6.enforceInterface(r0)
-                android.os.Parcelable$Creator<android.telephony.CellInfo> r1 = android.telephony.CellInfo.CREATOR
-                java.util.ArrayList r1 = r6.createTypedArrayList(r1)
-                r4.onCellInfoChanged(r1)
-                return r2
-            L_0x0137:
-                r6.enforceInterface(r0)
-                int r1 = r6.readInt()
-                r4.onOtaspChanged(r1)
-                return r2
-            L_0x0142:
-                r6.enforceInterface(r0)
-                android.os.Parcelable$Creator<android.telephony.PhysicalChannelConfig> r1 = android.telephony.PhysicalChannelConfig.CREATOR
-                java.util.ArrayList r1 = r6.createTypedArrayList(r1)
-                r4.onPhysicalChannelConfigurationChanged(r1)
-                return r2
-            L_0x014f:
-                r6.enforceInterface(r0)
-                int r1 = r6.readInt()
-                if (r1 == 0) goto L_0x0162
-                android.os.Parcelable$Creator<android.telephony.SignalStrength> r1 = android.telephony.SignalStrength.CREATOR
-                java.lang.Object r1 = r1.createFromParcel(r6)
-                r3 = r1
-                android.telephony.SignalStrength r3 = (android.telephony.SignalStrength) r3
-                goto L_0x0163
-            L_0x0162:
-            L_0x0163:
-                r1 = r3
-                r4.onSignalStrengthsChanged(r1)
-                return r2
-            L_0x0168:
-                r6.enforceInterface(r0)
-                int r1 = r6.readInt()
-                r4.onDataActivity(r1)
-                return r2
-            L_0x0173:
-                r6.enforceInterface(r0)
-                int r1 = r6.readInt()
-                int r3 = r6.readInt()
-                r4.onDataConnectionStateChanged(r1, r3)
-                return r2
-            L_0x0182:
-                r6.enforceInterface(r0)
-                int r1 = r6.readInt()
-                java.lang.String r3 = r6.readString()
-                r4.onCallStateChanged(r1, r3)
-                return r2
-            L_0x0191:
-                r6.enforceInterface(r0)
-                int r1 = r6.readInt()
-                if (r1 == 0) goto L_0x01a4
-                android.os.Parcelable$Creator<android.os.Bundle> r1 = android.os.Bundle.CREATOR
-                java.lang.Object r1 = r1.createFromParcel(r6)
-                r3 = r1
-                android.os.Bundle r3 = (android.os.Bundle) r3
-                goto L_0x01a5
-            L_0x01a4:
-            L_0x01a5:
-                r1 = r3
-                r4.onCellLocationChanged(r1)
-                return r2
-            L_0x01aa:
-                r6.enforceInterface(r0)
-                int r3 = r6.readInt()
-                if (r3 == 0) goto L_0x01b5
-                r1 = r2
-            L_0x01b5:
-                r4.onCallForwardingIndicatorChanged(r1)
-                return r2
-            L_0x01b9:
-                r6.enforceInterface(r0)
-                int r3 = r6.readInt()
-                if (r3 == 0) goto L_0x01c4
-                r1 = r2
-            L_0x01c4:
-                r4.onMessageWaitingIndicatorChanged(r1)
-                return r2
-            L_0x01c8:
-                r6.enforceInterface(r0)
-                int r1 = r6.readInt()
-                r4.onSignalStrengthChanged(r1)
-                return r2
-            L_0x01d3:
-                r6.enforceInterface(r0)
-                int r1 = r6.readInt()
-                if (r1 == 0) goto L_0x01e6
-                android.os.Parcelable$Creator<android.telephony.ServiceState> r1 = android.telephony.ServiceState.CREATOR
-                java.lang.Object r1 = r1.createFromParcel(r6)
-                r3 = r1
-                android.telephony.ServiceState r3 = (android.telephony.ServiceState) r3
-                goto L_0x01e7
-            L_0x01e6:
-            L_0x01e7:
-                r1 = r3
-                r4.onServiceStateChanged(r1)
-                return r2
-            L_0x01ec:
-                r7.writeString(r0)
-                return r2
-            */
-            throw new UnsupportedOperationException("Method not decompiled: com.android.internal.telephony.IPhoneStateListener.Stub.onTransact(int, android.os.Parcel, android.os.Parcel, int):boolean");
+        @Override // android.p007os.Binder
+        public boolean onTransact(int code, Parcel data, Parcel reply, int flags) throws RemoteException {
+            boolean _arg0;
+            if (code == 1598968902) {
+                reply.writeString(DESCRIPTOR);
+                return true;
+            }
+            switch (code) {
+                case 1:
+                    data.enforceInterface(DESCRIPTOR);
+                    onServiceStateChanged(data.readInt() != 0 ? ServiceState.CREATOR.createFromParcel(data) : null);
+                    return true;
+                case 2:
+                    data.enforceInterface(DESCRIPTOR);
+                    onSignalStrengthChanged(data.readInt());
+                    return true;
+                case 3:
+                    data.enforceInterface(DESCRIPTOR);
+                    _arg0 = data.readInt() != 0;
+                    onMessageWaitingIndicatorChanged(_arg0);
+                    return true;
+                case 4:
+                    data.enforceInterface(DESCRIPTOR);
+                    _arg0 = data.readInt() != 0;
+                    onCallForwardingIndicatorChanged(_arg0);
+                    return true;
+                case 5:
+                    data.enforceInterface(DESCRIPTOR);
+                    onCellLocationChanged(data.readInt() != 0 ? Bundle.CREATOR.createFromParcel(data) : null);
+                    return true;
+                case 6:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg02 = data.readInt();
+                    String _arg1 = data.readString();
+                    onCallStateChanged(_arg02, _arg1);
+                    return true;
+                case 7:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg03 = data.readInt();
+                    int _arg12 = data.readInt();
+                    onDataConnectionStateChanged(_arg03, _arg12);
+                    return true;
+                case 8:
+                    data.enforceInterface(DESCRIPTOR);
+                    onDataActivity(data.readInt());
+                    return true;
+                case 9:
+                    data.enforceInterface(DESCRIPTOR);
+                    onSignalStrengthsChanged(data.readInt() != 0 ? SignalStrength.CREATOR.createFromParcel(data) : null);
+                    return true;
+                case 10:
+                    data.enforceInterface(DESCRIPTOR);
+                    onPhysicalChannelConfigurationChanged(data.createTypedArrayList(PhysicalChannelConfig.CREATOR));
+                    return true;
+                case 11:
+                    data.enforceInterface(DESCRIPTOR);
+                    onOtaspChanged(data.readInt());
+                    return true;
+                case 12:
+                    data.enforceInterface(DESCRIPTOR);
+                    onCellInfoChanged(data.createTypedArrayList(CellInfo.CREATOR));
+                    return true;
+                case 13:
+                    data.enforceInterface(DESCRIPTOR);
+                    onPreciseCallStateChanged(data.readInt() != 0 ? PreciseCallState.CREATOR.createFromParcel(data) : null);
+                    return true;
+                case 14:
+                    data.enforceInterface(DESCRIPTOR);
+                    onPreciseDataConnectionStateChanged(data.readInt() != 0 ? PreciseDataConnectionState.CREATOR.createFromParcel(data) : null);
+                    return true;
+                case 15:
+                    data.enforceInterface(DESCRIPTOR);
+                    onDataConnectionRealTimeInfoChanged(data.readInt() != 0 ? DataConnectionRealTimeInfo.CREATOR.createFromParcel(data) : null);
+                    return true;
+                case 16:
+                    data.enforceInterface(DESCRIPTOR);
+                    onSrvccStateChanged(data.readInt());
+                    return true;
+                case 17:
+                    data.enforceInterface(DESCRIPTOR);
+                    onVoiceActivationStateChanged(data.readInt());
+                    return true;
+                case 18:
+                    data.enforceInterface(DESCRIPTOR);
+                    onDataActivationStateChanged(data.readInt());
+                    return true;
+                case 19:
+                    data.enforceInterface(DESCRIPTOR);
+                    onOemHookRawEvent(data.createByteArray());
+                    return true;
+                case 20:
+                    data.enforceInterface(DESCRIPTOR);
+                    _arg0 = data.readInt() != 0;
+                    onCarrierNetworkChange(_arg0);
+                    return true;
+                case 21:
+                    data.enforceInterface(DESCRIPTOR);
+                    _arg0 = data.readInt() != 0;
+                    onUserMobileDataStateChanged(_arg0);
+                    return true;
+                case 22:
+                    data.enforceInterface(DESCRIPTOR);
+                    PhoneCapability _arg04 = data.readInt() != 0 ? PhoneCapability.CREATOR.createFromParcel(data) : null;
+                    onPhoneCapabilityChanged(_arg04);
+                    return true;
+                case 23:
+                    data.enforceInterface(DESCRIPTOR);
+                    onActiveDataSubIdChanged(data.readInt());
+                    return true;
+                case 24:
+                    data.enforceInterface(DESCRIPTOR);
+                    onRadioPowerStateChanged(data.readInt());
+                    return true;
+                case 25:
+                    data.enforceInterface(DESCRIPTOR);
+                    CallAttributes _arg05 = data.readInt() != 0 ? CallAttributes.CREATOR.createFromParcel(data) : null;
+                    onCallAttributesChanged(_arg05);
+                    return true;
+                case 26:
+                    data.enforceInterface(DESCRIPTOR);
+                    ClassLoader cl = getClass().getClassLoader();
+                    onEmergencyNumberListChanged(data.readHashMap(cl));
+                    return true;
+                case 27:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg06 = data.readInt();
+                    int _arg13 = data.readInt();
+                    onCallDisconnectCauseChanged(_arg06, _arg13);
+                    return true;
+                case 28:
+                    data.enforceInterface(DESCRIPTOR);
+                    ImsReasonInfo _arg07 = data.readInt() != 0 ? ImsReasonInfo.CREATOR.createFromParcel(data) : null;
+                    onImsCallDisconnectCauseChanged(_arg07);
+                    return true;
+                default:
+                    return super.onTransact(code, data, reply, flags);
+            }
         }
 
+        /* loaded from: classes4.dex */
         private static class Proxy implements IPhoneStateListener {
             public static IPhoneStateListener sDefaultImpl;
             private IBinder mRemote;
@@ -618,6 +465,7 @@ public interface IPhoneStateListener extends IInterface {
                 this.mRemote = remote;
             }
 
+            @Override // android.p007os.IInterface
             public IBinder asBinder() {
                 return this.mRemote;
             }
@@ -626,6 +474,7 @@ public interface IPhoneStateListener extends IInterface {
                 return Stub.DESCRIPTOR;
             }
 
+            @Override // com.android.internal.telephony.IPhoneStateListener
             public void onServiceStateChanged(ServiceState serviceState) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
@@ -636,9 +485,8 @@ public interface IPhoneStateListener extends IInterface {
                     } else {
                         _data.writeInt(0);
                     }
-                    if (this.mRemote.transact(1, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    boolean _status = this.mRemote.transact(1, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().onServiceStateChanged(serviceState);
                     }
                 } finally {
@@ -646,14 +494,14 @@ public interface IPhoneStateListener extends IInterface {
                 }
             }
 
+            @Override // com.android.internal.telephony.IPhoneStateListener
             public void onSignalStrengthChanged(int asu) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeInt(asu);
-                    if (this.mRemote.transact(2, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    boolean _status = this.mRemote.transact(2, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().onSignalStrengthChanged(asu);
                     }
                 } finally {
@@ -661,14 +509,14 @@ public interface IPhoneStateListener extends IInterface {
                 }
             }
 
+            @Override // com.android.internal.telephony.IPhoneStateListener
             public void onMessageWaitingIndicatorChanged(boolean mwi) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    _data.writeInt(mwi);
-                    if (this.mRemote.transact(3, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    _data.writeInt(mwi ? 1 : 0);
+                    boolean _status = this.mRemote.transact(3, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().onMessageWaitingIndicatorChanged(mwi);
                     }
                 } finally {
@@ -676,14 +524,14 @@ public interface IPhoneStateListener extends IInterface {
                 }
             }
 
+            @Override // com.android.internal.telephony.IPhoneStateListener
             public void onCallForwardingIndicatorChanged(boolean cfi) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    _data.writeInt(cfi);
-                    if (this.mRemote.transact(4, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    _data.writeInt(cfi ? 1 : 0);
+                    boolean _status = this.mRemote.transact(4, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().onCallForwardingIndicatorChanged(cfi);
                     }
                 } finally {
@@ -691,6 +539,7 @@ public interface IPhoneStateListener extends IInterface {
                 }
             }
 
+            @Override // com.android.internal.telephony.IPhoneStateListener
             public void onCellLocationChanged(Bundle location) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
@@ -701,9 +550,8 @@ public interface IPhoneStateListener extends IInterface {
                     } else {
                         _data.writeInt(0);
                     }
-                    if (this.mRemote.transact(5, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    boolean _status = this.mRemote.transact(5, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().onCellLocationChanged(location);
                     }
                 } finally {
@@ -711,15 +559,15 @@ public interface IPhoneStateListener extends IInterface {
                 }
             }
 
+            @Override // com.android.internal.telephony.IPhoneStateListener
             public void onCallStateChanged(int state, String incomingNumber) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeInt(state);
                     _data.writeString(incomingNumber);
-                    if (this.mRemote.transact(6, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    boolean _status = this.mRemote.transact(6, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().onCallStateChanged(state, incomingNumber);
                     }
                 } finally {
@@ -727,15 +575,15 @@ public interface IPhoneStateListener extends IInterface {
                 }
             }
 
+            @Override // com.android.internal.telephony.IPhoneStateListener
             public void onDataConnectionStateChanged(int state, int networkType) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeInt(state);
                     _data.writeInt(networkType);
-                    if (this.mRemote.transact(7, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    boolean _status = this.mRemote.transact(7, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().onDataConnectionStateChanged(state, networkType);
                     }
                 } finally {
@@ -743,14 +591,14 @@ public interface IPhoneStateListener extends IInterface {
                 }
             }
 
+            @Override // com.android.internal.telephony.IPhoneStateListener
             public void onDataActivity(int direction) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeInt(direction);
-                    if (this.mRemote.transact(8, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    boolean _status = this.mRemote.transact(8, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().onDataActivity(direction);
                     }
                 } finally {
@@ -758,6 +606,7 @@ public interface IPhoneStateListener extends IInterface {
                 }
             }
 
+            @Override // com.android.internal.telephony.IPhoneStateListener
             public void onSignalStrengthsChanged(SignalStrength signalStrength) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
@@ -768,9 +617,8 @@ public interface IPhoneStateListener extends IInterface {
                     } else {
                         _data.writeInt(0);
                     }
-                    if (this.mRemote.transact(9, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    boolean _status = this.mRemote.transact(9, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().onSignalStrengthsChanged(signalStrength);
                     }
                 } finally {
@@ -778,14 +626,14 @@ public interface IPhoneStateListener extends IInterface {
                 }
             }
 
+            @Override // com.android.internal.telephony.IPhoneStateListener
             public void onPhysicalChannelConfigurationChanged(List<PhysicalChannelConfig> configs) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeTypedList(configs);
-                    if (this.mRemote.transact(10, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    boolean _status = this.mRemote.transact(10, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().onPhysicalChannelConfigurationChanged(configs);
                     }
                 } finally {
@@ -793,14 +641,14 @@ public interface IPhoneStateListener extends IInterface {
                 }
             }
 
+            @Override // com.android.internal.telephony.IPhoneStateListener
             public void onOtaspChanged(int otaspMode) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeInt(otaspMode);
-                    if (this.mRemote.transact(11, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    boolean _status = this.mRemote.transact(11, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().onOtaspChanged(otaspMode);
                     }
                 } finally {
@@ -808,14 +656,14 @@ public interface IPhoneStateListener extends IInterface {
                 }
             }
 
+            @Override // com.android.internal.telephony.IPhoneStateListener
             public void onCellInfoChanged(List<CellInfo> cellInfo) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeTypedList(cellInfo);
-                    if (this.mRemote.transact(12, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    boolean _status = this.mRemote.transact(12, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().onCellInfoChanged(cellInfo);
                     }
                 } finally {
@@ -823,6 +671,7 @@ public interface IPhoneStateListener extends IInterface {
                 }
             }
 
+            @Override // com.android.internal.telephony.IPhoneStateListener
             public void onPreciseCallStateChanged(PreciseCallState callState) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
@@ -833,9 +682,8 @@ public interface IPhoneStateListener extends IInterface {
                     } else {
                         _data.writeInt(0);
                     }
-                    if (this.mRemote.transact(13, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    boolean _status = this.mRemote.transact(13, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().onPreciseCallStateChanged(callState);
                     }
                 } finally {
@@ -843,6 +691,7 @@ public interface IPhoneStateListener extends IInterface {
                 }
             }
 
+            @Override // com.android.internal.telephony.IPhoneStateListener
             public void onPreciseDataConnectionStateChanged(PreciseDataConnectionState dataConnectionState) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
@@ -853,9 +702,8 @@ public interface IPhoneStateListener extends IInterface {
                     } else {
                         _data.writeInt(0);
                     }
-                    if (this.mRemote.transact(14, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    boolean _status = this.mRemote.transact(14, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().onPreciseDataConnectionStateChanged(dataConnectionState);
                     }
                 } finally {
@@ -863,6 +711,7 @@ public interface IPhoneStateListener extends IInterface {
                 }
             }
 
+            @Override // com.android.internal.telephony.IPhoneStateListener
             public void onDataConnectionRealTimeInfoChanged(DataConnectionRealTimeInfo dcRtInfo) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
@@ -873,9 +722,8 @@ public interface IPhoneStateListener extends IInterface {
                     } else {
                         _data.writeInt(0);
                     }
-                    if (this.mRemote.transact(15, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    boolean _status = this.mRemote.transact(15, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().onDataConnectionRealTimeInfoChanged(dcRtInfo);
                     }
                 } finally {
@@ -883,14 +731,14 @@ public interface IPhoneStateListener extends IInterface {
                 }
             }
 
+            @Override // com.android.internal.telephony.IPhoneStateListener
             public void onSrvccStateChanged(int state) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeInt(state);
-                    if (this.mRemote.transact(16, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    boolean _status = this.mRemote.transact(16, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().onSrvccStateChanged(state);
                     }
                 } finally {
@@ -898,14 +746,14 @@ public interface IPhoneStateListener extends IInterface {
                 }
             }
 
+            @Override // com.android.internal.telephony.IPhoneStateListener
             public void onVoiceActivationStateChanged(int activationState) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeInt(activationState);
-                    if (this.mRemote.transact(17, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    boolean _status = this.mRemote.transact(17, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().onVoiceActivationStateChanged(activationState);
                     }
                 } finally {
@@ -913,14 +761,14 @@ public interface IPhoneStateListener extends IInterface {
                 }
             }
 
+            @Override // com.android.internal.telephony.IPhoneStateListener
             public void onDataActivationStateChanged(int activationState) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeInt(activationState);
-                    if (this.mRemote.transact(18, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    boolean _status = this.mRemote.transact(18, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().onDataActivationStateChanged(activationState);
                     }
                 } finally {
@@ -928,14 +776,14 @@ public interface IPhoneStateListener extends IInterface {
                 }
             }
 
+            @Override // com.android.internal.telephony.IPhoneStateListener
             public void onOemHookRawEvent(byte[] rawData) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeByteArray(rawData);
-                    if (this.mRemote.transact(19, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    boolean _status = this.mRemote.transact(19, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().onOemHookRawEvent(rawData);
                     }
                 } finally {
@@ -943,14 +791,14 @@ public interface IPhoneStateListener extends IInterface {
                 }
             }
 
+            @Override // com.android.internal.telephony.IPhoneStateListener
             public void onCarrierNetworkChange(boolean active) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    _data.writeInt(active);
-                    if (this.mRemote.transact(20, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    _data.writeInt(active ? 1 : 0);
+                    boolean _status = this.mRemote.transact(20, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().onCarrierNetworkChange(active);
                     }
                 } finally {
@@ -958,14 +806,14 @@ public interface IPhoneStateListener extends IInterface {
                 }
             }
 
+            @Override // com.android.internal.telephony.IPhoneStateListener
             public void onUserMobileDataStateChanged(boolean enabled) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    _data.writeInt(enabled);
-                    if (this.mRemote.transact(21, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    _data.writeInt(enabled ? 1 : 0);
+                    boolean _status = this.mRemote.transact(21, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().onUserMobileDataStateChanged(enabled);
                     }
                 } finally {
@@ -973,6 +821,7 @@ public interface IPhoneStateListener extends IInterface {
                 }
             }
 
+            @Override // com.android.internal.telephony.IPhoneStateListener
             public void onPhoneCapabilityChanged(PhoneCapability capability) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
@@ -983,9 +832,8 @@ public interface IPhoneStateListener extends IInterface {
                     } else {
                         _data.writeInt(0);
                     }
-                    if (this.mRemote.transact(22, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    boolean _status = this.mRemote.transact(22, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().onPhoneCapabilityChanged(capability);
                     }
                 } finally {
@@ -993,14 +841,14 @@ public interface IPhoneStateListener extends IInterface {
                 }
             }
 
+            @Override // com.android.internal.telephony.IPhoneStateListener
             public void onActiveDataSubIdChanged(int subId) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeInt(subId);
-                    if (this.mRemote.transact(23, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    boolean _status = this.mRemote.transact(23, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().onActiveDataSubIdChanged(subId);
                     }
                 } finally {
@@ -1008,14 +856,14 @@ public interface IPhoneStateListener extends IInterface {
                 }
             }
 
+            @Override // com.android.internal.telephony.IPhoneStateListener
             public void onRadioPowerStateChanged(int state) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeInt(state);
-                    if (this.mRemote.transact(24, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    boolean _status = this.mRemote.transact(24, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().onRadioPowerStateChanged(state);
                     }
                 } finally {
@@ -1023,6 +871,7 @@ public interface IPhoneStateListener extends IInterface {
                 }
             }
 
+            @Override // com.android.internal.telephony.IPhoneStateListener
             public void onCallAttributesChanged(CallAttributes callAttributes) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
@@ -1033,9 +882,8 @@ public interface IPhoneStateListener extends IInterface {
                     } else {
                         _data.writeInt(0);
                     }
-                    if (this.mRemote.transact(25, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    boolean _status = this.mRemote.transact(25, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().onCallAttributesChanged(callAttributes);
                     }
                 } finally {
@@ -1043,14 +891,14 @@ public interface IPhoneStateListener extends IInterface {
                 }
             }
 
+            @Override // com.android.internal.telephony.IPhoneStateListener
             public void onEmergencyNumberListChanged(Map emergencyNumberList) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeMap(emergencyNumberList);
-                    if (this.mRemote.transact(26, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    boolean _status = this.mRemote.transact(26, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().onEmergencyNumberListChanged(emergencyNumberList);
                     }
                 } finally {
@@ -1058,15 +906,15 @@ public interface IPhoneStateListener extends IInterface {
                 }
             }
 
+            @Override // com.android.internal.telephony.IPhoneStateListener
             public void onCallDisconnectCauseChanged(int disconnectCause, int preciseDisconnectCause) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeInt(disconnectCause);
                     _data.writeInt(preciseDisconnectCause);
-                    if (this.mRemote.transact(27, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    boolean _status = this.mRemote.transact(27, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().onCallDisconnectCauseChanged(disconnectCause, preciseDisconnectCause);
                     }
                 } finally {
@@ -1074,6 +922,7 @@ public interface IPhoneStateListener extends IInterface {
                 }
             }
 
+            @Override // com.android.internal.telephony.IPhoneStateListener
             public void onImsCallDisconnectCauseChanged(ImsReasonInfo imsReasonInfo) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
@@ -1084,9 +933,8 @@ public interface IPhoneStateListener extends IInterface {
                     } else {
                         _data.writeInt(0);
                     }
-                    if (this.mRemote.transact(28, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    boolean _status = this.mRemote.transact(28, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().onImsCallDisconnectCauseChanged(imsReasonInfo);
                     }
                 } finally {
@@ -1096,11 +944,11 @@ public interface IPhoneStateListener extends IInterface {
         }
 
         public static boolean setDefaultImpl(IPhoneStateListener impl) {
-            if (Proxy.sDefaultImpl != null || impl == null) {
-                return false;
+            if (Proxy.sDefaultImpl == null && impl != null) {
+                Proxy.sDefaultImpl = impl;
+                return true;
             }
-            Proxy.sDefaultImpl = impl;
-            return true;
+            return false;
         }
 
         public static IPhoneStateListener getDefaultImpl() {

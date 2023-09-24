@@ -3,8 +3,10 @@ package com.android.internal.view.menu;
 import android.annotation.UnsupportedAppUsage;
 import android.graphics.drawable.Drawable;
 
+/* loaded from: classes4.dex */
 public interface MenuView {
 
+    /* loaded from: classes4.dex */
     public interface ItemView {
         @UnsupportedAppUsage
         MenuItemImpl getItemData();

@@ -3,6 +3,7 @@ package android.hardware.usb.gadget.V1_0;
 import android.security.keystore.KeyProperties;
 import java.util.ArrayList;
 
+/* loaded from: classes.dex */
 public final class GadgetFunction {
     public static final long ACCESSORY = 2;
     public static final long ADB = 1;

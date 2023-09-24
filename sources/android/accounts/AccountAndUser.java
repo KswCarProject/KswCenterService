@@ -2,6 +2,7 @@ package android.accounts;
 
 import android.annotation.UnsupportedAppUsage;
 
+/* loaded from: classes.dex */
 public class AccountAndUser {
     @UnsupportedAppUsage
     public Account account;
@@ -9,23 +10,20 @@ public class AccountAndUser {
     public int userId;
 
     @UnsupportedAppUsage
-    public AccountAndUser(Account account2, int userId2) {
-        this.account = account2;
-        this.userId = userId2;
+    public AccountAndUser(Account account, int userId) {
+        this.account = account;
+        this.userId = userId;
     }
 
     public boolean equals(Object o) {
         if (this == o) {
             return true;
         }
-        if (!(o instanceof AccountAndUser)) {
-            return false;
+        if (o instanceof AccountAndUser) {
+            AccountAndUser other = (AccountAndUser) o;
+            return this.account.equals(other.account) && this.userId == other.userId;
         }
-        AccountAndUser other = (AccountAndUser) o;
-        if (!this.account.equals(other.account) || this.userId != other.userId) {
-            return false;
-        }
-        return true;
+        return false;
     }
 
     public int hashCode() {

@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
+/* loaded from: classes4.dex */
 public final class RcsThreadQueryResult {
     private final RcsControllerCall mRcsControllerCall;
     private final RcsThreadQueryResultParcelable mRcsThreadQueryResultParcelable;
@@ -19,7 +20,8 @@ public final class RcsThreadQueryResult {
     }
 
     public List<RcsThread> getThreads() {
-        return (List) this.mRcsThreadQueryResultParcelable.mRcsThreadIds.stream().map(new Function() {
+        return (List) this.mRcsThreadQueryResultParcelable.mRcsThreadIds.stream().map(new Function() { // from class: android.telephony.ims.-$$Lambda$RcsThreadQueryResult$HsaNrgQR1ZYF-F0J6msBz3OMF6s
+            @Override // java.util.function.Function
             public final Object apply(Object obj) {
                 return RcsThreadQueryResult.lambda$getThreads$0(RcsThreadQueryResult.this, (RcsTypeIdPair) obj);
             }

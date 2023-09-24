@@ -11,6 +11,7 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.PriorityQueue;
 
+/* loaded from: classes4.dex */
 final class ColorCutQuantizer implements Quantizer {
     static final int COMPONENT_BLUE = -1;
     static final int COMPONENT_GREEN = -2;
@@ -19,7 +20,8 @@ final class ColorCutQuantizer implements Quantizer {
     private static final boolean LOG_TIMINGS = false;
     private static final int QUANTIZE_WORD_MASK = 31;
     private static final int QUANTIZE_WORD_WIDTH = 5;
-    private static final Comparator<Vbox> VBOX_COMPARATOR_VOLUME = new Comparator<Vbox>() {
+    private static final Comparator<Vbox> VBOX_COMPARATOR_VOLUME = new Comparator<Vbox>() { // from class: com.android.internal.graphics.palette.ColorCutQuantizer.1
+        @Override // java.util.Comparator
         public int compare(Vbox lhs, Vbox rhs) {
             return rhs.getVolume() - lhs.getVolume();
         }
@@ -34,6 +36,7 @@ final class ColorCutQuantizer implements Quantizer {
     ColorCutQuantizer() {
     }
 
+    @Override // com.android.internal.graphics.palette.Quantizer
     public void quantize(int[] pixels, int maxColors, Palette.Filter[] filters) {
         this.mTimingLogger = null;
         this.mFilters = filters;
@@ -45,33 +48,34 @@ final class ColorCutQuantizer implements Quantizer {
             hist[quantizedColor] = hist[quantizedColor] + 1;
         }
         int distinctColorCount = 0;
-        for (int color = 0; color < hist.length; color++) {
-            if (hist[color] > 0 && shouldIgnoreColor(color)) {
-                hist[color] = 0;
+        for (int distinctColorCount2 = 0; distinctColorCount2 < hist.length; distinctColorCount2++) {
+            if (hist[distinctColorCount2] > 0 && shouldIgnoreColor(distinctColorCount2)) {
+                hist[distinctColorCount2] = 0;
             }
-            if (hist[color] > 0) {
+            if (hist[distinctColorCount2] > 0) {
                 distinctColorCount++;
             }
         }
         int[] colors = new int[distinctColorCount];
         this.mColors = colors;
         int distinctColorIndex = 0;
-        for (int color2 = 0; color2 < hist.length; color2++) {
-            if (hist[color2] > 0) {
-                colors[distinctColorIndex] = color2;
+        for (int distinctColorIndex2 = 0; distinctColorIndex2 < hist.length; distinctColorIndex2++) {
+            if (hist[distinctColorIndex2] > 0) {
+                colors[distinctColorIndex] = distinctColorIndex2;
                 distinctColorIndex++;
             }
         }
         if (distinctColorCount <= maxColors) {
             this.mQuantizedColors = new ArrayList();
-            for (int color3 : colors) {
-                this.mQuantizedColors.add(new Palette.Swatch(approximateToRgb888(color3), hist[color3]));
+            for (int color : colors) {
+                this.mQuantizedColors.add(new Palette.Swatch(approximateToRgb888(color), hist[color]));
             }
             return;
         }
         this.mQuantizedColors = quantizePixels(maxColors);
     }
 
+    @Override // com.android.internal.graphics.palette.Quantizer
     public List<Palette.Swatch> getQuantizedColors() {
         return this.mQuantizedColors;
     }
@@ -102,6 +106,7 @@ final class ColorCutQuantizer implements Quantizer {
         return colors;
     }
 
+    /* loaded from: classes4.dex */
     private class Vbox {
         private int mLowerIndex;
         private int mMaxBlue;
@@ -119,23 +124,19 @@ final class ColorCutQuantizer implements Quantizer {
             fitBox();
         }
 
-        /* access modifiers changed from: package-private */
-        public final int getVolume() {
+        final int getVolume() {
             return ((this.mMaxRed - this.mMinRed) + 1) * ((this.mMaxGreen - this.mMinGreen) + 1) * ((this.mMaxBlue - this.mMinBlue) + 1);
         }
 
-        /* access modifiers changed from: package-private */
-        public final boolean canSplit() {
+        final boolean canSplit() {
             return getColorCount() > 1;
         }
 
-        /* access modifiers changed from: package-private */
-        public final int getColorCount() {
+        final int getColorCount() {
             return (this.mUpperIndex + 1) - this.mLowerIndex;
         }
 
-        /* access modifiers changed from: package-private */
-        public final void fitBox() {
+        final void fitBox() {
             int[] colors = ColorCutQuantizer.this.mColors;
             int[] hist = ColorCutQuantizer.this.mHistogram;
             int minRed = Integer.MAX_VALUE;
@@ -179,34 +180,31 @@ final class ColorCutQuantizer implements Quantizer {
             this.mPopulation = count;
         }
 
-        /* access modifiers changed from: package-private */
-        public final Vbox splitBox() {
-            if (canSplit()) {
-                int splitPoint = findSplitPoint();
-                Vbox newBox = new Vbox(splitPoint + 1, this.mUpperIndex);
-                this.mUpperIndex = splitPoint;
-                fitBox();
-                return newBox;
+        final Vbox splitBox() {
+            if (!canSplit()) {
+                throw new IllegalStateException("Can not split a box with only 1 color");
             }
-            throw new IllegalStateException("Can not split a box with only 1 color");
+            int splitPoint = findSplitPoint();
+            Vbox newBox = new Vbox(splitPoint + 1, this.mUpperIndex);
+            this.mUpperIndex = splitPoint;
+            fitBox();
+            return newBox;
         }
 
-        /* access modifiers changed from: package-private */
-        public final int getLongestColorDimension() {
+        final int getLongestColorDimension() {
             int redLength = this.mMaxRed - this.mMinRed;
             int greenLength = this.mMaxGreen - this.mMinGreen;
             int blueLength = this.mMaxBlue - this.mMinBlue;
             if (redLength >= greenLength && redLength >= blueLength) {
                 return -3;
             }
-            if (greenLength < redLength || greenLength < blueLength) {
-                return -1;
+            if (greenLength >= redLength && greenLength >= blueLength) {
+                return -2;
             }
-            return -2;
+            return -1;
         }
 
-        /* access modifiers changed from: package-private */
-        public final int findSplitPoint() {
+        final int findSplitPoint() {
             int longestDimension = getLongestColorDimension();
             int[] colors = ColorCutQuantizer.this.mColors;
             int[] hist = ColorCutQuantizer.this.mHistogram;
@@ -221,11 +219,11 @@ final class ColorCutQuantizer implements Quantizer {
                     return Math.min(this.mUpperIndex - 1, i);
                 }
             }
-            return this.mLowerIndex;
+            int i2 = this.mLowerIndex;
+            return i2;
         }
 
-        /* access modifiers changed from: package-private */
-        public final Palette.Swatch getAverageColor() {
+        final Palette.Swatch getAverageColor() {
             int[] colors = ColorCutQuantizer.this.mColors;
             int[] hist = ColorCutQuantizer.this.mHistogram;
             int redSum = 0;
@@ -240,12 +238,18 @@ final class ColorCutQuantizer implements Quantizer {
                 greenSum += ColorCutQuantizer.quantizedGreen(color) * colorPopulation;
                 blueSum += ColorCutQuantizer.quantizedBlue(color) * colorPopulation;
             }
-            return new Palette.Swatch(ColorCutQuantizer.approximateToRgb888(Math.round(((float) redSum) / ((float) totalPopulation)), Math.round(((float) greenSum) / ((float) totalPopulation)), Math.round(((float) blueSum) / ((float) totalPopulation))), totalPopulation);
+            int redMean = Math.round(redSum / totalPopulation);
+            int greenMean = Math.round(greenSum / totalPopulation);
+            int blueMean = Math.round(blueSum / totalPopulation);
+            return new Palette.Swatch(ColorCutQuantizer.approximateToRgb888(redMean, greenMean, blueMean), totalPopulation);
         }
     }
 
     static void modifySignificantOctet(int[] a, int dimension, int lower, int upper) {
         switch (dimension) {
+            case -3:
+            default:
+                return;
             case -2:
                 for (int i = lower; i <= upper; i++) {
                     int color = a[i];
@@ -257,8 +261,6 @@ final class ColorCutQuantizer implements Quantizer {
                     int color2 = a[i2];
                     a[i2] = (quantizedBlue(color2) << 10) | (quantizedGreen(color2) << 5) | quantizedRed(color2);
                 }
-                return;
-            default:
                 return;
         }
     }
@@ -274,13 +276,14 @@ final class ColorCutQuantizer implements Quantizer {
     }
 
     private boolean shouldIgnoreColor(int rgb, float[] hsl) {
-        if (this.mFilters == null || this.mFilters.length <= 0) {
-            return false;
-        }
-        for (Palette.Filter isAllowed : this.mFilters) {
-            if (!isAllowed.isAllowed(rgb, hsl)) {
-                return true;
+        if (this.mFilters != null && this.mFilters.length > 0) {
+            int count = this.mFilters.length;
+            for (int i = 0; i < count; i++) {
+                if (!this.mFilters[i].isAllowed(rgb, hsl)) {
+                    return true;
+                }
             }
+            return false;
         }
         return false;
     }
@@ -288,7 +291,8 @@ final class ColorCutQuantizer implements Quantizer {
     private static int quantizeFromRgb888(int color) {
         int r = modifyWordWidth(Color.red(color), 8, 5);
         int g = modifyWordWidth(Color.green(color), 8, 5);
-        return (r << 10) | (g << 5) | modifyWordWidth(Color.blue(color), 8, 5);
+        int b = modifyWordWidth(Color.blue(color), 8, 5);
+        return (r << 10) | (g << 5) | b;
     }
 
     static int approximateToRgb888(int r, int g, int b) {

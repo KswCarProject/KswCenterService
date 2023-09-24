@@ -3,22 +3,30 @@ package android.gesture;
 import java.io.DataInputStream;
 import java.io.IOException;
 
+/* loaded from: classes.dex */
 public class GesturePoint {
     public final long timestamp;
-    public final float x;
-    public final float y;
 
-    public GesturePoint(float x2, float y2, long t) {
-        this.x = x2;
-        this.y = y2;
+    /* renamed from: x */
+    public final float f41x;
+
+    /* renamed from: y */
+    public final float f42y;
+
+    public GesturePoint(float x, float y, long t) {
+        this.f41x = x;
+        this.f42y = y;
         this.timestamp = t;
     }
 
     static GesturePoint deserialize(DataInputStream in) throws IOException {
-        return new GesturePoint(in.readFloat(), in.readFloat(), in.readLong());
+        float x = in.readFloat();
+        float y = in.readFloat();
+        long timeStamp = in.readLong();
+        return new GesturePoint(x, y, timeStamp);
     }
 
     public Object clone() {
-        return new GesturePoint(this.x, this.y, this.timestamp);
+        return new GesturePoint(this.f41x, this.f42y, this.timestamp);
     }
 }

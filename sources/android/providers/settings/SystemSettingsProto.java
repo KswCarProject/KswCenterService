@@ -1,5 +1,6 @@
 package android.providers.settings;
 
+/* loaded from: classes3.dex */
 public final class SystemSettingsProto {
     public static final long ADVANCED_SETTINGS = 1146756268034L;
     public static final long ALARM = 1146756268035L;
@@ -35,6 +36,7 @@ public final class SystemSettingsProto {
     public static final long VOLUME = 1146756268065L;
     public static final long WHEN_TO_MAKE_WIFI_CALLS = 1146756268066L;
 
+    /* loaded from: classes3.dex */
     public final class Alarm {
         public static final long ALERT_CACHE = 1146756268034L;
         public static final long DEFAULT_URI = 1146756268033L;
@@ -43,6 +45,7 @@ public final class SystemSettingsProto {
         }
     }
 
+    /* loaded from: classes3.dex */
     public final class Bluetooth {
         public static final long DISCOVERABILITY = 1146756268033L;
         public static final long DISCOVERABILITY_TIMEOUT_SECS = 1146756268034L;
@@ -51,6 +54,7 @@ public final class SystemSettingsProto {
         }
     }
 
+    /* loaded from: classes3.dex */
     public final class DevOptions {
         public static final long POINTER_LOCATION = 1146756268033L;
         public static final long SHOW_TOUCHES = 1146756268034L;
@@ -60,6 +64,7 @@ public final class SystemSettingsProto {
         }
     }
 
+    /* loaded from: classes3.dex */
     public final class DtmfTone {
         public static final long PLAY_WHEN_DIALING = 1146756268033L;
         public static final long TYPE_PLAYED_WHEN_DIALING = 1146756268034L;
@@ -68,6 +73,7 @@ public final class SystemSettingsProto {
         }
     }
 
+    /* loaded from: classes3.dex */
     public final class HapticFeedback {
         public static final long ENABLED = 1146756268033L;
         public static final long INTENSITY = 1146756268034L;
@@ -76,6 +82,7 @@ public final class SystemSettingsProto {
         }
     }
 
+    /* loaded from: classes3.dex */
     public final class Lockscreen {
         public static final long DISABLED = 1146756268034L;
         public static final long SOUNDS_ENABLED = 1146756268033L;
@@ -84,6 +91,7 @@ public final class SystemSettingsProto {
         }
     }
 
+    /* loaded from: classes3.dex */
     public final class Notification {
         public static final long LIGHT_PULSE = 1146756268035L;
         public static final long SOUND = 1146756268033L;
@@ -94,6 +102,7 @@ public final class SystemSettingsProto {
         }
     }
 
+    /* loaded from: classes3.dex */
     public final class Ringtone {
         public static final long CACHE = 1146756268034L;
         public static final long DEFAULT_URI = 1146756268033L;
@@ -102,6 +111,7 @@ public final class SystemSettingsProto {
         }
     }
 
+    /* loaded from: classes3.dex */
     public final class Rotation {
         public static final long ACCELEROMETER_ROTATION = 1146756268033L;
         public static final long HIDE_ROTATION_LOCK_TOGGLE_FOR_ACCESSIBILITY = 1146756268035L;
@@ -111,6 +121,7 @@ public final class SystemSettingsProto {
         }
     }
 
+    /* loaded from: classes3.dex */
     public final class Screen {
         public static final long AUTO_BRIGHTNESS_ADJ = 1146756268037L;
         public static final long BRIGHTNESS = 1146756268034L;
@@ -122,6 +133,7 @@ public final class SystemSettingsProto {
         }
     }
 
+    /* loaded from: classes3.dex */
     public final class Sip {
         public static final long ADDRESS_ONLY = 1146756268036L;
         public static final long ALWAYS = 1146756268035L;
@@ -132,6 +144,7 @@ public final class SystemSettingsProto {
         }
     }
 
+    /* loaded from: classes3.dex */
     public final class Text {
         public static final long AUTO_CAPS = 1146756268034L;
         public static final long AUTO_PUNCTUATE = 1146756268035L;
@@ -142,16 +155,20 @@ public final class SystemSettingsProto {
         }
     }
 
+    /* loaded from: classes3.dex */
     public final class Vibrate {
         public static final long INPUT_DEVICES = 1146756268034L;
         public static final long IN_SILENT = 1146756268035L;
-        public static final long ON = 1146756268033L;
+
+        /* renamed from: ON */
+        public static final long f171ON = 1146756268033L;
         public static final long WHEN_RINGING = 1146756268036L;
 
         public Vibrate() {
         }
     }
 
+    /* loaded from: classes3.dex */
     public final class Volume {
         public static final long ACCESSIBILITY = 1146756268040L;
         public static final long ALARM = 1146756268037L;

@@ -1,20 +1,25 @@
 package android.service.autofill;
 
-import android.os.Bundle;
-import android.os.Parcel;
-import android.os.Parcelable;
+import android.p007os.Bundle;
+import android.p007os.Parcel;
+import android.p007os.Parcelable;
 import com.android.internal.util.Preconditions;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.util.ArrayList;
 import java.util.List;
 
+/* loaded from: classes3.dex */
 public final class FillRequest implements Parcelable {
-    public static final Parcelable.Creator<FillRequest> CREATOR = new Parcelable.Creator<FillRequest>() {
+    public static final Parcelable.Creator<FillRequest> CREATOR = new Parcelable.Creator<FillRequest>() { // from class: android.service.autofill.FillRequest.1
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public FillRequest createFromParcel(Parcel parcel) {
             return new FillRequest(parcel);
         }
 
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public FillRequest[] newArray(int size) {
             return new FillRequest[size];
         }
@@ -28,13 +33,14 @@ public final class FillRequest implements Parcelable {
     private final int mId;
 
     @Retention(RetentionPolicy.SOURCE)
+    /* loaded from: classes3.dex */
     @interface RequestFlags {
     }
 
     private FillRequest(Parcel parcel) {
         this.mId = parcel.readInt();
         this.mContexts = new ArrayList<>();
-        parcel.readParcelableList(this.mContexts, (ClassLoader) null);
+        parcel.readParcelableList(this.mContexts, null);
         this.mClientState = parcel.readBundle();
         this.mFlags = parcel.readInt();
     }
@@ -66,10 +72,12 @@ public final class FillRequest implements Parcelable {
         return this.mClientState;
     }
 
+    @Override // android.p007os.Parcelable
     public int describeContents() {
         return 0;
     }
 
+    @Override // android.p007os.Parcelable
     public void writeToParcel(Parcel parcel, int flags) {
         parcel.writeInt(this.mId);
         parcel.writeParcelableList(this.mContexts, flags);

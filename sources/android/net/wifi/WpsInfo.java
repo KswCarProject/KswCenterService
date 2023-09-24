@@ -1,10 +1,13 @@
 package android.net.wifi;
 
-import android.os.Parcel;
-import android.os.Parcelable;
+import android.p007os.Parcel;
+import android.p007os.Parcelable;
 
+/* loaded from: classes3.dex */
 public class WpsInfo implements Parcelable {
-    public static final Parcelable.Creator<WpsInfo> CREATOR = new Parcelable.Creator<WpsInfo>() {
+    public static final Parcelable.Creator<WpsInfo> CREATOR = new Parcelable.Creator<WpsInfo>() { // from class: android.net.wifi.WpsInfo.1
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public WpsInfo createFromParcel(Parcel in) {
             WpsInfo config = new WpsInfo();
             config.setup = in.readInt();
@@ -13,6 +16,8 @@ public class WpsInfo implements Parcelable {
             return config;
         }
 
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public WpsInfo[] newArray(int size) {
             return new WpsInfo[size];
         }
@@ -36,16 +41,17 @@ public class WpsInfo implements Parcelable {
         StringBuffer sbuf = new StringBuffer();
         sbuf.append(" setup: ");
         sbuf.append(this.setup);
-        sbuf.append(10);
+        sbuf.append('\n');
         sbuf.append(" BSSID: ");
         sbuf.append(this.BSSID);
-        sbuf.append(10);
+        sbuf.append('\n');
         sbuf.append(" pin: ");
         sbuf.append(this.pin);
-        sbuf.append(10);
+        sbuf.append('\n');
         return sbuf.toString();
     }
 
+    @Override // android.p007os.Parcelable
     public int describeContents() {
         return 0;
     }
@@ -58,6 +64,7 @@ public class WpsInfo implements Parcelable {
         }
     }
 
+    @Override // android.p007os.Parcelable
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeInt(this.setup);
         dest.writeString(this.BSSID);

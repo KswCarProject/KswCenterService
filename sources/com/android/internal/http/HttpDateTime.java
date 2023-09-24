@@ -6,12 +6,14 @@ import android.text.format.Time;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+/* loaded from: classes4.dex */
 public final class HttpDateTime {
-    private static final Pattern HTTP_DATE_ANSIC_PATTERN = Pattern.compile(HTTP_DATE_ANSIC_REGEXP);
-    private static final String HTTP_DATE_ANSIC_REGEXP = "[ ]([A-Za-z]{3,9})[ ]+([0-9]{1,2})[ ]([0-9]{1,2}:[0-9][0-9]:[0-9][0-9])[ ]([0-9]{2,4})";
-    private static final Pattern HTTP_DATE_RFC_PATTERN = Pattern.compile(HTTP_DATE_RFC_REGEXP);
     private static final String HTTP_DATE_RFC_REGEXP = "([0-9]{1,2})[- ]([A-Za-z]{3,9})[- ]([0-9]{2,4})[ ]([0-9]{1,2}:[0-9][0-9]:[0-9][0-9])";
+    private static final Pattern HTTP_DATE_RFC_PATTERN = Pattern.compile(HTTP_DATE_RFC_REGEXP);
+    private static final String HTTP_DATE_ANSIC_REGEXP = "[ ]([A-Za-z]{3,9})[ ]+([0-9]{1,2})[ ]([0-9]{1,2}:[0-9][0-9]:[0-9][0-9])[ ]([0-9]{2,4})";
+    private static final Pattern HTTP_DATE_ANSIC_PATTERN = Pattern.compile(HTTP_DATE_ANSIC_REGEXP);
 
+    /* loaded from: classes4.dex */
     private static class TimeOfDay {
         int hour;
         int minute;
@@ -26,10 +28,10 @@ public final class HttpDateTime {
 
     @UnsupportedAppUsage
     public static long parse(String timeString) throws IllegalArgumentException {
-        TimeOfDay timeOfDay;
-        int year;
         int month;
         int date;
+        int year;
+        TimeOfDay timeOfDay;
         Matcher rfcMatcher = HTTP_DATE_RFC_PATTERN.matcher(timeString);
         if (rfcMatcher.find()) {
             date = getDate(rfcMatcher.group(1));
@@ -67,44 +69,44 @@ public final class HttpDateTime {
 
     private static int getMonth(String monthString) {
         int hash = ((Character.toLowerCase(monthString.charAt(0)) + Character.toLowerCase(monthString.charAt(1))) + Character.toLowerCase(monthString.charAt(2))) - 291;
-        if (hash == 22) {
-            return 0;
-        }
-        if (hash == 26) {
+        if (hash != 22) {
+            if (hash != 26) {
+                if (hash != 29) {
+                    if (hash != 32) {
+                        if (hash != 40) {
+                            if (hash != 42) {
+                                if (hash == 48) {
+                                    return 10;
+                                }
+                                switch (hash) {
+                                    case 9:
+                                        return 11;
+                                    case 10:
+                                        return 1;
+                                    default:
+                                        switch (hash) {
+                                            case 35:
+                                                return 9;
+                                            case 36:
+                                                return 4;
+                                            case 37:
+                                                return 8;
+                                            default:
+                                                throw new IllegalArgumentException();
+                                        }
+                                }
+                            }
+                            return 5;
+                        }
+                        return 6;
+                    }
+                    return 3;
+                }
+                return 2;
+            }
             return 7;
         }
-        if (hash == 29) {
-            return 2;
-        }
-        if (hash == 32) {
-            return 3;
-        }
-        if (hash == 40) {
-            return 6;
-        }
-        if (hash == 42) {
-            return 5;
-        }
-        if (hash == 48) {
-            return 10;
-        }
-        switch (hash) {
-            case 9:
-                return 11;
-            case 10:
-                return 1;
-            default:
-                switch (hash) {
-                    case 35:
-                        return 9;
-                    case 36:
-                        return 4;
-                    case 37:
-                        return 8;
-                    default:
-                        throw new IllegalArgumentException();
-                }
-        }
+        return 0;
     }
 
     private static int getYear(String yearString) {
@@ -114,29 +116,33 @@ public final class HttpDateTime {
                 return year + PreciseDisconnectCause.ECBM_NOT_SUPPORTED;
             }
             return year + 2000;
-        } else if (yearString.length() == 3) {
-            return ((yearString.charAt(0) - '0') * 100) + ((yearString.charAt(1) - '0') * 10) + (yearString.charAt(2) - '0') + PreciseDisconnectCause.ECBM_NOT_SUPPORTED;
-        } else {
-            if (yearString.length() == 4) {
-                return ((yearString.charAt(0) - '0') * 1000) + ((yearString.charAt(1) - '0') * 100) + ((yearString.charAt(2) - '0') * 10) + (yearString.charAt(3) - '0');
-            }
-            return 1970;
         }
+        int year2 = yearString.length();
+        if (year2 == 3) {
+            int year3 = ((yearString.charAt(0) - '0') * 100) + ((yearString.charAt(1) - '0') * 10) + (yearString.charAt(2) - '0');
+            return year3 + PreciseDisconnectCause.ECBM_NOT_SUPPORTED;
+        }
+        int year4 = yearString.length();
+        if (year4 == 4) {
+            return ((yearString.charAt(0) - '0') * 1000) + ((yearString.charAt(1) - '0') * 100) + ((yearString.charAt(2) - '0') * 10) + (yearString.charAt(3) - '0');
+        }
+        return 1970;
     }
 
     private static TimeOfDay getTime(String timeString) {
-        int i = 0 + 1;
+        int i;
+        int i2;
+        int i3;
+        int i4 = 0 + 1;
         int hour = timeString.charAt(0) - 48;
-        if (timeString.charAt(i) != ':') {
-            hour = (hour * 10) + (timeString.charAt(i) - 48);
-            i++;
+        if (timeString.charAt(i4) != ':') {
+            hour = (hour * 10) + (timeString.charAt(i4) - 48);
+            i4++;
         }
-        int i2 = i + 1;
-        int i3 = i2 + 1;
-        int minute = ((timeString.charAt(i2) - 48) * 10) + (timeString.charAt(i3) - 48);
-        int i4 = i3 + 1 + 1;
-        int i5 = i4 + 1;
-        int i6 = i5 + 1;
-        return new TimeOfDay(hour, minute, ((timeString.charAt(i4) - 48) * 10) + (timeString.charAt(i5) - 48));
+        int i5 = i4 + 1 + 1;
+        int minute = ((timeString.charAt(i) - 48) * 10) + (timeString.charAt(i5) - 48);
+        int i6 = i5 + 1 + 1 + 1 + 1;
+        int second = ((timeString.charAt(i2) - 48) * 10) + (timeString.charAt(i3) - 48);
+        return new TimeOfDay(hour, minute, second);
     }
 }

@@ -2,6 +2,7 @@ package android.hardware.radio.V1_2;
 
 import java.util.ArrayList;
 
+/* loaded from: classes.dex */
 public final class ScanIntervalRange {
     public static final int MAX = 300;
     public static final int MIN = 5;

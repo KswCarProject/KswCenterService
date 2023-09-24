@@ -3,10 +3,11 @@ package android.view;
 import android.graphics.Point;
 import android.graphics.Rect;
 import android.graphics.Region;
-import android.os.Bundle;
+import android.p007os.Bundle;
 import android.view.ActionMode;
 import android.view.accessibility.AccessibilityEvent;
 
+/* loaded from: classes4.dex */
 public interface ViewParent {
     void bringChildToFront(View view);
 
@@ -98,12 +99,12 @@ public interface ViewParent {
 
     ActionMode startActionModeForChild(View view, ActionMode.Callback callback, int i);
 
-    void onDescendantInvalidated(View child, View target) {
+    default void onDescendantInvalidated(View child, View target) {
         if (getParent() != null) {
             getParent().onDescendantInvalidated(child, target);
         }
     }
 
-    void subtractObscuredTouchableRegion(Region touchableRegion, View view) {
+    default void subtractObscuredTouchableRegion(Region touchableRegion, View view) {
     }
 }

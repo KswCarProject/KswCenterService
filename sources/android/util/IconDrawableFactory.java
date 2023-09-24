@@ -2,19 +2,20 @@ package android.util;
 
 import android.annotation.UnsupportedAppUsage;
 import android.content.Context;
-import android.content.pm.ApplicationInfo;
-import android.content.pm.PackageItemInfo;
-import android.content.pm.PackageManager;
+import android.content.p002pm.ApplicationInfo;
+import android.content.p002pm.PackageItemInfo;
+import android.content.p002pm.PackageManager;
 import android.content.res.Resources;
 import android.graphics.drawable.Drawable;
-import android.os.UserHandle;
-import android.os.UserManager;
-import com.android.internal.R;
+import android.p007os.UserHandle;
+import android.p007os.UserManager;
+import com.android.internal.C3132R;
 import com.android.internal.annotations.VisibleForTesting;
 
+/* loaded from: classes4.dex */
 public class IconDrawableFactory {
     @VisibleForTesting
-    public static final int[] CORP_BADGE_COLORS = {R.color.profile_badge_1, R.color.profile_badge_2, R.color.profile_badge_3};
+    public static final int[] CORP_BADGE_COLORS = {C3132R.color.profile_badge_1, C3132R.color.profile_badge_2, C3132R.color.profile_badge_3};
     protected final Context mContext;
     protected final boolean mEmbedShadow;
     protected final LauncherIcons mLauncherIcons;
@@ -29,8 +30,7 @@ public class IconDrawableFactory {
         this.mEmbedShadow = embedShadow;
     }
 
-    /* access modifiers changed from: protected */
-    public boolean needsBadging(ApplicationInfo appInfo, int userId) {
+    protected boolean needsBadging(ApplicationInfo appInfo, int userId) {
         return appInfo.isInstantApp() || this.mUm.isManagedProfile(userId);
     }
 
@@ -51,10 +51,11 @@ public class IconDrawableFactory {
         }
         Drawable icon2 = getShadowedIcon(icon);
         if (appInfo.isInstantApp()) {
-            icon2 = this.mLauncherIcons.getBadgedDrawable(icon2, R.drawable.ic_instant_icon_badge_bolt, Resources.getSystem().getColor(R.color.instant_app_badge, (Resources.Theme) null));
+            int badgeColor = Resources.getSystem().getColor(C3132R.color.instant_app_badge, null);
+            icon2 = this.mLauncherIcons.getBadgedDrawable(icon2, C3132R.C3133drawable.ic_instant_icon_badge_bolt, badgeColor);
         }
         if (this.mUm.isManagedProfile(userId)) {
-            return this.mLauncherIcons.getBadgedDrawable(icon2, R.drawable.ic_corp_icon_badge_case, getUserBadgeColor(this.mUm, userId));
+            return this.mLauncherIcons.getBadgedDrawable(icon2, C3132R.C3133drawable.ic_corp_icon_badge_case, getUserBadgeColor(this.mUm, userId));
         }
         return icon2;
     }
@@ -68,7 +69,8 @@ public class IconDrawableFactory {
         if (badge < 0) {
             badge = 0;
         }
-        return Resources.getSystem().getColor(CORP_BADGE_COLORS[badge % CORP_BADGE_COLORS.length], (Resources.Theme) null);
+        int resourceId = CORP_BADGE_COLORS[badge % CORP_BADGE_COLORS.length];
+        return Resources.getSystem().getColor(resourceId, null);
     }
 
     @UnsupportedAppUsage

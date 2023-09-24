@@ -3,7 +3,7 @@ package com.android.internal.graphics.palette;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.Rect;
-import android.os.AsyncTask;
+import android.p007os.AsyncTask;
 import android.util.ArrayMap;
 import android.util.Log;
 import android.util.SparseBooleanArray;
@@ -15,14 +15,16 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
+/* loaded from: classes4.dex */
 public final class Palette {
     static final int DEFAULT_CALCULATE_NUMBER_COLORS = 16;
-    static final Filter DEFAULT_FILTER = new Filter() {
+    static final Filter DEFAULT_FILTER = new Filter() { // from class: com.android.internal.graphics.palette.Palette.1
         private static final float BLACK_MAX_LIGHTNESS = 0.05f;
         private static final float WHITE_MIN_LIGHTNESS = 0.95f;
 
+        @Override // com.android.internal.graphics.palette.Palette.Filter
         public boolean isAllowed(int rgb, float[] hsl) {
-            return !isWhite(hsl) && !isBlack(hsl) && !isNearRedILine(hsl);
+            return (isWhite(hsl) || isBlack(hsl) || isNearRedILine(hsl)) ? false : true;
         }
 
         private boolean isBlack(float[] hslColor) {
@@ -42,16 +44,18 @@ public final class Palette {
     static final boolean LOG_TIMINGS = false;
     static final float MIN_CONTRAST_BODY_TEXT = 4.5f;
     static final float MIN_CONTRAST_TITLE_TEXT = 3.0f;
-    private final Swatch mDominantSwatch = findDominantSwatch();
-    private final Map<Target, Swatch> mSelectedSwatches = new ArrayMap();
     private final List<Swatch> mSwatches;
     private final List<Target> mTargets;
     private final SparseBooleanArray mUsedColors = new SparseBooleanArray();
+    private final Map<Target, Swatch> mSelectedSwatches = new ArrayMap();
+    private final Swatch mDominantSwatch = findDominantSwatch();
 
+    /* loaded from: classes4.dex */
     public interface Filter {
         boolean isAllowed(int i, float[] fArr);
     }
 
+    /* loaded from: classes4.dex */
     public interface PaletteAsyncListener {
         void onGenerated(Palette palette);
     }
@@ -162,8 +166,7 @@ public final class Palette {
         return this.mDominantSwatch != null ? this.mDominantSwatch.getRgb() : defaultColor;
     }
 
-    /* access modifiers changed from: package-private */
-    public void generate() {
+    void generate() {
         int count = this.mTargets.size();
         for (int i = 0; i < count; i++) {
             Target target = this.mTargets.get(i);
@@ -200,10 +203,7 @@ public final class Palette {
 
     private boolean shouldBeScoredForTarget(Swatch swatch, Target target) {
         float[] hsl = swatch.getHsl();
-        if (hsl[1] < target.getMinimumSaturation() || hsl[1] > target.getMaximumSaturation() || hsl[2] < target.getMinimumLightness() || hsl[2] > target.getMaximumLightness() || this.mUsedColors.get(swatch.getRgb())) {
-            return false;
-        }
-        return true;
+        return hsl[1] >= target.getMinimumSaturation() && hsl[1] <= target.getMaximumSaturation() && hsl[2] >= target.getMinimumLightness() && hsl[2] <= target.getMaximumLightness() && !this.mUsedColors.get(swatch.getRgb());
     }
 
     private float generateScore(Swatch swatch, Target target) {
@@ -219,7 +219,7 @@ public final class Palette {
             luminanceScore = target.getLightnessWeight() * (1.0f - Math.abs(hsl[2] - target.getTargetLightness()));
         }
         if (target.getPopulationWeight() > 0.0f) {
-            populationScore = target.getPopulationWeight() * (((float) swatch.getPopulation()) / ((float) maxPopulation));
+            populationScore = target.getPopulationWeight() * (swatch.getPopulation() / maxPopulation);
         }
         return saturationScore + luminanceScore + populationScore;
     }
@@ -244,6 +244,7 @@ public final class Palette {
         return newHsl;
     }
 
+    /* loaded from: classes4.dex */
     public static final class Swatch {
         private final int mBlue;
         private int mBodyTextColor;
@@ -303,43 +304,43 @@ public final class Palette {
         }
 
         private void ensureTextColorsGenerated() {
-            int i;
-            int i2;
+            int alphaComponent;
+            int alphaComponent2;
             if (!this.mGeneratedTextColors) {
                 int lightBodyAlpha = ColorUtils.calculateMinimumAlpha(-1, this.mRgb, Palette.MIN_CONTRAST_BODY_TEXT);
                 int lightTitleAlpha = ColorUtils.calculateMinimumAlpha(-1, this.mRgb, 3.0f);
-                if (lightBodyAlpha == -1 || lightTitleAlpha == -1) {
-                    int darkBodyAlpha = ColorUtils.calculateMinimumAlpha(-16777216, this.mRgb, Palette.MIN_CONTRAST_BODY_TEXT);
-                    int darkTitleAlpha = ColorUtils.calculateMinimumAlpha(-16777216, this.mRgb, 3.0f);
-                    if (darkBodyAlpha == -1 || darkTitleAlpha == -1) {
-                        if (lightBodyAlpha != -1) {
-                            i = ColorUtils.setAlphaComponent(-1, lightBodyAlpha);
-                        } else {
-                            i = ColorUtils.setAlphaComponent(-16777216, darkBodyAlpha);
-                        }
-                        this.mBodyTextColor = i;
-                        if (lightTitleAlpha != -1) {
-                            i2 = ColorUtils.setAlphaComponent(-1, lightTitleAlpha);
-                        } else {
-                            i2 = ColorUtils.setAlphaComponent(-16777216, darkTitleAlpha);
-                        }
-                        this.mTitleTextColor = i2;
-                        this.mGeneratedTextColors = true;
-                        return;
-                    }
+                if (lightBodyAlpha != -1 && lightTitleAlpha != -1) {
+                    this.mBodyTextColor = ColorUtils.setAlphaComponent(-1, lightBodyAlpha);
+                    this.mTitleTextColor = ColorUtils.setAlphaComponent(-1, lightTitleAlpha);
+                    this.mGeneratedTextColors = true;
+                    return;
+                }
+                int darkBodyAlpha = ColorUtils.calculateMinimumAlpha(-16777216, this.mRgb, Palette.MIN_CONTRAST_BODY_TEXT);
+                int darkTitleAlpha = ColorUtils.calculateMinimumAlpha(-16777216, this.mRgb, 3.0f);
+                if (darkBodyAlpha != -1 && darkTitleAlpha != -1) {
                     this.mBodyTextColor = ColorUtils.setAlphaComponent(-16777216, darkBodyAlpha);
                     this.mTitleTextColor = ColorUtils.setAlphaComponent(-16777216, darkTitleAlpha);
                     this.mGeneratedTextColors = true;
                     return;
                 }
-                this.mBodyTextColor = ColorUtils.setAlphaComponent(-1, lightBodyAlpha);
-                this.mTitleTextColor = ColorUtils.setAlphaComponent(-1, lightTitleAlpha);
+                if (lightBodyAlpha != -1) {
+                    alphaComponent = ColorUtils.setAlphaComponent(-1, lightBodyAlpha);
+                } else {
+                    alphaComponent = ColorUtils.setAlphaComponent(-16777216, darkBodyAlpha);
+                }
+                this.mBodyTextColor = alphaComponent;
+                if (lightTitleAlpha != -1) {
+                    alphaComponent2 = ColorUtils.setAlphaComponent(-1, lightTitleAlpha);
+                } else {
+                    alphaComponent2 = ColorUtils.setAlphaComponent(-16777216, darkTitleAlpha);
+                }
+                this.mTitleTextColor = alphaComponent2;
                 this.mGeneratedTextColors = true;
             }
         }
 
         public String toString() {
-            return getClass().getSimpleName() + " [RGB: #" + Integer.toHexString(getRgb()) + ']' + " [HSL: " + Arrays.toString(getHsl()) + ']' + " [Population: " + this.mPopulation + ']' + " [Title Text: #" + Integer.toHexString(getTitleTextColor()) + ']' + " [Body Text: #" + Integer.toHexString(getBodyTextColor()) + ']';
+            return getClass().getSimpleName() + " [RGB: #" + Integer.toHexString(getRgb()) + "] [HSL: " + Arrays.toString(getHsl()) + "] [Population: " + this.mPopulation + "] [Title Text: #" + Integer.toHexString(getTitleTextColor()) + "] [Body Text: #" + Integer.toHexString(getBodyTextColor()) + ']';
         }
 
         public boolean equals(Object o) {
@@ -361,16 +362,17 @@ public final class Palette {
         }
     }
 
+    /* loaded from: classes4.dex */
     public static final class Builder {
         private final Bitmap mBitmap;
-        private final List<Filter> mFilters = new ArrayList();
-        private int mMaxColors = 16;
         private Quantizer mQuantizer;
         private Rect mRegion;
-        private int mResizeArea = Palette.DEFAULT_RESIZE_BITMAP_AREA;
-        private int mResizeMaxDimension = -1;
         private final List<Swatch> mSwatches;
         private final List<Target> mTargets = new ArrayList();
+        private int mMaxColors = 16;
+        private int mResizeArea = Palette.DEFAULT_RESIZE_BITMAP_AREA;
+        private int mResizeMaxDimension = -1;
+        private final List<Filter> mFilters = new ArrayList();
 
         public Builder(Bitmap bitmap) {
             if (bitmap == null || bitmap.isRecycled()) {
@@ -465,38 +467,29 @@ public final class Palette {
 
         public Palette generate() {
             List<Swatch> swatches;
-            Filter[] filterArr;
             TimingLogger logger = null;
             if (this.mBitmap != null) {
                 Bitmap bitmap = scaleBitmapDown(this.mBitmap);
-                if (logger != null) {
+                if (0 != 0) {
                     logger.addSplit("Processed Bitmap");
                 }
                 Rect region = this.mRegion;
-                if (!(bitmap == this.mBitmap || region == null)) {
-                    double scale = ((double) bitmap.getWidth()) / ((double) this.mBitmap.getWidth());
-                    region.left = (int) Math.floor(((double) region.left) * scale);
-                    region.top = (int) Math.floor(((double) region.top) * scale);
-                    region.right = Math.min((int) Math.ceil(((double) region.right) * scale), bitmap.getWidth());
-                    region.bottom = Math.min((int) Math.ceil(((double) region.bottom) * scale), bitmap.getHeight());
+                if (bitmap != this.mBitmap && region != null) {
+                    double scale = bitmap.getWidth() / this.mBitmap.getWidth();
+                    region.left = (int) Math.floor(region.left * scale);
+                    region.top = (int) Math.floor(region.top * scale);
+                    region.right = Math.min((int) Math.ceil(region.right * scale), bitmap.getWidth());
+                    region.bottom = Math.min((int) Math.ceil(region.bottom * scale), bitmap.getHeight());
                 }
                 if (this.mQuantizer == null) {
                     this.mQuantizer = new ColorCutQuantizer();
                 }
-                Quantizer quantizer = this.mQuantizer;
-                int[] pixelsFromBitmap = getPixelsFromBitmap(bitmap);
-                int i = this.mMaxColors;
-                if (this.mFilters.isEmpty()) {
-                    filterArr = null;
-                } else {
-                    filterArr = (Filter[]) this.mFilters.toArray(new Filter[this.mFilters.size()]);
-                }
-                quantizer.quantize(pixelsFromBitmap, i, filterArr);
+                this.mQuantizer.quantize(getPixelsFromBitmap(bitmap), this.mMaxColors, this.mFilters.isEmpty() ? null : (Filter[]) this.mFilters.toArray(new Filter[this.mFilters.size()]));
                 if (bitmap != this.mBitmap) {
                     bitmap.recycle();
                 }
                 swatches = this.mQuantizer.getQuantizedColors();
-                if (logger != null) {
+                if (0 != 0) {
                     logger.addSplit("Color quantization completed");
                 }
             } else {
@@ -504,7 +497,7 @@ public final class Palette {
             }
             Palette p = new Palette(swatches, this.mTargets);
             p.generate();
-            if (logger != null) {
+            if (0 != 0) {
                 logger.addSplit("Created Palette");
                 logger.dumpToLog();
             }
@@ -512,38 +505,40 @@ public final class Palette {
         }
 
         public AsyncTask<Bitmap, Void, Palette> generate(final PaletteAsyncListener listener) {
-            if (listener != null) {
-                return new AsyncTask<Bitmap, Void, Palette>() {
-                    /* access modifiers changed from: protected */
-                    public Palette doInBackground(Bitmap... params) {
-                        try {
-                            return Builder.this.generate();
-                        } catch (Exception e) {
-                            Log.e(Palette.LOG_TAG, "Exception thrown during async generate", e);
-                            return null;
-                        }
-                    }
-
-                    /* access modifiers changed from: protected */
-                    public void onPostExecute(Palette colorExtractor) {
-                        listener.onGenerated(colorExtractor);
-                    }
-                }.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, this.mBitmap);
+            if (listener == null) {
+                throw new IllegalArgumentException("listener can not be null");
             }
-            throw new IllegalArgumentException("listener can not be null");
+            return new AsyncTask<Bitmap, Void, Palette>() { // from class: com.android.internal.graphics.palette.Palette.Builder.1
+                /* JADX INFO: Access modifiers changed from: protected */
+                @Override // android.p007os.AsyncTask
+                public Palette doInBackground(Bitmap... params) {
+                    try {
+                        return Builder.this.generate();
+                    } catch (Exception e) {
+                        Log.m69e(Palette.LOG_TAG, "Exception thrown during async generate", e);
+                        return null;
+                    }
+                }
+
+                /* JADX INFO: Access modifiers changed from: protected */
+                @Override // android.p007os.AsyncTask
+                public void onPostExecute(Palette colorExtractor) {
+                    listener.onGenerated(colorExtractor);
+                }
+            }.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, this.mBitmap);
         }
 
         private int[] getPixelsFromBitmap(Bitmap bitmap) {
             int bitmapWidth = bitmap.getWidth();
             int bitmapHeight = bitmap.getHeight();
-            int[] pixels = new int[(bitmapWidth * bitmapHeight)];
+            int[] pixels = new int[bitmapWidth * bitmapHeight];
             bitmap.getPixels(pixels, 0, bitmapWidth, 0, 0, bitmapWidth, bitmapHeight);
             if (this.mRegion == null) {
                 return pixels;
             }
             int regionWidth = this.mRegion.width();
             int regionHeight = this.mRegion.height();
-            int[] subsetPixels = new int[(regionWidth * regionHeight)];
+            int[] subsetPixels = new int[regionWidth * regionHeight];
             for (int row = 0; row < regionHeight; row++) {
                 System.arraycopy(pixels, ((this.mRegion.top + row) * bitmapWidth) + this.mRegion.left, subsetPixels, row * regionWidth, regionWidth);
             }
@@ -556,15 +551,15 @@ public final class Palette {
             if (this.mResizeArea > 0) {
                 int bitmapArea = bitmap.getWidth() * bitmap.getHeight();
                 if (bitmapArea > this.mResizeArea) {
-                    scaleRatio = Math.sqrt(((double) this.mResizeArea) / ((double) bitmapArea));
+                    scaleRatio = Math.sqrt(this.mResizeArea / bitmapArea);
                 }
             } else if (this.mResizeMaxDimension > 0 && (maxDimension = Math.max(bitmap.getWidth(), bitmap.getHeight())) > this.mResizeMaxDimension) {
-                scaleRatio = ((double) this.mResizeMaxDimension) / ((double) maxDimension);
+                scaleRatio = this.mResizeMaxDimension / maxDimension;
             }
             if (scaleRatio <= 0.0d) {
                 return bitmap;
             }
-            return Bitmap.createScaledBitmap(bitmap, (int) Math.ceil(((double) bitmap.getWidth()) * scaleRatio), (int) Math.ceil(((double) bitmap.getHeight()) * scaleRatio), false);
+            return Bitmap.createScaledBitmap(bitmap, (int) Math.ceil(bitmap.getWidth() * scaleRatio), (int) Math.ceil(bitmap.getHeight() * scaleRatio), false);
         }
     }
 }

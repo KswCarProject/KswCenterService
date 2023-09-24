@@ -1,14 +1,15 @@
 package android.app.job;
 
-import android.content.pm.ParceledListSlice;
-import android.os.Binder;
-import android.os.IBinder;
-import android.os.IInterface;
-import android.os.Parcel;
-import android.os.RemoteException;
+import android.content.p002pm.ParceledListSlice;
+import android.p007os.Binder;
+import android.p007os.IBinder;
+import android.p007os.IInterface;
+import android.p007os.Parcel;
+import android.p007os.RemoteException;
 import android.service.notification.ZenModeConfig;
 import java.util.List;
 
+/* loaded from: classes.dex */
 public interface IJobScheduler extends IInterface {
     void cancel(int i) throws RemoteException;
 
@@ -28,46 +29,58 @@ public interface IJobScheduler extends IInterface {
 
     int scheduleAsPackage(JobInfo jobInfo, String str, int i, String str2) throws RemoteException;
 
+    /* loaded from: classes.dex */
     public static class Default implements IJobScheduler {
+        @Override // android.app.job.IJobScheduler
         public int schedule(JobInfo job) throws RemoteException {
             return 0;
         }
 
+        @Override // android.app.job.IJobScheduler
         public int enqueue(JobInfo job, JobWorkItem work) throws RemoteException {
             return 0;
         }
 
+        @Override // android.app.job.IJobScheduler
         public int scheduleAsPackage(JobInfo job, String packageName, int userId, String tag) throws RemoteException {
             return 0;
         }
 
+        @Override // android.app.job.IJobScheduler
         public void cancel(int jobId) throws RemoteException {
         }
 
+        @Override // android.app.job.IJobScheduler
         public void cancelAll() throws RemoteException {
         }
 
+        @Override // android.app.job.IJobScheduler
         public ParceledListSlice getAllPendingJobs() throws RemoteException {
             return null;
         }
 
+        @Override // android.app.job.IJobScheduler
         public JobInfo getPendingJob(int jobId) throws RemoteException {
             return null;
         }
 
+        @Override // android.app.job.IJobScheduler
         public List<JobInfo> getStartedJobs() throws RemoteException {
             return null;
         }
 
+        @Override // android.app.job.IJobScheduler
         public ParceledListSlice getAllJobSnapshots() throws RemoteException {
             return null;
         }
 
+        @Override // android.p007os.IInterface
         public IBinder asBinder() {
             return null;
         }
     }
 
+    /* loaded from: classes.dex */
     public static abstract class Stub extends Binder implements IJobScheduler {
         private static final String DESCRIPTOR = "android.app.job.IJobScheduler";
         static final int TRANSACTION_cancel = 4;
@@ -89,12 +102,13 @@ public interface IJobScheduler extends IInterface {
                 return null;
             }
             IInterface iin = obj.queryLocalInterface(DESCRIPTOR);
-            if (iin == null || !(iin instanceof IJobScheduler)) {
-                return new Proxy(obj);
+            if (iin != null && (iin instanceof IJobScheduler)) {
+                return (IJobScheduler) iin;
             }
-            return (IJobScheduler) iin;
+            return new Proxy(obj);
         }
 
+        @Override // android.p007os.IInterface
         public IBinder asBinder() {
             return this;
         }
@@ -124,166 +138,106 @@ public interface IJobScheduler extends IInterface {
             }
         }
 
+        @Override // android.p007os.Binder
         public String getTransactionName(int transactionCode) {
             return getDefaultTransactionName(transactionCode);
         }
 
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r3v0, resolved type: android.app.job.JobWorkItem} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r3v1, resolved type: android.app.job.JobWorkItem} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r1v3, resolved type: android.app.job.JobInfo} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r3v5, resolved type: android.app.job.JobWorkItem} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r3v9, resolved type: android.app.job.JobWorkItem} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r1v13, resolved type: android.app.job.JobInfo} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r3v16, resolved type: android.app.job.JobWorkItem} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r3v17, resolved type: android.app.job.JobWorkItem} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r3v18, resolved type: android.app.job.JobWorkItem} */
-        /* JADX WARNING: type inference failed for: r3v4, types: [android.app.job.JobInfo] */
-        /* JADX WARNING: type inference failed for: r3v12, types: [android.app.job.JobInfo] */
-        /* JADX WARNING: Multi-variable type inference failed */
-        /* Code decompiled incorrectly, please refer to instructions dump. */
-        public boolean onTransact(int r8, android.os.Parcel r9, android.os.Parcel r10, int r11) throws android.os.RemoteException {
-            /*
-                r7 = this;
-                java.lang.String r0 = "android.app.job.IJobScheduler"
-                r1 = 1598968902(0x5f4e5446, float:1.4867585E19)
-                r2 = 1
-                if (r8 == r1) goto L_0x00fb
-                r1 = 0
-                r3 = 0
-                switch(r8) {
-                    case 1: goto L_0x00db;
-                    case 2: goto L_0x00ad;
-                    case 3: goto L_0x0081;
-                    case 4: goto L_0x0073;
-                    case 5: goto L_0x0069;
-                    case 6: goto L_0x0052;
-                    case 7: goto L_0x0037;
-                    case 8: goto L_0x0029;
-                    case 9: goto L_0x0012;
-                    default: goto L_0x000d;
-                }
-            L_0x000d:
-                boolean r1 = super.onTransact(r8, r9, r10, r11)
-                return r1
-            L_0x0012:
-                r9.enforceInterface(r0)
-                android.content.pm.ParceledListSlice r3 = r7.getAllJobSnapshots()
-                r10.writeNoException()
-                if (r3 == 0) goto L_0x0025
-                r10.writeInt(r2)
-                r3.writeToParcel(r10, r2)
-                goto L_0x0028
-            L_0x0025:
-                r10.writeInt(r1)
-            L_0x0028:
-                return r2
-            L_0x0029:
-                r9.enforceInterface(r0)
-                java.util.List r1 = r7.getStartedJobs()
-                r10.writeNoException()
-                r10.writeTypedList(r1)
-                return r2
-            L_0x0037:
-                r9.enforceInterface(r0)
-                int r3 = r9.readInt()
-                android.app.job.JobInfo r4 = r7.getPendingJob(r3)
-                r10.writeNoException()
-                if (r4 == 0) goto L_0x004e
-                r10.writeInt(r2)
-                r4.writeToParcel(r10, r2)
-                goto L_0x0051
-            L_0x004e:
-                r10.writeInt(r1)
-            L_0x0051:
-                return r2
-            L_0x0052:
-                r9.enforceInterface(r0)
-                android.content.pm.ParceledListSlice r3 = r7.getAllPendingJobs()
-                r10.writeNoException()
-                if (r3 == 0) goto L_0x0065
-                r10.writeInt(r2)
-                r3.writeToParcel(r10, r2)
-                goto L_0x0068
-            L_0x0065:
-                r10.writeInt(r1)
-            L_0x0068:
-                return r2
-            L_0x0069:
-                r9.enforceInterface(r0)
-                r7.cancelAll()
-                r10.writeNoException()
-                return r2
-            L_0x0073:
-                r9.enforceInterface(r0)
-                int r1 = r9.readInt()
-                r7.cancel(r1)
-                r10.writeNoException()
-                return r2
-            L_0x0081:
-                r9.enforceInterface(r0)
-                int r1 = r9.readInt()
-                if (r1 == 0) goto L_0x0094
-                android.os.Parcelable$Creator<android.app.job.JobInfo> r1 = android.app.job.JobInfo.CREATOR
-                java.lang.Object r1 = r1.createFromParcel(r9)
-                r3 = r1
-                android.app.job.JobInfo r3 = (android.app.job.JobInfo) r3
-                goto L_0x0095
-            L_0x0094:
-            L_0x0095:
-                r1 = r3
-                java.lang.String r3 = r9.readString()
-                int r4 = r9.readInt()
-                java.lang.String r5 = r9.readString()
-                int r6 = r7.scheduleAsPackage(r1, r3, r4, r5)
-                r10.writeNoException()
-                r10.writeInt(r6)
-                return r2
-            L_0x00ad:
-                r9.enforceInterface(r0)
-                int r1 = r9.readInt()
-                if (r1 == 0) goto L_0x00bf
-                android.os.Parcelable$Creator<android.app.job.JobInfo> r1 = android.app.job.JobInfo.CREATOR
-                java.lang.Object r1 = r1.createFromParcel(r9)
-                android.app.job.JobInfo r1 = (android.app.job.JobInfo) r1
-                goto L_0x00c0
-            L_0x00bf:
-                r1 = r3
-            L_0x00c0:
-                int r4 = r9.readInt()
-                if (r4 == 0) goto L_0x00cf
-                android.os.Parcelable$Creator<android.app.job.JobWorkItem> r3 = android.app.job.JobWorkItem.CREATOR
-                java.lang.Object r3 = r3.createFromParcel(r9)
-                android.app.job.JobWorkItem r3 = (android.app.job.JobWorkItem) r3
-                goto L_0x00d0
-            L_0x00cf:
-            L_0x00d0:
-                int r4 = r7.enqueue(r1, r3)
-                r10.writeNoException()
-                r10.writeInt(r4)
-                return r2
-            L_0x00db:
-                r9.enforceInterface(r0)
-                int r1 = r9.readInt()
-                if (r1 == 0) goto L_0x00ee
-                android.os.Parcelable$Creator<android.app.job.JobInfo> r1 = android.app.job.JobInfo.CREATOR
-                java.lang.Object r1 = r1.createFromParcel(r9)
-                r3 = r1
-                android.app.job.JobInfo r3 = (android.app.job.JobInfo) r3
-                goto L_0x00ef
-            L_0x00ee:
-            L_0x00ef:
-                r1 = r3
-                int r3 = r7.schedule(r1)
-                r10.writeNoException()
-                r10.writeInt(r3)
-                return r2
-            L_0x00fb:
-                r10.writeString(r0)
-                return r2
-            */
-            throw new UnsupportedOperationException("Method not decompiled: android.app.job.IJobScheduler.Stub.onTransact(int, android.os.Parcel, android.os.Parcel, int):boolean");
+        @Override // android.p007os.Binder
+        public boolean onTransact(int code, Parcel data, Parcel reply, int flags) throws RemoteException {
+            JobInfo _arg0;
+            if (code == 1598968902) {
+                reply.writeString(DESCRIPTOR);
+                return true;
+            }
+            switch (code) {
+                case 1:
+                    data.enforceInterface(DESCRIPTOR);
+                    JobInfo _arg02 = data.readInt() != 0 ? JobInfo.CREATOR.createFromParcel(data) : null;
+                    int _result = schedule(_arg02);
+                    reply.writeNoException();
+                    reply.writeInt(_result);
+                    return true;
+                case 2:
+                    data.enforceInterface(DESCRIPTOR);
+                    if (data.readInt() != 0) {
+                        _arg0 = JobInfo.CREATOR.createFromParcel(data);
+                    } else {
+                        _arg0 = null;
+                    }
+                    JobWorkItem _arg1 = data.readInt() != 0 ? JobWorkItem.CREATOR.createFromParcel(data) : null;
+                    int _result2 = enqueue(_arg0, _arg1);
+                    reply.writeNoException();
+                    reply.writeInt(_result2);
+                    return true;
+                case 3:
+                    data.enforceInterface(DESCRIPTOR);
+                    JobInfo _arg03 = data.readInt() != 0 ? JobInfo.CREATOR.createFromParcel(data) : null;
+                    JobInfo _arg04 = _arg03;
+                    String _arg12 = data.readString();
+                    int _arg2 = data.readInt();
+                    String _arg3 = data.readString();
+                    int _result3 = scheduleAsPackage(_arg04, _arg12, _arg2, _arg3);
+                    reply.writeNoException();
+                    reply.writeInt(_result3);
+                    return true;
+                case 4:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg05 = data.readInt();
+                    cancel(_arg05);
+                    reply.writeNoException();
+                    return true;
+                case 5:
+                    data.enforceInterface(DESCRIPTOR);
+                    cancelAll();
+                    reply.writeNoException();
+                    return true;
+                case 6:
+                    data.enforceInterface(DESCRIPTOR);
+                    ParceledListSlice _result4 = getAllPendingJobs();
+                    reply.writeNoException();
+                    if (_result4 != null) {
+                        reply.writeInt(1);
+                        _result4.writeToParcel(reply, 1);
+                    } else {
+                        reply.writeInt(0);
+                    }
+                    return true;
+                case 7:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg06 = data.readInt();
+                    JobInfo _result5 = getPendingJob(_arg06);
+                    reply.writeNoException();
+                    if (_result5 != null) {
+                        reply.writeInt(1);
+                        _result5.writeToParcel(reply, 1);
+                    } else {
+                        reply.writeInt(0);
+                    }
+                    return true;
+                case 8:
+                    data.enforceInterface(DESCRIPTOR);
+                    List<JobInfo> _result6 = getStartedJobs();
+                    reply.writeNoException();
+                    reply.writeTypedList(_result6);
+                    return true;
+                case 9:
+                    data.enforceInterface(DESCRIPTOR);
+                    ParceledListSlice _result7 = getAllJobSnapshots();
+                    reply.writeNoException();
+                    if (_result7 != null) {
+                        reply.writeInt(1);
+                        _result7.writeToParcel(reply, 1);
+                    } else {
+                        reply.writeInt(0);
+                    }
+                    return true;
+                default:
+                    return super.onTransact(code, data, reply, flags);
+            }
         }
 
+        /* loaded from: classes.dex */
         private static class Proxy implements IJobScheduler {
             public static IJobScheduler sDefaultImpl;
             private IBinder mRemote;
@@ -292,6 +246,7 @@ public interface IJobScheduler extends IInterface {
                 this.mRemote = remote;
             }
 
+            @Override // android.p007os.IInterface
             public IBinder asBinder() {
                 return this.mRemote;
             }
@@ -300,6 +255,7 @@ public interface IJobScheduler extends IInterface {
                 return Stub.DESCRIPTOR;
             }
 
+            @Override // android.app.job.IJobScheduler
             public int schedule(JobInfo job) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -311,13 +267,12 @@ public interface IJobScheduler extends IInterface {
                     } else {
                         _data.writeInt(0);
                     }
-                    if (!this.mRemote.transact(1, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(1, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().schedule(job);
                     }
                     _reply.readException();
                     int _result = _reply.readInt();
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -325,6 +280,7 @@ public interface IJobScheduler extends IInterface {
                 }
             }
 
+            @Override // android.app.job.IJobScheduler
             public int enqueue(JobInfo job, JobWorkItem work) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -342,13 +298,12 @@ public interface IJobScheduler extends IInterface {
                     } else {
                         _data.writeInt(0);
                     }
-                    if (!this.mRemote.transact(2, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(2, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().enqueue(job, work);
                     }
                     _reply.readException();
                     int _result = _reply.readInt();
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -356,6 +311,7 @@ public interface IJobScheduler extends IInterface {
                 }
             }
 
+            @Override // android.app.job.IJobScheduler
             public int scheduleAsPackage(JobInfo job, String packageName, int userId, String tag) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -370,13 +326,12 @@ public interface IJobScheduler extends IInterface {
                     _data.writeString(packageName);
                     _data.writeInt(userId);
                     _data.writeString(tag);
-                    if (!this.mRemote.transact(3, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(3, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().scheduleAsPackage(job, packageName, userId, tag);
                     }
                     _reply.readException();
                     int _result = _reply.readInt();
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -384,50 +339,52 @@ public interface IJobScheduler extends IInterface {
                 }
             }
 
+            @Override // android.app.job.IJobScheduler
             public void cancel(int jobId) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeInt(jobId);
-                    if (this.mRemote.transact(4, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(4, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().cancel(jobId);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().cancel(jobId);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.app.job.IJobScheduler
             public void cancelAll() throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    if (this.mRemote.transact(5, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(5, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().cancelAll();
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().cancelAll();
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.app.job.IJobScheduler
             public ParceledListSlice getAllPendingJobs() throws RemoteException {
                 ParceledListSlice _result;
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    if (!this.mRemote.transact(6, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(6, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().getAllPendingJobs();
                     }
                     _reply.readException();
@@ -436,16 +393,14 @@ public interface IJobScheduler extends IInterface {
                     } else {
                         _result = null;
                     }
-                    ParceledListSlice _result2 = _result;
-                    _reply.recycle();
-                    _data.recycle();
-                    return _result2;
+                    return _result;
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.app.job.IJobScheduler
             public JobInfo getPendingJob(int jobId) throws RemoteException {
                 JobInfo _result;
                 Parcel _data = Parcel.obtain();
@@ -453,7 +408,8 @@ public interface IJobScheduler extends IInterface {
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeInt(jobId);
-                    if (!this.mRemote.transact(7, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(7, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().getPendingJob(jobId);
                     }
                     _reply.readException();
@@ -462,28 +418,6 @@ public interface IJobScheduler extends IInterface {
                     } else {
                         _result = null;
                     }
-                    JobInfo _result2 = _result;
-                    _reply.recycle();
-                    _data.recycle();
-                    return _result2;
-                } finally {
-                    _reply.recycle();
-                    _data.recycle();
-                }
-            }
-
-            public List<JobInfo> getStartedJobs() throws RemoteException {
-                Parcel _data = Parcel.obtain();
-                Parcel _reply = Parcel.obtain();
-                try {
-                    _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    if (!this.mRemote.transact(8, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
-                        return Stub.getDefaultImpl().getStartedJobs();
-                    }
-                    _reply.readException();
-                    List<JobInfo> _result = _reply.createTypedArrayList(JobInfo.CREATOR);
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -491,13 +425,34 @@ public interface IJobScheduler extends IInterface {
                 }
             }
 
+            @Override // android.app.job.IJobScheduler
+            public List<JobInfo> getStartedJobs() throws RemoteException {
+                Parcel _data = Parcel.obtain();
+                Parcel _reply = Parcel.obtain();
+                try {
+                    _data.writeInterfaceToken(Stub.DESCRIPTOR);
+                    boolean _status = this.mRemote.transact(8, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        return Stub.getDefaultImpl().getStartedJobs();
+                    }
+                    _reply.readException();
+                    List<JobInfo> _result = _reply.createTypedArrayList(JobInfo.CREATOR);
+                    return _result;
+                } finally {
+                    _reply.recycle();
+                    _data.recycle();
+                }
+            }
+
+            @Override // android.app.job.IJobScheduler
             public ParceledListSlice getAllJobSnapshots() throws RemoteException {
                 ParceledListSlice _result;
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    if (!this.mRemote.transact(9, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(9, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().getAllJobSnapshots();
                     }
                     _reply.readException();
@@ -506,10 +461,7 @@ public interface IJobScheduler extends IInterface {
                     } else {
                         _result = null;
                     }
-                    ParceledListSlice _result2 = _result;
-                    _reply.recycle();
-                    _data.recycle();
-                    return _result2;
+                    return _result;
                 } finally {
                     _reply.recycle();
                     _data.recycle();
@@ -518,11 +470,11 @@ public interface IJobScheduler extends IInterface {
         }
 
         public static boolean setDefaultImpl(IJobScheduler impl) {
-            if (Proxy.sDefaultImpl != null || impl == null) {
-                return false;
+            if (Proxy.sDefaultImpl == null && impl != null) {
+                Proxy.sDefaultImpl = impl;
+                return true;
             }
-            Proxy.sDefaultImpl = impl;
-            return true;
+            return false;
         }
 
         public static IJobScheduler getDefaultImpl() {

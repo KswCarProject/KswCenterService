@@ -1,18 +1,23 @@
 package android.bluetooth;
 
 import android.annotation.UnsupportedAppUsage;
-import android.os.Parcel;
-import android.os.Parcelable;
+import android.p007os.Parcel;
+import android.p007os.Parcelable;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.util.Arrays;
 
+/* loaded from: classes.dex */
 public final class BluetoothClass implements Parcelable {
-    public static final Parcelable.Creator<BluetoothClass> CREATOR = new Parcelable.Creator<BluetoothClass>() {
+    public static final Parcelable.Creator<BluetoothClass> CREATOR = new Parcelable.Creator<BluetoothClass>() { // from class: android.bluetooth.BluetoothClass.1
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public BluetoothClass createFromParcel(Parcel in) {
             return new BluetoothClass(in.readInt());
         }
 
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public BluetoothClass[] newArray(int size) {
             return new BluetoothClass[size];
         }
@@ -29,6 +34,7 @@ public final class BluetoothClass implements Parcelable {
     public static final int PROFILE_PANU = 4;
     private final int mClass;
 
+    /* loaded from: classes.dex */
     public static class Device {
         public static final int AUDIO_VIDEO_CAMCORDER = 1076;
         public static final int AUDIO_VIDEO_CAR_AUDIO = 1056;
@@ -86,6 +92,7 @@ public final class BluetoothClass implements Parcelable {
         public static final int WEARABLE_UNCATEGORIZED = 1792;
         public static final int WEARABLE_WRIST_WATCH = 1796;
 
+        /* loaded from: classes.dex */
         public static class Major {
             public static final int AUDIO_VIDEO = 1024;
             private static final int BITMASK = 7936;
@@ -102,6 +109,7 @@ public final class BluetoothClass implements Parcelable {
         }
     }
 
+    /* loaded from: classes.dex */
     public static final class Service {
         public static final int AUDIO = 2097152;
         private static final int BITMASK = 16769024;
@@ -121,10 +129,7 @@ public final class BluetoothClass implements Parcelable {
     }
 
     public boolean equals(Object o) {
-        if (!(o instanceof BluetoothClass) || this.mClass != ((BluetoothClass) o).mClass) {
-            return false;
-        }
-        return true;
+        return (o instanceof BluetoothClass) && this.mClass == ((BluetoothClass) o).mClass;
     }
 
     public int hashCode() {
@@ -135,10 +140,12 @@ public final class BluetoothClass implements Parcelable {
         return Integer.toHexString(this.mClass);
     }
 
+    @Override // android.p007os.Parcelable
     public int describeContents() {
         return 0;
     }
 
+    @Override // android.p007os.Parcelable
     public void writeToParcel(Parcel out, int flags) {
         out.writeInt(this.mClass);
     }
@@ -164,127 +171,45 @@ public final class BluetoothClass implements Parcelable {
         return Arrays.copyOfRange(bytes, 1, bytes.length);
     }
 
-    /* JADX WARNING: Code restructure failed: missing block: B:5:0x0011, code lost:
-        r2 = getDeviceClass();
-     */
-    @android.annotation.UnsupportedAppUsage
-    /* Code decompiled incorrectly, please refer to instructions dump. */
-    public boolean doesClassMatch(int r7) {
-        /*
-            r6 = this;
-            r0 = 1064(0x428, float:1.491E-42)
-            r1 = 1056(0x420, float:1.48E-42)
-            r2 = 262144(0x40000, float:3.67342E-40)
-            r3 = 0
-            r4 = 1
-            if (r7 != r4) goto L_0x0023
-            boolean r2 = r6.hasService(r2)
-            if (r2 == 0) goto L_0x0011
-            return r4
-        L_0x0011:
-            int r2 = r6.getDeviceClass()
-            r5 = 1044(0x414, float:1.463E-42)
-            if (r2 == r5) goto L_0x0022
-            r5 = 1048(0x418, float:1.469E-42)
-            if (r2 == r5) goto L_0x0022
-            if (r2 == r1) goto L_0x0022
-            if (r2 == r0) goto L_0x0022
-            return r3
-        L_0x0022:
-            return r4
-        L_0x0023:
-            r5 = 6
-            if (r7 != r5) goto L_0x003f
-            r1 = 524288(0x80000, float:7.34684E-40)
-            boolean r1 = r6.hasService(r1)
-            if (r1 == 0) goto L_0x002f
-            return r4
-        L_0x002f:
-            int r1 = r6.getDeviceClass()
-            r2 = 1060(0x424, float:1.485E-42)
-            if (r1 == r2) goto L_0x003e
-            if (r1 == r0) goto L_0x003e
-            r0 = 1068(0x42c, float:1.497E-42)
-            if (r1 == r0) goto L_0x003e
-            return r3
-        L_0x003e:
-            return r4
-        L_0x003f:
-            if (r7 != 0) goto L_0x0058
-            boolean r0 = r6.hasService(r2)
-            if (r0 == 0) goto L_0x0048
-            return r4
-        L_0x0048:
-            int r0 = r6.getDeviceClass()
-            r2 = 1028(0x404, float:1.44E-42)
-            if (r0 == r2) goto L_0x0057
-            r2 = 1032(0x408, float:1.446E-42)
-            if (r0 == r2) goto L_0x0057
-            if (r0 == r1) goto L_0x0057
-            return r3
-        L_0x0057:
-            return r4
-        L_0x0058:
-            r0 = 2
-            if (r7 != r0) goto L_0x006d
-            r0 = 1048576(0x100000, float:1.469368E-39)
-            boolean r0 = r6.hasService(r0)
-            if (r0 == 0) goto L_0x0064
-            return r4
-        L_0x0064:
-            int r0 = r6.getDeviceClass()
-            switch(r0) {
-                case 256: goto L_0x006c;
-                case 260: goto L_0x006c;
-                case 264: goto L_0x006c;
-                case 268: goto L_0x006c;
-                case 272: goto L_0x006c;
-                case 276: goto L_0x006c;
-                case 280: goto L_0x006c;
-                case 512: goto L_0x006c;
-                case 516: goto L_0x006c;
-                case 520: goto L_0x006c;
-                case 524: goto L_0x006c;
-                case 528: goto L_0x006c;
-                case 532: goto L_0x006c;
-                default: goto L_0x006b;
+    @UnsupportedAppUsage
+    public boolean doesClassMatch(int profile) {
+        int deviceClass;
+        int deviceClass2;
+        int deviceClass3;
+        if (profile == 1) {
+            return hasService(262144) || (deviceClass3 = getDeviceClass()) == 1044 || deviceClass3 == 1048 || deviceClass3 == 1056 || deviceClass3 == 1064;
+        } else if (profile == 6) {
+            return hasService(524288) || (deviceClass2 = getDeviceClass()) == 1060 || deviceClass2 == 1064 || deviceClass2 == 1068;
+        } else if (profile == 0) {
+            return hasService(262144) || (deviceClass = getDeviceClass()) == 1028 || deviceClass == 1032 || deviceClass == 1056;
+        } else if (profile == 2) {
+            if (hasService(1048576)) {
+                return true;
             }
-        L_0x006b:
-            return r3
-        L_0x006c:
-            return r4
-        L_0x006d:
-            r0 = 3
-            if (r7 != r0) goto L_0x007c
-            int r0 = r6.getDeviceClass()
-            r1 = 1280(0x500, float:1.794E-42)
-            r0 = r0 & r1
-            if (r0 != r1) goto L_0x007b
-            r3 = r4
-        L_0x007b:
-            return r3
-        L_0x007c:
-            r0 = 4
-            if (r7 == r0) goto L_0x0084
-            r0 = 5
-            if (r7 != r0) goto L_0x0083
-            goto L_0x0084
-        L_0x0083:
-            return r3
-        L_0x0084:
-            r0 = 131072(0x20000, float:1.83671E-40)
-            boolean r0 = r6.hasService(r0)
-            if (r0 == 0) goto L_0x008d
-            return r4
-        L_0x008d:
-            int r0 = r6.getDeviceClass()
-            r1 = 768(0x300, float:1.076E-42)
-            r0 = r0 & r1
-            if (r0 != r1) goto L_0x0098
-            r3 = r4
-        L_0x0098:
-            return r3
-        */
-        throw new UnsupportedOperationException("Method not decompiled: android.bluetooth.BluetoothClass.doesClassMatch(int):boolean");
+            switch (getDeviceClass()) {
+                case 256:
+                case 260:
+                case 264:
+                case 268:
+                case 272:
+                case 276:
+                case 280:
+                case 512:
+                case 516:
+                case 520:
+                case 524:
+                case 528:
+                case 532:
+                    return true;
+                default:
+                    return false;
+            }
+        } else if (profile == 3) {
+            return (getDeviceClass() & 1280) == 1280;
+        } else if (profile == 4 || profile == 5) {
+            return hasService(131072) || (getDeviceClass() & 768) == 768;
+        } else {
+            return false;
+        }
     }
 }

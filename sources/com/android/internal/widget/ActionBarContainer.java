@@ -12,34 +12,29 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
-import com.android.internal.R;
+import com.android.internal.C3132R;
 
+/* loaded from: classes4.dex */
 public class ActionBarContainer extends FrameLayout {
-    /* access modifiers changed from: private */
-    public View mActionBarView;
+    private View mActionBarView;
     private View mActionContextView;
-    /* access modifiers changed from: private */
-    public Drawable mBackground;
+    private Drawable mBackground;
     private int mHeight;
-    /* access modifiers changed from: private */
-    public boolean mIsSplit;
-    /* access modifiers changed from: private */
-    public boolean mIsStacked;
+    private boolean mIsSplit;
+    private boolean mIsStacked;
     private boolean mIsTransitioning;
-    /* access modifiers changed from: private */
-    public Drawable mSplitBackground;
-    /* access modifiers changed from: private */
-    public Drawable mStackedBackground;
+    private Drawable mSplitBackground;
+    private Drawable mStackedBackground;
     private View mTabContainer;
 
     public ActionBarContainer(Context context) {
-        this(context, (AttributeSet) null);
+        this(context, null);
     }
 
     public ActionBarContainer(Context context, AttributeSet attrs) {
         super(context, attrs);
         setBackground(new ActionBarBackgroundDrawable());
-        TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.ActionBar);
+        TypedArray a = context.obtainStyledAttributes(attrs, C3132R.styleable.ActionBar);
         this.mBackground = a.getDrawable(2);
         this.mStackedBackground = a.getDrawable(18);
         this.mHeight = a.getDimensionPixelSize(4, -1);
@@ -49,21 +44,22 @@ public class ActionBarContainer extends FrameLayout {
             this.mSplitBackground = a.getDrawable(19);
         }
         a.recycle();
-        if (!this.mIsSplit ? !(this.mBackground == null && this.mStackedBackground == null) : this.mSplitBackground != null) {
+        if (!this.mIsSplit ? this.mBackground != null || this.mStackedBackground != null : this.mSplitBackground != null) {
             z = false;
         }
         setWillNotDraw(z);
     }
 
+    @Override // android.view.View
     public void onFinishInflate() {
         super.onFinishInflate();
-        this.mActionBarView = findViewById(R.id.action_bar);
-        this.mActionContextView = findViewById(R.id.action_context_bar);
+        this.mActionBarView = findViewById(C3132R.C3134id.action_bar);
+        this.mActionContextView = findViewById(C3132R.C3134id.action_context_bar);
     }
 
     public void setPrimaryBackground(Drawable bg) {
         if (this.mBackground != null) {
-            this.mBackground.setCallback((Drawable.Callback) null);
+            this.mBackground.setCallback(null);
             unscheduleDrawable(this.mBackground);
         }
         this.mBackground = bg;
@@ -74,7 +70,7 @@ public class ActionBarContainer extends FrameLayout {
             }
         }
         boolean z = false;
-        if (!this.mIsSplit ? this.mBackground == null && this.mStackedBackground == null : this.mSplitBackground == null) {
+        if (!this.mIsSplit ? !(this.mBackground != null || this.mStackedBackground != null) : this.mSplitBackground == null) {
             z = true;
         }
         setWillNotDraw(z);
@@ -83,7 +79,7 @@ public class ActionBarContainer extends FrameLayout {
 
     public void setStackedBackground(Drawable bg) {
         if (this.mStackedBackground != null) {
-            this.mStackedBackground.setCallback((Drawable.Callback) null);
+            this.mStackedBackground.setCallback(null);
             unscheduleDrawable(this.mStackedBackground);
         }
         this.mStackedBackground = bg;
@@ -94,7 +90,7 @@ public class ActionBarContainer extends FrameLayout {
             }
         }
         boolean z = false;
-        if (!this.mIsSplit ? this.mBackground == null && this.mStackedBackground == null : this.mSplitBackground == null) {
+        if (!this.mIsSplit ? !(this.mBackground != null || this.mStackedBackground != null) : this.mSplitBackground == null) {
             z = true;
         }
         setWillNotDraw(z);
@@ -103,7 +99,7 @@ public class ActionBarContainer extends FrameLayout {
 
     public void setSplitBackground(Drawable bg) {
         if (this.mSplitBackground != null) {
-            this.mSplitBackground.setCallback((Drawable.Callback) null);
+            this.mSplitBackground.setCallback(null);
             unscheduleDrawable(this.mSplitBackground);
         }
         this.mSplitBackground = bg;
@@ -114,13 +110,14 @@ public class ActionBarContainer extends FrameLayout {
                 this.mSplitBackground.setBounds(0, 0, getMeasuredWidth(), getMeasuredHeight());
             }
         }
-        if (!this.mIsSplit ? this.mBackground == null && this.mStackedBackground == null : this.mSplitBackground == null) {
+        if (!this.mIsSplit ? !(this.mBackground != null || this.mStackedBackground != null) : this.mSplitBackground == null) {
             z = true;
         }
         setWillNotDraw(z);
         invalidate();
     }
 
+    @Override // android.view.View
     public void setVisibility(int visibility) {
         super.setVisibility(visibility);
         boolean isVisible = visibility == 0;
@@ -135,13 +132,13 @@ public class ActionBarContainer extends FrameLayout {
         }
     }
 
-    /* access modifiers changed from: protected */
-    public boolean verifyDrawable(Drawable who) {
+    @Override // android.view.View
+    protected boolean verifyDrawable(Drawable who) {
         return (who == this.mBackground && !this.mIsSplit) || (who == this.mStackedBackground && this.mIsStacked) || ((who == this.mSplitBackground && this.mIsSplit) || super.verifyDrawable(who));
     }
 
-    /* access modifiers changed from: protected */
-    public void drawableStateChanged() {
+    @Override // android.view.ViewGroup, android.view.View
+    protected void drawableStateChanged() {
         super.drawableStateChanged();
         int[] state = getDrawableState();
         boolean changed = false;
@@ -162,6 +159,7 @@ public class ActionBarContainer extends FrameLayout {
         }
     }
 
+    @Override // android.view.ViewGroup, android.view.View
     public void jumpDrawablesToCurrentState() {
         super.jumpDrawablesToCurrentState();
         if (this.mBackground != null) {
@@ -175,6 +173,7 @@ public class ActionBarContainer extends FrameLayout {
         }
     }
 
+    @Override // android.view.View
     public void onResolveDrawables(int layoutDirection) {
         super.onResolveDrawables(layoutDirection);
         if (this.mBackground != null) {
@@ -189,25 +188,22 @@ public class ActionBarContainer extends FrameLayout {
     }
 
     public void setTransitioning(boolean isTransitioning) {
-        int i;
         this.mIsTransitioning = isTransitioning;
-        if (isTransitioning) {
-            i = 393216;
-        } else {
-            i = 262144;
-        }
-        setDescendantFocusability(i);
+        setDescendantFocusability(isTransitioning ? 393216 : 262144);
     }
 
+    @Override // android.view.ViewGroup
     public boolean onInterceptTouchEvent(MotionEvent ev) {
         return this.mIsTransitioning || super.onInterceptTouchEvent(ev);
     }
 
+    @Override // android.view.View
     public boolean onTouchEvent(MotionEvent ev) {
         super.onTouchEvent(ev);
         return true;
     }
 
+    @Override // android.view.View
     public boolean onHoverEvent(MotionEvent ev) {
         super.onHoverEvent(ev);
         return true;
@@ -231,6 +227,7 @@ public class ActionBarContainer extends FrameLayout {
         return this.mTabContainer;
     }
 
+    @Override // android.view.ViewGroup, android.view.ViewParent
     public ActionMode startActionModeForChild(View child, ActionMode.Callback callback, int type) {
         if (type != 0) {
             return super.startActionModeForChild(child, callback, type);
@@ -238,7 +235,7 @@ public class ActionBarContainer extends FrameLayout {
         return null;
     }
 
-    /* access modifiers changed from: private */
+    /* JADX INFO: Access modifiers changed from: private */
     public static boolean isCollapsed(View view) {
         return view == null || view.getVisibility() == 8 || view.getMeasuredHeight() == 0;
     }
@@ -248,8 +245,9 @@ public class ActionBarContainer extends FrameLayout {
         return view.getMeasuredHeight() + lp.topMargin + lp.bottomMargin;
     }
 
+    @Override // android.widget.FrameLayout, android.view.View
     public void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
-        int i;
+        int measuredHeightWithMargins;
         if (this.mActionBarView == null && View.MeasureSpec.getMode(heightMeasureSpec) == Integer.MIN_VALUE && this.mHeight >= 0) {
             heightMeasureSpec = View.MeasureSpec.makeMeasureSpec(Math.min(this.mHeight, View.MeasureSpec.getSize(heightMeasureSpec)), Integer.MIN_VALUE);
         }
@@ -257,39 +255,48 @@ public class ActionBarContainer extends FrameLayout {
         if (this.mActionBarView != null && this.mTabContainer != null && this.mTabContainer.getVisibility() != 8) {
             int childCount = getChildCount();
             int nonTabMaxHeight = 0;
-            for (int i2 = 0; i2 < childCount; i2++) {
-                View child = getChildAt(i2);
+            for (int nonTabMaxHeight2 = 0; nonTabMaxHeight2 < childCount; nonTabMaxHeight2++) {
+                View child = getChildAt(nonTabMaxHeight2);
                 if (child != this.mTabContainer) {
                     if (isCollapsed(child)) {
-                        i = 0;
+                        measuredHeightWithMargins = 0;
                     } else {
-                        i = getMeasuredHeightWithMargins(child);
+                        measuredHeightWithMargins = getMeasuredHeightWithMargins(child);
                     }
-                    nonTabMaxHeight = Math.max(nonTabMaxHeight, i);
+                    nonTabMaxHeight = Math.max(nonTabMaxHeight, measuredHeightWithMargins);
                 }
             }
-            setMeasuredDimension(getMeasuredWidth(), Math.min(getMeasuredHeightWithMargins(this.mTabContainer) + nonTabMaxHeight, View.MeasureSpec.getMode(heightMeasureSpec) == Integer.MIN_VALUE ? View.MeasureSpec.getSize(heightMeasureSpec) : Integer.MAX_VALUE));
+            int mode = View.MeasureSpec.getMode(heightMeasureSpec);
+            int maxHeight = mode == Integer.MIN_VALUE ? View.MeasureSpec.getSize(heightMeasureSpec) : Integer.MAX_VALUE;
+            setMeasuredDimension(getMeasuredWidth(), Math.min(getMeasuredHeightWithMargins(this.mTabContainer) + nonTabMaxHeight, maxHeight));
         }
     }
 
+    @Override // android.widget.FrameLayout, android.view.ViewGroup, android.view.View
     public void onLayout(boolean changed, int l, int t, int r, int b) {
         super.onLayout(changed, l, t, r, b);
         View tabContainer = this.mTabContainer;
         boolean hasTabs = (tabContainer == null || tabContainer.getVisibility() == 8) ? false : true;
-        if (!(tabContainer == null || tabContainer.getVisibility() == 8)) {
+        if (tabContainer != null && tabContainer.getVisibility() != 8) {
             int containerHeight = getMeasuredHeight();
             FrameLayout.LayoutParams lp = (FrameLayout.LayoutParams) tabContainer.getLayoutParams();
-            tabContainer.layout(l, (containerHeight - tabContainer.getMeasuredHeight()) - lp.bottomMargin, r, containerHeight - lp.bottomMargin);
+            int tabHeight = tabContainer.getMeasuredHeight();
+            tabContainer.layout(l, (containerHeight - tabHeight) - lp.bottomMargin, r, containerHeight - lp.bottomMargin);
         }
         boolean needsInvalidate = false;
-        if (!this.mIsSplit) {
+        if (this.mIsSplit) {
+            if (this.mSplitBackground != null) {
+                this.mSplitBackground.setBounds(0, 0, getMeasuredWidth(), getMeasuredHeight());
+                needsInvalidate = true;
+            }
+        } else {
             if (this.mBackground != null) {
                 if (this.mActionBarView.getVisibility() == 0) {
                     this.mBackground.setBounds(this.mActionBarView.getLeft(), this.mActionBarView.getTop(), this.mActionBarView.getRight(), this.mActionBarView.getBottom());
-                } else if (this.mActionContextView == null || this.mActionContextView.getVisibility() != 0) {
-                    this.mBackground.setBounds(0, 0, 0, 0);
-                } else {
+                } else if (this.mActionContextView != null && this.mActionContextView.getVisibility() == 0) {
                     this.mBackground.setBounds(this.mActionContextView.getLeft(), this.mActionContextView.getTop(), this.mActionContextView.getRight(), this.mActionContextView.getBottom());
+                } else {
+                    this.mBackground.setBounds(0, 0, 0, 0);
                 }
                 needsInvalidate = true;
             }
@@ -298,32 +305,35 @@ public class ActionBarContainer extends FrameLayout {
                 this.mStackedBackground.setBounds(tabContainer.getLeft(), tabContainer.getTop(), tabContainer.getRight(), tabContainer.getBottom());
                 needsInvalidate = true;
             }
-        } else if (this.mSplitBackground != null) {
-            this.mSplitBackground.setBounds(0, 0, getMeasuredWidth(), getMeasuredHeight());
-            needsInvalidate = true;
         }
         if (needsInvalidate) {
             invalidate();
         }
     }
 
+    /* loaded from: classes4.dex */
     private class ActionBarBackgroundDrawable extends Drawable {
         private ActionBarBackgroundDrawable() {
         }
 
+        @Override // android.graphics.drawable.Drawable
         public void draw(Canvas canvas) {
-            if (!ActionBarContainer.this.mIsSplit) {
-                if (ActionBarContainer.this.mBackground != null) {
-                    ActionBarContainer.this.mBackground.draw(canvas);
+            if (ActionBarContainer.this.mIsSplit) {
+                if (ActionBarContainer.this.mSplitBackground != null) {
+                    ActionBarContainer.this.mSplitBackground.draw(canvas);
+                    return;
                 }
-                if (ActionBarContainer.this.mStackedBackground != null && ActionBarContainer.this.mIsStacked) {
-                    ActionBarContainer.this.mStackedBackground.draw(canvas);
-                }
-            } else if (ActionBarContainer.this.mSplitBackground != null) {
-                ActionBarContainer.this.mSplitBackground.draw(canvas);
+                return;
+            }
+            if (ActionBarContainer.this.mBackground != null) {
+                ActionBarContainer.this.mBackground.draw(canvas);
+            }
+            if (ActionBarContainer.this.mStackedBackground != null && ActionBarContainer.this.mIsStacked) {
+                ActionBarContainer.this.mStackedBackground.draw(canvas);
             }
         }
 
+        @Override // android.graphics.drawable.Drawable
         public void getOutline(Outline outline) {
             if (ActionBarContainer.this.mIsSplit) {
                 if (ActionBarContainer.this.mSplitBackground != null) {
@@ -334,19 +344,24 @@ public class ActionBarContainer extends FrameLayout {
             }
         }
 
+        @Override // android.graphics.drawable.Drawable
         public void setAlpha(int alpha) {
         }
 
+        @Override // android.graphics.drawable.Drawable
         public void setColorFilter(ColorFilter colorFilter) {
         }
 
+        @Override // android.graphics.drawable.Drawable
         public int getOpacity() {
             if (ActionBarContainer.this.mIsSplit) {
-                return (ActionBarContainer.this.mSplitBackground == null || ActionBarContainer.this.mSplitBackground.getOpacity() != -1) ? 0 : -1;
-            }
-            if ((!ActionBarContainer.this.mIsStacked || (ActionBarContainer.this.mStackedBackground != null && ActionBarContainer.this.mStackedBackground.getOpacity() == -1)) && !ActionBarContainer.isCollapsed(ActionBarContainer.this.mActionBarView) && ActionBarContainer.this.mBackground != null && ActionBarContainer.this.mBackground.getOpacity() == -1) {
+                if (ActionBarContainer.this.mSplitBackground != null && ActionBarContainer.this.mSplitBackground.getOpacity() == -1) {
+                    return -1;
+                }
+            } else if ((!ActionBarContainer.this.mIsStacked || (ActionBarContainer.this.mStackedBackground != null && ActionBarContainer.this.mStackedBackground.getOpacity() == -1)) && !ActionBarContainer.isCollapsed(ActionBarContainer.this.mActionBarView) && ActionBarContainer.this.mBackground != null && ActionBarContainer.this.mBackground.getOpacity() == -1) {
                 return -1;
             }
+            return 0;
         }
     }
 }

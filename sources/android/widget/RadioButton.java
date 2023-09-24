@@ -3,9 +3,10 @@ package android.widget;
 import android.content.Context;
 import android.util.AttributeSet;
 
+/* loaded from: classes4.dex */
 public class RadioButton extends CompoundButton {
     public RadioButton(Context context) {
-        this(context, (AttributeSet) null);
+        this(context, null);
     }
 
     public RadioButton(Context context, AttributeSet attrs) {
@@ -20,12 +21,14 @@ public class RadioButton extends CompoundButton {
         super(context, attrs, defStyleAttr, defStyleRes);
     }
 
+    @Override // android.widget.CompoundButton, android.widget.Checkable
     public void toggle() {
         if (!isChecked()) {
             super.toggle();
         }
     }
 
+    @Override // android.widget.CompoundButton, android.widget.Button, android.widget.TextView, android.view.View
     public CharSequence getAccessibilityClassName() {
         return RadioButton.class.getName();
     }

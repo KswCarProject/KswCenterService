@@ -1,18 +1,23 @@
 package android.bluetooth;
 
 import android.net.wifi.WifiEnterpriseConfig;
-import android.os.Parcel;
-import android.os.Parcelable;
+import android.p007os.Parcel;
+import android.p007os.Parcelable;
 import android.util.Log;
 import java.util.HashMap;
 import java.util.Map;
 
+/* loaded from: classes.dex */
 public final class BluetoothAvrcpPlayerSettings implements Parcelable {
-    public static final Parcelable.Creator<BluetoothAvrcpPlayerSettings> CREATOR = new Parcelable.Creator<BluetoothAvrcpPlayerSettings>() {
+    public static final Parcelable.Creator<BluetoothAvrcpPlayerSettings> CREATOR = new Parcelable.Creator<BluetoothAvrcpPlayerSettings>() { // from class: android.bluetooth.BluetoothAvrcpPlayerSettings.1
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public BluetoothAvrcpPlayerSettings createFromParcel(Parcel in) {
             return new BluetoothAvrcpPlayerSettings(in);
         }
 
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public BluetoothAvrcpPlayerSettings[] newArray(int size) {
             return new BluetoothAvrcpPlayerSettings[size];
         }
@@ -31,15 +36,17 @@ public final class BluetoothAvrcpPlayerSettings implements Parcelable {
     private int mSettings;
     private Map<Integer, Integer> mSettingsValue;
 
+    @Override // android.p007os.Parcelable
     public int describeContents() {
         return 0;
     }
 
+    @Override // android.p007os.Parcelable
     public void writeToParcel(Parcel out, int flags) {
         out.writeInt(this.mSettings);
         out.writeInt(this.mSettingsValue.size());
-        for (Integer intValue : this.mSettingsValue.keySet()) {
-            int k = intValue.intValue();
+        for (Integer num : this.mSettingsValue.keySet()) {
+            int k = num.intValue();
             out.writeInt(k);
             out.writeInt(this.mSettingsValue.get(Integer.valueOf(k)).intValue());
         }
@@ -64,23 +71,22 @@ public final class BluetoothAvrcpPlayerSettings implements Parcelable {
     }
 
     public void addSettingValue(int setting, int value) {
-        if ((this.mSettings & setting) != 0) {
-            this.mSettingsValue.put(Integer.valueOf(setting), Integer.valueOf(value));
-            return;
+        if ((this.mSettings & setting) == 0) {
+            Log.m70e(TAG, "Setting not supported: " + setting + WifiEnterpriseConfig.CA_CERT_ALIAS_DELIMITER + this.mSettings);
+            throw new IllegalStateException("Setting not supported: " + setting);
         }
-        Log.e(TAG, "Setting not supported: " + setting + WifiEnterpriseConfig.CA_CERT_ALIAS_DELIMITER + this.mSettings);
-        throw new IllegalStateException("Setting not supported: " + setting);
+        this.mSettingsValue.put(Integer.valueOf(setting), Integer.valueOf(value));
     }
 
     public int getSettingValue(int setting) {
-        if ((this.mSettings & setting) != 0) {
-            Integer i = this.mSettingsValue.get(Integer.valueOf(setting));
-            if (i == null) {
-                return -1;
-            }
-            return i.intValue();
+        if ((this.mSettings & setting) == 0) {
+            Log.m70e(TAG, "Setting not supported: " + setting + WifiEnterpriseConfig.CA_CERT_ALIAS_DELIMITER + this.mSettings);
+            throw new IllegalStateException("Setting not supported: " + setting);
         }
-        Log.e(TAG, "Setting not supported: " + setting + WifiEnterpriseConfig.CA_CERT_ALIAS_DELIMITER + this.mSettings);
-        throw new IllegalStateException("Setting not supported: " + setting);
+        Integer i = this.mSettingsValue.get(Integer.valueOf(setting));
+        if (i == null) {
+            return -1;
+        }
+        return i.intValue();
     }
 }

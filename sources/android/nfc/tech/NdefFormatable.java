@@ -4,42 +4,48 @@ import android.nfc.FormatException;
 import android.nfc.INfcTag;
 import android.nfc.NdefMessage;
 import android.nfc.Tag;
-import android.os.RemoteException;
+import android.p007os.RemoteException;
 import android.util.Log;
 import java.io.IOException;
 
+/* loaded from: classes3.dex */
 public final class NdefFormatable extends BasicTagTechnology {
     private static final String TAG = "NFC";
 
+    @Override // android.nfc.tech.BasicTagTechnology, android.nfc.tech.TagTechnology, java.io.Closeable, java.lang.AutoCloseable
     public /* bridge */ /* synthetic */ void close() throws IOException {
         super.close();
     }
 
+    @Override // android.nfc.tech.BasicTagTechnology, android.nfc.tech.TagTechnology
     public /* bridge */ /* synthetic */ void connect() throws IOException {
         super.connect();
     }
 
+    @Override // android.nfc.tech.BasicTagTechnology, android.nfc.tech.TagTechnology
     public /* bridge */ /* synthetic */ Tag getTag() {
         return super.getTag();
     }
 
+    @Override // android.nfc.tech.BasicTagTechnology, android.nfc.tech.TagTechnology
     public /* bridge */ /* synthetic */ boolean isConnected() {
         return super.isConnected();
     }
 
+    @Override // android.nfc.tech.BasicTagTechnology, android.nfc.tech.TagTechnology
     public /* bridge */ /* synthetic */ void reconnect() throws IOException {
         super.reconnect();
     }
 
     public static NdefFormatable get(Tag tag) {
-        if (!tag.hasTech(7)) {
-            return null;
+        if (tag.hasTech(7)) {
+            try {
+                return new NdefFormatable(tag);
+            } catch (RemoteException e) {
+                return null;
+            }
         }
-        try {
-            return new NdefFormatable(tag);
-        } catch (RemoteException e) {
-            return null;
-        }
+        return null;
     }
 
     public NdefFormatable(Tag tag) throws RemoteException {
@@ -54,8 +60,7 @@ public final class NdefFormatable extends BasicTagTechnology {
         format(firstMessage, true);
     }
 
-    /* access modifiers changed from: package-private */
-    public void format(NdefMessage firstMessage, boolean makeReadOnly) throws IOException, FormatException {
+    void format(NdefMessage firstMessage, boolean makeReadOnly) throws IOException, FormatException {
         checkConnected();
         try {
             int serviceHandle = this.mTag.getServiceHandle();
@@ -66,48 +71,47 @@ public final class NdefFormatable extends BasicTagTechnology {
                     case -1:
                         throw new IOException();
                     case 0:
-                        if (tagService.isNdef(serviceHandle)) {
-                            if (firstMessage != null) {
-                                int errorCode2 = tagService.ndefWrite(serviceHandle, firstMessage);
-                                if (errorCode2 != -8) {
-                                    switch (errorCode2) {
-                                        case -1:
-                                            throw new IOException();
-                                        case 0:
-                                            break;
-                                        default:
-                                            throw new IOException();
-                                    }
-                                } else {
-                                    throw new FormatException();
-                                }
-                            }
-                            if (makeReadOnly) {
-                                int errorCode3 = tagService.ndefMakeReadOnly(serviceHandle);
-                                if (errorCode3 != -8) {
-                                    switch (errorCode3) {
-                                        case -1:
-                                            throw new IOException();
-                                        case 0:
-                                            break;
-                                        default:
-                                            throw new IOException();
-                                    }
-                                } else {
-                                    throw new IOException();
-                                }
-                            }
-                            return;
+                        if (!tagService.isNdef(serviceHandle)) {
+                            throw new IOException();
                         }
-                        throw new IOException();
+                        if (firstMessage != null) {
+                            int errorCode2 = tagService.ndefWrite(serviceHandle, firstMessage);
+                            if (errorCode2 != -8) {
+                                switch (errorCode2) {
+                                    case -1:
+                                        throw new IOException();
+                                    case 0:
+                                        break;
+                                    default:
+                                        throw new IOException();
+                                }
+                            } else {
+                                throw new FormatException();
+                            }
+                        }
+                        if (makeReadOnly) {
+                            int errorCode3 = tagService.ndefMakeReadOnly(serviceHandle);
+                            if (errorCode3 != -8) {
+                                switch (errorCode3) {
+                                    case -1:
+                                        throw new IOException();
+                                    case 0:
+                                        break;
+                                    default:
+                                        throw new IOException();
+                                }
+                            } else {
+                                throw new IOException();
+                            }
+                        }
+                        return;
                     default:
                         throw new IOException();
                 }
-            } else {
-                throw new FormatException();
             }
+            throw new FormatException();
         } catch (RemoteException e) {
-            Log.e(TAG, "NFC service dead", e);
+            Log.m69e(TAG, "NFC service dead", e);
         }
     }
 }

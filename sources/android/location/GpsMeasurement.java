@@ -1,55 +1,60 @@
 package android.location;
 
 import android.annotation.SystemApi;
-import android.os.Parcel;
-import android.os.Parcelable;
+import android.p007os.Parcel;
+import android.p007os.Parcelable;
 import android.util.Half;
 
 @SystemApi
+/* loaded from: classes.dex */
 public class GpsMeasurement implements Parcelable {
     private static final short ADR_ALL = 7;
     public static final short ADR_STATE_CYCLE_SLIP = 4;
     public static final short ADR_STATE_RESET = 2;
     public static final short ADR_STATE_UNKNOWN = 0;
     public static final short ADR_STATE_VALID = 1;
-    public static final Parcelable.Creator<GpsMeasurement> CREATOR = new Parcelable.Creator<GpsMeasurement>() {
+    public static final Parcelable.Creator<GpsMeasurement> CREATOR = new Parcelable.Creator<GpsMeasurement>() { // from class: android.location.GpsMeasurement.1
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public GpsMeasurement createFromParcel(Parcel parcel) {
             GpsMeasurement gpsMeasurement = new GpsMeasurement();
-            int unused = gpsMeasurement.mFlags = parcel.readInt();
-            byte unused2 = gpsMeasurement.mPrn = parcel.readByte();
-            double unused3 = gpsMeasurement.mTimeOffsetInNs = parcel.readDouble();
-            short unused4 = gpsMeasurement.mState = (short) parcel.readInt();
-            long unused5 = gpsMeasurement.mReceivedGpsTowInNs = parcel.readLong();
-            long unused6 = gpsMeasurement.mReceivedGpsTowUncertaintyInNs = parcel.readLong();
-            double unused7 = gpsMeasurement.mCn0InDbHz = parcel.readDouble();
-            double unused8 = gpsMeasurement.mPseudorangeRateInMetersPerSec = parcel.readDouble();
-            double unused9 = gpsMeasurement.mPseudorangeRateUncertaintyInMetersPerSec = parcel.readDouble();
-            short unused10 = gpsMeasurement.mAccumulatedDeltaRangeState = (short) parcel.readInt();
-            double unused11 = gpsMeasurement.mAccumulatedDeltaRangeInMeters = parcel.readDouble();
-            double unused12 = gpsMeasurement.mAccumulatedDeltaRangeUncertaintyInMeters = parcel.readDouble();
-            double unused13 = gpsMeasurement.mPseudorangeInMeters = parcel.readDouble();
-            double unused14 = gpsMeasurement.mPseudorangeUncertaintyInMeters = parcel.readDouble();
-            double unused15 = gpsMeasurement.mCodePhaseInChips = parcel.readDouble();
-            double unused16 = gpsMeasurement.mCodePhaseUncertaintyInChips = parcel.readDouble();
-            float unused17 = gpsMeasurement.mCarrierFrequencyInHz = parcel.readFloat();
-            long unused18 = gpsMeasurement.mCarrierCycles = parcel.readLong();
-            double unused19 = gpsMeasurement.mCarrierPhase = parcel.readDouble();
-            double unused20 = gpsMeasurement.mCarrierPhaseUncertainty = parcel.readDouble();
-            byte unused21 = gpsMeasurement.mLossOfLock = parcel.readByte();
-            int unused22 = gpsMeasurement.mBitNumber = parcel.readInt();
-            short unused23 = gpsMeasurement.mTimeFromLastBitInMs = (short) parcel.readInt();
-            double unused24 = gpsMeasurement.mDopplerShiftInHz = parcel.readDouble();
-            double unused25 = gpsMeasurement.mDopplerShiftUncertaintyInHz = parcel.readDouble();
-            byte unused26 = gpsMeasurement.mMultipathIndicator = parcel.readByte();
-            double unused27 = gpsMeasurement.mSnrInDb = parcel.readDouble();
-            double unused28 = gpsMeasurement.mElevationInDeg = parcel.readDouble();
-            double unused29 = gpsMeasurement.mElevationUncertaintyInDeg = parcel.readDouble();
-            double unused30 = gpsMeasurement.mAzimuthInDeg = parcel.readDouble();
-            double unused31 = gpsMeasurement.mAzimuthUncertaintyInDeg = parcel.readDouble();
-            boolean unused32 = gpsMeasurement.mUsedInFix = parcel.readInt() != 0;
+            gpsMeasurement.mFlags = parcel.readInt();
+            gpsMeasurement.mPrn = parcel.readByte();
+            gpsMeasurement.mTimeOffsetInNs = parcel.readDouble();
+            gpsMeasurement.mState = (short) parcel.readInt();
+            gpsMeasurement.mReceivedGpsTowInNs = parcel.readLong();
+            gpsMeasurement.mReceivedGpsTowUncertaintyInNs = parcel.readLong();
+            gpsMeasurement.mCn0InDbHz = parcel.readDouble();
+            gpsMeasurement.mPseudorangeRateInMetersPerSec = parcel.readDouble();
+            gpsMeasurement.mPseudorangeRateUncertaintyInMetersPerSec = parcel.readDouble();
+            gpsMeasurement.mAccumulatedDeltaRangeState = (short) parcel.readInt();
+            gpsMeasurement.mAccumulatedDeltaRangeInMeters = parcel.readDouble();
+            gpsMeasurement.mAccumulatedDeltaRangeUncertaintyInMeters = parcel.readDouble();
+            gpsMeasurement.mPseudorangeInMeters = parcel.readDouble();
+            gpsMeasurement.mPseudorangeUncertaintyInMeters = parcel.readDouble();
+            gpsMeasurement.mCodePhaseInChips = parcel.readDouble();
+            gpsMeasurement.mCodePhaseUncertaintyInChips = parcel.readDouble();
+            gpsMeasurement.mCarrierFrequencyInHz = parcel.readFloat();
+            gpsMeasurement.mCarrierCycles = parcel.readLong();
+            gpsMeasurement.mCarrierPhase = parcel.readDouble();
+            gpsMeasurement.mCarrierPhaseUncertainty = parcel.readDouble();
+            gpsMeasurement.mLossOfLock = parcel.readByte();
+            gpsMeasurement.mBitNumber = parcel.readInt();
+            gpsMeasurement.mTimeFromLastBitInMs = (short) parcel.readInt();
+            gpsMeasurement.mDopplerShiftInHz = parcel.readDouble();
+            gpsMeasurement.mDopplerShiftUncertaintyInHz = parcel.readDouble();
+            gpsMeasurement.mMultipathIndicator = parcel.readByte();
+            gpsMeasurement.mSnrInDb = parcel.readDouble();
+            gpsMeasurement.mElevationInDeg = parcel.readDouble();
+            gpsMeasurement.mElevationUncertaintyInDeg = parcel.readDouble();
+            gpsMeasurement.mAzimuthInDeg = parcel.readDouble();
+            gpsMeasurement.mAzimuthUncertaintyInDeg = parcel.readDouble();
+            gpsMeasurement.mUsedInFix = parcel.readInt() != 0;
             return gpsMeasurement;
         }
 
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public GpsMeasurement[] newArray(int i) {
             return new GpsMeasurement[i];
         }
@@ -87,70 +92,38 @@ public class GpsMeasurement implements Parcelable {
     public static final short STATE_SUBFRAME_SYNC = 4;
     public static final short STATE_TOW_DECODED = 8;
     public static final short STATE_UNKNOWN = 0;
-    /* access modifiers changed from: private */
-    public double mAccumulatedDeltaRangeInMeters;
-    /* access modifiers changed from: private */
-    public short mAccumulatedDeltaRangeState;
-    /* access modifiers changed from: private */
-    public double mAccumulatedDeltaRangeUncertaintyInMeters;
-    /* access modifiers changed from: private */
-    public double mAzimuthInDeg;
-    /* access modifiers changed from: private */
-    public double mAzimuthUncertaintyInDeg;
-    /* access modifiers changed from: private */
-    public int mBitNumber;
-    /* access modifiers changed from: private */
-    public long mCarrierCycles;
-    /* access modifiers changed from: private */
-    public float mCarrierFrequencyInHz;
-    /* access modifiers changed from: private */
-    public double mCarrierPhase;
-    /* access modifiers changed from: private */
-    public double mCarrierPhaseUncertainty;
-    /* access modifiers changed from: private */
-    public double mCn0InDbHz;
-    /* access modifiers changed from: private */
-    public double mCodePhaseInChips;
-    /* access modifiers changed from: private */
-    public double mCodePhaseUncertaintyInChips;
-    /* access modifiers changed from: private */
-    public double mDopplerShiftInHz;
-    /* access modifiers changed from: private */
-    public double mDopplerShiftUncertaintyInHz;
-    /* access modifiers changed from: private */
-    public double mElevationInDeg;
-    /* access modifiers changed from: private */
-    public double mElevationUncertaintyInDeg;
-    /* access modifiers changed from: private */
-    public int mFlags;
-    /* access modifiers changed from: private */
-    public byte mLossOfLock;
-    /* access modifiers changed from: private */
-    public byte mMultipathIndicator;
-    /* access modifiers changed from: private */
-    public byte mPrn;
-    /* access modifiers changed from: private */
-    public double mPseudorangeInMeters;
-    /* access modifiers changed from: private */
-    public double mPseudorangeRateInMetersPerSec;
-    /* access modifiers changed from: private */
-    public double mPseudorangeRateUncertaintyInMetersPerSec;
-    /* access modifiers changed from: private */
-    public double mPseudorangeUncertaintyInMeters;
-    /* access modifiers changed from: private */
-    public long mReceivedGpsTowInNs;
-    /* access modifiers changed from: private */
-    public long mReceivedGpsTowUncertaintyInNs;
-    /* access modifiers changed from: private */
-    public double mSnrInDb;
-    /* access modifiers changed from: private */
-    public short mState;
-    /* access modifiers changed from: private */
-    public short mTimeFromLastBitInMs;
-    /* access modifiers changed from: private */
-    public double mTimeOffsetInNs;
-    /* access modifiers changed from: private */
-    public boolean mUsedInFix;
+    private double mAccumulatedDeltaRangeInMeters;
+    private short mAccumulatedDeltaRangeState;
+    private double mAccumulatedDeltaRangeUncertaintyInMeters;
+    private double mAzimuthInDeg;
+    private double mAzimuthUncertaintyInDeg;
+    private int mBitNumber;
+    private long mCarrierCycles;
+    private float mCarrierFrequencyInHz;
+    private double mCarrierPhase;
+    private double mCarrierPhaseUncertainty;
+    private double mCn0InDbHz;
+    private double mCodePhaseInChips;
+    private double mCodePhaseUncertaintyInChips;
+    private double mDopplerShiftInHz;
+    private double mDopplerShiftUncertaintyInHz;
+    private double mElevationInDeg;
+    private double mElevationUncertaintyInDeg;
+    private int mFlags;
+    private byte mLossOfLock;
+    private byte mMultipathIndicator;
+    private byte mPrn;
+    private double mPseudorangeInMeters;
+    private double mPseudorangeRateInMetersPerSec;
+    private double mPseudorangeRateUncertaintyInMetersPerSec;
+    private double mPseudorangeUncertaintyInMeters;
+    private long mReceivedGpsTowInNs;
+    private long mReceivedGpsTowUncertaintyInNs;
+    private double mSnrInDb;
+    private short mState;
+    private short mTimeFromLastBitInMs;
+    private double mTimeOffsetInNs;
+    private boolean mUsedInFix;
 
     GpsMeasurement() {
         initialize();
@@ -239,7 +212,7 @@ public class GpsMeasurement implements Parcelable {
         if ((this.mState & 16) == 16) {
             builder.append("MsecAmbiguous");
         }
-        int remainingStates = this.mState & -32;
+        int remainingStates = this.mState & (-32);
         if (remainingStates > 0) {
             builder.append("Other(");
             builder.append(Integer.toBinaryString(remainingStates));
@@ -315,7 +288,7 @@ public class GpsMeasurement implements Parcelable {
         if ((this.mAccumulatedDeltaRangeState & 4) == 4) {
             builder.append("CycleSlip|");
         }
-        int remainingStates = this.mAccumulatedDeltaRangeState & -8;
+        int remainingStates = this.mAccumulatedDeltaRangeState & (-8);
         if (remainingStates > 0) {
             builder.append("Other(");
             builder.append(Integer.toBinaryString(remainingStates));
@@ -502,7 +475,7 @@ public class GpsMeasurement implements Parcelable {
             case 2:
                 return "CycleSlip";
             default:
-                return "<Invalid:" + this.mLossOfLock + ">";
+                return "<Invalid:" + ((int) this.mLossOfLock) + ">";
         }
     }
 
@@ -595,7 +568,7 @@ public class GpsMeasurement implements Parcelable {
             case 2:
                 return "NotUsed";
             default:
-                return "<Invalid:" + this.mMultipathIndicator + ">";
+                return "<Invalid:" + ((int) this.mMultipathIndicator) + ">";
         }
     }
 
@@ -697,6 +670,7 @@ public class GpsMeasurement implements Parcelable {
         this.mUsedInFix = value;
     }
 
+    @Override // android.p007os.Parcelable
     public void writeToParcel(Parcel parcel, int flags) {
         parcel.writeInt(this.mFlags);
         parcel.writeByte(this.mPrn);
@@ -732,24 +706,24 @@ public class GpsMeasurement implements Parcelable {
         parcel.writeInt(this.mUsedInFix ? 1 : 0);
     }
 
+    @Override // android.p007os.Parcelable
     public int describeContents() {
         return 0;
     }
 
     public String toString() {
         StringBuilder builder = new StringBuilder("GpsMeasurement:\n");
-        builder.append(String.format("   %-29s = %s\n", new Object[]{"Prn", Byte.valueOf(this.mPrn)}));
-        builder.append(String.format("   %-29s = %s\n", new Object[]{"TimeOffsetInNs", Double.valueOf(this.mTimeOffsetInNs)}));
-        builder.append(String.format("   %-29s = %s\n", new Object[]{"State", getStateString()}));
-        builder.append(String.format("   %-29s = %-25s   %-40s = %s\n", new Object[]{"ReceivedGpsTowInNs", Long.valueOf(this.mReceivedGpsTowInNs), "ReceivedGpsTowUncertaintyInNs", Long.valueOf(this.mReceivedGpsTowUncertaintyInNs)}));
-        builder.append(String.format("   %-29s = %s\n", new Object[]{"Cn0InDbHz", Double.valueOf(this.mCn0InDbHz)}));
-        builder.append(String.format("   %-29s = %-25s   %-40s = %s\n", new Object[]{"PseudorangeRateInMetersPerSec", Double.valueOf(this.mPseudorangeRateInMetersPerSec), "PseudorangeRateUncertaintyInMetersPerSec", Double.valueOf(this.mPseudorangeRateUncertaintyInMetersPerSec)}));
-        builder.append(String.format("   %-29s = %s\n", new Object[]{"PseudorangeRateIsCorrected", Boolean.valueOf(isPseudorangeRateCorrected())}));
-        builder.append(String.format("   %-29s = %s\n", new Object[]{"AccumulatedDeltaRangeState", getAccumulatedDeltaRangeStateString()}));
-        builder.append(String.format("   %-29s = %-25s   %-40s = %s\n", new Object[]{"AccumulatedDeltaRangeInMeters", Double.valueOf(this.mAccumulatedDeltaRangeInMeters), "AccumulatedDeltaRangeUncertaintyInMeters", Double.valueOf(this.mAccumulatedDeltaRangeUncertaintyInMeters)}));
+        builder.append(String.format("   %-29s = %s\n", "Prn", Byte.valueOf(this.mPrn)));
+        builder.append(String.format("   %-29s = %s\n", "TimeOffsetInNs", Double.valueOf(this.mTimeOffsetInNs)));
+        builder.append(String.format("   %-29s = %s\n", "State", getStateString()));
+        builder.append(String.format("   %-29s = %-25s   %-40s = %s\n", "ReceivedGpsTowInNs", Long.valueOf(this.mReceivedGpsTowInNs), "ReceivedGpsTowUncertaintyInNs", Long.valueOf(this.mReceivedGpsTowUncertaintyInNs)));
+        builder.append(String.format("   %-29s = %s\n", "Cn0InDbHz", Double.valueOf(this.mCn0InDbHz)));
+        builder.append(String.format("   %-29s = %-25s   %-40s = %s\n", "PseudorangeRateInMetersPerSec", Double.valueOf(this.mPseudorangeRateInMetersPerSec), "PseudorangeRateUncertaintyInMetersPerSec", Double.valueOf(this.mPseudorangeRateUncertaintyInMetersPerSec)));
+        builder.append(String.format("   %-29s = %s\n", "PseudorangeRateIsCorrected", Boolean.valueOf(isPseudorangeRateCorrected())));
+        builder.append(String.format("   %-29s = %s\n", "AccumulatedDeltaRangeState", getAccumulatedDeltaRangeStateString()));
+        builder.append(String.format("   %-29s = %-25s   %-40s = %s\n", "AccumulatedDeltaRangeInMeters", Double.valueOf(this.mAccumulatedDeltaRangeInMeters), "AccumulatedDeltaRangeUncertaintyInMeters", Double.valueOf(this.mAccumulatedDeltaRangeUncertaintyInMeters)));
         Object[] objArr = new Object[4];
         objArr[0] = "PseudorangeInMeters";
-        Double d = null;
         objArr[1] = hasPseudorangeInMeters() ? Double.valueOf(this.mPseudorangeInMeters) : null;
         objArr[2] = "PseudorangeUncertaintyInMeters";
         objArr[3] = hasPseudorangeUncertaintyInMeters() ? Double.valueOf(this.mPseudorangeUncertaintyInMeters) : null;
@@ -774,7 +748,7 @@ public class GpsMeasurement implements Parcelable {
         objArr5[2] = "CarrierPhaseUncertainty";
         objArr5[3] = hasCarrierPhaseUncertainty() ? Double.valueOf(this.mCarrierPhaseUncertainty) : null;
         builder.append(String.format("   %-29s = %-25s   %-40s = %s\n", objArr5));
-        builder.append(String.format("   %-29s = %s\n", new Object[]{"LossOfLock", getLossOfLockString()}));
+        builder.append(String.format("   %-29s = %s\n", "LossOfLock", getLossOfLockString()));
         Object[] objArr6 = new Object[2];
         objArr6[0] = "BitNumber";
         objArr6[1] = hasBitNumber() ? Integer.valueOf(this.mBitNumber) : null;
@@ -789,7 +763,7 @@ public class GpsMeasurement implements Parcelable {
         objArr8[2] = "DopplerShiftUncertaintyInHz";
         objArr8[3] = hasDopplerShiftUncertaintyInHz() ? Double.valueOf(this.mDopplerShiftUncertaintyInHz) : null;
         builder.append(String.format("   %-29s = %-25s   %-40s = %s\n", objArr8));
-        builder.append(String.format("   %-29s = %s\n", new Object[]{"MultipathIndicator", getMultipathIndicatorString()}));
+        builder.append(String.format("   %-29s = %s\n", "MultipathIndicator", getMultipathIndicatorString()));
         Object[] objArr9 = new Object[2];
         objArr9[0] = "SnrInDb";
         objArr9[1] = hasSnrInDb() ? Double.valueOf(this.mSnrInDb) : null;
@@ -804,12 +778,9 @@ public class GpsMeasurement implements Parcelable {
         objArr11[0] = "AzimuthInDeg";
         objArr11[1] = hasAzimuthInDeg() ? Double.valueOf(this.mAzimuthInDeg) : null;
         objArr11[2] = "AzimuthUncertaintyInDeg";
-        if (hasAzimuthUncertaintyInDeg()) {
-            d = Double.valueOf(this.mAzimuthUncertaintyInDeg);
-        }
-        objArr11[3] = d;
+        objArr11[3] = hasAzimuthUncertaintyInDeg() ? Double.valueOf(this.mAzimuthUncertaintyInDeg) : null;
         builder.append(String.format("   %-29s = %-25s   %-40s = %s\n", objArr11));
-        builder.append(String.format("   %-29s = %s\n", new Object[]{"UsedInFix", Boolean.valueOf(this.mUsedInFix)}));
+        builder.append(String.format("   %-29s = %s\n", "UsedInFix", Boolean.valueOf(this.mUsedInFix)));
         return builder.toString();
     }
 
@@ -817,13 +788,13 @@ public class GpsMeasurement implements Parcelable {
         this.mFlags = 0;
         setPrn(Byte.MIN_VALUE);
         setTimeOffsetInNs(-9.223372036854776E18d);
-        setState(0);
+        setState((short) 0);
         setReceivedGpsTowInNs(Long.MIN_VALUE);
         setReceivedGpsTowUncertaintyInNs(Long.MAX_VALUE);
         setCn0InDbHz(Double.MIN_VALUE);
         setPseudorangeRateInMetersPerSec(Double.MIN_VALUE);
         setPseudorangeRateUncertaintyInMetersPerSec(Double.MIN_VALUE);
-        setAccumulatedDeltaRangeState(0);
+        setAccumulatedDeltaRangeState((short) 0);
         setAccumulatedDeltaRangeInMeters(Double.MIN_VALUE);
         setAccumulatedDeltaRangeUncertaintyInMeters(Double.MIN_VALUE);
         resetPseudorangeInMeters();

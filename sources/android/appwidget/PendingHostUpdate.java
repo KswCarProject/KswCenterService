@@ -1,15 +1,20 @@
 package android.appwidget;
 
-import android.os.Parcel;
-import android.os.Parcelable;
+import android.p007os.Parcel;
+import android.p007os.Parcelable;
 import android.widget.RemoteViews;
 
+/* loaded from: classes.dex */
 public class PendingHostUpdate implements Parcelable {
-    public static final Parcelable.Creator<PendingHostUpdate> CREATOR = new Parcelable.Creator<PendingHostUpdate>() {
+    public static final Parcelable.Creator<PendingHostUpdate> CREATOR = new Parcelable.Creator<PendingHostUpdate>() { // from class: android.appwidget.PendingHostUpdate.1
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public PendingHostUpdate createFromParcel(Parcel parcel) {
             return new PendingHostUpdate(parcel);
         }
 
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public PendingHostUpdate[] newArray(int size) {
             return new PendingHostUpdate[size];
         }
@@ -23,27 +28,27 @@ public class PendingHostUpdate implements Parcelable {
     RemoteViews views;
     AppWidgetProviderInfo widgetInfo;
 
-    public static PendingHostUpdate updateAppWidget(int appWidgetId2, RemoteViews views2) {
-        PendingHostUpdate update = new PendingHostUpdate(appWidgetId2, 0);
-        update.views = views2;
+    public static PendingHostUpdate updateAppWidget(int appWidgetId, RemoteViews views) {
+        PendingHostUpdate update = new PendingHostUpdate(appWidgetId, 0);
+        update.views = views;
         return update;
     }
 
-    public static PendingHostUpdate providerChanged(int appWidgetId2, AppWidgetProviderInfo info) {
-        PendingHostUpdate update = new PendingHostUpdate(appWidgetId2, 1);
+    public static PendingHostUpdate providerChanged(int appWidgetId, AppWidgetProviderInfo info) {
+        PendingHostUpdate update = new PendingHostUpdate(appWidgetId, 1);
         update.widgetInfo = info;
         return update;
     }
 
-    public static PendingHostUpdate viewDataChanged(int appWidgetId2, int viewId2) {
-        PendingHostUpdate update = new PendingHostUpdate(appWidgetId2, 2);
-        update.viewId = viewId2;
+    public static PendingHostUpdate viewDataChanged(int appWidgetId, int viewId) {
+        PendingHostUpdate update = new PendingHostUpdate(appWidgetId, 2);
+        update.viewId = viewId;
         return update;
     }
 
-    private PendingHostUpdate(int appWidgetId2, int type2) {
-        this.appWidgetId = appWidgetId2;
-        this.type = type2;
+    private PendingHostUpdate(int appWidgetId, int type) {
+        this.appWidgetId = appWidgetId;
+        this.type = type;
     }
 
     private PendingHostUpdate(Parcel in) {
@@ -70,10 +75,12 @@ public class PendingHostUpdate implements Parcelable {
         }
     }
 
+    @Override // android.p007os.Parcelable
     public int describeContents() {
         return 0;
     }
 
+    @Override // android.p007os.Parcelable
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeInt(this.appWidgetId);
         dest.writeInt(this.type);

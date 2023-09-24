@@ -4,6 +4,7 @@ import android.annotation.UnsupportedAppUsage;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.content.res.ColorStateList;
+import android.content.res.Resources;
 import android.content.res.TypedArray;
 import android.graphics.Bitmap;
 import android.graphics.BlendMode;
@@ -19,6 +20,7 @@ import android.graphics.Xfermode;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.Icon;
+import android.media.TtmlUtils;
 import android.net.Uri;
 import android.text.TextUtils;
 import android.util.AttributeSet;
@@ -32,18 +34,17 @@ import android.view.inspector.InspectionCompanion;
 import android.view.inspector.PropertyMapper;
 import android.view.inspector.PropertyReader;
 import android.widget.RemoteViews;
-import com.android.internal.R;
+import com.android.internal.C3132R;
 import java.io.IOException;
 
 @RemoteViews.RemoteView
+/* loaded from: classes4.dex */
 public class ImageView extends View {
     private static final String LOG_TAG = "ImageView";
     private static boolean sCompatAdjustViewBounds;
     private static boolean sCompatDone;
     private static boolean sCompatDrawableVisibilityDispatch;
     private static boolean sCompatUseCorrectStreamDensity;
-    private static final Matrix.ScaleToFit[] sS2FArray = {Matrix.ScaleToFit.FILL, Matrix.ScaleToFit.START, Matrix.ScaleToFit.CENTER, Matrix.ScaleToFit.END};
-    private static final ScaleType[] sScaleTypeArray = {ScaleType.MATRIX, ScaleType.FIT_XY, ScaleType.FIT_START, ScaleType.FIT_CENTER, ScaleType.FIT_END, ScaleType.CENTER, ScaleType.CENTER_CROP, ScaleType.CENTER_INSIDE};
     @UnsupportedAppUsage
     private boolean mAdjustViewBounds;
     @UnsupportedAppUsage
@@ -78,19 +79,20 @@ public class ImageView extends View {
     private boolean mMergeState;
     @UnsupportedAppUsage
     private BitmapDrawable mRecycleableBitmapDrawable;
-    /* access modifiers changed from: private */
     @UnsupportedAppUsage
-    public int mResource;
+    private int mResource;
     private ScaleType mScaleType;
     private int[] mState;
     private final RectF mTempDst;
     private final RectF mTempSrc;
-    /* access modifiers changed from: private */
     @UnsupportedAppUsage
-    public Uri mUri;
+    private Uri mUri;
     private final int mViewAlphaScale;
     private Xfermode mXfermode;
+    private static final ScaleType[] sScaleTypeArray = {ScaleType.MATRIX, ScaleType.FIT_XY, ScaleType.FIT_START, ScaleType.FIT_CENTER, ScaleType.FIT_END, ScaleType.CENTER, ScaleType.CENTER_CROP, ScaleType.CENTER_INSIDE};
+    private static final Matrix.ScaleToFit[] sS2FArray = {Matrix.ScaleToFit.FILL, Matrix.ScaleToFit.START, Matrix.ScaleToFit.CENTER, Matrix.ScaleToFit.END};
 
+    /* loaded from: classes4.dex */
     public final class InspectionCompanion implements android.view.inspector.InspectionCompanion<ImageView> {
         private int mAdjustViewBoundsId;
         private int mBaselineAlignBottomId;
@@ -105,6 +107,7 @@ public class ImageView extends View {
         private int mTintId;
         private int mTintModeId;
 
+        @Override // android.view.inspector.InspectionCompanion
         public void mapProperties(PropertyMapper propertyMapper) {
             this.mAdjustViewBoundsId = propertyMapper.mapBoolean("adjustViewBounds", 16843038);
             this.mBaselineId = propertyMapper.mapInt("baseline", 16843548);
@@ -120,22 +123,22 @@ public class ImageView extends View {
             this.mPropertiesMapped = true;
         }
 
+        @Override // android.view.inspector.InspectionCompanion
         public void readProperties(ImageView node, PropertyReader propertyReader) {
-            if (this.mPropertiesMapped) {
-                propertyReader.readBoolean(this.mAdjustViewBoundsId, node.getAdjustViewBounds());
-                propertyReader.readInt(this.mBaselineId, node.getBaseline());
-                propertyReader.readBoolean(this.mBaselineAlignBottomId, node.getBaselineAlignBottom());
-                propertyReader.readObject(this.mBlendModeId, node.getImageTintBlendMode());
-                propertyReader.readBoolean(this.mCropToPaddingId, node.getCropToPadding());
-                propertyReader.readInt(this.mMaxHeightId, node.getMaxHeight());
-                propertyReader.readInt(this.mMaxWidthId, node.getMaxWidth());
-                propertyReader.readObject(this.mScaleTypeId, node.getScaleType());
-                propertyReader.readObject(this.mSrcId, node.getDrawable());
-                propertyReader.readObject(this.mTintId, node.getImageTintList());
-                propertyReader.readObject(this.mTintModeId, node.getImageTintMode());
-                return;
+            if (!this.mPropertiesMapped) {
+                throw new InspectionCompanion.UninitializedPropertyMapException();
             }
-            throw new InspectionCompanion.UninitializedPropertyMapException();
+            propertyReader.readBoolean(this.mAdjustViewBoundsId, node.getAdjustViewBounds());
+            propertyReader.readInt(this.mBaselineId, node.getBaseline());
+            propertyReader.readBoolean(this.mBaselineAlignBottomId, node.getBaselineAlignBottom());
+            propertyReader.readObject(this.mBlendModeId, node.getImageTintBlendMode());
+            propertyReader.readBoolean(this.mCropToPaddingId, node.getCropToPadding());
+            propertyReader.readInt(this.mMaxHeightId, node.getMaxHeight());
+            propertyReader.readInt(this.mMaxWidthId, node.getMaxWidth());
+            propertyReader.readObject(this.mScaleTypeId, node.getScaleType());
+            propertyReader.readObject(this.mSrcId, node.getDrawable());
+            propertyReader.readObject(this.mTintId, node.getImageTintList());
+            propertyReader.readObject(this.mTintModeId, node.getImageTintMode());
         }
     }
 
@@ -177,7 +180,6 @@ public class ImageView extends View {
         this(context, attrs, defStyleAttr, 0);
     }
 
-    /* JADX INFO: super call moved to the top of the method (can break code semantics) */
     public ImageView(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
         super(context, attrs, defStyleAttr, defStyleRes);
         this.mResource = 0;
@@ -209,40 +211,38 @@ public class ImageView extends View {
         if (getImportantForAutofill() == 0) {
             setImportantForAutofill(2);
         }
-        int i = defStyleRes;
-        TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.ImageView, defStyleAttr, i);
-        TypedArray a2 = a;
-        saveAttributeDataForStyleable(context, R.styleable.ImageView, attrs, a, defStyleAttr, i);
-        Drawable d = a2.getDrawable(0);
+        TypedArray a = context.obtainStyledAttributes(attrs, C3132R.styleable.ImageView, defStyleAttr, defStyleRes);
+        saveAttributeDataForStyleable(context, C3132R.styleable.ImageView, attrs, a, defStyleAttr, defStyleRes);
+        Drawable d = a.getDrawable(0);
         if (d != null) {
             setImageDrawable(d);
         }
-        this.mBaselineAlignBottom = a2.getBoolean(6, false);
-        this.mBaseline = a2.getDimensionPixelSize(8, -1);
-        setAdjustViewBounds(a2.getBoolean(2, false));
-        setMaxWidth(a2.getDimensionPixelSize(3, Integer.MAX_VALUE));
-        setMaxHeight(a2.getDimensionPixelSize(4, Integer.MAX_VALUE));
-        int index = a2.getInt(1, -1);
+        this.mBaselineAlignBottom = a.getBoolean(6, false);
+        this.mBaseline = a.getDimensionPixelSize(8, -1);
+        setAdjustViewBounds(a.getBoolean(2, false));
+        setMaxWidth(a.getDimensionPixelSize(3, Integer.MAX_VALUE));
+        setMaxHeight(a.getDimensionPixelSize(4, Integer.MAX_VALUE));
+        int index = a.getInt(1, -1);
         if (index >= 0) {
             setScaleType(sScaleTypeArray[index]);
         }
-        if (a2.hasValue(5)) {
-            this.mDrawableTintList = a2.getColorStateList(5);
+        if (a.hasValue(5)) {
+            this.mDrawableTintList = a.getColorStateList(5);
             this.mHasDrawableTint = true;
             this.mDrawableBlendMode = BlendMode.SRC_ATOP;
             this.mHasDrawableBlendMode = true;
         }
-        if (a2.hasValue(9)) {
-            this.mDrawableBlendMode = Drawable.parseBlendMode(a2.getInt(9, -1), this.mDrawableBlendMode);
+        if (a.hasValue(9)) {
+            this.mDrawableBlendMode = Drawable.parseBlendMode(a.getInt(9, -1), this.mDrawableBlendMode);
             this.mHasDrawableBlendMode = true;
         }
         applyImageTint();
-        int alpha = a2.getInt(10, 255);
+        int alpha = a.getInt(10, 255);
         if (alpha != 255) {
             setImageAlpha(alpha);
         }
-        this.mCropToPadding = a2.getBoolean(7, false);
-        a2.recycle();
+        this.mCropToPadding = a.getBoolean(7, false);
+        a.recycle();
     }
 
     private void initImageView() {
@@ -250,22 +250,19 @@ public class ImageView extends View {
         this.mScaleType = ScaleType.FIT_CENTER;
         if (!sCompatDone) {
             int targetSdkVersion = this.mContext.getApplicationInfo().targetSdkVersion;
-            boolean z = false;
             sCompatAdjustViewBounds = targetSdkVersion <= 17;
             sCompatUseCorrectStreamDensity = targetSdkVersion > 23;
-            if (targetSdkVersion < 24) {
-                z = true;
-            }
-            sCompatDrawableVisibilityDispatch = z;
+            sCompatDrawableVisibilityDispatch = targetSdkVersion < 24;
             sCompatDone = true;
         }
     }
 
-    /* access modifiers changed from: protected */
-    public boolean verifyDrawable(Drawable dr) {
+    @Override // android.view.View
+    protected boolean verifyDrawable(Drawable dr) {
         return this.mDrawable == dr || super.verifyDrawable(dr);
     }
 
+    @Override // android.view.View
     public void jumpDrawablesToCurrentState() {
         super.jumpDrawablesToCurrentState();
         if (this.mDrawable != null) {
@@ -273,12 +270,13 @@ public class ImageView extends View {
         }
     }
 
+    @Override // android.view.View, android.graphics.drawable.Drawable.Callback
     public void invalidateDrawable(Drawable dr) {
         if (dr == this.mDrawable) {
             if (dr != null) {
                 int w = dr.getIntrinsicWidth();
                 int h = dr.getIntrinsicHeight();
-                if (!(w == this.mDrawableWidth && h == this.mDrawableHeight)) {
+                if (w != this.mDrawableWidth || h != this.mDrawableHeight) {
                     this.mDrawableWidth = w;
                     this.mDrawableHeight = h;
                     configureBounds();
@@ -290,10 +288,12 @@ public class ImageView extends View {
         super.invalidateDrawable(dr);
     }
 
+    @Override // android.view.View
     public boolean hasOverlappingRendering() {
         return (getBackground() == null || getBackground().getCurrent() == null) ? false : true;
     }
 
+    @Override // android.view.View
     public void onPopulateAccessibilityEventInternal(AccessibilityEvent event) {
         super.onPopulateAccessibilityEventInternal(event);
         CharSequence contentDescription = getContentDescription();
@@ -339,21 +339,23 @@ public class ImageView extends View {
         return this.mDrawable;
     }
 
+    /* loaded from: classes4.dex */
     private class ImageDrawableCallback implements Runnable {
         private final Drawable drawable;
         private final int resource;
         private final Uri uri;
 
-        ImageDrawableCallback(Drawable drawable2, Uri uri2, int resource2) {
-            this.drawable = drawable2;
-            this.uri = uri2;
-            this.resource = resource2;
+        ImageDrawableCallback(Drawable drawable, Uri uri, int resource) {
+            this.drawable = drawable;
+            this.uri = uri;
+            this.resource = resource;
         }
 
+        @Override // java.lang.Runnable
         public void run() {
             ImageView.this.setImageDrawable(this.drawable);
-            Uri unused = ImageView.this.mUri = this.uri;
-            int unused2 = ImageView.this.mResource = this.resource;
+            ImageView.this.mUri = this.uri;
+            ImageView.this.mResource = this.resource;
         }
     }
 
@@ -361,11 +363,11 @@ public class ImageView extends View {
     public void setImageResource(int resId) {
         int oldWidth = this.mDrawableWidth;
         int oldHeight = this.mDrawableHeight;
-        updateDrawable((Drawable) null);
+        updateDrawable(null);
         this.mResource = resId;
         this.mUri = null;
         resolveUri();
-        if (!(oldWidth == this.mDrawableWidth && oldHeight == this.mDrawableHeight)) {
+        if (oldWidth != this.mDrawableWidth || oldHeight != this.mDrawableHeight) {
             requestLayout();
         }
         invalidate();
@@ -378,11 +380,11 @@ public class ImageView extends View {
             try {
                 d = getContext().getDrawable(resId);
             } catch (Exception e) {
-                Log.w(LOG_TAG, "Unable to find resource: " + resId, e);
+                Log.m63w(LOG_TAG, "Unable to find resource: " + resId, e);
                 resId = 0;
             }
         }
-        return new ImageDrawableCallback(d, (Uri) null, resId);
+        return new ImageDrawableCallback(d, null, resId);
     }
 
     @RemotableViewMethod(asyncImpl = "setImageURIAsync")
@@ -391,17 +393,17 @@ public class ImageView extends View {
             if (this.mUri == uri) {
                 return;
             }
-            if (!(uri == null || this.mUri == null || !uri.equals(this.mUri))) {
+            if (uri != null && this.mUri != null && uri.equals(this.mUri)) {
                 return;
             }
         }
-        updateDrawable((Drawable) null);
+        updateDrawable(null);
         this.mResource = 0;
         this.mUri = uri;
         int oldWidth = this.mDrawableWidth;
         int oldHeight = this.mDrawableHeight;
         resolveUri();
-        if (!(oldWidth == this.mDrawableWidth && oldHeight == this.mDrawableHeight)) {
+        if (oldWidth != this.mDrawableWidth || oldHeight != this.mDrawableHeight) {
             requestLayout();
         }
         invalidate();
@@ -409,18 +411,14 @@ public class ImageView extends View {
 
     @UnsupportedAppUsage
     public Runnable setImageURIAsync(Uri uri) {
-        Drawable drawable = null;
-        if (this.mResource == 0 && (this.mUri == uri || (uri != null && this.mUri != null && uri.equals(this.mUri)))) {
-            return null;
+        if (this.mResource != 0 || (this.mUri != uri && (uri == null || this.mUri == null || !uri.equals(this.mUri)))) {
+            Drawable d = uri != null ? getDrawableFromUri(uri) : null;
+            if (d == null) {
+                uri = null;
+            }
+            return new ImageDrawableCallback(d, uri, 0);
         }
-        if (uri != null) {
-            drawable = getDrawableFromUri(uri);
-        }
-        Drawable d = drawable;
-        if (d == null) {
-            uri = null;
-        }
-        return new ImageDrawableCallback(d, uri, 0);
+        return null;
     }
 
     public void setImageDrawable(Drawable drawable) {
@@ -430,7 +428,7 @@ public class ImageView extends View {
             int oldWidth = this.mDrawableWidth;
             int oldHeight = this.mDrawableHeight;
             updateDrawable(drawable);
-            if (!(oldWidth == this.mDrawableWidth && oldHeight == this.mDrawableHeight)) {
+            if (oldWidth != this.mDrawableWidth || oldHeight != this.mDrawableHeight) {
                 requestLayout();
             }
             invalidate();
@@ -443,7 +441,7 @@ public class ImageView extends View {
     }
 
     public Runnable setImageIconAsync(Icon icon) {
-        return new ImageDrawableCallback(icon == null ? null : icon.loadDrawable(this.mContext), (Uri) null, 0);
+        return new ImageDrawableCallback(icon == null ? null : icon.loadDrawable(this.mContext), null, 0);
     }
 
     public void setImageTintList(ColorStateList tint) {
@@ -478,19 +476,18 @@ public class ImageView extends View {
     }
 
     private void applyImageTint() {
-        if (this.mDrawable == null) {
-            return;
-        }
-        if (this.mHasDrawableTint || this.mHasDrawableBlendMode) {
-            this.mDrawable = this.mDrawable.mutate();
-            if (this.mHasDrawableTint) {
-                this.mDrawable.setTintList(this.mDrawableTintList);
-            }
-            if (this.mHasDrawableBlendMode) {
-                this.mDrawable.setTintBlendMode(this.mDrawableBlendMode);
-            }
-            if (this.mDrawable.isStateful()) {
-                this.mDrawable.setState(getDrawableState());
+        if (this.mDrawable != null) {
+            if (this.mHasDrawableTint || this.mHasDrawableBlendMode) {
+                this.mDrawable = this.mDrawable.mutate();
+                if (this.mHasDrawableTint) {
+                    this.mDrawable.setTintList(this.mDrawableTintList);
+                }
+                if (this.mHasDrawableBlendMode) {
+                    this.mDrawable.setTintBlendMode(this.mDrawableBlendMode);
+                }
+                if (this.mDrawable.isStateful()) {
+                    this.mDrawable.setState(getDrawableState());
+                }
             }
         }
     }
@@ -515,6 +512,7 @@ public class ImageView extends View {
         }
     }
 
+    @Override // android.view.View
     public void setSelected(boolean selected) {
         super.setSelected(selected);
         resizeFromDrawable();
@@ -529,6 +527,7 @@ public class ImageView extends View {
         }
     }
 
+    /* loaded from: classes4.dex */
     public enum ScaleType {
         MATRIX(0),
         FIT_XY(1),
@@ -541,7 +540,7 @@ public class ImageView extends View {
         
         final int nativeInt;
 
-        private ScaleType(int ni) {
+        ScaleType(int ni) {
             this.nativeInt = ni;
         }
     }
@@ -549,7 +548,8 @@ public class ImageView extends View {
     public void setScaleType(ScaleType scaleType) {
         if (scaleType == null) {
             throw new NullPointerException();
-        } else if (this.mScaleType != scaleType) {
+        }
+        if (this.mScaleType != scaleType) {
             this.mScaleType = scaleType;
             requestLayout();
             invalidate();
@@ -592,26 +592,27 @@ public class ImageView extends View {
 
     @UnsupportedAppUsage
     private void resolveUri() {
-        if (this.mDrawable == null && getResources() != null) {
-            Drawable d = null;
-            if (this.mResource != 0) {
-                try {
-                    d = this.mContext.getDrawable(this.mResource);
-                } catch (Exception e) {
-                    Log.w(LOG_TAG, "Unable to find resource: " + this.mResource, e);
-                    this.mResource = 0;
-                }
-            } else if (this.mUri != null) {
-                d = getDrawableFromUri(this.mUri);
-                if (d == null) {
-                    Log.w(LOG_TAG, "resolveUri failed on bad bitmap uri: " + this.mUri);
-                    this.mUri = null;
-                }
-            } else {
-                return;
-            }
-            updateDrawable(d);
+        if (this.mDrawable != null || getResources() == null) {
+            return;
         }
+        Drawable d = null;
+        if (this.mResource != 0) {
+            try {
+                d = this.mContext.getDrawable(this.mResource);
+            } catch (Exception e) {
+                Log.m63w(LOG_TAG, "Unable to find resource: " + this.mResource, e);
+                this.mResource = 0;
+            }
+        } else if (this.mUri != null) {
+            d = getDrawableFromUri(this.mUri);
+            if (d == null) {
+                Log.m64w(LOG_TAG, "resolveUri failed on bad bitmap uri: " + this.mUri);
+                this.mUri = null;
+            }
+        } else {
+            return;
+        }
+        updateDrawable(d);
     }
 
     private Drawable getDrawableFromUri(Uri uri) {
@@ -619,23 +620,30 @@ public class ImageView extends View {
         if (ContentResolver.SCHEME_ANDROID_RESOURCE.equals(scheme)) {
             try {
                 ContentResolver.OpenResourceIdResult r = this.mContext.getContentResolver().getResourceId(uri);
-                return r.r.getDrawable(r.id, this.mContext.getTheme());
+                return r.f25r.getDrawable(r.f24id, this.mContext.getTheme());
             } catch (Exception e) {
-                Log.w(LOG_TAG, "Unable to open content: " + uri, e);
-                return null;
+                Log.m63w(LOG_TAG, "Unable to open content: " + uri, e);
             }
-        } else if (!"content".equals(scheme) && !ContentResolver.SCHEME_FILE.equals(scheme)) {
-            return Drawable.createFromPath(uri.toString());
-        } else {
+        } else if ("content".equals(scheme) || ContentResolver.SCHEME_FILE.equals(scheme)) {
             try {
-                return ImageDecoder.decodeDrawable(ImageDecoder.createSource(this.mContext.getContentResolver(), uri, sCompatUseCorrectStreamDensity ? getResources() : null), $$Lambda$ImageView$GWf2ZLHjSbTbrFI3WzfR0LeM.INSTANCE);
+                Resources res = sCompatUseCorrectStreamDensity ? getResources() : null;
+                ImageDecoder.Source src = ImageDecoder.createSource(this.mContext.getContentResolver(), uri, res);
+                return ImageDecoder.decodeDrawable(src, new ImageDecoder.OnHeaderDecodedListener() { // from class: android.widget.-$$Lambda$ImageView$GWf2-Z-LHjSbTbrF-I3WzfR0LeM
+                    @Override // android.graphics.ImageDecoder.OnHeaderDecodedListener
+                    public final void onHeaderDecoded(ImageDecoder imageDecoder, ImageDecoder.ImageInfo imageInfo, ImageDecoder.Source source) {
+                        imageDecoder.setAllocator(1);
+                    }
+                });
             } catch (IOException e2) {
-                Log.w(LOG_TAG, "Unable to open content: " + uri, e2);
-                return null;
+                Log.m63w(LOG_TAG, "Unable to open content: " + uri, e2);
             }
+        } else {
+            return Drawable.createFromPath(uri.toString());
         }
+        return null;
     }
 
+    @Override // android.view.View
     public int[] onCreateDrawableState(int extraSpace) {
         if (this.mState == null) {
             return super.onCreateDrawableState(extraSpace);
@@ -646,16 +654,22 @@ public class ImageView extends View {
         return mergeDrawableStates(super.onCreateDrawableState(this.mState.length + extraSpace), this.mState);
     }
 
+    /* JADX WARN: Code restructure failed: missing block: B:31:0x0063, code lost:
+        r4 = true;
+     */
     @UnsupportedAppUsage
+    /*
+        Code decompiled incorrectly, please refer to instructions dump.
+    */
     private void updateDrawable(Drawable d) {
-        if (!(d == this.mRecycleableBitmapDrawable || this.mRecycleableBitmapDrawable == null)) {
-            this.mRecycleableBitmapDrawable.setBitmap((Bitmap) null);
+        if (d != this.mRecycleableBitmapDrawable && this.mRecycleableBitmapDrawable != null) {
+            this.mRecycleableBitmapDrawable.setBitmap(null);
         }
         boolean sameDrawable = false;
-        boolean visible = false;
+        boolean z = false;
         if (this.mDrawable != null) {
             sameDrawable = this.mDrawable == d;
-            this.mDrawable.setCallback((Drawable.Callback) null);
+            this.mDrawable.setCallback(null);
             unscheduleDrawable(this.mDrawable);
             if (!sCompatDrawableVisibilityDispatch && !sameDrawable && isAttachedToWindow()) {
                 this.mDrawable.setVisible(false, false);
@@ -669,10 +683,13 @@ public class ImageView extends View {
                 d.setState(getDrawableState());
             }
             if (!sameDrawable || sCompatDrawableVisibilityDispatch) {
-                if (!sCompatDrawableVisibilityDispatch ? !(!isAttachedToWindow() || getWindowVisibility() != 0 || !isShown()) : getVisibility() == 0) {
-                    visible = true;
+                if (sCompatDrawableVisibilityDispatch) {
+                    boolean visible = z;
+                    d.setVisible(visible, true);
+                } else {
+                    boolean visible2 = z;
+                    d.setVisible(visible2, true);
                 }
-                d.setVisible(visible, true);
             }
             d.setLevel(this.mLevel);
             this.mDrawableWidth = d.getIntrinsicWidth();
@@ -708,6 +725,7 @@ public class ImageView extends View {
         }
     }
 
+    @Override // android.view.View
     public void onRtlPropertiesChanged(int layoutDirection) {
         super.onRtlPropertiesChanged(layoutDirection);
         if (this.mDrawable != null) {
@@ -720,15 +738,13 @@ public class ImageView extends View {
         return sS2FArray[st.nativeInt - 1];
     }
 
-    /* access modifiers changed from: protected */
-    public void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
+    @Override // android.view.View
+    protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
         int h;
         int h2;
         int widthSize;
         int heightSize;
         boolean done;
-        int i = widthMeasureSpec;
-        int i2 = heightMeasureSpec;
         resolveUri();
         float desiredAspect = 0.0f;
         boolean resizeWidth = false;
@@ -738,25 +754,21 @@ public class ImageView extends View {
         if (this.mDrawable == null) {
             this.mDrawableWidth = -1;
             this.mDrawableHeight = -1;
-            h = 0;
             h2 = 0;
+            h = 0;
         } else {
-            h2 = this.mDrawableWidth;
-            h = this.mDrawableHeight;
-            if (h2 <= 0) {
-                h2 = 1;
-            }
+            h = this.mDrawableWidth;
+            h2 = this.mDrawableHeight;
             if (h <= 0) {
                 h = 1;
             }
+            if (h2 <= 0) {
+                h2 = 1;
+            }
             if (this.mAdjustViewBounds) {
-                boolean z = true;
                 resizeWidth = widthSpecMode != 1073741824;
-                if (heightSpecMode == 1073741824) {
-                    z = false;
-                }
-                resizeHeight = z;
-                desiredAspect = ((float) h2) / ((float) h);
+                resizeHeight = heightSpecMode != 1073741824;
+                desiredAspect = h / h2;
             }
         }
         int pleft = this.mPaddingLeft;
@@ -764,33 +776,32 @@ public class ImageView extends View {
         int ptop = this.mPaddingTop;
         int pbottom = this.mPaddingBottom;
         if (resizeWidth || resizeHeight) {
-            widthSize = resolveAdjustedSize(h2 + pleft + pright, this.mMaxWidth, i);
-            int i3 = widthSpecMode;
-            heightSize = resolveAdjustedSize(h + ptop + pbottom, this.mMaxHeight, i2);
+            widthSize = resolveAdjustedSize(h + pleft + pright, this.mMaxWidth, widthMeasureSpec);
+            int widthSpecMode2 = this.mMaxHeight;
+            heightSize = resolveAdjustedSize(h2 + ptop + pbottom, widthSpecMode2, heightMeasureSpec);
             if (desiredAspect != 0.0f) {
-                int i4 = heightSpecMode;
-                float actualAspect = ((float) ((widthSize - pleft) - pright)) / ((float) ((heightSize - ptop) - pbottom));
-                float f = actualAspect;
-                if (((double) Math.abs(actualAspect - desiredAspect)) > 1.0E-7d) {
-                    if (resizeWidth) {
-                        int newWidth = ((int) (((float) ((heightSize - ptop) - pbottom)) * desiredAspect)) + pleft + pright;
-                        if (resizeHeight || sCompatAdjustViewBounds) {
+                int heightSpecMode2 = (heightSize - ptop) - pbottom;
+                float actualAspect = ((widthSize - pleft) - pright) / heightSpecMode2;
+                if (Math.abs(actualAspect - desiredAspect) > 1.0E-7d) {
+                    if (!resizeWidth) {
+                        done = false;
+                    } else {
+                        int newWidth = ((int) (((heightSize - ptop) - pbottom) * desiredAspect)) + pleft + pright;
+                        if (!resizeHeight && !sCompatAdjustViewBounds) {
                             done = false;
+                            widthSize = resolveAdjustedSize(newWidth, this.mMaxWidth, widthMeasureSpec);
                         } else {
                             done = false;
-                            widthSize = resolveAdjustedSize(newWidth, this.mMaxWidth, i);
                         }
                         if (newWidth <= widthSize) {
                             widthSize = newWidth;
                             done = true;
                         }
-                    } else {
-                        done = false;
                     }
                     if (!done && resizeHeight) {
-                        int newHeight = ((int) (((float) ((widthSize - pleft) - pright)) / desiredAspect)) + ptop + pbottom;
+                        int newHeight = ((int) (((widthSize - pleft) - pright) / desiredAspect)) + ptop + pbottom;
                         if (!resizeWidth && !sCompatAdjustViewBounds) {
-                            heightSize = resolveAdjustedSize(newHeight, this.mMaxHeight, i2);
+                            heightSize = resolveAdjustedSize(newHeight, this.mMaxHeight, heightMeasureSpec);
                         }
                         if (newHeight <= heightSize) {
                             heightSize = newHeight;
@@ -799,34 +810,33 @@ public class ImageView extends View {
                 }
             }
         } else {
-            int w = Math.max(h2 + pleft + pright, getSuggestedMinimumWidth());
-            int h3 = Math.max(h + ptop + pbottom, getSuggestedMinimumHeight());
-            widthSize = resolveSizeAndState(w, i, 0);
-            heightSize = resolveSizeAndState(h3, i2, 0);
-            int i5 = widthSpecMode;
-            int i6 = heightSpecMode;
+            int w = h + pleft + pright;
+            int w2 = Math.max(w, getSuggestedMinimumWidth());
+            int h3 = Math.max(h2 + ptop + pbottom, getSuggestedMinimumHeight());
+            widthSize = resolveSizeAndState(w2, widthMeasureSpec, 0);
+            heightSize = resolveSizeAndState(h3, heightMeasureSpec, 0);
         }
         setMeasuredDimension(widthSize, heightSize);
     }
 
     private int resolveAdjustedSize(int desiredSize, int maxSize, int measureSpec) {
-        int result = desiredSize;
         int specMode = View.MeasureSpec.getMode(measureSpec);
         int specSize = View.MeasureSpec.getSize(measureSpec);
         if (specMode == Integer.MIN_VALUE) {
-            return Math.min(Math.min(desiredSize, specSize), maxSize);
-        }
-        if (specMode == 0) {
-            return Math.min(desiredSize, maxSize);
-        }
-        if (specMode != 1073741824) {
+            int result = Math.min(Math.min(desiredSize, specSize), maxSize);
             return result;
+        } else if (specMode == 0) {
+            int result2 = Math.min(desiredSize, maxSize);
+            return result2;
+        } else if (specMode != 1073741824) {
+            return desiredSize;
+        } else {
+            return specSize;
         }
-        return specSize;
     }
 
-    /* access modifiers changed from: protected */
-    public boolean setFrame(int l, int t, int r, int b) {
+    @Override // android.view.View
+    protected boolean setFrame(int l, int t, int r, int b) {
         boolean changed = super.setFrame(l, t, r, b);
         this.mHaveFrame = true;
         configureBounds();
@@ -836,62 +846,66 @@ public class ImageView extends View {
     private void configureBounds() {
         float scale;
         float scale2;
-        if (this.mDrawable != null && this.mHaveFrame) {
-            int dwidth = this.mDrawableWidth;
-            int dheight = this.mDrawableHeight;
-            int vwidth = (getWidth() - this.mPaddingLeft) - this.mPaddingRight;
-            int vheight = (getHeight() - this.mPaddingTop) - this.mPaddingBottom;
-            boolean fits = (dwidth < 0 || vwidth == dwidth) && (dheight < 0 || vheight == dheight);
-            if (dwidth <= 0 || dheight <= 0 || ScaleType.FIT_XY == this.mScaleType) {
-                this.mDrawable.setBounds(0, 0, vwidth, vheight);
+        if (this.mDrawable == null || !this.mHaveFrame) {
+            return;
+        }
+        int dwidth = this.mDrawableWidth;
+        int dheight = this.mDrawableHeight;
+        int vwidth = (getWidth() - this.mPaddingLeft) - this.mPaddingRight;
+        int vheight = (getHeight() - this.mPaddingTop) - this.mPaddingBottom;
+        boolean fits = (dwidth < 0 || vwidth == dwidth) && (dheight < 0 || vheight == dheight);
+        if (dwidth <= 0 || dheight <= 0 || ScaleType.FIT_XY == this.mScaleType) {
+            this.mDrawable.setBounds(0, 0, vwidth, vheight);
+            this.mDrawMatrix = null;
+            return;
+        }
+        this.mDrawable.setBounds(0, 0, dwidth, dheight);
+        if (ScaleType.MATRIX == this.mScaleType) {
+            if (this.mMatrix.isIdentity()) {
                 this.mDrawMatrix = null;
-                return;
-            }
-            this.mDrawable.setBounds(0, 0, dwidth, dheight);
-            if (ScaleType.MATRIX == this.mScaleType) {
-                if (this.mMatrix.isIdentity()) {
-                    this.mDrawMatrix = null;
-                } else {
-                    this.mDrawMatrix = this.mMatrix;
-                }
-            } else if (fits) {
-                this.mDrawMatrix = null;
-            } else if (ScaleType.CENTER == this.mScaleType) {
-                this.mDrawMatrix = this.mMatrix;
-                this.mDrawMatrix.setTranslate((float) Math.round(((float) (vwidth - dwidth)) * 0.5f), (float) Math.round(((float) (vheight - dheight)) * 0.5f));
-            } else if (ScaleType.CENTER_CROP == this.mScaleType) {
-                this.mDrawMatrix = this.mMatrix;
-                float dx = 0.0f;
-                float dy = 0.0f;
-                if (dwidth * vheight > vwidth * dheight) {
-                    scale2 = ((float) vheight) / ((float) dheight);
-                    dx = (((float) vwidth) - (((float) dwidth) * scale2)) * 0.5f;
-                } else {
-                    scale2 = ((float) vwidth) / ((float) dwidth);
-                    dy = (((float) vheight) - (((float) dheight) * scale2)) * 0.5f;
-                }
-                this.mDrawMatrix.setScale(scale2, scale2);
-                this.mDrawMatrix.postTranslate((float) Math.round(dx), (float) Math.round(dy));
-            } else if (ScaleType.CENTER_INSIDE == this.mScaleType) {
-                this.mDrawMatrix = this.mMatrix;
-                if (dwidth > vwidth || dheight > vheight) {
-                    scale = Math.min(((float) vwidth) / ((float) dwidth), ((float) vheight) / ((float) dheight));
-                } else {
-                    scale = 1.0f;
-                }
-                this.mDrawMatrix.setScale(scale, scale);
-                this.mDrawMatrix.postTranslate((float) Math.round((((float) vwidth) - (((float) dwidth) * scale)) * 0.5f), (float) Math.round((((float) vheight) - (((float) dheight) * scale)) * 0.5f));
             } else {
-                this.mTempSrc.set(0.0f, 0.0f, (float) dwidth, (float) dheight);
-                this.mTempDst.set(0.0f, 0.0f, (float) vwidth, (float) vheight);
                 this.mDrawMatrix = this.mMatrix;
-                this.mDrawMatrix.setRectToRect(this.mTempSrc, this.mTempDst, scaleTypeToScaleToFit(this.mScaleType));
             }
+        } else if (fits) {
+            this.mDrawMatrix = null;
+        } else if (ScaleType.CENTER == this.mScaleType) {
+            this.mDrawMatrix = this.mMatrix;
+            this.mDrawMatrix.setTranslate(Math.round((vwidth - dwidth) * 0.5f), Math.round((vheight - dheight) * 0.5f));
+        } else if (ScaleType.CENTER_CROP == this.mScaleType) {
+            this.mDrawMatrix = this.mMatrix;
+            float dx = 0.0f;
+            float dy = 0.0f;
+            if (dwidth * vheight > vwidth * dheight) {
+                scale2 = vheight / dheight;
+                dx = (vwidth - (dwidth * scale2)) * 0.5f;
+            } else {
+                float scale3 = vwidth;
+                scale2 = scale3 / dwidth;
+                dy = (vheight - (dheight * scale2)) * 0.5f;
+            }
+            this.mDrawMatrix.setScale(scale2, scale2);
+            this.mDrawMatrix.postTranslate(Math.round(dx), Math.round(dy));
+        } else if (ScaleType.CENTER_INSIDE == this.mScaleType) {
+            this.mDrawMatrix = this.mMatrix;
+            if (dwidth <= vwidth && dheight <= vheight) {
+                scale = 1.0f;
+            } else {
+                scale = Math.min(vwidth / dwidth, vheight / dheight);
+            }
+            float dx2 = Math.round((vwidth - (dwidth * scale)) * 0.5f);
+            float dy2 = Math.round((vheight - (dheight * scale)) * 0.5f);
+            this.mDrawMatrix.setScale(scale, scale);
+            this.mDrawMatrix.postTranslate(dx2, dy2);
+        } else {
+            this.mTempSrc.set(0.0f, 0.0f, dwidth, dheight);
+            this.mTempDst.set(0.0f, 0.0f, vwidth, vheight);
+            this.mDrawMatrix = this.mMatrix;
+            this.mDrawMatrix.setRectToRect(this.mTempSrc, this.mTempDst, scaleTypeToScaleToFit(this.mScaleType));
         }
     }
 
-    /* access modifiers changed from: protected */
-    public void drawableStateChanged() {
+    @Override // android.view.View
+    protected void drawableStateChanged() {
         super.drawableStateChanged();
         Drawable drawable = this.mDrawable;
         if (drawable != null && drawable.isStateful() && drawable.setState(getDrawableState())) {
@@ -899,6 +913,7 @@ public class ImageView extends View {
         }
     }
 
+    @Override // android.view.View
     public void drawableHotspotChanged(float x, float y) {
         super.drawableHotspotChanged(x, y);
         if (this.mDrawable != null) {
@@ -907,46 +922,51 @@ public class ImageView extends View {
     }
 
     public void animateTransform(Matrix matrix) {
-        if (this.mDrawable != null) {
-            if (matrix == null) {
-                this.mDrawable.setBounds(0, 0, (getWidth() - this.mPaddingLeft) - this.mPaddingRight, (getHeight() - this.mPaddingTop) - this.mPaddingBottom);
-                this.mDrawMatrix = null;
-            } else {
-                this.mDrawable.setBounds(0, 0, this.mDrawableWidth, this.mDrawableHeight);
-                if (this.mDrawMatrix == null) {
-                    this.mDrawMatrix = new Matrix();
-                }
-                this.mDrawMatrix.set(matrix);
-            }
-            invalidate();
+        if (this.mDrawable == null) {
+            return;
         }
+        if (matrix != null) {
+            this.mDrawable.setBounds(0, 0, this.mDrawableWidth, this.mDrawableHeight);
+            if (this.mDrawMatrix == null) {
+                this.mDrawMatrix = new Matrix();
+            }
+            this.mDrawMatrix.set(matrix);
+        } else {
+            int vwidth = (getWidth() - this.mPaddingLeft) - this.mPaddingRight;
+            int vheight = (getHeight() - this.mPaddingTop) - this.mPaddingBottom;
+            this.mDrawable.setBounds(0, 0, vwidth, vheight);
+            this.mDrawMatrix = null;
+        }
+        invalidate();
     }
 
-    /* access modifiers changed from: protected */
-    public void onDraw(Canvas canvas) {
+    @Override // android.view.View
+    protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
-        if (this.mDrawable != null && this.mDrawableWidth != 0 && this.mDrawableHeight != 0) {
-            if (this.mDrawMatrix == null && this.mPaddingTop == 0 && this.mPaddingLeft == 0) {
-                this.mDrawable.draw(canvas);
-                return;
-            }
-            int saveCount = canvas.getSaveCount();
-            canvas.save();
-            if (this.mCropToPadding) {
-                int scrollX = this.mScrollX;
-                int scrollY = this.mScrollY;
-                canvas.clipRect(this.mPaddingLeft + scrollX, this.mPaddingTop + scrollY, ((this.mRight + scrollX) - this.mLeft) - this.mPaddingRight, ((this.mBottom + scrollY) - this.mTop) - this.mPaddingBottom);
-            }
-            canvas.translate((float) this.mPaddingLeft, (float) this.mPaddingTop);
-            if (this.mDrawMatrix != null) {
-                canvas.concat(this.mDrawMatrix);
-            }
-            this.mDrawable.draw(canvas);
-            canvas.restoreToCount(saveCount);
+        if (this.mDrawable == null || this.mDrawableWidth == 0 || this.mDrawableHeight == 0) {
+            return;
         }
+        if (this.mDrawMatrix == null && this.mPaddingTop == 0 && this.mPaddingLeft == 0) {
+            this.mDrawable.draw(canvas);
+            return;
+        }
+        int saveCount = canvas.getSaveCount();
+        canvas.save();
+        if (this.mCropToPadding) {
+            int scrollX = this.mScrollX;
+            int scrollY = this.mScrollY;
+            canvas.clipRect(this.mPaddingLeft + scrollX, this.mPaddingTop + scrollY, ((this.mRight + scrollX) - this.mLeft) - this.mPaddingRight, ((this.mBottom + scrollY) - this.mTop) - this.mPaddingBottom);
+        }
+        canvas.translate(this.mPaddingLeft, this.mPaddingTop);
+        if (this.mDrawMatrix != null) {
+            canvas.concat(this.mDrawMatrix);
+        }
+        this.mDrawable.draw(canvas);
+        canvas.restoreToCount(saveCount);
     }
 
-    @ViewDebug.ExportedProperty(category = "layout")
+    @Override // android.view.View
+    @ViewDebug.ExportedProperty(category = TtmlUtils.TAG_LAYOUT)
     public int getBaseline() {
         if (this.mBaselineAlignBottom) {
             return getMeasuredHeight();
@@ -973,7 +993,7 @@ public class ImageView extends View {
     }
 
     public final void setColorFilter(int color, PorterDuff.Mode mode) {
-        setColorFilter((ColorFilter) new PorterDuffColorFilter(color, mode));
+        setColorFilter(new PorterDuffColorFilter(color, mode));
     }
 
     @RemotableViewMethod
@@ -1049,6 +1069,7 @@ public class ImageView extends View {
         }
     }
 
+    @Override // android.view.View
     public boolean isOpaque() {
         return super.isOpaque() || (this.mDrawable != null && this.mXfermode == null && this.mDrawable.getOpacity() == -1 && ((this.mAlpha * 256) >> 8) == 255 && isFilledByImage());
     }
@@ -1060,24 +1081,19 @@ public class ImageView extends View {
         Rect bounds = this.mDrawable.getBounds();
         Matrix matrix = this.mDrawMatrix;
         if (matrix == null) {
-            if (bounds.left > 0 || bounds.top > 0 || bounds.right < getWidth() || bounds.bottom < getHeight()) {
-                return false;
-            }
-            return true;
-        } else if (!matrix.rectStaysRect()) {
-            return false;
-        } else {
+            return bounds.left <= 0 && bounds.top <= 0 && bounds.right >= getWidth() && bounds.bottom >= getHeight();
+        } else if (matrix.rectStaysRect()) {
             RectF boundsSrc = this.mTempSrc;
             RectF boundsDst = this.mTempDst;
             boundsSrc.set(bounds);
             matrix.mapRect(boundsDst, boundsSrc);
-            if (boundsDst.left > 0.0f || boundsDst.top > 0.0f || boundsDst.right < ((float) getWidth()) || boundsDst.bottom < ((float) getHeight())) {
-                return false;
-            }
-            return true;
+            return boundsDst.left <= 0.0f && boundsDst.top <= 0.0f && boundsDst.right >= ((float) getWidth()) && boundsDst.bottom >= ((float) getHeight());
+        } else {
+            return false;
         }
     }
 
+    @Override // android.view.View
     public void onVisibilityAggregated(boolean isVisible) {
         super.onVisibilityAggregated(isVisible);
         if (this.mDrawable != null && !sCompatDrawableVisibilityDispatch) {
@@ -1085,6 +1101,7 @@ public class ImageView extends View {
         }
     }
 
+    @Override // android.view.View
     @RemotableViewMethod
     public void setVisibility(int visibility) {
         super.setVisibility(visibility);
@@ -1093,37 +1110,36 @@ public class ImageView extends View {
         }
     }
 
-    /* access modifiers changed from: protected */
-    public void onAttachedToWindow() {
+    @Override // android.view.View
+    protected void onAttachedToWindow() {
         super.onAttachedToWindow();
         if (this.mDrawable != null && sCompatDrawableVisibilityDispatch) {
             this.mDrawable.setVisible(getVisibility() == 0, false);
         }
     }
 
-    /* access modifiers changed from: protected */
-    public void onDetachedFromWindow() {
+    @Override // android.view.View
+    protected void onDetachedFromWindow() {
         super.onDetachedFromWindow();
         if (this.mDrawable != null && sCompatDrawableVisibilityDispatch) {
             this.mDrawable.setVisible(false, false);
         }
     }
 
+    @Override // android.view.View
     public CharSequence getAccessibilityClassName() {
         return ImageView.class.getName();
     }
 
-    /* access modifiers changed from: protected */
-    public void encodeProperties(ViewHierarchyEncoder stream) {
+    @Override // android.view.View
+    protected void encodeProperties(ViewHierarchyEncoder stream) {
         super.encodeProperties(stream);
         stream.addProperty("layout:baseline", getBaseline());
     }
 
+    @Override // android.view.View
     public boolean isDefaultFocusHighlightNeeded(Drawable background, Drawable foreground) {
-        boolean lackFocusState = this.mDrawable == null || !this.mDrawable.isStateful() || !this.mDrawable.hasFocusStateSpecified();
-        if (!super.isDefaultFocusHighlightNeeded(background, foreground) || !lackFocusState) {
-            return false;
-        }
-        return true;
+        boolean lackFocusState = (this.mDrawable != null && this.mDrawable.isStateful() && this.mDrawable.hasFocusStateSpecified()) ? false : true;
+        return super.isDefaultFocusHighlightNeeded(background, foreground) && lackFocusState;
     }
 }

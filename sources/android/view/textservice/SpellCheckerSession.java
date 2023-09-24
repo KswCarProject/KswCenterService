@@ -1,11 +1,11 @@
 package android.view.textservice;
 
 import android.annotation.UnsupportedAppUsage;
-import android.os.Binder;
-import android.os.Handler;
-import android.os.HandlerThread;
-import android.os.Message;
-import android.os.RemoteException;
+import android.p007os.Binder;
+import android.p007os.Handler;
+import android.p007os.HandlerThread;
+import android.p007os.Message;
+import android.p007os.RemoteException;
 import android.util.Log;
 import com.android.internal.textservice.ISpellCheckerSession;
 import com.android.internal.textservice.ISpellCheckerSessionListener;
@@ -14,15 +14,16 @@ import dalvik.system.CloseGuard;
 import java.util.LinkedList;
 import java.util.Queue;
 
+/* loaded from: classes4.dex */
 public class SpellCheckerSession {
     private static final boolean DBG = false;
     private static final int MSG_ON_GET_SUGGESTION_MULTIPLE = 1;
     private static final int MSG_ON_GET_SUGGESTION_MULTIPLE_FOR_SENTENCE = 2;
     public static final String SERVICE_META_DATA = "android.view.textservice.scs";
-    /* access modifiers changed from: private */
-    public static final String TAG = SpellCheckerSession.class.getSimpleName();
+    private static final String TAG = SpellCheckerSession.class.getSimpleName();
     private final CloseGuard mGuard = CloseGuard.get();
-    private final Handler mHandler = new Handler() {
+    private final Handler mHandler = new Handler() { // from class: android.view.textservice.SpellCheckerSession.1
+        @Override // android.p007os.Handler
         public void handleMessage(Message msg) {
             switch (msg.what) {
                 case 1:
@@ -43,6 +44,7 @@ public class SpellCheckerSession {
     private final SpellCheckerSessionListenerImpl mSpellCheckerSessionListenerImpl;
     private final TextServicesManager mTextServicesManager;
 
+    /* loaded from: classes4.dex */
     public interface SpellCheckerSessionListener {
         void onGetSentenceSuggestions(SentenceSuggestionsInfo[] sentenceSuggestionsInfoArr);
 
@@ -93,16 +95,17 @@ public class SpellCheckerSession {
         this.mSpellCheckerSessionListenerImpl.getSuggestionsMultiple(textInfos, suggestionsLimit, sequentialWords);
     }
 
-    /* access modifiers changed from: private */
+    /* JADX INFO: Access modifiers changed from: private */
     public void handleOnGetSuggestionsMultiple(SuggestionsInfo[] suggestionInfos) {
         this.mSpellCheckerSessionListener.onGetSuggestions(suggestionInfos);
     }
 
-    /* access modifiers changed from: private */
+    /* JADX INFO: Access modifiers changed from: private */
     public void handleOnGetSentenceSuggestionsMultiple(SentenceSuggestionsInfo[] suggestionInfos) {
         this.mSpellCheckerSessionListener.onGetSentenceSuggestions(suggestionInfos);
     }
 
+    /* loaded from: classes4.dex */
     private static final class SpellCheckerSessionListenerImpl extends ISpellCheckerSessionListener.Stub {
         private static final int STATE_CLOSED_AFTER_CONNECTION = 2;
         private static final int STATE_CLOSED_BEFORE_CONNECTION = 3;
@@ -153,6 +156,7 @@ public class SpellCheckerSession {
             this.mHandler = handler;
         }
 
+        /* loaded from: classes4.dex */
         private static class SpellCheckerParams {
             public final boolean mSequentialWords;
             public ISpellCheckerSession mSession;
@@ -168,7 +172,7 @@ public class SpellCheckerSession {
             }
         }
 
-        /* access modifiers changed from: private */
+        /* JADX INFO: Access modifiers changed from: private */
         public void processTask(ISpellCheckerSession session, SpellCheckerParams scp, boolean async) {
             if (async || this.mAsyncHandler == null) {
                 switch (scp.mWhat) {
@@ -177,8 +181,8 @@ public class SpellCheckerSession {
                             session.onCancel();
                             break;
                         } catch (RemoteException e) {
-                            String access$200 = SpellCheckerSession.TAG;
-                            Log.e(access$200, "Failed to cancel " + e);
+                            String str = SpellCheckerSession.TAG;
+                            Log.m70e(str, "Failed to cancel " + e);
                             break;
                         }
                     case 2:
@@ -186,8 +190,8 @@ public class SpellCheckerSession {
                             session.onGetSuggestionsMultiple(scp.mTextInfos, scp.mSuggestionsLimit, scp.mSequentialWords);
                             break;
                         } catch (RemoteException e2) {
-                            String access$2002 = SpellCheckerSession.TAG;
-                            Log.e(access$2002, "Failed to get suggestions " + e2);
+                            String str2 = SpellCheckerSession.TAG;
+                            Log.m70e(str2, "Failed to get suggestions " + e2);
                             break;
                         }
                     case 3:
@@ -195,8 +199,8 @@ public class SpellCheckerSession {
                             session.onClose();
                             break;
                         } catch (RemoteException e3) {
-                            String access$2003 = SpellCheckerSession.TAG;
-                            Log.e(access$2003, "Failed to close " + e3);
+                            String str3 = SpellCheckerSession.TAG;
+                            Log.m70e(str3, "Failed to close " + e3);
                             break;
                         }
                     case 4:
@@ -204,8 +208,8 @@ public class SpellCheckerSession {
                             session.onGetSentenceSuggestionsMultiple(scp.mTextInfos, scp.mSuggestionsLimit);
                             break;
                         } catch (RemoteException e4) {
-                            String access$2004 = SpellCheckerSession.TAG;
-                            Log.e(access$2004, "Failed to get suggestions " + e4);
+                            String str4 = SpellCheckerSession.TAG;
+                            Log.m70e(str4, "Failed to get suggestions " + e4);
                             break;
                         }
                 }
@@ -237,8 +241,8 @@ public class SpellCheckerSession {
                     this.mState = 2;
                     return;
                 default:
-                    String access$200 = SpellCheckerSession.TAG;
-                    Log.e(access$200, "processCloseLocked is called unexpectedly. mState=" + stateToString(this.mState));
+                    String str = SpellCheckerSession.TAG;
+                    Log.m70e(str, "processCloseLocked is called unexpectedly. mState=" + stateToString(this.mState));
                     return;
             }
         }
@@ -248,17 +252,18 @@ public class SpellCheckerSession {
                 int i = this.mState;
                 if (i != 0) {
                     if (i != 3) {
-                        String access$200 = SpellCheckerSession.TAG;
-                        Log.e(access$200, "ignoring onServiceConnected due to unexpected mState=" + stateToString(this.mState));
+                        String str = SpellCheckerSession.TAG;
+                        Log.m70e(str, "ignoring onServiceConnected due to unexpected mState=" + stateToString(this.mState));
                     }
                 } else if (session == null) {
-                    Log.e(SpellCheckerSession.TAG, "ignoring onServiceConnected due to session=null");
+                    Log.m70e(SpellCheckerSession.TAG, "ignoring onServiceConnected due to session=null");
                 } else {
                     this.mISpellCheckerSession = session;
                     if ((session.asBinder() instanceof Binder) && this.mThread == null) {
                         this.mThread = new HandlerThread("SpellCheckerSession", 10);
                         this.mThread.start();
-                        this.mAsyncHandler = new Handler(this.mThread.getLooper()) {
+                        this.mAsyncHandler = new Handler(this.mThread.getLooper()) { // from class: android.view.textservice.SpellCheckerSession.SpellCheckerSessionListenerImpl.1
+                            @Override // android.p007os.Handler
                             public void handleMessage(Message msg) {
                                 SpellCheckerParams scp = (SpellCheckerParams) msg.obj;
                                 SpellCheckerSessionListenerImpl.this.processTask(scp.mSession, scp, true);
@@ -274,7 +279,7 @@ public class SpellCheckerSession {
         }
 
         public void cancel() {
-            processOrEnqueueTask(new SpellCheckerParams(1, (TextInfo[]) null, 0, false));
+            processOrEnqueueTask(new SpellCheckerParams(1, null, 0, false));
         }
 
         public void getSuggestionsMultiple(TextInfo[] textInfos, int suggestionsLimit, boolean sequentialWords) {
@@ -286,7 +291,7 @@ public class SpellCheckerSession {
         }
 
         public void close() {
-            processOrEnqueueTask(new SpellCheckerParams(3, (TextInfo[]) null, 0, false));
+            processOrEnqueueTask(new SpellCheckerParams(3, null, 0, false));
         }
 
         public boolean isDisconnected() {
@@ -300,98 +305,40 @@ public class SpellCheckerSession {
             return z;
         }
 
-        /* JADX WARNING: Code restructure failed: missing block: B:36:0x007d, code lost:
-            return;
-         */
-        /* JADX WARNING: Code restructure failed: missing block: B:9:0x0010, code lost:
-            return;
-         */
-        /* Code decompiled incorrectly, please refer to instructions dump. */
-        private void processOrEnqueueTask(android.view.textservice.SpellCheckerSession.SpellCheckerSessionListenerImpl.SpellCheckerParams r5) {
-            /*
-                r4 = this;
-                monitor-enter(r4)
-                int r0 = r5.mWhat     // Catch:{ all -> 0x0086 }
-                r1 = 3
-                if (r0 != r1) goto L_0x0011
-                int r0 = r4.mState     // Catch:{ all -> 0x0086 }
-                r2 = 2
-                if (r0 == r2) goto L_0x000f
-                int r0 = r4.mState     // Catch:{ all -> 0x0086 }
-                if (r0 != r1) goto L_0x0011
-            L_0x000f:
-                monitor-exit(r4)     // Catch:{ all -> 0x0086 }
-                return
-            L_0x0011:
-                int r0 = r4.mState     // Catch:{ all -> 0x0086 }
-                r2 = 1
-                if (r0 == 0) goto L_0x0048
-                int r0 = r4.mState     // Catch:{ all -> 0x0086 }
-                if (r0 == r2) goto L_0x0048
-                java.lang.String r0 = android.view.textservice.SpellCheckerSession.TAG     // Catch:{ all -> 0x0086 }
-                java.lang.StringBuilder r1 = new java.lang.StringBuilder     // Catch:{ all -> 0x0086 }
-                r1.<init>()     // Catch:{ all -> 0x0086 }
-                java.lang.String r2 = "ignoring processOrEnqueueTask due to unexpected mState="
-                r1.append(r2)     // Catch:{ all -> 0x0086 }
-                int r2 = r4.mState     // Catch:{ all -> 0x0086 }
-                java.lang.String r2 = stateToString(r2)     // Catch:{ all -> 0x0086 }
-                r1.append(r2)     // Catch:{ all -> 0x0086 }
-                java.lang.String r2 = " scp.mWhat="
-                r1.append(r2)     // Catch:{ all -> 0x0086 }
-                int r2 = r5.mWhat     // Catch:{ all -> 0x0086 }
-                java.lang.String r2 = taskToString(r2)     // Catch:{ all -> 0x0086 }
-                r1.append(r2)     // Catch:{ all -> 0x0086 }
-                java.lang.String r1 = r1.toString()     // Catch:{ all -> 0x0086 }
-                android.util.Log.e(r0, r1)     // Catch:{ all -> 0x0086 }
-                monitor-exit(r4)     // Catch:{ all -> 0x0086 }
-                return
-            L_0x0048:
-                int r0 = r4.mState     // Catch:{ all -> 0x0086 }
-                if (r0 != 0) goto L_0x007e
-                int r0 = r5.mWhat     // Catch:{ all -> 0x0086 }
-                if (r0 != r1) goto L_0x0055
-                r4.processCloseLocked()     // Catch:{ all -> 0x0086 }
-                monitor-exit(r4)     // Catch:{ all -> 0x0086 }
-                return
-            L_0x0055:
-                r0 = 0
-                int r3 = r5.mWhat     // Catch:{ all -> 0x0086 }
-                if (r3 != r2) goto L_0x0070
-            L_0x005a:
-                java.util.Queue<android.view.textservice.SpellCheckerSession$SpellCheckerSessionListenerImpl$SpellCheckerParams> r2 = r4.mPendingTasks     // Catch:{ all -> 0x0086 }
-                boolean r2 = r2.isEmpty()     // Catch:{ all -> 0x0086 }
-                if (r2 != 0) goto L_0x0070
-                java.util.Queue<android.view.textservice.SpellCheckerSession$SpellCheckerSessionListenerImpl$SpellCheckerParams> r2 = r4.mPendingTasks     // Catch:{ all -> 0x0086 }
-                java.lang.Object r2 = r2.poll()     // Catch:{ all -> 0x0086 }
-                android.view.textservice.SpellCheckerSession$SpellCheckerSessionListenerImpl$SpellCheckerParams r2 = (android.view.textservice.SpellCheckerSession.SpellCheckerSessionListenerImpl.SpellCheckerParams) r2     // Catch:{ all -> 0x0086 }
-                int r3 = r2.mWhat     // Catch:{ all -> 0x0086 }
-                if (r3 != r1) goto L_0x006f
-                r0 = r2
-            L_0x006f:
-                goto L_0x005a
-            L_0x0070:
-                java.util.Queue<android.view.textservice.SpellCheckerSession$SpellCheckerSessionListenerImpl$SpellCheckerParams> r1 = r4.mPendingTasks     // Catch:{ all -> 0x0086 }
-                r1.offer(r5)     // Catch:{ all -> 0x0086 }
-                if (r0 == 0) goto L_0x007c
-                java.util.Queue<android.view.textservice.SpellCheckerSession$SpellCheckerSessionListenerImpl$SpellCheckerParams> r1 = r4.mPendingTasks     // Catch:{ all -> 0x0086 }
-                r1.offer(r0)     // Catch:{ all -> 0x0086 }
-            L_0x007c:
-                monitor-exit(r4)     // Catch:{ all -> 0x0086 }
-                return
-            L_0x007e:
-                com.android.internal.textservice.ISpellCheckerSession r0 = r4.mISpellCheckerSession     // Catch:{ all -> 0x0086 }
-                monitor-exit(r4)     // Catch:{ all -> 0x0086 }
-                r1 = 0
-                r4.processTask(r0, r5, r1)
-                return
-            L_0x0086:
-                r0 = move-exception
-                monitor-exit(r4)     // Catch:{ all -> 0x0086 }
-                throw r0
-            */
-            throw new UnsupportedOperationException("Method not decompiled: android.view.textservice.SpellCheckerSession.SpellCheckerSessionListenerImpl.processOrEnqueueTask(android.view.textservice.SpellCheckerSession$SpellCheckerSessionListenerImpl$SpellCheckerParams):void");
+        private void processOrEnqueueTask(SpellCheckerParams scp) {
+            synchronized (this) {
+                if (scp.mWhat == 3 && (this.mState == 2 || this.mState == 3)) {
+                    return;
+                }
+                if (this.mState != 0 && this.mState != 1) {
+                    String str = SpellCheckerSession.TAG;
+                    Log.m70e(str, "ignoring processOrEnqueueTask due to unexpected mState=" + stateToString(this.mState) + " scp.mWhat=" + taskToString(scp.mWhat));
+                } else if (this.mState == 0) {
+                    if (scp.mWhat == 3) {
+                        processCloseLocked();
+                        return;
+                    }
+                    SpellCheckerParams closeTask = null;
+                    if (scp.mWhat == 1) {
+                        while (!this.mPendingTasks.isEmpty()) {
+                            SpellCheckerParams tmp = this.mPendingTasks.poll();
+                            if (tmp.mWhat == 3) {
+                                closeTask = tmp;
+                            }
+                        }
+                    }
+                    this.mPendingTasks.offer(scp);
+                    if (closeTask != null) {
+                        this.mPendingTasks.offer(closeTask);
+                    }
+                } else {
+                    ISpellCheckerSession session = this.mISpellCheckerSession;
+                    processTask(session, scp, false);
+                }
+            }
         }
 
+        @Override // com.android.internal.textservice.ISpellCheckerSessionListener
         public void onGetSuggestions(SuggestionsInfo[] results) {
             synchronized (this) {
                 if (this.mHandler != null) {
@@ -400,6 +347,7 @@ public class SpellCheckerSession {
             }
         }
 
+        @Override // com.android.internal.textservice.ISpellCheckerSessionListener
         public void onGetSentenceSuggestions(SentenceSuggestionsInfo[] results) {
             synchronized (this) {
                 if (this.mHandler != null) {
@@ -409,6 +357,7 @@ public class SpellCheckerSession {
         }
     }
 
+    /* loaded from: classes4.dex */
     private static final class InternalListener extends ITextServicesSessionListener.Stub {
         private final SpellCheckerSessionListenerImpl mParentSpellCheckerSessionListenerImpl;
 
@@ -416,13 +365,13 @@ public class SpellCheckerSession {
             this.mParentSpellCheckerSessionListenerImpl = spellCheckerSessionListenerImpl;
         }
 
+        @Override // com.android.internal.textservice.ITextServicesSessionListener
         public void onServiceConnected(ISpellCheckerSession session) {
             this.mParentSpellCheckerSessionListenerImpl.onServiceConnected(session);
         }
     }
 
-    /* access modifiers changed from: protected */
-    public void finalize() throws Throwable {
+    protected void finalize() throws Throwable {
         try {
             if (this.mGuard != null) {
                 this.mGuard.warnIfOpen();

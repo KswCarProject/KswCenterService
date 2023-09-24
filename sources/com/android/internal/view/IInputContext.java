@@ -1,18 +1,20 @@
 package com.android.internal.view;
 
-import android.os.Binder;
-import android.os.Bundle;
-import android.os.IBinder;
-import android.os.IInterface;
-import android.os.Parcel;
-import android.os.RemoteException;
+import android.p007os.Binder;
+import android.p007os.Bundle;
+import android.p007os.IBinder;
+import android.p007os.IInterface;
+import android.p007os.Parcel;
+import android.p007os.RemoteException;
 import android.text.TextUtils;
 import android.view.KeyEvent;
 import android.view.inputmethod.CompletionInfo;
 import android.view.inputmethod.CorrectionInfo;
 import android.view.inputmethod.ExtractedTextRequest;
 import android.view.inputmethod.InputContentInfo;
+import com.android.internal.view.IInputContextCallback;
 
+/* loaded from: classes4.dex */
 public interface IInputContext extends IInterface {
     void beginBatchEdit() throws RemoteException;
 
@@ -60,81 +62,107 @@ public interface IInputContext extends IInterface {
 
     void setSelection(int i, int i2) throws RemoteException;
 
+    /* loaded from: classes4.dex */
     public static class Default implements IInputContext {
+        @Override // com.android.internal.view.IInputContext
         public void getTextBeforeCursor(int length, int flags, int seq, IInputContextCallback callback) throws RemoteException {
         }
 
+        @Override // com.android.internal.view.IInputContext
         public void getTextAfterCursor(int length, int flags, int seq, IInputContextCallback callback) throws RemoteException {
         }
 
+        @Override // com.android.internal.view.IInputContext
         public void getCursorCapsMode(int reqModes, int seq, IInputContextCallback callback) throws RemoteException {
         }
 
+        @Override // com.android.internal.view.IInputContext
         public void getExtractedText(ExtractedTextRequest request, int flags, int seq, IInputContextCallback callback) throws RemoteException {
         }
 
+        @Override // com.android.internal.view.IInputContext
         public void deleteSurroundingText(int beforeLength, int afterLength) throws RemoteException {
         }
 
+        @Override // com.android.internal.view.IInputContext
         public void deleteSurroundingTextInCodePoints(int beforeLength, int afterLength) throws RemoteException {
         }
 
+        @Override // com.android.internal.view.IInputContext
         public void setComposingText(CharSequence text, int newCursorPosition) throws RemoteException {
         }
 
+        @Override // com.android.internal.view.IInputContext
         public void finishComposingText() throws RemoteException {
         }
 
+        @Override // com.android.internal.view.IInputContext
         public void commitText(CharSequence text, int newCursorPosition) throws RemoteException {
         }
 
+        @Override // com.android.internal.view.IInputContext
         public void commitCompletion(CompletionInfo completion) throws RemoteException {
         }
 
+        @Override // com.android.internal.view.IInputContext
         public void commitCorrection(CorrectionInfo correction) throws RemoteException {
         }
 
+        @Override // com.android.internal.view.IInputContext
         public void setSelection(int start, int end) throws RemoteException {
         }
 
+        @Override // com.android.internal.view.IInputContext
         public void performEditorAction(int actionCode) throws RemoteException {
         }
 
+        @Override // com.android.internal.view.IInputContext
         public void performContextMenuAction(int id) throws RemoteException {
         }
 
+        @Override // com.android.internal.view.IInputContext
         public void beginBatchEdit() throws RemoteException {
         }
 
+        @Override // com.android.internal.view.IInputContext
         public void endBatchEdit() throws RemoteException {
         }
 
+        @Override // com.android.internal.view.IInputContext
         public void sendKeyEvent(KeyEvent event) throws RemoteException {
         }
 
+        @Override // com.android.internal.view.IInputContext
         public void clearMetaKeyStates(int states) throws RemoteException {
         }
 
+        @Override // com.android.internal.view.IInputContext
         public void performPrivateCommand(String action, Bundle data) throws RemoteException {
         }
 
+        @Override // com.android.internal.view.IInputContext
         public void setComposingRegion(int start, int end) throws RemoteException {
         }
 
+        @Override // com.android.internal.view.IInputContext
         public void getSelectedText(int flags, int seq, IInputContextCallback callback) throws RemoteException {
         }
 
+        @Override // com.android.internal.view.IInputContext
         public void requestUpdateCursorAnchorInfo(int cursorUpdateMode, int seq, IInputContextCallback callback) throws RemoteException {
         }
 
+        @Override // com.android.internal.view.IInputContext
         public void commitContent(InputContentInfo inputContentInfo, int flags, Bundle opts, int sec, IInputContextCallback callback) throws RemoteException {
         }
 
+        @Override // android.p007os.IInterface
         public IBinder asBinder() {
             return null;
         }
     }
 
+    /* loaded from: classes4.dex */
     public static abstract class Stub extends Binder implements IInputContext {
         private static final String DESCRIPTOR = "com.android.internal.view.IInputContext";
         static final int TRANSACTION_beginBatchEdit = 15;
@@ -170,12 +198,13 @@ public interface IInputContext extends IInterface {
                 return null;
             }
             IInterface iin = obj.queryLocalInterface(DESCRIPTOR);
-            if (iin == null || !(iin instanceof IInputContext)) {
-                return new Proxy(obj);
+            if (iin != null && (iin instanceof IInputContext)) {
+                return (IInputContext) iin;
             }
-            return (IInputContext) iin;
+            return new Proxy(obj);
         }
 
+        @Override // android.p007os.IInterface
         public IBinder asBinder() {
             return this;
         }
@@ -233,290 +262,162 @@ public interface IInputContext extends IInterface {
             }
         }
 
+        @Override // android.p007os.Binder
         public String getTransactionName(int transactionCode) {
             return getDefaultTransactionName(transactionCode);
         }
 
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r1v5, resolved type: android.view.inputmethod.ExtractedTextRequest} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r1v19, resolved type: android.view.inputmethod.CompletionInfo} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r1v23, resolved type: android.view.inputmethod.CorrectionInfo} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r1v30, resolved type: android.view.KeyEvent} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r1v35, resolved type: android.os.Bundle} */
-        /* JADX WARNING: type inference failed for: r1v1 */
-        /* JADX WARNING: type inference failed for: r1v11, types: [java.lang.CharSequence] */
-        /* JADX WARNING: type inference failed for: r1v15, types: [java.lang.CharSequence] */
-        /* JADX WARNING: type inference failed for: r1v42 */
-        /* JADX WARNING: type inference failed for: r1v48 */
-        /* JADX WARNING: type inference failed for: r1v49 */
-        /* JADX WARNING: type inference failed for: r1v50 */
-        /* JADX WARNING: type inference failed for: r1v51 */
-        /* JADX WARNING: type inference failed for: r1v52 */
-        /* JADX WARNING: type inference failed for: r1v53 */
-        /* JADX WARNING: type inference failed for: r1v54 */
-        /* JADX WARNING: type inference failed for: r1v55 */
-        /* JADX WARNING: Multi-variable type inference failed */
-        /* Code decompiled incorrectly, please refer to instructions dump. */
-        public boolean onTransact(int r12, android.os.Parcel r13, android.os.Parcel r14, int r15) throws android.os.RemoteException {
-            /*
-                r11 = this;
-                java.lang.String r0 = "com.android.internal.view.IInputContext"
-                r1 = 1598968902(0x5f4e5446, float:1.4867585E19)
-                r2 = 1
-                if (r12 == r1) goto L_0x01f8
-                r1 = 0
-                switch(r12) {
-                    case 1: goto L_0x01dd;
-                    case 2: goto L_0x01c2;
-                    case 3: goto L_0x01ab;
-                    case 4: goto L_0x0184;
-                    case 5: goto L_0x0175;
-                    case 6: goto L_0x0166;
-                    case 7: goto L_0x014b;
-                    case 8: goto L_0x0144;
-                    case 9: goto L_0x0129;
-                    case 10: goto L_0x0112;
-                    case 11: goto L_0x00fb;
-                    case 12: goto L_0x00ec;
-                    case 13: goto L_0x00e1;
-                    case 14: goto L_0x00d6;
-                    case 15: goto L_0x00cf;
-                    case 16: goto L_0x00c8;
-                    case 17: goto L_0x00b1;
-                    case 18: goto L_0x00a6;
-                    case 19: goto L_0x008b;
-                    case 20: goto L_0x007c;
-                    case 21: goto L_0x0065;
-                    case 22: goto L_0x004e;
-                    case 23: goto L_0x0011;
-                    default: goto L_0x000c;
-                }
-            L_0x000c:
-                boolean r1 = super.onTransact(r12, r13, r14, r15)
-                return r1
-            L_0x0011:
-                r13.enforceInterface(r0)
-                int r3 = r13.readInt()
-                if (r3 == 0) goto L_0x0024
-                android.os.Parcelable$Creator<android.view.inputmethod.InputContentInfo> r3 = android.view.inputmethod.InputContentInfo.CREATOR
-                java.lang.Object r3 = r3.createFromParcel(r13)
-                android.view.inputmethod.InputContentInfo r3 = (android.view.inputmethod.InputContentInfo) r3
-                r5 = r3
-                goto L_0x0025
-            L_0x0024:
-                r5 = r1
-            L_0x0025:
-                int r3 = r13.readInt()
-                int r4 = r13.readInt()
-                if (r4 == 0) goto L_0x0039
-                android.os.Parcelable$Creator<android.os.Bundle> r1 = android.os.Bundle.CREATOR
-                java.lang.Object r1 = r1.createFromParcel(r13)
-                android.os.Bundle r1 = (android.os.Bundle) r1
-            L_0x0037:
-                r7 = r1
-                goto L_0x003a
-            L_0x0039:
-                goto L_0x0037
-            L_0x003a:
-                int r1 = r13.readInt()
-                android.os.IBinder r4 = r13.readStrongBinder()
-                com.android.internal.view.IInputContextCallback r10 = com.android.internal.view.IInputContextCallback.Stub.asInterface(r4)
-                r4 = r11
-                r6 = r3
-                r8 = r1
-                r9 = r10
-                r4.commitContent(r5, r6, r7, r8, r9)
-                return r2
-            L_0x004e:
-                r13.enforceInterface(r0)
-                int r1 = r13.readInt()
-                int r3 = r13.readInt()
-                android.os.IBinder r4 = r13.readStrongBinder()
-                com.android.internal.view.IInputContextCallback r4 = com.android.internal.view.IInputContextCallback.Stub.asInterface(r4)
-                r11.requestUpdateCursorAnchorInfo(r1, r3, r4)
-                return r2
-            L_0x0065:
-                r13.enforceInterface(r0)
-                int r1 = r13.readInt()
-                int r3 = r13.readInt()
-                android.os.IBinder r4 = r13.readStrongBinder()
-                com.android.internal.view.IInputContextCallback r4 = com.android.internal.view.IInputContextCallback.Stub.asInterface(r4)
-                r11.getSelectedText(r1, r3, r4)
-                return r2
-            L_0x007c:
-                r13.enforceInterface(r0)
-                int r1 = r13.readInt()
-                int r3 = r13.readInt()
-                r11.setComposingRegion(r1, r3)
-                return r2
-            L_0x008b:
-                r13.enforceInterface(r0)
-                java.lang.String r3 = r13.readString()
-                int r4 = r13.readInt()
-                if (r4 == 0) goto L_0x00a1
-                android.os.Parcelable$Creator<android.os.Bundle> r1 = android.os.Bundle.CREATOR
-                java.lang.Object r1 = r1.createFromParcel(r13)
-                android.os.Bundle r1 = (android.os.Bundle) r1
-                goto L_0x00a2
-            L_0x00a1:
-            L_0x00a2:
-                r11.performPrivateCommand(r3, r1)
-                return r2
-            L_0x00a6:
-                r13.enforceInterface(r0)
-                int r1 = r13.readInt()
-                r11.clearMetaKeyStates(r1)
-                return r2
-            L_0x00b1:
-                r13.enforceInterface(r0)
-                int r3 = r13.readInt()
-                if (r3 == 0) goto L_0x00c3
-                android.os.Parcelable$Creator<android.view.KeyEvent> r1 = android.view.KeyEvent.CREATOR
-                java.lang.Object r1 = r1.createFromParcel(r13)
-                android.view.KeyEvent r1 = (android.view.KeyEvent) r1
-                goto L_0x00c4
-            L_0x00c3:
-            L_0x00c4:
-                r11.sendKeyEvent(r1)
-                return r2
-            L_0x00c8:
-                r13.enforceInterface(r0)
-                r11.endBatchEdit()
-                return r2
-            L_0x00cf:
-                r13.enforceInterface(r0)
-                r11.beginBatchEdit()
-                return r2
-            L_0x00d6:
-                r13.enforceInterface(r0)
-                int r1 = r13.readInt()
-                r11.performContextMenuAction(r1)
-                return r2
-            L_0x00e1:
-                r13.enforceInterface(r0)
-                int r1 = r13.readInt()
-                r11.performEditorAction(r1)
-                return r2
-            L_0x00ec:
-                r13.enforceInterface(r0)
-                int r1 = r13.readInt()
-                int r3 = r13.readInt()
-                r11.setSelection(r1, r3)
-                return r2
-            L_0x00fb:
-                r13.enforceInterface(r0)
-                int r3 = r13.readInt()
-                if (r3 == 0) goto L_0x010d
-                android.os.Parcelable$Creator<android.view.inputmethod.CorrectionInfo> r1 = android.view.inputmethod.CorrectionInfo.CREATOR
-                java.lang.Object r1 = r1.createFromParcel(r13)
-                android.view.inputmethod.CorrectionInfo r1 = (android.view.inputmethod.CorrectionInfo) r1
-                goto L_0x010e
-            L_0x010d:
-            L_0x010e:
-                r11.commitCorrection(r1)
-                return r2
-            L_0x0112:
-                r13.enforceInterface(r0)
-                int r3 = r13.readInt()
-                if (r3 == 0) goto L_0x0124
-                android.os.Parcelable$Creator<android.view.inputmethod.CompletionInfo> r1 = android.view.inputmethod.CompletionInfo.CREATOR
-                java.lang.Object r1 = r1.createFromParcel(r13)
-                android.view.inputmethod.CompletionInfo r1 = (android.view.inputmethod.CompletionInfo) r1
-                goto L_0x0125
-            L_0x0124:
-            L_0x0125:
-                r11.commitCompletion(r1)
-                return r2
-            L_0x0129:
-                r13.enforceInterface(r0)
-                int r3 = r13.readInt()
-                if (r3 == 0) goto L_0x013b
-                android.os.Parcelable$Creator<java.lang.CharSequence> r1 = android.text.TextUtils.CHAR_SEQUENCE_CREATOR
-                java.lang.Object r1 = r1.createFromParcel(r13)
-                java.lang.CharSequence r1 = (java.lang.CharSequence) r1
-                goto L_0x013c
-            L_0x013b:
-            L_0x013c:
-                int r3 = r13.readInt()
-                r11.commitText(r1, r3)
-                return r2
-            L_0x0144:
-                r13.enforceInterface(r0)
-                r11.finishComposingText()
-                return r2
-            L_0x014b:
-                r13.enforceInterface(r0)
-                int r3 = r13.readInt()
-                if (r3 == 0) goto L_0x015d
-                android.os.Parcelable$Creator<java.lang.CharSequence> r1 = android.text.TextUtils.CHAR_SEQUENCE_CREATOR
-                java.lang.Object r1 = r1.createFromParcel(r13)
-                java.lang.CharSequence r1 = (java.lang.CharSequence) r1
-                goto L_0x015e
-            L_0x015d:
-            L_0x015e:
-                int r3 = r13.readInt()
-                r11.setComposingText(r1, r3)
-                return r2
-            L_0x0166:
-                r13.enforceInterface(r0)
-                int r1 = r13.readInt()
-                int r3 = r13.readInt()
-                r11.deleteSurroundingTextInCodePoints(r1, r3)
-                return r2
-            L_0x0175:
-                r13.enforceInterface(r0)
-                int r1 = r13.readInt()
-                int r3 = r13.readInt()
-                r11.deleteSurroundingText(r1, r3)
-                return r2
-            L_0x0184:
-                r13.enforceInterface(r0)
-                int r3 = r13.readInt()
-                if (r3 == 0) goto L_0x0196
-                android.os.Parcelable$Creator<android.view.inputmethod.ExtractedTextRequest> r1 = android.view.inputmethod.ExtractedTextRequest.CREATOR
-                java.lang.Object r1 = r1.createFromParcel(r13)
-                android.view.inputmethod.ExtractedTextRequest r1 = (android.view.inputmethod.ExtractedTextRequest) r1
-                goto L_0x0197
-            L_0x0196:
-            L_0x0197:
-                int r3 = r13.readInt()
-                int r4 = r13.readInt()
-                android.os.IBinder r5 = r13.readStrongBinder()
-                com.android.internal.view.IInputContextCallback r5 = com.android.internal.view.IInputContextCallback.Stub.asInterface(r5)
-                r11.getExtractedText(r1, r3, r4, r5)
-                return r2
-            L_0x01ab:
-                r13.enforceInterface(r0)
-                int r1 = r13.readInt()
-                int r3 = r13.readInt()
-                android.os.IBinder r4 = r13.readStrongBinder()
-                com.android.internal.view.IInputContextCallback r4 = com.android.internal.view.IInputContextCallback.Stub.asInterface(r4)
-                r11.getCursorCapsMode(r1, r3, r4)
-                return r2
-            L_0x01c2:
-                r13.enforceInterface(r0)
-                int r1 = r13.readInt()
-                int r3 = r13.readInt()
-                int r4 = r13.readInt()
-                android.os.IBinder r5 = r13.readStrongBinder()
-                com.android.internal.view.IInputContextCallback r5 = com.android.internal.view.IInputContextCallback.Stub.asInterface(r5)
-                r11.getTextAfterCursor(r1, r3, r4, r5)
-                return r2
-            L_0x01dd:
-                r13.enforceInterface(r0)
-                int r1 = r13.readInt()
-                int r3 = r13.readInt()
-                int r4 = r13.readInt()
-                android.os.IBinder r5 = r13.readStrongBinder()
-                com.android.internal.view.IInputContextCallback r5 = com.android.internal.view.IInputContextCallback.Stub.asInterface(r5)
-                r11.getTextBeforeCursor(r1, r3, r4, r5)
-                return r2
-            L_0x01f8:
-                r14.writeString(r0)
-                return r2
-            */
-            throw new UnsupportedOperationException("Method not decompiled: com.android.internal.view.IInputContext.Stub.onTransact(int, android.os.Parcel, android.os.Parcel, int):boolean");
+        @Override // android.p007os.Binder
+        public boolean onTransact(int code, Parcel data, Parcel reply, int flags) throws RemoteException {
+            if (code == 1598968902) {
+                reply.writeString(DESCRIPTOR);
+                return true;
+            }
+            switch (code) {
+                case 1:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg0 = data.readInt();
+                    int _arg1 = data.readInt();
+                    int _arg2 = data.readInt();
+                    IInputContextCallback _arg3 = IInputContextCallback.Stub.asInterface(data.readStrongBinder());
+                    getTextBeforeCursor(_arg0, _arg1, _arg2, _arg3);
+                    return true;
+                case 2:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg02 = data.readInt();
+                    int _arg12 = data.readInt();
+                    int _arg22 = data.readInt();
+                    IInputContextCallback _arg32 = IInputContextCallback.Stub.asInterface(data.readStrongBinder());
+                    getTextAfterCursor(_arg02, _arg12, _arg22, _arg32);
+                    return true;
+                case 3:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg03 = data.readInt();
+                    int _arg13 = data.readInt();
+                    IInputContextCallback _arg23 = IInputContextCallback.Stub.asInterface(data.readStrongBinder());
+                    getCursorCapsMode(_arg03, _arg13, _arg23);
+                    return true;
+                case 4:
+                    data.enforceInterface(DESCRIPTOR);
+                    ExtractedTextRequest _arg04 = data.readInt() != 0 ? ExtractedTextRequest.CREATOR.createFromParcel(data) : null;
+                    int _arg14 = data.readInt();
+                    int _arg24 = data.readInt();
+                    IInputContextCallback _arg33 = IInputContextCallback.Stub.asInterface(data.readStrongBinder());
+                    getExtractedText(_arg04, _arg14, _arg24, _arg33);
+                    return true;
+                case 5:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg05 = data.readInt();
+                    int _arg15 = data.readInt();
+                    deleteSurroundingText(_arg05, _arg15);
+                    return true;
+                case 6:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg06 = data.readInt();
+                    int _arg16 = data.readInt();
+                    deleteSurroundingTextInCodePoints(_arg06, _arg16);
+                    return true;
+                case 7:
+                    data.enforceInterface(DESCRIPTOR);
+                    CharSequence _arg07 = data.readInt() != 0 ? TextUtils.CHAR_SEQUENCE_CREATOR.createFromParcel(data) : null;
+                    int _arg17 = data.readInt();
+                    setComposingText(_arg07, _arg17);
+                    return true;
+                case 8:
+                    data.enforceInterface(DESCRIPTOR);
+                    finishComposingText();
+                    return true;
+                case 9:
+                    data.enforceInterface(DESCRIPTOR);
+                    CharSequence _arg08 = data.readInt() != 0 ? TextUtils.CHAR_SEQUENCE_CREATOR.createFromParcel(data) : null;
+                    int _arg18 = data.readInt();
+                    commitText(_arg08, _arg18);
+                    return true;
+                case 10:
+                    data.enforceInterface(DESCRIPTOR);
+                    CompletionInfo _arg09 = data.readInt() != 0 ? CompletionInfo.CREATOR.createFromParcel(data) : null;
+                    commitCompletion(_arg09);
+                    return true;
+                case 11:
+                    data.enforceInterface(DESCRIPTOR);
+                    CorrectionInfo _arg010 = data.readInt() != 0 ? CorrectionInfo.CREATOR.createFromParcel(data) : null;
+                    commitCorrection(_arg010);
+                    return true;
+                case 12:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg011 = data.readInt();
+                    int _arg19 = data.readInt();
+                    setSelection(_arg011, _arg19);
+                    return true;
+                case 13:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg012 = data.readInt();
+                    performEditorAction(_arg012);
+                    return true;
+                case 14:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg013 = data.readInt();
+                    performContextMenuAction(_arg013);
+                    return true;
+                case 15:
+                    data.enforceInterface(DESCRIPTOR);
+                    beginBatchEdit();
+                    return true;
+                case 16:
+                    data.enforceInterface(DESCRIPTOR);
+                    endBatchEdit();
+                    return true;
+                case 17:
+                    data.enforceInterface(DESCRIPTOR);
+                    KeyEvent _arg014 = data.readInt() != 0 ? KeyEvent.CREATOR.createFromParcel(data) : null;
+                    sendKeyEvent(_arg014);
+                    return true;
+                case 18:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg015 = data.readInt();
+                    clearMetaKeyStates(_arg015);
+                    return true;
+                case 19:
+                    data.enforceInterface(DESCRIPTOR);
+                    String _arg016 = data.readString();
+                    Bundle _arg110 = data.readInt() != 0 ? Bundle.CREATOR.createFromParcel(data) : null;
+                    performPrivateCommand(_arg016, _arg110);
+                    return true;
+                case 20:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg017 = data.readInt();
+                    int _arg111 = data.readInt();
+                    setComposingRegion(_arg017, _arg111);
+                    return true;
+                case 21:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg018 = data.readInt();
+                    int _arg112 = data.readInt();
+                    IInputContextCallback _arg25 = IInputContextCallback.Stub.asInterface(data.readStrongBinder());
+                    getSelectedText(_arg018, _arg112, _arg25);
+                    return true;
+                case 22:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg019 = data.readInt();
+                    int _arg113 = data.readInt();
+                    IInputContextCallback _arg26 = IInputContextCallback.Stub.asInterface(data.readStrongBinder());
+                    requestUpdateCursorAnchorInfo(_arg019, _arg113, _arg26);
+                    return true;
+                case 23:
+                    data.enforceInterface(DESCRIPTOR);
+                    InputContentInfo _arg020 = data.readInt() != 0 ? InputContentInfo.CREATOR.createFromParcel(data) : null;
+                    int _arg114 = data.readInt();
+                    Bundle _arg27 = data.readInt() != 0 ? Bundle.CREATOR.createFromParcel(data) : null;
+                    int _arg34 = data.readInt();
+                    IInputContextCallback _arg4 = IInputContextCallback.Stub.asInterface(data.readStrongBinder());
+                    commitContent(_arg020, _arg114, _arg27, _arg34, _arg4);
+                    return true;
+                default:
+                    return super.onTransact(code, data, reply, flags);
+            }
         }
 
+        /* loaded from: classes4.dex */
         private static class Proxy implements IInputContext {
             public static IInputContext sDefaultImpl;
             private IBinder mRemote;
@@ -525,6 +426,7 @@ public interface IInputContext extends IInterface {
                 this.mRemote = remote;
             }
 
+            @Override // android.p007os.IInterface
             public IBinder asBinder() {
                 return this.mRemote;
             }
@@ -533,6 +435,7 @@ public interface IInputContext extends IInterface {
                 return Stub.DESCRIPTOR;
             }
 
+            @Override // com.android.internal.view.IInputContext
             public void getTextBeforeCursor(int length, int flags, int seq, IInputContextCallback callback) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
@@ -541,9 +444,8 @@ public interface IInputContext extends IInterface {
                     _data.writeInt(flags);
                     _data.writeInt(seq);
                     _data.writeStrongBinder(callback != null ? callback.asBinder() : null);
-                    if (this.mRemote.transact(1, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    boolean _status = this.mRemote.transact(1, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().getTextBeforeCursor(length, flags, seq, callback);
                     }
                 } finally {
@@ -551,6 +453,7 @@ public interface IInputContext extends IInterface {
                 }
             }
 
+            @Override // com.android.internal.view.IInputContext
             public void getTextAfterCursor(int length, int flags, int seq, IInputContextCallback callback) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
@@ -559,9 +462,8 @@ public interface IInputContext extends IInterface {
                     _data.writeInt(flags);
                     _data.writeInt(seq);
                     _data.writeStrongBinder(callback != null ? callback.asBinder() : null);
-                    if (this.mRemote.transact(2, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    boolean _status = this.mRemote.transact(2, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().getTextAfterCursor(length, flags, seq, callback);
                     }
                 } finally {
@@ -569,6 +471,7 @@ public interface IInputContext extends IInterface {
                 }
             }
 
+            @Override // com.android.internal.view.IInputContext
             public void getCursorCapsMode(int reqModes, int seq, IInputContextCallback callback) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
@@ -576,9 +479,8 @@ public interface IInputContext extends IInterface {
                     _data.writeInt(reqModes);
                     _data.writeInt(seq);
                     _data.writeStrongBinder(callback != null ? callback.asBinder() : null);
-                    if (this.mRemote.transact(3, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    boolean _status = this.mRemote.transact(3, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().getCursorCapsMode(reqModes, seq, callback);
                     }
                 } finally {
@@ -586,6 +488,7 @@ public interface IInputContext extends IInterface {
                 }
             }
 
+            @Override // com.android.internal.view.IInputContext
             public void getExtractedText(ExtractedTextRequest request, int flags, int seq, IInputContextCallback callback) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
@@ -599,9 +502,8 @@ public interface IInputContext extends IInterface {
                     _data.writeInt(flags);
                     _data.writeInt(seq);
                     _data.writeStrongBinder(callback != null ? callback.asBinder() : null);
-                    if (this.mRemote.transact(4, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    boolean _status = this.mRemote.transact(4, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().getExtractedText(request, flags, seq, callback);
                     }
                 } finally {
@@ -609,15 +511,15 @@ public interface IInputContext extends IInterface {
                 }
             }
 
+            @Override // com.android.internal.view.IInputContext
             public void deleteSurroundingText(int beforeLength, int afterLength) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeInt(beforeLength);
                     _data.writeInt(afterLength);
-                    if (this.mRemote.transact(5, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    boolean _status = this.mRemote.transact(5, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().deleteSurroundingText(beforeLength, afterLength);
                     }
                 } finally {
@@ -625,15 +527,15 @@ public interface IInputContext extends IInterface {
                 }
             }
 
+            @Override // com.android.internal.view.IInputContext
             public void deleteSurroundingTextInCodePoints(int beforeLength, int afterLength) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeInt(beforeLength);
                     _data.writeInt(afterLength);
-                    if (this.mRemote.transact(6, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    boolean _status = this.mRemote.transact(6, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().deleteSurroundingTextInCodePoints(beforeLength, afterLength);
                     }
                 } finally {
@@ -641,6 +543,7 @@ public interface IInputContext extends IInterface {
                 }
             }
 
+            @Override // com.android.internal.view.IInputContext
             public void setComposingText(CharSequence text, int newCursorPosition) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
@@ -652,9 +555,8 @@ public interface IInputContext extends IInterface {
                         _data.writeInt(0);
                     }
                     _data.writeInt(newCursorPosition);
-                    if (this.mRemote.transact(7, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    boolean _status = this.mRemote.transact(7, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().setComposingText(text, newCursorPosition);
                     }
                 } finally {
@@ -662,13 +564,13 @@ public interface IInputContext extends IInterface {
                 }
             }
 
+            @Override // com.android.internal.view.IInputContext
             public void finishComposingText() throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    if (this.mRemote.transact(8, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    boolean _status = this.mRemote.transact(8, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().finishComposingText();
                     }
                 } finally {
@@ -676,6 +578,7 @@ public interface IInputContext extends IInterface {
                 }
             }
 
+            @Override // com.android.internal.view.IInputContext
             public void commitText(CharSequence text, int newCursorPosition) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
@@ -687,9 +590,8 @@ public interface IInputContext extends IInterface {
                         _data.writeInt(0);
                     }
                     _data.writeInt(newCursorPosition);
-                    if (this.mRemote.transact(9, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    boolean _status = this.mRemote.transact(9, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().commitText(text, newCursorPosition);
                     }
                 } finally {
@@ -697,6 +599,7 @@ public interface IInputContext extends IInterface {
                 }
             }
 
+            @Override // com.android.internal.view.IInputContext
             public void commitCompletion(CompletionInfo completion) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
@@ -707,9 +610,8 @@ public interface IInputContext extends IInterface {
                     } else {
                         _data.writeInt(0);
                     }
-                    if (this.mRemote.transact(10, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    boolean _status = this.mRemote.transact(10, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().commitCompletion(completion);
                     }
                 } finally {
@@ -717,6 +619,7 @@ public interface IInputContext extends IInterface {
                 }
             }
 
+            @Override // com.android.internal.view.IInputContext
             public void commitCorrection(CorrectionInfo correction) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
@@ -727,9 +630,8 @@ public interface IInputContext extends IInterface {
                     } else {
                         _data.writeInt(0);
                     }
-                    if (this.mRemote.transact(11, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    boolean _status = this.mRemote.transact(11, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().commitCorrection(correction);
                     }
                 } finally {
@@ -737,15 +639,15 @@ public interface IInputContext extends IInterface {
                 }
             }
 
+            @Override // com.android.internal.view.IInputContext
             public void setSelection(int start, int end) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeInt(start);
                     _data.writeInt(end);
-                    if (this.mRemote.transact(12, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    boolean _status = this.mRemote.transact(12, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().setSelection(start, end);
                     }
                 } finally {
@@ -753,14 +655,14 @@ public interface IInputContext extends IInterface {
                 }
             }
 
+            @Override // com.android.internal.view.IInputContext
             public void performEditorAction(int actionCode) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeInt(actionCode);
-                    if (this.mRemote.transact(13, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    boolean _status = this.mRemote.transact(13, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().performEditorAction(actionCode);
                     }
                 } finally {
@@ -768,14 +670,14 @@ public interface IInputContext extends IInterface {
                 }
             }
 
+            @Override // com.android.internal.view.IInputContext
             public void performContextMenuAction(int id) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeInt(id);
-                    if (this.mRemote.transact(14, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    boolean _status = this.mRemote.transact(14, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().performContextMenuAction(id);
                     }
                 } finally {
@@ -783,13 +685,13 @@ public interface IInputContext extends IInterface {
                 }
             }
 
+            @Override // com.android.internal.view.IInputContext
             public void beginBatchEdit() throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    if (this.mRemote.transact(15, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    boolean _status = this.mRemote.transact(15, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().beginBatchEdit();
                     }
                 } finally {
@@ -797,13 +699,13 @@ public interface IInputContext extends IInterface {
                 }
             }
 
+            @Override // com.android.internal.view.IInputContext
             public void endBatchEdit() throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    if (this.mRemote.transact(16, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    boolean _status = this.mRemote.transact(16, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().endBatchEdit();
                     }
                 } finally {
@@ -811,6 +713,7 @@ public interface IInputContext extends IInterface {
                 }
             }
 
+            @Override // com.android.internal.view.IInputContext
             public void sendKeyEvent(KeyEvent event) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
@@ -821,9 +724,8 @@ public interface IInputContext extends IInterface {
                     } else {
                         _data.writeInt(0);
                     }
-                    if (this.mRemote.transact(17, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    boolean _status = this.mRemote.transact(17, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().sendKeyEvent(event);
                     }
                 } finally {
@@ -831,14 +733,14 @@ public interface IInputContext extends IInterface {
                 }
             }
 
+            @Override // com.android.internal.view.IInputContext
             public void clearMetaKeyStates(int states) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeInt(states);
-                    if (this.mRemote.transact(18, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    boolean _status = this.mRemote.transact(18, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().clearMetaKeyStates(states);
                     }
                 } finally {
@@ -846,6 +748,7 @@ public interface IInputContext extends IInterface {
                 }
             }
 
+            @Override // com.android.internal.view.IInputContext
             public void performPrivateCommand(String action, Bundle data) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
@@ -857,9 +760,8 @@ public interface IInputContext extends IInterface {
                     } else {
                         _data.writeInt(0);
                     }
-                    if (this.mRemote.transact(19, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    boolean _status = this.mRemote.transact(19, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().performPrivateCommand(action, data);
                     }
                 } finally {
@@ -867,15 +769,15 @@ public interface IInputContext extends IInterface {
                 }
             }
 
+            @Override // com.android.internal.view.IInputContext
             public void setComposingRegion(int start, int end) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeInt(start);
                     _data.writeInt(end);
-                    if (this.mRemote.transact(20, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    boolean _status = this.mRemote.transact(20, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().setComposingRegion(start, end);
                     }
                 } finally {
@@ -883,6 +785,7 @@ public interface IInputContext extends IInterface {
                 }
             }
 
+            @Override // com.android.internal.view.IInputContext
             public void getSelectedText(int flags, int seq, IInputContextCallback callback) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
@@ -890,9 +793,8 @@ public interface IInputContext extends IInterface {
                     _data.writeInt(flags);
                     _data.writeInt(seq);
                     _data.writeStrongBinder(callback != null ? callback.asBinder() : null);
-                    if (this.mRemote.transact(21, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    boolean _status = this.mRemote.transact(21, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().getSelectedText(flags, seq, callback);
                     }
                 } finally {
@@ -900,6 +802,7 @@ public interface IInputContext extends IInterface {
                 }
             }
 
+            @Override // com.android.internal.view.IInputContext
             public void requestUpdateCursorAnchorInfo(int cursorUpdateMode, int seq, IInputContextCallback callback) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
@@ -907,9 +810,8 @@ public interface IInputContext extends IInterface {
                     _data.writeInt(cursorUpdateMode);
                     _data.writeInt(seq);
                     _data.writeStrongBinder(callback != null ? callback.asBinder() : null);
-                    if (this.mRemote.transact(22, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    boolean _status = this.mRemote.transact(22, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().requestUpdateCursorAnchorInfo(cursorUpdateMode, seq, callback);
                     }
                 } finally {
@@ -917,6 +819,7 @@ public interface IInputContext extends IInterface {
                 }
             }
 
+            @Override // com.android.internal.view.IInputContext
             public void commitContent(InputContentInfo inputContentInfo, int flags, Bundle opts, int sec, IInputContextCallback callback) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
@@ -936,9 +839,8 @@ public interface IInputContext extends IInterface {
                     }
                     _data.writeInt(sec);
                     _data.writeStrongBinder(callback != null ? callback.asBinder() : null);
-                    if (this.mRemote.transact(23, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    boolean _status = this.mRemote.transact(23, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().commitContent(inputContentInfo, flags, opts, sec, callback);
                     }
                 } finally {
@@ -948,11 +850,11 @@ public interface IInputContext extends IInterface {
         }
 
         public static boolean setDefaultImpl(IInputContext impl) {
-            if (Proxy.sDefaultImpl != null || impl == null) {
-                return false;
+            if (Proxy.sDefaultImpl == null && impl != null) {
+                Proxy.sDefaultImpl = impl;
+                return true;
             }
-            Proxy.sDefaultImpl = impl;
-            return true;
+            return false;
         }
 
         public static IInputContext getDefaultImpl() {

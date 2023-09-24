@@ -9,6 +9,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+/* loaded from: classes.dex */
 public final class TotalCaptureResult extends CaptureResult {
     private final List<CaptureResult> mPartialResults;
     private final HashMap<String, CaptureResult> mPhysicalCaptureResults;
@@ -24,7 +25,8 @@ public final class TotalCaptureResult extends CaptureResult {
         this.mSessionId = sessionId;
         this.mPhysicalCaptureResults = new HashMap<>();
         for (PhysicalCaptureResultInfo onePhysicalResult : physicalResults) {
-            this.mPhysicalCaptureResults.put(onePhysicalResult.getCameraId(), new CaptureResult(onePhysicalResult.getCameraMetadata(), parent, extras));
+            CaptureResult physicalResult = new CaptureResult(onePhysicalResult.getCameraMetadata(), parent, extras);
+            this.mPhysicalCaptureResults.put(onePhysicalResult.getCameraId(), physicalResult);
         }
     }
 

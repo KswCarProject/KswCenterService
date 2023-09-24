@@ -2,11 +2,12 @@ package android.net;
 
 import android.content.res.Resources;
 import android.graphics.drawable.Drawable;
-import com.android.internal.R;
+import com.android.internal.C3132R;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 
 @Deprecated
+/* loaded from: classes3.dex */
 public class NetworkBadging {
     public static final int BADGING_4K = 30;
     public static final int BADGING_HD = 20;
@@ -14,6 +15,7 @@ public class NetworkBadging {
     public static final int BADGING_SD = 10;
 
     @Retention(RetentionPolicy.SOURCE)
+    /* loaded from: classes3.dex */
     public @interface Badging {
     }
 
@@ -27,15 +29,15 @@ public class NetworkBadging {
     private static int getWifiSignalResource(int signalLevel) {
         switch (signalLevel) {
             case 0:
-                return R.drawable.ic_wifi_signal_0;
+                return C3132R.C3133drawable.ic_wifi_signal_0;
             case 1:
-                return R.drawable.ic_wifi_signal_1;
+                return C3132R.C3133drawable.ic_wifi_signal_1;
             case 2:
-                return R.drawable.ic_wifi_signal_2;
+                return C3132R.C3133drawable.ic_wifi_signal_2;
             case 3:
-                return R.drawable.ic_wifi_signal_3;
+                return C3132R.C3133drawable.ic_wifi_signal_3;
             case 4:
-                return R.drawable.ic_wifi_signal_4;
+                return C3132R.C3133drawable.ic_wifi_signal_4;
             default:
                 throw new IllegalArgumentException("Invalid signal level: " + signalLevel);
         }

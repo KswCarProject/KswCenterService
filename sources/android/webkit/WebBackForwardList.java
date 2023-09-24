@@ -2,9 +2,11 @@ package android.webkit;
 
 import java.io.Serializable;
 
+/* loaded from: classes4.dex */
 public abstract class WebBackForwardList implements Cloneable, Serializable {
-    /* access modifiers changed from: protected */
-    public abstract WebBackForwardList clone();
+    /* JADX INFO: Access modifiers changed from: protected */
+    /* renamed from: clone */
+    public abstract WebBackForwardList m184clone();
 
     public abstract int getCurrentIndex();
 

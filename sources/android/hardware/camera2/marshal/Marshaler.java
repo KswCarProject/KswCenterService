@@ -4,6 +4,7 @@ import android.hardware.camera2.utils.TypeReference;
 import com.android.internal.util.Preconditions;
 import java.nio.ByteBuffer;
 
+/* loaded from: classes.dex */
 public abstract class Marshaler<T> {
     public static int NATIVE_SIZE_DYNAMIC = -1;
     protected final int mNativeType;
@@ -23,12 +24,12 @@ public abstract class Marshaler<T> {
         }
     }
 
-    public int calculateMarshalSize(T t) {
+    public int calculateMarshalSize(T value) {
         int nativeSize = getNativeSize();
-        if (nativeSize != NATIVE_SIZE_DYNAMIC) {
-            return nativeSize;
+        if (nativeSize == NATIVE_SIZE_DYNAMIC) {
+            throw new AssertionError("Override this function for dynamically-sized objects");
         }
-        throw new AssertionError("Override this function for dynamically-sized objects");
+        return nativeSize;
     }
 
     public TypeReference<T> getTypeReference() {

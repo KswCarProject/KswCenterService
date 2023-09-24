@@ -2,8 +2,9 @@ package android.media;
 
 import android.content.Context;
 import android.media.SubtitleController;
-import android.os.Handler;
+import android.p007os.Handler;
 
+/* loaded from: classes3.dex */
 public class SRTRenderer extends SubtitleController.Renderer {
     private final Context mContext;
     private final Handler mEventHandler;
@@ -11,25 +12,24 @@ public class SRTRenderer extends SubtitleController.Renderer {
     private WebVttRenderingWidget mRenderingWidget;
 
     public SRTRenderer(Context context) {
-        this(context, (Handler) null);
+        this(context, null);
     }
 
-    SRTRenderer(Context mContext2, Handler mEventHandler2) {
-        this.mContext = mContext2;
-        this.mRender = mEventHandler2 == null;
-        this.mEventHandler = mEventHandler2;
+    SRTRenderer(Context mContext, Handler mEventHandler) {
+        this.mContext = mContext;
+        this.mRender = mEventHandler == null;
+        this.mEventHandler = mEventHandler;
     }
 
+    @Override // android.media.SubtitleController.Renderer
     public boolean supports(MediaFormat format) {
-        if (!format.containsKey(MediaFormat.KEY_MIME) || !format.getString(MediaFormat.KEY_MIME).equals("application/x-subrip")) {
-            return false;
-        }
-        if (this.mRender == (format.getInteger(MediaFormat.KEY_IS_TIMED_TEXT, 0) == 0)) {
-            return true;
+        if (format.containsKey(MediaFormat.KEY_MIME) && format.getString(MediaFormat.KEY_MIME).equals("application/x-subrip")) {
+            return this.mRender == (format.getInteger(MediaFormat.KEY_IS_TIMED_TEXT, 0) == 0);
         }
         return false;
     }
 
+    @Override // android.media.SubtitleController.Renderer
     public SubtitleTrack createTrack(MediaFormat format) {
         if (this.mRender && this.mRenderingWidget == null) {
             this.mRenderingWidget = new WebVttRenderingWidget(this.mContext);

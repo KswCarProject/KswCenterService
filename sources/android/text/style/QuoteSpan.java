@@ -2,10 +2,11 @@ package android.text.style;
 
 import android.graphics.Canvas;
 import android.graphics.Paint;
-import android.os.Parcel;
+import android.p007os.Parcel;
 import android.text.Layout;
 import android.text.ParcelableSpan;
 
+/* loaded from: classes4.dex */
 public class QuoteSpan implements LeadingMarginSpan, ParcelableSpan {
     public static final int STANDARD_COLOR = -16776961;
     public static final int STANDARD_GAP_WIDTH_PX = 2;
@@ -34,22 +35,27 @@ public class QuoteSpan implements LeadingMarginSpan, ParcelableSpan {
         this.mGapWidth = src.readInt();
     }
 
+    @Override // android.text.ParcelableSpan
     public int getSpanTypeId() {
         return getSpanTypeIdInternal();
     }
 
+    @Override // android.text.ParcelableSpan
     public int getSpanTypeIdInternal() {
         return 9;
     }
 
+    @Override // android.p007os.Parcelable
     public int describeContents() {
         return 0;
     }
 
+    @Override // android.p007os.Parcelable
     public void writeToParcel(Parcel dest, int flags) {
         writeToParcelInternal(dest, flags);
     }
 
+    @Override // android.text.ParcelableSpan
     public void writeToParcelInternal(Parcel dest, int flags) {
         dest.writeInt(this.mColor);
         dest.writeInt(this.mStripeWidth);
@@ -68,18 +74,18 @@ public class QuoteSpan implements LeadingMarginSpan, ParcelableSpan {
         return this.mGapWidth;
     }
 
+    @Override // android.text.style.LeadingMarginSpan
     public int getLeadingMargin(boolean first) {
         return this.mStripeWidth + this.mGapWidth;
     }
 
+    @Override // android.text.style.LeadingMarginSpan
     public void drawLeadingMargin(Canvas c, Paint p, int x, int dir, int top, int baseline, int bottom, CharSequence text, int start, int end, boolean first, Layout layout) {
-        Paint paint = p;
-        int i = x;
         Paint.Style style = p.getStyle();
         int color = p.getColor();
         p.setStyle(Paint.Style.FILL);
         p.setColor(this.mColor);
-        c.drawRect((float) i, (float) top, (float) ((this.mStripeWidth * dir) + i), (float) bottom, p);
+        c.drawRect(x, top, (this.mStripeWidth * dir) + x, bottom, p);
         p.setStyle(style);
         p.setColor(color);
     }

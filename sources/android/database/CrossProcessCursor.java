@@ -1,5 +1,6 @@
 package android.database;
 
+/* loaded from: classes.dex */
 public interface CrossProcessCursor extends Cursor {
     void fillWindow(int i, CursorWindow cursorWindow);
 

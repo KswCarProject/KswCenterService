@@ -10,27 +10,30 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.function.Function;
 
+/* loaded from: classes3.dex */
 public class SettingsStringUtil {
     public static final String DELIMITER = ":";
 
     private SettingsStringUtil() {
     }
 
+    /* loaded from: classes3.dex */
     public static abstract class ColonDelimitedSet<T> extends HashSet<T> {
-        /* access modifiers changed from: protected */
-        public abstract T itemFromString(String str);
+        protected abstract T itemFromString(String str);
 
         public ColonDelimitedSet(String colonSeparatedItems) {
+            String[] split;
             for (String cn : TextUtils.split(TextUtils.emptyIfNull(colonSeparatedItems), SettingsStringUtil.DELIMITER)) {
                 add(itemFromString(cn));
             }
         }
 
-        /* access modifiers changed from: protected */
-        public String itemToString(T item) {
+        protected String itemToString(T item) {
             return String.valueOf(item);
         }
 
+        /* JADX WARN: Multi-variable type inference failed */
+        @Override // java.util.AbstractCollection
         public String toString() {
             StringBuilder sb = new StringBuilder();
             Iterator<T> it = iterator();
@@ -44,12 +47,14 @@ public class SettingsStringUtil {
             return sb.toString();
         }
 
+        /* loaded from: classes3.dex */
         public static class OfStrings extends ColonDelimitedSet<String> {
             public OfStrings(String colonSeparatedItems) {
                 super(colonSeparatedItems);
             }
 
-            /* access modifiers changed from: protected */
+            /* JADX INFO: Access modifiers changed from: protected */
+            @Override // android.provider.SettingsStringUtil.ColonDelimitedSet
             public String itemFromString(String s) {
                 return s;
             }
@@ -78,22 +83,27 @@ public class SettingsStringUtil {
             }
 
             public static boolean contains(String delimitedElements, String element) {
-                return ArrayUtils.indexOf(TextUtils.split(delimitedElements, SettingsStringUtil.DELIMITER), element) != -1;
+                String[] elements = TextUtils.split(delimitedElements, SettingsStringUtil.DELIMITER);
+                return ArrayUtils.indexOf(elements, element) != -1;
             }
         }
     }
 
+    /* loaded from: classes3.dex */
     public static class ComponentNameSet extends ColonDelimitedSet<ComponentName> {
         public ComponentNameSet(String colonSeparatedPackageNames) {
             super(colonSeparatedPackageNames);
         }
 
-        /* access modifiers changed from: protected */
+        /* JADX INFO: Access modifiers changed from: protected */
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.provider.SettingsStringUtil.ColonDelimitedSet
         public ComponentName itemFromString(String s) {
             return ComponentName.unflattenFromString(s);
         }
 
-        /* access modifiers changed from: protected */
+        /* JADX INFO: Access modifiers changed from: protected */
+        @Override // android.provider.SettingsStringUtil.ColonDelimitedSet
         public String itemToString(ComponentName item) {
             return item.flattenToString();
         }
@@ -121,6 +131,7 @@ public class SettingsStringUtil {
         }
     }
 
+    /* loaded from: classes3.dex */
     public static class SettingStringHelper {
         private final ContentResolver mContentResolver;
         private final String mSettingName;

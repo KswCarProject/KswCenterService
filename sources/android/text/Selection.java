@@ -2,12 +2,13 @@ package android.text;
 
 import android.annotation.UnsupportedAppUsage;
 
+/* loaded from: classes4.dex */
 public class Selection {
-    public static final Object SELECTION_END = new END();
-    /* access modifiers changed from: private */
-    public static final Object SELECTION_MEMORY = new MEMORY();
+    private static final Object SELECTION_MEMORY = new MEMORY();
     public static final Object SELECTION_START = new START();
+    public static final Object SELECTION_END = new END();
 
+    /* loaded from: classes4.dex */
     public interface PositionIterator {
         public static final int DONE = -1;
 
@@ -60,7 +61,8 @@ public class Selection {
             if (memory != currentMemory) {
                 text.setSpan(SELECTION_MEMORY, memory, memory, 34);
                 if (currentMemory == -1) {
-                    text.setSpan(new MemoryTextWatcher(), 0, text.length(), 18);
+                    TextWatcher watcher = new MemoryTextWatcher();
+                    text.setSpan(watcher, 0, text.length(), 18);
                     return;
                 }
                 return;
@@ -72,18 +74,23 @@ public class Selection {
 
     private static void removeMemory(Spannable text) {
         text.removeSpan(SELECTION_MEMORY);
-        for (MemoryTextWatcher watcher : (MemoryTextWatcher[]) text.getSpans(0, text.length(), MemoryTextWatcher.class)) {
+        MemoryTextWatcher[] watchers = (MemoryTextWatcher[]) text.getSpans(0, text.length(), MemoryTextWatcher.class);
+        for (MemoryTextWatcher watcher : watchers) {
             text.removeSpan(watcher);
         }
     }
 
+    /* loaded from: classes4.dex */
     public static final class MemoryTextWatcher implements TextWatcher {
+        @Override // android.text.TextWatcher
         public void beforeTextChanged(CharSequence s, int start, int count, int after) {
         }
 
+        @Override // android.text.TextWatcher
         public void onTextChanged(CharSequence s, int start, int before, int count) {
         }
 
+        @Override // android.text.TextWatcher
         public void afterTextChanged(Editable s) {
             s.removeSpan(Selection.SELECTION_MEMORY);
             s.removeSpan(this);
@@ -143,15 +150,19 @@ public class Selection {
         if (layout.getParagraphDirection(line) == layout.getParagraphDirection(line + direction)) {
             int memory2 = getSelectionMemory(text);
             if (memory2 > -1) {
-                move = layout.getOffsetForHorizontal(line + direction, layout.getPrimaryHorizontal(memory2));
+                float h = layout.getPrimaryHorizontal(memory2);
+                move = layout.getOffsetForHorizontal(line + direction, h);
                 newMemory = memory2;
             } else {
-                move = layout.getOffsetForHorizontal(line + direction, layout.getPrimaryHorizontal(end));
+                float h2 = layout.getPrimaryHorizontal(end);
+                move = layout.getOffsetForHorizontal(line + direction, h2);
                 newMemory = end;
             }
             memory = newMemory;
         } else {
-            move = layout.getLineStart(line + direction);
+            int newMemory2 = line + direction;
+            int move2 = layout.getLineStart(newMemory2);
+            move = move2;
             memory = -1;
         }
         if (extend) {
@@ -190,11 +201,11 @@ public class Selection {
             return true;
         }
         int to = layout.getOffsetToLeftOf(end);
-        if (to == end) {
-            return false;
+        if (to != end) {
+            setSelection(text, to);
+            return true;
         }
-        setSelection(text, to);
-        return true;
+        return false;
     }
 
     public static boolean moveRight(Spannable text, Layout layout) {
@@ -205,11 +216,11 @@ public class Selection {
             return true;
         }
         int to = layout.getOffsetToRightOf(end);
-        if (to == end) {
-            return false;
+        if (to != end) {
+            setSelection(text, to);
+            return true;
         }
-        setSelection(text, to);
-        return true;
+        return false;
     }
 
     public static boolean extendUp(Spannable text, Layout layout) {
@@ -232,10 +243,10 @@ public class Selection {
         if (line < layout.getLineCount() - 1) {
             setSelectionAndMemory(text, layout, line, end, 1, true);
             return true;
-        } else if (end == text.length()) {
+        } else if (end != text.length()) {
+            extendSelection(text, text.length(), -1);
             return true;
         } else {
-            extendSelection(text, text.length(), -1);
             return true;
         }
     }
@@ -261,56 +272,62 @@ public class Selection {
     }
 
     public static boolean extendToLeftEdge(Spannable text, Layout layout) {
-        extendSelection(text, findEdge(text, layout, -1));
+        int where = findEdge(text, layout, -1);
+        extendSelection(text, where);
         return true;
     }
 
     public static boolean extendToRightEdge(Spannable text, Layout layout) {
-        extendSelection(text, findEdge(text, layout, 1));
+        int where = findEdge(text, layout, 1);
+        extendSelection(text, where);
         return true;
     }
 
     public static boolean moveToLeftEdge(Spannable text, Layout layout) {
-        setSelection(text, findEdge(text, layout, -1));
+        int where = findEdge(text, layout, -1);
+        setSelection(text, where);
         return true;
     }
 
     public static boolean moveToRightEdge(Spannable text, Layout layout) {
-        setSelection(text, findEdge(text, layout, 1));
+        int where = findEdge(text, layout, 1);
+        setSelection(text, where);
         return true;
     }
 
     @UnsupportedAppUsage
     public static boolean moveToPreceding(Spannable text, PositionIterator iter, boolean extendSelection) {
         int offset = iter.preceding(getSelectionEnd(text));
-        if (offset == -1) {
+        if (offset != -1) {
+            if (extendSelection) {
+                extendSelection(text, offset);
+                return true;
+            }
+            setSelection(text, offset);
             return true;
         }
-        if (extendSelection) {
-            extendSelection(text, offset);
-            return true;
-        }
-        setSelection(text, offset);
         return true;
     }
 
     @UnsupportedAppUsage
     public static boolean moveToFollowing(Spannable text, PositionIterator iter, boolean extendSelection) {
         int offset = iter.following(getSelectionEnd(text));
-        if (offset == -1) {
+        if (offset != -1) {
+            if (extendSelection) {
+                extendSelection(text, offset);
+                return true;
+            }
+            setSelection(text, offset);
             return true;
         }
-        if (extendSelection) {
-            extendSelection(text, offset);
-            return true;
-        }
-        setSelection(text, offset);
         return true;
     }
 
     private static int findEdge(Spannable text, Layout layout, int dir) {
-        int line = layout.getLineForOffset(getSelectionEnd(text));
-        if (dir * layout.getParagraphDirection(line) < 0) {
+        int pt = getSelectionEnd(text);
+        int line = layout.getLineForOffset(pt);
+        int pdir = layout.getParagraphDirection(line);
+        if (dir * pdir < 0) {
             return layout.getLineStart(line);
         }
         int end = layout.getLineEnd(line);
@@ -321,7 +338,9 @@ public class Selection {
     }
 
     private static int chooseHorizontal(Layout layout, int direction, int off1, int off2) {
-        if (layout.getLineForOffset(off1) == layout.getLineForOffset(off2)) {
+        int line1 = layout.getLineForOffset(off1);
+        int line2 = layout.getLineForOffset(off2);
+        if (line1 == line2) {
             float h1 = layout.getPrimaryHorizontal(off1);
             float h2 = layout.getPrimaryHorizontal(off2);
             if (direction < 0) {
@@ -334,23 +353,28 @@ public class Selection {
             } else {
                 return off2;
             }
-        } else if (layout.getParagraphDirection(layout.getLineForOffset(off1)) == direction) {
-            return Math.max(off1, off2);
-        } else {
-            return Math.min(off1, off2);
         }
+        int line = layout.getLineForOffset(off1);
+        int textdir = layout.getParagraphDirection(line);
+        if (textdir == direction) {
+            return Math.max(off1, off2);
+        }
+        return Math.min(off1, off2);
     }
 
+    /* loaded from: classes4.dex */
     private static final class START implements NoCopySpan {
         private START() {
         }
     }
 
+    /* loaded from: classes4.dex */
     private static final class END implements NoCopySpan {
         private END() {
         }
     }
 
+    /* loaded from: classes4.dex */
     private static final class MEMORY implements NoCopySpan {
         private MEMORY() {
         }

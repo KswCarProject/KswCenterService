@@ -2,6 +2,7 @@ package android.hardware.radio.V1_0;
 
 import java.util.ArrayList;
 
+/* loaded from: classes.dex */
 public final class SapStatus {
     public static final int CARD_INSERTED = 4;
     public static final int CARD_NOT_ACCESSIBLE = 2;

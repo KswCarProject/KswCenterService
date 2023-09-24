@@ -1,17 +1,22 @@
 package android.hardware.location;
 
 import android.annotation.SystemApi;
-import android.os.Parcel;
-import android.os.Parcelable;
+import android.p007os.Parcel;
+import android.p007os.Parcelable;
 import com.android.internal.content.NativeLibraryHelper;
 
 @SystemApi
+/* loaded from: classes.dex */
 public class MemoryRegion implements Parcelable {
-    public static final Parcelable.Creator<MemoryRegion> CREATOR = new Parcelable.Creator<MemoryRegion>() {
+    public static final Parcelable.Creator<MemoryRegion> CREATOR = new Parcelable.Creator<MemoryRegion>() { // from class: android.hardware.location.MemoryRegion.1
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public MemoryRegion createFromParcel(Parcel in) {
             return new MemoryRegion(in);
         }
 
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public MemoryRegion[] newArray(int size) {
             return new MemoryRegion[size];
         }
@@ -47,7 +52,7 @@ public class MemoryRegion implements Parcelable {
         String mask2;
         String mask3;
         if (isReadable()) {
-            mask = "" + "r";
+            mask = "r";
         } else {
             mask = "" + NativeLibraryHelper.CLEAR_ABI_OVERRIDE;
         }
@@ -61,11 +66,12 @@ public class MemoryRegion implements Parcelable {
         } else {
             mask3 = mask2 + NativeLibraryHelper.CLEAR_ABI_OVERRIDE;
         }
-        return "[ " + this.mSizeBytesFree + "/ " + this.mSizeBytes + " ] : " + mask3;
+        String retVal = "[ " + this.mSizeBytesFree + "/ " + this.mSizeBytes + " ] : " + mask3;
+        return retVal;
     }
 
     public boolean equals(Object object) {
-        boolean isEqual = true;
+        boolean z = true;
         if (object == this) {
             return true;
         }
@@ -73,16 +79,16 @@ public class MemoryRegion implements Parcelable {
             return false;
         }
         MemoryRegion other = (MemoryRegion) object;
-        if (!(other.getCapacityBytes() == this.mSizeBytes && other.getFreeCapacityBytes() == this.mSizeBytesFree && other.isReadable() == this.mIsReadable && other.isWritable() == this.mIsWritable && other.isExecutable() == this.mIsExecutable)) {
-            isEqual = false;
-        }
+        boolean isEqual = (other.getCapacityBytes() == this.mSizeBytes && other.getFreeCapacityBytes() == this.mSizeBytesFree && other.isReadable() == this.mIsReadable && other.isWritable() == this.mIsWritable && other.isExecutable() == this.mIsExecutable) ? false : false;
         return isEqual;
     }
 
+    @Override // android.p007os.Parcelable
     public int describeContents() {
         return 0;
     }
 
+    @Override // android.p007os.Parcelable
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeInt(this.mSizeBytes);
         dest.writeInt(this.mSizeBytesFree);
@@ -94,9 +100,8 @@ public class MemoryRegion implements Parcelable {
     public MemoryRegion(Parcel source) {
         this.mSizeBytes = source.readInt();
         this.mSizeBytesFree = source.readInt();
-        boolean z = false;
         this.mIsReadable = source.readInt() != 0;
         this.mIsWritable = source.readInt() != 0;
-        this.mIsExecutable = source.readInt() != 0 ? true : z;
+        this.mIsExecutable = source.readInt() != 0;
     }
 }

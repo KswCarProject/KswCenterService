@@ -1,19 +1,24 @@
 package android.net;
 
 import android.annotation.SystemApi;
-import android.os.Parcel;
-import android.os.Parcelable;
+import android.p007os.Parcel;
+import android.p007os.Parcelable;
 import android.telephony.SmsManager;
 import java.util.Arrays;
 import java.util.Objects;
 
 @SystemApi
+/* loaded from: classes3.dex */
 public class RssiCurve implements Parcelable {
-    public static final Parcelable.Creator<RssiCurve> CREATOR = new Parcelable.Creator<RssiCurve>() {
+    public static final Parcelable.Creator<RssiCurve> CREATOR = new Parcelable.Creator<RssiCurve>() { // from class: android.net.RssiCurve.1
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public RssiCurve createFromParcel(Parcel in) {
             return new RssiCurve(in);
         }
 
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public RssiCurve[] newArray(int size) {
             return new RssiCurve[size];
         }
@@ -24,32 +29,35 @@ public class RssiCurve implements Parcelable {
     public final byte[] rssiBuckets;
     public final int start;
 
-    public RssiCurve(int start2, int bucketWidth2, byte[] rssiBuckets2) {
-        this(start2, bucketWidth2, rssiBuckets2, 25);
+    public RssiCurve(int start, int bucketWidth, byte[] rssiBuckets) {
+        this(start, bucketWidth, rssiBuckets, 25);
     }
 
-    public RssiCurve(int start2, int bucketWidth2, byte[] rssiBuckets2, int activeNetworkRssiBoost2) {
-        this.start = start2;
-        this.bucketWidth = bucketWidth2;
-        if (rssiBuckets2 == null || rssiBuckets2.length == 0) {
+    public RssiCurve(int start, int bucketWidth, byte[] rssiBuckets, int activeNetworkRssiBoost) {
+        this.start = start;
+        this.bucketWidth = bucketWidth;
+        if (rssiBuckets == null || rssiBuckets.length == 0) {
             throw new IllegalArgumentException("rssiBuckets must be at least one element large.");
         }
-        this.rssiBuckets = rssiBuckets2;
-        this.activeNetworkRssiBoost = activeNetworkRssiBoost2;
+        this.rssiBuckets = rssiBuckets;
+        this.activeNetworkRssiBoost = activeNetworkRssiBoost;
     }
 
     private RssiCurve(Parcel in) {
         this.start = in.readInt();
         this.bucketWidth = in.readInt();
-        this.rssiBuckets = new byte[in.readInt()];
+        int bucketCount = in.readInt();
+        this.rssiBuckets = new byte[bucketCount];
         in.readByteArray(this.rssiBuckets);
         this.activeNetworkRssiBoost = in.readInt();
     }
 
+    @Override // android.p007os.Parcelable
     public int describeContents() {
         return 0;
     }
 
+    @Override // android.p007os.Parcelable
     public void writeToParcel(Parcel out, int flags) {
         out.writeInt(this.start);
         out.writeInt(this.bucketWidth);
@@ -90,7 +98,7 @@ public class RssiCurve implements Parcelable {
     }
 
     public int hashCode() {
-        return Objects.hash(new Object[]{Integer.valueOf(this.start), Integer.valueOf(this.bucketWidth), Integer.valueOf(this.activeNetworkRssiBoost)}) ^ Arrays.hashCode(this.rssiBuckets);
+        return Objects.hash(Integer.valueOf(this.start), Integer.valueOf(this.bucketWidth), Integer.valueOf(this.activeNetworkRssiBoost)) ^ Arrays.hashCode(this.rssiBuckets);
     }
 
     public String toString() {
@@ -103,7 +111,7 @@ public class RssiCurve implements Parcelable {
         sb.append(this.activeNetworkRssiBoost);
         sb.append(",buckets=");
         for (int i = 0; i < this.rssiBuckets.length; i++) {
-            sb.append(this.rssiBuckets[i]);
+            sb.append((int) this.rssiBuckets[i]);
             if (i < this.rssiBuckets.length - 1) {
                 sb.append(SmsManager.REGEX_PREFIX_DELIMITER);
             }

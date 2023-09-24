@@ -1,16 +1,21 @@
 package android.telephony.ims;
 
 import android.net.Uri;
-import android.os.Parcel;
-import android.os.Parcelable;
+import android.p007os.Parcel;
+import android.p007os.Parcelable;
 import com.android.internal.annotations.VisibleForTesting;
 
+/* loaded from: classes4.dex */
 public class RcsGroupThreadIconChangedEventDescriptor extends RcsGroupThreadEventDescriptor {
-    public static final Parcelable.Creator<RcsGroupThreadIconChangedEventDescriptor> CREATOR = new Parcelable.Creator<RcsGroupThreadIconChangedEventDescriptor>() {
+    public static final Parcelable.Creator<RcsGroupThreadIconChangedEventDescriptor> CREATOR = new Parcelable.Creator<RcsGroupThreadIconChangedEventDescriptor>() { // from class: android.telephony.ims.RcsGroupThreadIconChangedEventDescriptor.1
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public RcsGroupThreadIconChangedEventDescriptor createFromParcel(Parcel in) {
             return new RcsGroupThreadIconChangedEventDescriptor(in);
         }
 
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public RcsGroupThreadIconChangedEventDescriptor[] newArray(int size) {
             return new RcsGroupThreadIconChangedEventDescriptor[size];
         }
@@ -22,6 +27,7 @@ public class RcsGroupThreadIconChangedEventDescriptor extends RcsGroupThreadEven
         this.mNewIcon = newIcon;
     }
 
+    @Override // android.telephony.ims.RcsEventDescriptor
     @VisibleForTesting(visibility = VisibleForTesting.Visibility.PROTECTED)
     public RcsGroupThreadIconChangedEvent createRcsEvent(RcsControllerCall rcsControllerCall) {
         return new RcsGroupThreadIconChangedEvent(this.mTimestamp, new RcsGroupThread(rcsControllerCall, this.mRcsGroupThreadId), new RcsParticipant(rcsControllerCall, this.mOriginatingParticipantId), this.mNewIcon);
@@ -32,10 +38,12 @@ public class RcsGroupThreadIconChangedEventDescriptor extends RcsGroupThreadEven
         this.mNewIcon = (Uri) in.readParcelable(Uri.class.getClassLoader());
     }
 
+    @Override // android.telephony.ims.RcsEventDescriptor, android.p007os.Parcelable
     public int describeContents() {
         return 0;
     }
 
+    @Override // android.telephony.ims.RcsGroupThreadEventDescriptor, android.telephony.ims.RcsEventDescriptor, android.p007os.Parcelable
     public void writeToParcel(Parcel dest, int flags) {
         super.writeToParcel(dest, flags);
         dest.writeParcelable(this.mNewIcon, flags);

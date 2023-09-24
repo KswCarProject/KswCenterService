@@ -2,11 +2,12 @@ package com.wits.pms.bean;
 
 import android.content.Context;
 import android.content.Intent;
-import android.os.Bundle;
-import android.os.UserHandle;
+import android.p007os.Bundle;
+import android.p007os.UserHandle;
 import android.util.Log;
 import com.android.internal.content.NativeLibraryHelper;
 
+/* loaded from: classes2.dex */
 public class AutoKitMessage {
     public static final String AUTOBOX_CALL = "vendor.wits.autobox.call";
     public static final String AUTOBOX_CALL_ING = "2";
@@ -23,10 +24,10 @@ public class AutoKitMessage {
     public Context context;
     public int receiveKey;
 
-    public AutoKitMessage(Context context2, String action2, Bundle bundle2) {
-        this.action = action2;
-        this.bundle = bundle2;
-        this.context = context2;
+    public AutoKitMessage(Context context, String action, Bundle bundle) {
+        this.action = action;
+        this.bundle = bundle;
+        this.context = context;
     }
 
     public AutoKitMessage(Intent intent) {
@@ -37,24 +38,24 @@ public class AutoKitMessage {
         }
     }
 
-    public static void obtainMsgSendOut(Context context2, int dataInt, String dataString) {
-        Bundle bundle2 = new Bundle();
-        bundle2.putInt(AUTO_BOX_CONTROL_CMD_DATA, dataInt);
-        bundle2.putString(AUTO_BOX_CONTROL_CMD_DATA_STRING, dataString);
-        new AutoKitMessage(context2, AUTO_BOX_CONTROL_CMD_EVT, bundle2).sendBroadCast();
+    public static void obtainMsgSendOut(Context context, int dataInt, String dataString) {
+        Bundle bundle = new Bundle();
+        bundle.putInt(AUTO_BOX_CONTROL_CMD_DATA, dataInt);
+        bundle.putString(AUTO_BOX_CONTROL_CMD_DATA_STRING, dataString);
+        new AutoKitMessage(context, AUTO_BOX_CONTROL_CMD_EVT, bundle).sendBroadCast();
     }
 
-    public static void obtainMsgSendOut(Context context2, int dataInt) {
-        Bundle bundle2 = new Bundle();
-        bundle2.putInt(AUTO_BOX_CONTROL_CMD_DATA, dataInt);
-        new AutoKitMessage(context2, AUTO_BOX_CONTROL_CMD_EVT, bundle2).sendBroadCast();
+    public static void obtainMsgSendOut(Context context, int dataInt) {
+        Bundle bundle = new Bundle();
+        bundle.putInt(AUTO_BOX_CONTROL_CMD_DATA, dataInt);
+        new AutoKitMessage(context, AUTO_BOX_CONTROL_CMD_EVT, bundle).sendBroadCast();
     }
 
     public void sendBroadCast() {
         Intent intent = new Intent();
         intent.putExtras(this.bundle);
         intent.setAction(this.action);
-        Log.v("AutoKitMessage", "action: " + intent.getStringExtra("action"));
+        Log.m66v("AutoKitMessage", "action: " + intent.getStringExtra("action"));
         this.context.sendBroadcastAsUser(intent, UserHandle.getUserHandleForUid(this.context.getApplicationInfo().uid));
     }
 

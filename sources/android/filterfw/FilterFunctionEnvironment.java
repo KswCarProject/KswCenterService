@@ -5,9 +5,10 @@ import android.filterfw.core.FilterFactory;
 import android.filterfw.core.FilterFunction;
 import android.filterfw.core.FrameManager;
 
+/* loaded from: classes.dex */
 public class FilterFunctionEnvironment extends MffEnvironment {
     public FilterFunctionEnvironment() {
-        super((FrameManager) null);
+        super(null);
     }
 
     public FilterFunctionEnvironment(FrameManager frameManager) {
@@ -15,7 +16,8 @@ public class FilterFunctionEnvironment extends MffEnvironment {
     }
 
     public FilterFunction createFunction(Class filterClass, Object... parameters) {
-        Filter filter = FilterFactory.sharedFactory().createFilterByClass(filterClass, "FilterFunction(" + filterClass.getSimpleName() + ")");
+        String filterName = "FilterFunction(" + filterClass.getSimpleName() + ")";
+        Filter filter = FilterFactory.sharedFactory().createFilterByClass(filterClass, filterName);
         filter.initWithAssignmentList(parameters);
         return new FilterFunction(getContext(), filter);
     }

@@ -3,6 +3,7 @@ package android.media.audiofx;
 import android.media.audiofx.AudioEffect;
 import java.util.StringTokenizer;
 
+/* loaded from: classes3.dex */
 public class PresetReverb extends AudioEffect {
     public static final int PARAM_PRESET = 0;
     public static final short PRESET_LARGEHALL = 5;
@@ -13,18 +14,20 @@ public class PresetReverb extends AudioEffect {
     public static final short PRESET_PLATE = 6;
     public static final short PRESET_SMALLROOM = 1;
     private static final String TAG = "PresetReverb";
-    private BaseParameterListener mBaseParamListener = null;
-    /* access modifiers changed from: private */
-    public OnParameterChangeListener mParamListener = null;
-    /* access modifiers changed from: private */
-    public final Object mParamListenerLock = new Object();
+    private BaseParameterListener mBaseParamListener;
+    private OnParameterChangeListener mParamListener;
+    private final Object mParamListenerLock;
 
+    /* loaded from: classes3.dex */
     public interface OnParameterChangeListener {
         void onParameterChange(PresetReverb presetReverb, int i, int i2, short s);
     }
 
     public PresetReverb(int priority, int audioSession) throws IllegalArgumentException, UnsupportedOperationException, RuntimeException {
         super(EFFECT_TYPE_PRESET_REVERB, EFFECT_TYPE_NULL, priority, audioSession);
+        this.mParamListener = null;
+        this.mBaseParamListener = null;
+        this.mParamListenerLock = new Object();
     }
 
     public void setPreset(short preset) throws IllegalStateException, IllegalArgumentException, UnsupportedOperationException {
@@ -37,10 +40,12 @@ public class PresetReverb extends AudioEffect {
         return value[0];
     }
 
+    /* loaded from: classes3.dex */
     private class BaseParameterListener implements AudioEffect.OnParameterChangeListener {
         private BaseParameterListener() {
         }
 
+        @Override // android.media.audiofx.AudioEffect.OnParameterChangeListener
         public void onParameterChange(AudioEffect effect, int status, byte[] param, byte[] value) {
             OnParameterChangeListener l = null;
             synchronized (PresetReverb.this.mParamListenerLock) {
@@ -74,6 +79,7 @@ public class PresetReverb extends AudioEffect {
         }
     }
 
+    /* loaded from: classes3.dex */
     public static class Settings {
         public short preset;
 
@@ -82,30 +88,28 @@ public class PresetReverb extends AudioEffect {
 
         public Settings(String settings) {
             StringTokenizer st = new StringTokenizer(settings, "=;");
-            int countTokens = st.countTokens();
-            if (st.countTokens() == 3) {
-                String key = st.nextToken();
-                if (key.equals(PresetReverb.TAG)) {
-                    try {
-                        String key2 = st.nextToken();
-                        if (key2.equals("preset")) {
-                            this.preset = Short.parseShort(st.nextToken());
-                            return;
-                        }
-                        throw new IllegalArgumentException("invalid key name: " + key2);
-                    } catch (NumberFormatException e) {
-                        throw new IllegalArgumentException("invalid value for key: " + key);
-                    }
-                } else {
-                    throw new IllegalArgumentException("invalid settings for PresetReverb: " + key);
-                }
-            } else {
+            st.countTokens();
+            if (st.countTokens() != 3) {
                 throw new IllegalArgumentException("settings: " + settings);
+            }
+            String key = st.nextToken();
+            if (!key.equals(PresetReverb.TAG)) {
+                throw new IllegalArgumentException("invalid settings for PresetReverb: " + key);
+            }
+            try {
+                String key2 = st.nextToken();
+                if (!key2.equals("preset")) {
+                    throw new IllegalArgumentException("invalid key name: " + key2);
+                }
+                this.preset = Short.parseShort(st.nextToken());
+            } catch (NumberFormatException e) {
+                throw new IllegalArgumentException("invalid value for key: " + key);
             }
         }
 
         public String toString() {
-            return new String("PresetReverb;preset=" + Short.toString(this.preset));
+            String str = new String("PresetReverb;preset=" + Short.toString(this.preset));
+            return str;
         }
     }
 

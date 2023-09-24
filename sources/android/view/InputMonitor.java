@@ -1,16 +1,21 @@
 package android.view;
 
-import android.os.Parcel;
-import android.os.Parcelable;
-import android.os.RemoteException;
+import android.p007os.Parcel;
+import android.p007os.Parcelable;
+import android.p007os.RemoteException;
 import android.view.IInputMonitorHost;
 
+/* loaded from: classes4.dex */
 public final class InputMonitor implements Parcelable {
-    public static final Parcelable.Creator<InputMonitor> CREATOR = new Parcelable.Creator<InputMonitor>() {
+    public static final Parcelable.Creator<InputMonitor> CREATOR = new Parcelable.Creator<InputMonitor>() { // from class: android.view.InputMonitor.1
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public InputMonitor createFromParcel(Parcel source) {
             return new InputMonitor(source);
         }
 
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public InputMonitor[] newArray(int size) {
             return new InputMonitor[size];
         }
@@ -29,7 +34,7 @@ public final class InputMonitor implements Parcelable {
 
     public InputMonitor(Parcel in) {
         this.mName = in.readString();
-        this.mChannel = (InputChannel) in.readParcelable((ClassLoader) null);
+        this.mChannel = (InputChannel) in.readParcelable(null);
         this.mHost = IInputMonitorHost.Stub.asInterface(in.readStrongBinder());
     }
 
@@ -58,12 +63,14 @@ public final class InputMonitor implements Parcelable {
         }
     }
 
+    @Override // android.p007os.Parcelable
     public void writeToParcel(Parcel out, int flags) {
         out.writeString(this.mName);
         out.writeParcelable(this.mChannel, flags);
         out.writeStrongBinder(this.mHost.asBinder());
     }
 
+    @Override // android.p007os.Parcelable
     public int describeContents() {
         return 0;
     }

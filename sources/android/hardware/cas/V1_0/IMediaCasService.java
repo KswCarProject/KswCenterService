@@ -2,14 +2,14 @@ package android.hardware.cas.V1_0;
 
 import android.internal.hidl.base.V1_0.DebugInfo;
 import android.internal.hidl.base.V1_0.IBase;
-import android.os.HidlSupport;
-import android.os.HwBinder;
-import android.os.HwBlob;
-import android.os.HwParcel;
-import android.os.IHwBinder;
-import android.os.IHwInterface;
-import android.os.NativeHandle;
-import android.os.RemoteException;
+import android.p007os.HidlSupport;
+import android.p007os.HwBinder;
+import android.p007os.HwBlob;
+import android.p007os.HwParcel;
+import android.p007os.IHwBinder;
+import android.p007os.IHwInterface;
+import android.p007os.NativeHandle;
+import android.p007os.RemoteException;
 import com.android.internal.midi.MidiConstants;
 import com.android.internal.telephony.PhoneConstants;
 import com.ibm.icu.text.Bidi;
@@ -19,39 +19,51 @@ import java.util.Iterator;
 import java.util.Objects;
 import org.mozilla.universalchardet.prober.HebrewProber;
 
+/* loaded from: classes.dex */
 public interface IMediaCasService extends IBase {
     public static final String kInterfaceName = "android.hardware.cas@1.0::IMediaCasService";
 
+    @Override // android.internal.hidl.base.V1_0.IBase, android.p007os.IHwInterface
     IHwBinder asBinder();
 
     IDescramblerBase createDescrambler(int i) throws RemoteException;
 
     ICas createPlugin(int i, ICasListener iCasListener) throws RemoteException;
 
+    @Override // android.internal.hidl.base.V1_0.IBase
     void debug(NativeHandle nativeHandle, ArrayList<String> arrayList) throws RemoteException;
 
     ArrayList<HidlCasPluginDescriptor> enumeratePlugins() throws RemoteException;
 
+    @Override // android.internal.hidl.base.V1_0.IBase
     DebugInfo getDebugInfo() throws RemoteException;
 
+    @Override // android.internal.hidl.base.V1_0.IBase
     ArrayList<byte[]> getHashChain() throws RemoteException;
 
+    @Override // android.internal.hidl.base.V1_0.IBase
     ArrayList<String> interfaceChain() throws RemoteException;
 
+    @Override // android.internal.hidl.base.V1_0.IBase
     String interfaceDescriptor() throws RemoteException;
 
     boolean isDescramblerSupported(int i) throws RemoteException;
 
     boolean isSystemIdSupported(int i) throws RemoteException;
 
+    @Override // android.internal.hidl.base.V1_0.IBase
     boolean linkToDeath(IHwBinder.DeathRecipient deathRecipient, long j) throws RemoteException;
 
+    @Override // android.internal.hidl.base.V1_0.IBase
     void notifySyspropsChanged() throws RemoteException;
 
+    @Override // android.internal.hidl.base.V1_0.IBase
     void ping() throws RemoteException;
 
+    @Override // android.internal.hidl.base.V1_0.IBase
     void setHALInstrumentation() throws RemoteException;
 
+    @Override // android.internal.hidl.base.V1_0.IBase
     boolean unlinkToDeath(IHwBinder.DeathRecipient deathRecipient) throws RemoteException;
 
     static IMediaCasService asInterface(IHwBinder binder) {
@@ -66,7 +78,8 @@ public interface IMediaCasService extends IBase {
         try {
             Iterator<String> it = proxy.interfaceChain().iterator();
             while (it.hasNext()) {
-                if (it.next().equals(kInterfaceName)) {
+                String descriptor = it.next();
+                if (descriptor.equals(kInterfaceName)) {
                     return proxy;
                 }
             }
@@ -98,6 +111,7 @@ public interface IMediaCasService extends IBase {
         return getService(PhoneConstants.APN_TYPE_DEFAULT);
     }
 
+    /* loaded from: classes.dex */
     public static final class Proxy implements IMediaCasService {
         private IHwBinder mRemote;
 
@@ -105,6 +119,7 @@ public interface IMediaCasService extends IBase {
             this.mRemote = (IHwBinder) Objects.requireNonNull(remote);
         }
 
+        @Override // android.hardware.cas.V1_0.IMediaCasService, android.internal.hidl.base.V1_0.IBase, android.p007os.IHwInterface
         public IHwBinder asBinder() {
             return this.mRemote;
         }
@@ -125,6 +140,7 @@ public interface IMediaCasService extends IBase {
             return asBinder().hashCode();
         }
 
+        @Override // android.hardware.cas.V1_0.IMediaCasService
         public ArrayList<HidlCasPluginDescriptor> enumeratePlugins() throws RemoteException {
             HwParcel _hidl_request = new HwParcel();
             _hidl_request.writeInterfaceToken(IMediaCasService.kInterfaceName);
@@ -133,12 +149,14 @@ public interface IMediaCasService extends IBase {
                 this.mRemote.transact(1, _hidl_request, _hidl_reply, 0);
                 _hidl_reply.verifySuccess();
                 _hidl_request.releaseTemporaryStorage();
-                return HidlCasPluginDescriptor.readVectorFromParcel(_hidl_reply);
+                ArrayList<HidlCasPluginDescriptor> _hidl_out_descriptors = HidlCasPluginDescriptor.readVectorFromParcel(_hidl_reply);
+                return _hidl_out_descriptors;
             } finally {
                 _hidl_reply.release();
             }
         }
 
+        @Override // android.hardware.cas.V1_0.IMediaCasService
         public boolean isSystemIdSupported(int CA_system_id) throws RemoteException {
             HwParcel _hidl_request = new HwParcel();
             _hidl_request.writeInterfaceToken(IMediaCasService.kInterfaceName);
@@ -148,12 +166,14 @@ public interface IMediaCasService extends IBase {
                 this.mRemote.transact(2, _hidl_request, _hidl_reply, 0);
                 _hidl_reply.verifySuccess();
                 _hidl_request.releaseTemporaryStorage();
-                return _hidl_reply.readBool();
+                boolean _hidl_out_result = _hidl_reply.readBool();
+                return _hidl_out_result;
             } finally {
                 _hidl_reply.release();
             }
         }
 
+        @Override // android.hardware.cas.V1_0.IMediaCasService
         public ICas createPlugin(int CA_system_id, ICasListener listener) throws RemoteException {
             HwParcel _hidl_request = new HwParcel();
             _hidl_request.writeInterfaceToken(IMediaCasService.kInterfaceName);
@@ -164,12 +184,14 @@ public interface IMediaCasService extends IBase {
                 this.mRemote.transact(3, _hidl_request, _hidl_reply, 0);
                 _hidl_reply.verifySuccess();
                 _hidl_request.releaseTemporaryStorage();
-                return ICas.asInterface(_hidl_reply.readStrongBinder());
+                ICas _hidl_out_cas = ICas.asInterface(_hidl_reply.readStrongBinder());
+                return _hidl_out_cas;
             } finally {
                 _hidl_reply.release();
             }
         }
 
+        @Override // android.hardware.cas.V1_0.IMediaCasService
         public boolean isDescramblerSupported(int CA_system_id) throws RemoteException {
             HwParcel _hidl_request = new HwParcel();
             _hidl_request.writeInterfaceToken(IMediaCasService.kInterfaceName);
@@ -179,12 +201,14 @@ public interface IMediaCasService extends IBase {
                 this.mRemote.transact(4, _hidl_request, _hidl_reply, 0);
                 _hidl_reply.verifySuccess();
                 _hidl_request.releaseTemporaryStorage();
-                return _hidl_reply.readBool();
+                boolean _hidl_out_result = _hidl_reply.readBool();
+                return _hidl_out_result;
             } finally {
                 _hidl_reply.release();
             }
         }
 
+        @Override // android.hardware.cas.V1_0.IMediaCasService
         public IDescramblerBase createDescrambler(int CA_system_id) throws RemoteException {
             HwParcel _hidl_request = new HwParcel();
             _hidl_request.writeInterfaceToken(IMediaCasService.kInterfaceName);
@@ -194,12 +218,14 @@ public interface IMediaCasService extends IBase {
                 this.mRemote.transact(5, _hidl_request, _hidl_reply, 0);
                 _hidl_reply.verifySuccess();
                 _hidl_request.releaseTemporaryStorage();
-                return IDescramblerBase.asInterface(_hidl_reply.readStrongBinder());
+                IDescramblerBase _hidl_out_descrambler = IDescramblerBase.asInterface(_hidl_reply.readStrongBinder());
+                return _hidl_out_descrambler;
             } finally {
                 _hidl_reply.release();
             }
         }
 
+        @Override // android.hardware.cas.V1_0.IMediaCasService, android.internal.hidl.base.V1_0.IBase
         public ArrayList<String> interfaceChain() throws RemoteException {
             HwParcel _hidl_request = new HwParcel();
             _hidl_request.writeInterfaceToken(IBase.kInterfaceName);
@@ -208,12 +234,14 @@ public interface IMediaCasService extends IBase {
                 this.mRemote.transact(256067662, _hidl_request, _hidl_reply, 0);
                 _hidl_reply.verifySuccess();
                 _hidl_request.releaseTemporaryStorage();
-                return _hidl_reply.readStringVector();
+                ArrayList<String> _hidl_out_descriptors = _hidl_reply.readStringVector();
+                return _hidl_out_descriptors;
             } finally {
                 _hidl_reply.release();
             }
         }
 
+        @Override // android.hardware.cas.V1_0.IMediaCasService, android.internal.hidl.base.V1_0.IBase
         public void debug(NativeHandle fd, ArrayList<String> options) throws RemoteException {
             HwParcel _hidl_request = new HwParcel();
             _hidl_request.writeInterfaceToken(IBase.kInterfaceName);
@@ -229,6 +257,7 @@ public interface IMediaCasService extends IBase {
             }
         }
 
+        @Override // android.hardware.cas.V1_0.IMediaCasService, android.internal.hidl.base.V1_0.IBase
         public String interfaceDescriptor() throws RemoteException {
             HwParcel _hidl_request = new HwParcel();
             _hidl_request.writeInterfaceToken(IBase.kInterfaceName);
@@ -237,12 +266,14 @@ public interface IMediaCasService extends IBase {
                 this.mRemote.transact(256136003, _hidl_request, _hidl_reply, 0);
                 _hidl_reply.verifySuccess();
                 _hidl_request.releaseTemporaryStorage();
-                return _hidl_reply.readString();
+                String _hidl_out_descriptor = _hidl_reply.readString();
+                return _hidl_out_descriptor;
             } finally {
                 _hidl_reply.release();
             }
         }
 
+        @Override // android.hardware.cas.V1_0.IMediaCasService, android.internal.hidl.base.V1_0.IBase
         public ArrayList<byte[]> getHashChain() throws RemoteException {
             HwParcel _hidl_request = new HwParcel();
             _hidl_request.writeInterfaceToken(IBase.kInterfaceName);
@@ -253,9 +284,9 @@ public interface IMediaCasService extends IBase {
                 _hidl_reply.verifySuccess();
                 _hidl_request.releaseTemporaryStorage();
                 ArrayList<byte[]> _hidl_out_hashchain = new ArrayList<>();
-                HwBlob _hidl_blob = _hidl_reply.readBuffer(16);
-                int _hidl_vec_size = _hidl_blob.getInt32(8);
-                HwBlob childBlob = _hidl_reply.readEmbeddedBuffer((long) (_hidl_vec_size * 32), _hidl_blob.handle(), 0, true);
+                HwBlob _hidl_blob = _hidl_reply.readBuffer(16L);
+                int _hidl_vec_size = _hidl_blob.getInt32(8L);
+                HwBlob childBlob = _hidl_reply.readEmbeddedBuffer(_hidl_vec_size * 32, _hidl_blob.handle(), 0L, true);
                 _hidl_out_hashchain.clear();
                 while (true) {
                     int _hidl_index_02 = _hidl_index_0;
@@ -263,7 +294,8 @@ public interface IMediaCasService extends IBase {
                         return _hidl_out_hashchain;
                     }
                     byte[] _hidl_vec_element = new byte[32];
-                    childBlob.copyToInt8Array((long) (_hidl_index_02 * 32), _hidl_vec_element, 32);
+                    long _hidl_array_offset_1 = _hidl_index_02 * 32;
+                    childBlob.copyToInt8Array(_hidl_array_offset_1, _hidl_vec_element, 32);
                     _hidl_out_hashchain.add(_hidl_vec_element);
                     _hidl_index_0 = _hidl_index_02 + 1;
                 }
@@ -272,6 +304,7 @@ public interface IMediaCasService extends IBase {
             }
         }
 
+        @Override // android.hardware.cas.V1_0.IMediaCasService, android.internal.hidl.base.V1_0.IBase
         public void setHALInstrumentation() throws RemoteException {
             HwParcel _hidl_request = new HwParcel();
             _hidl_request.writeInterfaceToken(IBase.kInterfaceName);
@@ -284,10 +317,12 @@ public interface IMediaCasService extends IBase {
             }
         }
 
+        @Override // android.hardware.cas.V1_0.IMediaCasService, android.internal.hidl.base.V1_0.IBase
         public boolean linkToDeath(IHwBinder.DeathRecipient recipient, long cookie) throws RemoteException {
             return this.mRemote.linkToDeath(recipient, cookie);
         }
 
+        @Override // android.hardware.cas.V1_0.IMediaCasService, android.internal.hidl.base.V1_0.IBase
         public void ping() throws RemoteException {
             HwParcel _hidl_request = new HwParcel();
             _hidl_request.writeInterfaceToken(IBase.kInterfaceName);
@@ -301,6 +336,7 @@ public interface IMediaCasService extends IBase {
             }
         }
 
+        @Override // android.hardware.cas.V1_0.IMediaCasService, android.internal.hidl.base.V1_0.IBase
         public DebugInfo getDebugInfo() throws RemoteException {
             HwParcel _hidl_request = new HwParcel();
             _hidl_request.writeInterfaceToken(IBase.kInterfaceName);
@@ -317,6 +353,7 @@ public interface IMediaCasService extends IBase {
             }
         }
 
+        @Override // android.hardware.cas.V1_0.IMediaCasService, android.internal.hidl.base.V1_0.IBase
         public void notifySyspropsChanged() throws RemoteException {
             HwParcel _hidl_request = new HwParcel();
             _hidl_request.writeInterfaceToken(IBase.kInterfaceName);
@@ -329,57 +366,71 @@ public interface IMediaCasService extends IBase {
             }
         }
 
+        @Override // android.hardware.cas.V1_0.IMediaCasService, android.internal.hidl.base.V1_0.IBase
         public boolean unlinkToDeath(IHwBinder.DeathRecipient recipient) throws RemoteException {
             return this.mRemote.unlinkToDeath(recipient);
         }
     }
 
+    /* loaded from: classes.dex */
     public static abstract class Stub extends HwBinder implements IMediaCasService {
+        @Override // android.hardware.cas.V1_0.IMediaCasService, android.internal.hidl.base.V1_0.IBase, android.p007os.IHwInterface
         public IHwBinder asBinder() {
             return this;
         }
 
+        @Override // android.hardware.cas.V1_0.IMediaCasService, android.internal.hidl.base.V1_0.IBase
         public final ArrayList<String> interfaceChain() {
-            return new ArrayList<>(Arrays.asList(new String[]{IMediaCasService.kInterfaceName, IBase.kInterfaceName}));
+            return new ArrayList<>(Arrays.asList(IMediaCasService.kInterfaceName, IBase.kInterfaceName));
         }
 
-        public void debug(NativeHandle fd, ArrayList<String> arrayList) {
+        @Override // android.hardware.cas.V1_0.IMediaCasService, android.internal.hidl.base.V1_0.IBase
+        public void debug(NativeHandle fd, ArrayList<String> options) {
         }
 
+        @Override // android.hardware.cas.V1_0.IMediaCasService, android.internal.hidl.base.V1_0.IBase
         public final String interfaceDescriptor() {
             return IMediaCasService.kInterfaceName;
         }
 
+        @Override // android.hardware.cas.V1_0.IMediaCasService, android.internal.hidl.base.V1_0.IBase
         public final ArrayList<byte[]> getHashChain() {
-            return new ArrayList<>(Arrays.asList(new byte[][]{new byte[]{-122, -70, -100, 3, -105, -117, 121, -89, 66, -23, MidiConstants.STATUS_NOTE_ON, 66, 11, -59, -50, MidiConstants.STATUS_CHANNEL_PRESSURE, 103, 61, 37, -87, 57, -8, 37, 114, -103, 107, -17, -110, 98, 30, HebrewProber.SPACE, 20}, new byte[]{-20, Bidi.LEVEL_DEFAULT_RTL, -41, -98, MidiConstants.STATUS_CHANNEL_PRESSURE, 45, -6, -123, -68, 73, -108, 38, -83, -82, 62, -66, 35, -17, 5, 36, MidiConstants.STATUS_SONG_SELECT, -51, 105, 87, 19, -109, 36, -72, 59, 24, -54, 76}}));
+            return new ArrayList<>(Arrays.asList(new byte[]{-122, -70, -100, 3, -105, -117, 121, -89, 66, -23, MidiConstants.STATUS_NOTE_ON, 66, 11, -59, -50, MidiConstants.STATUS_CHANNEL_PRESSURE, 103, 61, 37, -87, 57, -8, 37, 114, -103, 107, -17, -110, 98, 30, HebrewProber.SPACE, 20}, new byte[]{-20, Bidi.LEVEL_DEFAULT_RTL, -41, -98, MidiConstants.STATUS_CHANNEL_PRESSURE, 45, -6, -123, -68, 73, -108, 38, -83, -82, 62, -66, 35, -17, 5, 36, MidiConstants.STATUS_SONG_SELECT, -51, 105, 87, 19, -109, 36, -72, 59, 24, -54, 76}));
         }
 
+        @Override // android.hardware.cas.V1_0.IMediaCasService, android.internal.hidl.base.V1_0.IBase
         public final void setHALInstrumentation() {
         }
 
+        @Override // android.p007os.IHwBinder, android.hardware.cas.V1_0.ICas, android.internal.hidl.base.V1_0.IBase
         public final boolean linkToDeath(IHwBinder.DeathRecipient recipient, long cookie) {
             return true;
         }
 
+        @Override // android.hardware.cas.V1_0.IMediaCasService, android.internal.hidl.base.V1_0.IBase
         public final void ping() {
         }
 
+        @Override // android.hardware.cas.V1_0.IMediaCasService, android.internal.hidl.base.V1_0.IBase
         public final DebugInfo getDebugInfo() {
             DebugInfo info = new DebugInfo();
             info.pid = HidlSupport.getPidIfSharable();
-            info.ptr = 0;
+            info.ptr = 0L;
             info.arch = 0;
             return info;
         }
 
+        @Override // android.hardware.cas.V1_0.IMediaCasService, android.internal.hidl.base.V1_0.IBase
         public final void notifySyspropsChanged() {
             HwBinder.enableInstrumentation();
         }
 
+        @Override // android.p007os.IHwBinder, android.hardware.cas.V1_0.ICas, android.internal.hidl.base.V1_0.IBase
         public final boolean unlinkToDeath(IHwBinder.DeathRecipient recipient) {
             return true;
         }
 
+        @Override // android.p007os.IHwBinder
         public IHwInterface queryLocalInterface(String descriptor) {
             if (IMediaCasService.kInterfaceName.equals(descriptor)) {
                 return this;
@@ -395,15 +446,12 @@ public interface IMediaCasService extends IBase {
             return interfaceDescriptor() + "@Stub";
         }
 
+        @Override // android.p007os.HwBinder
         public void onTransact(int _hidl_code, HwParcel _hidl_request, HwParcel _hidl_reply, int _hidl_flags) throws RemoteException {
-            IHwBinder iHwBinder = null;
-            int _hidl_index_0 = 0;
-            boolean _hidl_is_oneway = true;
+            boolean _hidl_is_oneway;
             switch (_hidl_code) {
                 case 1:
-                    if (_hidl_flags == false || !true) {
-                        _hidl_is_oneway = false;
-                    }
+                    _hidl_is_oneway = (_hidl_flags & 1) != 0;
                     if (_hidl_is_oneway) {
                         _hidl_reply.writeStatus(Integer.MIN_VALUE);
                         _hidl_reply.send();
@@ -416,77 +464,66 @@ public interface IMediaCasService extends IBase {
                     _hidl_reply.send();
                     return;
                 case 2:
-                    if ((_hidl_flags & 1) == 0) {
-                        _hidl_is_oneway = false;
-                    }
+                    _hidl_is_oneway = (_hidl_flags & 1) != 0;
                     if (_hidl_is_oneway) {
                         _hidl_reply.writeStatus(Integer.MIN_VALUE);
                         _hidl_reply.send();
                         return;
                     }
                     _hidl_request.enforceInterface(IMediaCasService.kInterfaceName);
-                    boolean _hidl_out_result = isSystemIdSupported(_hidl_request.readInt32());
+                    int CA_system_id = _hidl_request.readInt32();
+                    boolean _hidl_out_result = isSystemIdSupported(CA_system_id);
                     _hidl_reply.writeStatus(0);
                     _hidl_reply.writeBool(_hidl_out_result);
                     _hidl_reply.send();
                     return;
                 case 3:
-                    if ((_hidl_flags & 1) == 0) {
-                        _hidl_is_oneway = false;
-                    }
+                    _hidl_is_oneway = (_hidl_flags & 1) != 0;
                     if (_hidl_is_oneway) {
                         _hidl_reply.writeStatus(Integer.MIN_VALUE);
                         _hidl_reply.send();
                         return;
                     }
                     _hidl_request.enforceInterface(IMediaCasService.kInterfaceName);
-                    ICas _hidl_out_cas = createPlugin(_hidl_request.readInt32(), ICasListener.asInterface(_hidl_request.readStrongBinder()));
+                    int CA_system_id2 = _hidl_request.readInt32();
+                    ICasListener listener = ICasListener.asInterface(_hidl_request.readStrongBinder());
+                    ICas _hidl_out_cas = createPlugin(CA_system_id2, listener);
                     _hidl_reply.writeStatus(0);
-                    if (_hidl_out_cas != null) {
-                        iHwBinder = _hidl_out_cas.asBinder();
-                    }
-                    _hidl_reply.writeStrongBinder(iHwBinder);
+                    _hidl_reply.writeStrongBinder(_hidl_out_cas != null ? _hidl_out_cas.asBinder() : null);
                     _hidl_reply.send();
                     return;
                 case 4:
-                    if ((_hidl_flags & 1) == 0) {
-                        _hidl_is_oneway = false;
-                    }
+                    _hidl_is_oneway = (_hidl_flags & 1) != 0;
                     if (_hidl_is_oneway) {
                         _hidl_reply.writeStatus(Integer.MIN_VALUE);
                         _hidl_reply.send();
                         return;
                     }
                     _hidl_request.enforceInterface(IMediaCasService.kInterfaceName);
-                    boolean _hidl_out_result2 = isDescramblerSupported(_hidl_request.readInt32());
+                    int CA_system_id3 = _hidl_request.readInt32();
+                    boolean _hidl_out_result2 = isDescramblerSupported(CA_system_id3);
                     _hidl_reply.writeStatus(0);
                     _hidl_reply.writeBool(_hidl_out_result2);
                     _hidl_reply.send();
                     return;
                 case 5:
-                    if ((_hidl_flags & 1) == 0) {
-                        _hidl_is_oneway = false;
-                    }
+                    _hidl_is_oneway = (_hidl_flags & 1) != 0;
                     if (_hidl_is_oneway) {
                         _hidl_reply.writeStatus(Integer.MIN_VALUE);
                         _hidl_reply.send();
                         return;
                     }
                     _hidl_request.enforceInterface(IMediaCasService.kInterfaceName);
-                    IDescramblerBase _hidl_out_descrambler = createDescrambler(_hidl_request.readInt32());
+                    int CA_system_id4 = _hidl_request.readInt32();
+                    IDescramblerBase _hidl_out_descrambler = createDescrambler(CA_system_id4);
                     _hidl_reply.writeStatus(0);
-                    if (_hidl_out_descrambler != null) {
-                        iHwBinder = _hidl_out_descrambler.asBinder();
-                    }
-                    _hidl_reply.writeStrongBinder(iHwBinder);
+                    _hidl_reply.writeStrongBinder(_hidl_out_descrambler != null ? _hidl_out_descrambler.asBinder() : null);
                     _hidl_reply.send();
                     return;
                 default:
                     switch (_hidl_code) {
                         case 256067662:
-                            if (_hidl_flags == false || !true) {
-                                _hidl_is_oneway = false;
-                            }
+                            _hidl_is_oneway = (_hidl_flags & 1) != 0;
                             if (_hidl_is_oneway) {
                                 _hidl_reply.writeStatus(Integer.MIN_VALUE);
                                 _hidl_reply.send();
@@ -499,23 +536,21 @@ public interface IMediaCasService extends IBase {
                             _hidl_reply.send();
                             return;
                         case 256131655:
-                            if (_hidl_flags == false || !true) {
-                                _hidl_is_oneway = false;
-                            }
+                            _hidl_is_oneway = (_hidl_flags & 1) != 0;
                             if (_hidl_is_oneway) {
                                 _hidl_reply.writeStatus(Integer.MIN_VALUE);
                                 _hidl_reply.send();
                                 return;
                             }
                             _hidl_request.enforceInterface(IBase.kInterfaceName);
-                            debug(_hidl_request.readNativeHandle(), _hidl_request.readStringVector());
+                            NativeHandle fd = _hidl_request.readNativeHandle();
+                            ArrayList<String> options = _hidl_request.readStringVector();
+                            debug(fd, options);
                             _hidl_reply.writeStatus(0);
                             _hidl_reply.send();
                             return;
                         case 256136003:
-                            if (_hidl_flags == false || !true) {
-                                _hidl_is_oneway = false;
-                            }
+                            _hidl_is_oneway = (_hidl_flags & 1) != 0;
                             if (_hidl_is_oneway) {
                                 _hidl_reply.writeStatus(Integer.MIN_VALUE);
                                 _hidl_reply.send();
@@ -528,9 +563,7 @@ public interface IMediaCasService extends IBase {
                             _hidl_reply.send();
                             return;
                         case 256398152:
-                            if (_hidl_flags == false || !true) {
-                                _hidl_is_oneway = false;
-                            }
+                            _hidl_is_oneway = (_hidl_flags & 1) != 0;
                             if (_hidl_is_oneway) {
                                 _hidl_reply.writeStatus(Integer.MIN_VALUE);
                                 _hidl_reply.send();
@@ -541,11 +574,11 @@ public interface IMediaCasService extends IBase {
                             _hidl_reply.writeStatus(0);
                             HwBlob _hidl_blob = new HwBlob(16);
                             int _hidl_vec_size = _hidl_out_hashchain.size();
-                            _hidl_blob.putInt32(8, _hidl_vec_size);
-                            _hidl_blob.putBool(12, false);
+                            _hidl_blob.putInt32(8L, _hidl_vec_size);
+                            _hidl_blob.putBool(12L, false);
                             HwBlob childBlob = new HwBlob(_hidl_vec_size * 32);
                             while (_hidl_index_0 < _hidl_vec_size) {
-                                long _hidl_array_offset_1 = (long) (_hidl_index_0 * 32);
+                                long _hidl_array_offset_1 = _hidl_index_0 * 32;
                                 byte[] _hidl_array_item_1 = _hidl_out_hashchain.get(_hidl_index_0);
                                 if (_hidl_array_item_1 == null || _hidl_array_item_1.length != 32) {
                                     throw new IllegalArgumentException("Array element is not of the expected length");
@@ -553,14 +586,12 @@ public interface IMediaCasService extends IBase {
                                 childBlob.putInt8Array(_hidl_array_offset_1, _hidl_array_item_1);
                                 _hidl_index_0++;
                             }
-                            _hidl_blob.putBlob(0, childBlob);
+                            _hidl_blob.putBlob(0L, childBlob);
                             _hidl_reply.writeBuffer(_hidl_blob);
                             _hidl_reply.send();
                             return;
                         case 256462420:
-                            if (_hidl_flags != false && true) {
-                                _hidl_index_0 = 1;
-                            }
+                            _hidl_index_0 = (_hidl_flags & 1) != 0 ? 1 : 0;
                             if (_hidl_index_0 != 1) {
                                 _hidl_reply.writeStatus(Integer.MIN_VALUE);
                                 _hidl_reply.send();
@@ -570,9 +601,7 @@ public interface IMediaCasService extends IBase {
                             setHALInstrumentation();
                             return;
                         case 256660548:
-                            if (_hidl_flags != false && true) {
-                                _hidl_index_0 = 1;
-                            }
+                            _hidl_index_0 = (_hidl_flags & 1) != 0 ? 1 : 0;
                             if (_hidl_index_0 != 0) {
                                 _hidl_reply.writeStatus(Integer.MIN_VALUE);
                                 _hidl_reply.send();
@@ -580,9 +609,7 @@ public interface IMediaCasService extends IBase {
                             }
                             return;
                         case 256921159:
-                            if (_hidl_flags == false || !true) {
-                                _hidl_is_oneway = false;
-                            }
+                            _hidl_is_oneway = (_hidl_flags & 1) != 0;
                             if (_hidl_is_oneway) {
                                 _hidl_reply.writeStatus(Integer.MIN_VALUE);
                                 _hidl_reply.send();
@@ -594,9 +621,7 @@ public interface IMediaCasService extends IBase {
                             _hidl_reply.send();
                             return;
                         case 257049926:
-                            if (_hidl_flags == false || !true) {
-                                _hidl_is_oneway = false;
-                            }
+                            _hidl_is_oneway = (_hidl_flags & 1) != 0;
                             if (_hidl_is_oneway) {
                                 _hidl_reply.writeStatus(Integer.MIN_VALUE);
                                 _hidl_reply.send();
@@ -609,9 +634,7 @@ public interface IMediaCasService extends IBase {
                             _hidl_reply.send();
                             return;
                         case 257120595:
-                            if (_hidl_flags != false && true) {
-                                _hidl_index_0 = 1;
-                            }
+                            _hidl_index_0 = (_hidl_flags & 1) != 0 ? 1 : 0;
                             if (_hidl_index_0 != 1) {
                                 _hidl_reply.writeStatus(Integer.MIN_VALUE);
                                 _hidl_reply.send();
@@ -621,9 +644,7 @@ public interface IMediaCasService extends IBase {
                             notifySyspropsChanged();
                             return;
                         case 257250372:
-                            if ((_hidl_flags & 1) != 0) {
-                                _hidl_index_0 = 1;
-                            }
+                            _hidl_index_0 = (_hidl_flags & 1) != 0 ? 1 : 0;
                             if (_hidl_index_0 != 0) {
                                 _hidl_reply.writeStatus(Integer.MIN_VALUE);
                                 _hidl_reply.send();

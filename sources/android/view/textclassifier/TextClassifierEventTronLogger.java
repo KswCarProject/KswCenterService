@@ -7,6 +7,7 @@ import com.android.internal.logging.MetricsLogger;
 import com.android.internal.logging.nano.MetricsProto;
 import com.android.internal.util.Preconditions;
 
+/* loaded from: classes4.dex */
 public final class TextClassifierEventTronLogger {
     private static final String TAG = "TCEventTronLogger";
     private final MetricsLogger mMetricsLogger;
@@ -24,7 +25,7 @@ public final class TextClassifierEventTronLogger {
         Preconditions.checkNotNull(event);
         int category = getCategory(event);
         if (category == -1) {
-            Log.w(TAG, "Unknown category: " + event.getEventCategory());
+            Log.m37w(TAG, "Unknown category: " + event.getEventCategory());
             return;
         }
         LogMaker log = new LogMaker(category).setSubtype(getLogType(event)).addTaggedData(MetricsProto.MetricsEvent.FIELD_TEXT_CLASSIFIER_SESSION_ID, event.getResultId()).addTaggedData(MetricsProto.MetricsEvent.FIELD_TEXTCLASSIFIER_MODEL, getModelName(event));
@@ -71,20 +72,20 @@ public final class TextClassifierEventTronLogger {
 
     private static int getLogType(TextClassifierEvent event) {
         int eventType = event.getEventType();
-        if (eventType == 6) {
-            return 1616;
+        if (eventType != 6) {
+            if (eventType == 13) {
+                return MetricsProto.MetricsEvent.ACTION_TEXT_SELECTION_SMART_SHARE;
+            }
+            switch (eventType) {
+                case 19:
+                    return 1618;
+                case 20:
+                    return 1619;
+                default:
+                    return 0;
+            }
         }
-        if (eventType == 13) {
-            return MetricsProto.MetricsEvent.ACTION_TEXT_SELECTION_SMART_SHARE;
-        }
-        switch (eventType) {
-            case 19:
-                return 1618;
-            case 20:
-                return 1619;
-            default:
-                return 0;
-        }
+        return 1616;
     }
 
     private String toCategoryName(int category) {
@@ -99,35 +100,36 @@ public final class TextClassifierEventTronLogger {
     }
 
     private String toEventName(int logType) {
-        if (logType == 1113) {
-            return "smart_share";
+        if (logType != 1113) {
+            if (logType == 1616) {
+                return "actions_shown";
+            }
+            switch (logType) {
+                case 1618:
+                    return "manual_reply";
+                case 1619:
+                    return "actions_generated";
+                default:
+                    return "unknown";
+            }
         }
-        if (logType == 1616) {
-            return "actions_shown";
-        }
-        switch (logType) {
-            case 1618:
-                return "manual_reply";
-            case 1619:
-                return "actions_generated";
-            default:
-                return "unknown";
-        }
+        return "smart_share";
     }
 
     private void debugLog(LogMaker log) {
-        if (Log.ENABLE_FULL_LOGGING) {
-            String id = String.valueOf(log.getTaggedData(MetricsProto.MetricsEvent.FIELD_TEXT_CLASSIFIER_SESSION_ID));
-            String categoryName = toCategoryName(log.getCategory());
-            String eventName = toEventName(log.getSubtype());
-            String widgetType = String.valueOf(log.getTaggedData(MetricsProto.MetricsEvent.FIELD_TEXT_CLASSIFIER_WIDGET_TYPE));
-            String widgetVersion = String.valueOf(log.getTaggedData(MetricsProto.MetricsEvent.FIELD_TEXT_CLASSIFIER_WIDGET_VERSION));
-            String model = String.valueOf(log.getTaggedData(MetricsProto.MetricsEvent.FIELD_TEXTCLASSIFIER_MODEL));
-            String firstEntityType = String.valueOf(log.getTaggedData(MetricsProto.MetricsEvent.FIELD_TEXT_CLASSIFIER_FIRST_ENTITY_TYPE));
-            String secondEntityType = String.valueOf(log.getTaggedData(MetricsProto.MetricsEvent.FIELD_TEXT_CLASSIFIER_SECOND_ENTITY_TYPE));
-            String thirdEntityType = String.valueOf(log.getTaggedData(MetricsProto.MetricsEvent.FIELD_TEXT_CLASSIFIER_THIRD_ENTITY_TYPE));
-            String score = String.valueOf(log.getTaggedData(MetricsProto.MetricsEvent.FIELD_TEXT_CLASSIFIER_SCORE));
-            Log.v(TAG, "writeEvent: " + "id=" + id + ", category=" + categoryName + ", eventName=" + eventName + ", widgetType=" + widgetType + ", widgetVersion=" + widgetVersion + ", model=" + model + ", firstEntityType=" + firstEntityType + ", secondEntityType=" + secondEntityType + ", thirdEntityType=" + thirdEntityType + ", score=" + score);
+        if (!Log.ENABLE_FULL_LOGGING) {
+            return;
         }
+        String id = String.valueOf(log.getTaggedData(MetricsProto.MetricsEvent.FIELD_TEXT_CLASSIFIER_SESSION_ID));
+        String categoryName = toCategoryName(log.getCategory());
+        String eventName = toEventName(log.getSubtype());
+        String widgetType = String.valueOf(log.getTaggedData(MetricsProto.MetricsEvent.FIELD_TEXT_CLASSIFIER_WIDGET_TYPE));
+        String widgetVersion = String.valueOf(log.getTaggedData(MetricsProto.MetricsEvent.FIELD_TEXT_CLASSIFIER_WIDGET_VERSION));
+        String model = String.valueOf(log.getTaggedData(MetricsProto.MetricsEvent.FIELD_TEXTCLASSIFIER_MODEL));
+        String firstEntityType = String.valueOf(log.getTaggedData(MetricsProto.MetricsEvent.FIELD_TEXT_CLASSIFIER_FIRST_ENTITY_TYPE));
+        String secondEntityType = String.valueOf(log.getTaggedData(MetricsProto.MetricsEvent.FIELD_TEXT_CLASSIFIER_SECOND_ENTITY_TYPE));
+        String thirdEntityType = String.valueOf(log.getTaggedData(MetricsProto.MetricsEvent.FIELD_TEXT_CLASSIFIER_THIRD_ENTITY_TYPE));
+        String score = String.valueOf(log.getTaggedData(MetricsProto.MetricsEvent.FIELD_TEXT_CLASSIFIER_SCORE));
+        Log.m38v(TAG, "writeEvent: id=" + id + ", category=" + categoryName + ", eventName=" + eventName + ", widgetType=" + widgetType + ", widgetVersion=" + widgetVersion + ", model=" + model + ", firstEntityType=" + firstEntityType + ", secondEntityType=" + secondEntityType + ", thirdEntityType=" + thirdEntityType + ", score=" + score);
     }
 }

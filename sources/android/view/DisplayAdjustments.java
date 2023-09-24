@@ -5,6 +5,7 @@ import android.content.res.CompatibilityInfo;
 import android.content.res.Configuration;
 import java.util.Objects;
 
+/* loaded from: classes4.dex */
 public class DisplayAdjustments {
     public static final DisplayAdjustments DEFAULT_DISPLAY_ADJUSTMENTS = new DisplayAdjustments();
     private volatile CompatibilityInfo mCompatInfo = CompatibilityInfo.DEFAULT_COMPATIBILITY_INFO;
@@ -27,10 +28,11 @@ public class DisplayAdjustments {
     public void setCompatibilityInfo(CompatibilityInfo compatInfo) {
         if (this == DEFAULT_DISPLAY_ADJUSTMENTS) {
             throw new IllegalArgumentException("setCompatbilityInfo: Cannot modify DEFAULT_DISPLAY_ADJUSTMENTS");
-        } else if (compatInfo == null || (!compatInfo.isScalingRequired() && compatInfo.supportsScreen())) {
-            this.mCompatInfo = CompatibilityInfo.DEFAULT_COMPATIBILITY_INFO;
-        } else {
+        }
+        if (compatInfo != null && (compatInfo.isScalingRequired() || !compatInfo.supportsScreen())) {
             this.mCompatInfo = compatInfo;
+        } else {
+            this.mCompatInfo = CompatibilityInfo.DEFAULT_COMPATIBILITY_INFO;
         }
     }
 
@@ -39,11 +41,10 @@ public class DisplayAdjustments {
     }
 
     public void setConfiguration(Configuration configuration) {
-        if (this != DEFAULT_DISPLAY_ADJUSTMENTS) {
-            this.mConfiguration.setTo(configuration != null ? configuration : Configuration.EMPTY);
-            return;
+        if (this == DEFAULT_DISPLAY_ADJUSTMENTS) {
+            throw new IllegalArgumentException("setConfiguration: Cannot modify DEFAULT_DISPLAY_ADJUSTMENTS");
         }
-        throw new IllegalArgumentException("setConfiguration: Cannot modify DEFAULT_DISPLAY_ADJUSTMENTS");
+        this.mConfiguration.setTo(configuration != null ? configuration : Configuration.EMPTY);
     }
 
     @UnsupportedAppUsage
@@ -52,17 +53,15 @@ public class DisplayAdjustments {
     }
 
     public int hashCode() {
-        return (((17 * 31) + Objects.hashCode(this.mCompatInfo)) * 31) + Objects.hashCode(this.mConfiguration);
+        int hash = (17 * 31) + Objects.hashCode(this.mCompatInfo);
+        return (hash * 31) + Objects.hashCode(this.mConfiguration);
     }
 
     public boolean equals(Object o) {
-        if (!(o instanceof DisplayAdjustments)) {
-            return false;
+        if (o instanceof DisplayAdjustments) {
+            DisplayAdjustments daj = (DisplayAdjustments) o;
+            return Objects.equals(daj.mCompatInfo, this.mCompatInfo) && Objects.equals(daj.mConfiguration, this.mConfiguration);
         }
-        DisplayAdjustments daj = (DisplayAdjustments) o;
-        if (!Objects.equals(daj.mCompatInfo, this.mCompatInfo) || !Objects.equals(daj.mConfiguration, this.mConfiguration)) {
-            return false;
-        }
-        return true;
+        return false;
     }
 }

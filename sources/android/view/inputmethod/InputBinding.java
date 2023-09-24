@@ -1,15 +1,20 @@
 package android.view.inputmethod;
 
-import android.os.IBinder;
-import android.os.Parcel;
-import android.os.Parcelable;
+import android.p007os.IBinder;
+import android.p007os.Parcel;
+import android.p007os.Parcelable;
 
+/* loaded from: classes4.dex */
 public final class InputBinding implements Parcelable {
-    public static final Parcelable.Creator<InputBinding> CREATOR = new Parcelable.Creator<InputBinding>() {
+    public static final Parcelable.Creator<InputBinding> CREATOR = new Parcelable.Creator<InputBinding>() { // from class: android.view.inputmethod.InputBinding.1
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public InputBinding createFromParcel(Parcel source) {
             return new InputBinding(source);
         }
 
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public InputBinding[] newArray(int size) {
             return new InputBinding[size];
         }
@@ -61,12 +66,14 @@ public final class InputBinding implements Parcelable {
         return "InputBinding{" + this.mConnectionToken + " / uid " + this.mUid + " / pid " + this.mPid + "}";
     }
 
+    @Override // android.p007os.Parcelable
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeStrongBinder(this.mConnectionToken);
         dest.writeInt(this.mUid);
         dest.writeInt(this.mPid);
     }
 
+    @Override // android.p007os.Parcelable
     public int describeContents() {
         return 0;
     }

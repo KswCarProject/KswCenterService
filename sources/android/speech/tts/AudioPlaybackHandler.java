@@ -3,14 +3,13 @@ package android.speech.tts;
 import java.util.Iterator;
 import java.util.concurrent.LinkedBlockingQueue;
 
+/* loaded from: classes3.dex */
 class AudioPlaybackHandler {
     private static final boolean DBG = false;
     private static final String TAG = "TTS.AudioPlaybackHandler";
-    /* access modifiers changed from: private */
-    public volatile PlaybackQueueItem mCurrentWorkItem = null;
+    private final LinkedBlockingQueue<PlaybackQueueItem> mQueue = new LinkedBlockingQueue<>();
+    private volatile PlaybackQueueItem mCurrentWorkItem = null;
     private final Thread mHandlerThread = new Thread(new MessageLoop(), "TTS.AudioPlaybackThread");
-    /* access modifiers changed from: private */
-    public final LinkedBlockingQueue<PlaybackQueueItem> mQueue = new LinkedBlockingQueue<>();
 
     AudioPlaybackHandler() {
     }
@@ -20,9 +19,10 @@ class AudioPlaybackHandler {
     }
 
     private void stop(PlaybackQueueItem item) {
-        if (item != null) {
-            item.stop(-2);
+        if (item == null) {
+            return;
         }
+        item.stop(-2);
     }
 
     public void enqueue(PlaybackQueueItem item) {
@@ -70,17 +70,19 @@ class AudioPlaybackHandler {
         }
     }
 
+    /* loaded from: classes3.dex */
     private final class MessageLoop implements Runnable {
         private MessageLoop() {
         }
 
+        @Override // java.lang.Runnable
         public void run() {
             while (true) {
                 try {
                     PlaybackQueueItem item = (PlaybackQueueItem) AudioPlaybackHandler.this.mQueue.take();
-                    PlaybackQueueItem unused = AudioPlaybackHandler.this.mCurrentWorkItem = item;
+                    AudioPlaybackHandler.this.mCurrentWorkItem = item;
                     item.run();
-                    PlaybackQueueItem unused2 = AudioPlaybackHandler.this.mCurrentWorkItem = null;
+                    AudioPlaybackHandler.this.mCurrentWorkItem = null;
                 } catch (InterruptedException e) {
                     return;
                 }

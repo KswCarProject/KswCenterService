@@ -2,20 +2,25 @@ package android.app.servertransaction;
 
 import android.annotation.UnsupportedAppUsage;
 import android.app.ClientTransactionHandler;
-import android.os.IBinder;
-import android.os.Parcel;
-import android.os.Parcelable;
-import android.os.Trace;
+import android.p007os.IBinder;
+import android.p007os.Parcel;
+import android.p007os.Parcelable;
+import android.p007os.Trace;
 import com.android.internal.content.ReferrerIntent;
 import java.util.List;
 import java.util.Objects;
 
+/* loaded from: classes.dex */
 public class NewIntentItem extends ClientTransactionItem {
-    public static final Parcelable.Creator<NewIntentItem> CREATOR = new Parcelable.Creator<NewIntentItem>() {
+    public static final Parcelable.Creator<NewIntentItem> CREATOR = new Parcelable.Creator<NewIntentItem>() { // from class: android.app.servertransaction.NewIntentItem.1
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public NewIntentItem createFromParcel(Parcel in) {
             return new NewIntentItem(in);
         }
 
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public NewIntentItem[] newArray(int size) {
             return new NewIntentItem[size];
         }
@@ -24,14 +29,16 @@ public class NewIntentItem extends ClientTransactionItem {
     private List<ReferrerIntent> mIntents;
     private boolean mResume;
 
+    @Override // android.app.servertransaction.ClientTransactionItem
     public int getPostExecutionState() {
         return this.mResume ? 3 : -1;
     }
 
+    @Override // android.app.servertransaction.BaseClientRequest
     public void execute(ClientTransactionHandler client, IBinder token, PendingTransactionActions pendingActions) {
-        Trace.traceBegin(64, "activityNewIntent");
+        Trace.traceBegin(64L, "activityNewIntent");
         client.handleNewIntent(token, this.mIntents);
-        Trace.traceEnd(64);
+        Trace.traceEnd(64L);
     }
 
     private NewIntentItem() {
@@ -47,12 +54,14 @@ public class NewIntentItem extends ClientTransactionItem {
         return instance;
     }
 
+    @Override // android.app.servertransaction.ObjectPoolItem
     public void recycle() {
         this.mIntents = null;
         this.mResume = false;
         ObjectPool.recycle(this);
     }
 
+    @Override // android.p007os.Parcelable
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeBoolean(this.mResume);
         dest.writeTypedList(this.mIntents, flags);
@@ -71,14 +80,15 @@ public class NewIntentItem extends ClientTransactionItem {
             return false;
         }
         NewIntentItem other = (NewIntentItem) o;
-        if (this.mResume != other.mResume || !Objects.equals(this.mIntents, other.mIntents)) {
-            return false;
+        if (this.mResume == other.mResume && Objects.equals(this.mIntents, other.mIntents)) {
+            return true;
         }
-        return true;
+        return false;
     }
 
     public int hashCode() {
-        return (((17 * 31) + (this.mResume ? 1 : 0)) * 31) + this.mIntents.hashCode();
+        int result = (17 * 31) + (this.mResume ? 1 : 0);
+        return (result * 31) + this.mIntents.hashCode();
     }
 
     public String toString() {

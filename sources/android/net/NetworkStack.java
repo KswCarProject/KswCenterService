@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 
 @SystemApi
+/* loaded from: classes3.dex */
 public class NetworkStack {
     @SystemApi
     public static final String PERMISSION_MAINLINE_NETWORK_STACK = "android.permission.MAINLINE_NETWORK_STACK";
@@ -20,7 +21,7 @@ public class NetworkStack {
 
     public static void checkNetworkStackPermissionOr(Context context, String... otherPermissions) {
         ArrayList<String> permissions = new ArrayList<>(Arrays.asList(otherPermissions));
-        permissions.add(Manifest.permission.NETWORK_STACK);
+        permissions.add(Manifest.C0000permission.NETWORK_STACK);
         permissions.add(PERMISSION_MAINLINE_NETWORK_STACK);
         enforceAnyPermissionOf(context, (String[]) permissions.toArray(new String[0]));
     }

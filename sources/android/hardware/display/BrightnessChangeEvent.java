@@ -1,17 +1,22 @@
 package android.hardware.display;
 
 import android.annotation.SystemApi;
-import android.os.Parcel;
-import android.os.Parcelable;
+import android.p007os.Parcel;
+import android.p007os.Parcelable;
 import java.util.Objects;
 
 @SystemApi
+/* loaded from: classes.dex */
 public final class BrightnessChangeEvent implements Parcelable {
-    public static final Parcelable.Creator<BrightnessChangeEvent> CREATOR = new Parcelable.Creator<BrightnessChangeEvent>() {
+    public static final Parcelable.Creator<BrightnessChangeEvent> CREATOR = new Parcelable.Creator<BrightnessChangeEvent>() { // from class: android.hardware.display.BrightnessChangeEvent.1
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public BrightnessChangeEvent createFromParcel(Parcel source) {
             return new BrightnessChangeEvent(source);
         }
 
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public BrightnessChangeEvent[] newArray(int size) {
             return new BrightnessChangeEvent[size];
         }
@@ -32,22 +37,22 @@ public final class BrightnessChangeEvent implements Parcelable {
     public final long timeStamp;
     public final int userId;
 
-    private BrightnessChangeEvent(float brightness2, long timeStamp2, String packageName2, int userId2, float[] luxValues2, long[] luxTimestamps2, float batteryLevel2, float powerBrightnessFactor2, boolean nightMode2, int colorTemperature2, float lastBrightness2, boolean isDefaultBrightnessConfig2, boolean isUserSetBrightness2, long[] colorValueBuckets2, long colorSampleDuration2) {
-        this.brightness = brightness2;
-        this.timeStamp = timeStamp2;
-        this.packageName = packageName2;
-        this.userId = userId2;
-        this.luxValues = luxValues2;
-        this.luxTimestamps = luxTimestamps2;
-        this.batteryLevel = batteryLevel2;
-        this.powerBrightnessFactor = powerBrightnessFactor2;
-        this.nightMode = nightMode2;
-        this.colorTemperature = colorTemperature2;
-        this.lastBrightness = lastBrightness2;
-        this.isDefaultBrightnessConfig = isDefaultBrightnessConfig2;
-        this.isUserSetBrightness = isUserSetBrightness2;
-        this.colorValueBuckets = colorValueBuckets2;
-        this.colorSampleDuration = colorSampleDuration2;
+    private BrightnessChangeEvent(float brightness, long timeStamp, String packageName, int userId, float[] luxValues, long[] luxTimestamps, float batteryLevel, float powerBrightnessFactor, boolean nightMode, int colorTemperature, float lastBrightness, boolean isDefaultBrightnessConfig, boolean isUserSetBrightness, long[] colorValueBuckets, long colorSampleDuration) {
+        this.brightness = brightness;
+        this.timeStamp = timeStamp;
+        this.packageName = packageName;
+        this.userId = userId;
+        this.luxValues = luxValues;
+        this.luxTimestamps = luxTimestamps;
+        this.batteryLevel = batteryLevel;
+        this.powerBrightnessFactor = powerBrightnessFactor;
+        this.nightMode = nightMode;
+        this.colorTemperature = colorTemperature;
+        this.lastBrightness = lastBrightness;
+        this.isDefaultBrightnessConfig = isDefaultBrightnessConfig;
+        this.isUserSetBrightness = isUserSetBrightness;
+        this.colorValueBuckets = colorValueBuckets;
+        this.colorSampleDuration = colorSampleDuration;
     }
 
     public BrightnessChangeEvent(BrightnessChangeEvent other, boolean redactPackage) {
@@ -86,10 +91,12 @@ public final class BrightnessChangeEvent implements Parcelable {
         this.colorSampleDuration = source.readLong();
     }
 
+    @Override // android.p007os.Parcelable
     public int describeContents() {
         return 0;
     }
 
+    @Override // android.p007os.Parcelable
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeFloat(this.brightness);
         dest.writeLong(this.timeStamp);
@@ -108,6 +115,7 @@ public final class BrightnessChangeEvent implements Parcelable {
         dest.writeLong(this.colorSampleDuration);
     }
 
+    /* loaded from: classes.dex */
     public static class Builder {
         private float mBatteryLevel;
         private float mBrightness;

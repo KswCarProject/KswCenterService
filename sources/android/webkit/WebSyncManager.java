@@ -2,27 +2,27 @@ package android.webkit;
 
 import android.annotation.UnsupportedAppUsage;
 import android.content.Context;
-import android.os.Handler;
+import android.p007os.Handler;
 
 @Deprecated
+/* loaded from: classes4.dex */
 abstract class WebSyncManager implements Runnable {
     protected static final String LOGTAG = "websync";
     protected WebViewDatabase mDataBase;
     @UnsupportedAppUsage
     protected Handler mHandler;
 
-    /* access modifiers changed from: package-private */
     @UnsupportedAppUsage
-    public abstract void syncFromRamToFlash();
+    abstract void syncFromRamToFlash();
 
     protected WebSyncManager(Context context, String name) {
     }
 
-    /* access modifiers changed from: protected */
-    public Object clone() throws CloneNotSupportedException {
+    protected Object clone() throws CloneNotSupportedException {
         throw new CloneNotSupportedException("doesn't implement Cloneable");
     }
 
+    @Override // java.lang.Runnable
     public void run() {
     }
 
@@ -38,7 +38,6 @@ abstract class WebSyncManager implements Runnable {
     public void stopSync() {
     }
 
-    /* access modifiers changed from: protected */
-    public void onSyncInit() {
+    protected void onSyncInit() {
     }
 }

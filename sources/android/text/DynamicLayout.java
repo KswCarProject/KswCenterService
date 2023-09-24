@@ -8,6 +8,7 @@ import android.text.StaticLayout;
 import android.text.TextUtils;
 import android.text.style.ReplacementSpan;
 import android.text.style.UpdateLayout;
+import android.text.style.WrapTogetherSpan;
 import android.util.ArraySet;
 import android.util.Pools;
 import com.android.internal.annotations.VisibleForTesting;
@@ -15,6 +16,7 @@ import com.android.internal.util.ArrayUtils;
 import com.android.internal.util.GrowingArrayUtils;
 import java.lang.ref.WeakReference;
 
+/* loaded from: classes4.dex */
 public class DynamicLayout extends Layout {
     private static final int BLOCK_MINIMUM_CHARACTER_LENGTH = 400;
     private static final int COLUMNS_ELLIPSIZE = 7;
@@ -37,10 +39,6 @@ public class DynamicLayout extends Layout {
     private static final int TAB = 0;
     private static final int TAB_MASK = 536870912;
     private static final int TOP = 1;
-    private static StaticLayout.Builder sBuilder = null;
-    private static final Object[] sLock = new Object[0];
-    @UnsupportedAppUsage
-    private static StaticLayout sStaticLayout = null;
     private CharSequence mBase;
     private int[] mBlockEndLines;
     private int[] mBlockIndices;
@@ -62,41 +60,30 @@ public class DynamicLayout extends Layout {
     private Rect mTempRect;
     private int mTopPadding;
     private ChangeWatcher mWatcher;
+    @UnsupportedAppUsage
+    private static StaticLayout sStaticLayout = null;
+    private static StaticLayout.Builder sBuilder = null;
+    private static final Object[] sLock = new Object[0];
 
+    /* loaded from: classes4.dex */
     public static final class Builder {
         private static final Pools.SynchronizedPool<Builder> sPool = new Pools.SynchronizedPool<>(3);
-        /* access modifiers changed from: private */
-        public Layout.Alignment mAlignment;
-        /* access modifiers changed from: private */
-        public CharSequence mBase;
-        /* access modifiers changed from: private */
-        public int mBreakStrategy;
-        /* access modifiers changed from: private */
-        public CharSequence mDisplay;
-        /* access modifiers changed from: private */
-        public TextUtils.TruncateAt mEllipsize;
-        /* access modifiers changed from: private */
-        public int mEllipsizedWidth;
-        /* access modifiers changed from: private */
-        public boolean mFallbackLineSpacing;
-        /* access modifiers changed from: private */
-        public final Paint.FontMetricsInt mFontMetricsInt = new Paint.FontMetricsInt();
-        /* access modifiers changed from: private */
-        public int mHyphenationFrequency;
-        /* access modifiers changed from: private */
-        public boolean mIncludePad;
-        /* access modifiers changed from: private */
-        public int mJustificationMode;
-        /* access modifiers changed from: private */
-        public TextPaint mPaint;
-        /* access modifiers changed from: private */
-        public float mSpacingAdd;
-        /* access modifiers changed from: private */
-        public float mSpacingMult;
-        /* access modifiers changed from: private */
-        public TextDirectionHeuristic mTextDir;
-        /* access modifiers changed from: private */
-        public int mWidth;
+        private Layout.Alignment mAlignment;
+        private CharSequence mBase;
+        private int mBreakStrategy;
+        private CharSequence mDisplay;
+        private TextUtils.TruncateAt mEllipsize;
+        private int mEllipsizedWidth;
+        private boolean mFallbackLineSpacing;
+        private final Paint.FontMetricsInt mFontMetricsInt = new Paint.FontMetricsInt();
+        private int mHyphenationFrequency;
+        private boolean mIncludePad;
+        private int mJustificationMode;
+        private TextPaint mPaint;
+        private float mSpacingAdd;
+        private float mSpacingMult;
+        private TextDirectionHeuristic mTextDir;
+        private int mWidth;
 
         private Builder() {
         }
@@ -124,7 +111,7 @@ public class DynamicLayout extends Layout {
             return b;
         }
 
-        /* access modifiers changed from: private */
+        /* JADX INFO: Access modifiers changed from: private */
         public static void recycle(Builder b) {
             b.mBase = null;
             b.mDisplay = null;
@@ -202,7 +189,7 @@ public class DynamicLayout extends Layout {
 
     @Deprecated
     public DynamicLayout(CharSequence base, CharSequence display, TextPaint paint, int width, Layout.Alignment align, float spacingmult, float spacingadd, boolean includepad) {
-        this(base, display, paint, width, align, spacingmult, spacingadd, includepad, (TextUtils.TruncateAt) null, 0);
+        this(base, display, paint, width, align, spacingmult, spacingadd, includepad, null, 0);
     }
 
     @Deprecated
@@ -210,52 +197,19 @@ public class DynamicLayout extends Layout {
         this(base, display, paint, width, align, TextDirectionHeuristics.FIRSTSTRONG_LTR, spacingmult, spacingadd, includepad, 0, 0, 0, ellipsize, ellipsizedWidth);
     }
 
-    /* JADX WARNING: Illegal instructions before constructor call */
-    @java.lang.Deprecated
-    @android.annotation.UnsupportedAppUsage(maxTargetSdk = 28, trackingBug = 115609023)
-    /* Code decompiled incorrectly, please refer to instructions dump. */
-    public DynamicLayout(java.lang.CharSequence r17, java.lang.CharSequence r18, android.text.TextPaint r19, int r20, android.text.Layout.Alignment r21, android.text.TextDirectionHeuristic r22, float r23, float r24, boolean r25, int r26, int r27, int r28, android.text.TextUtils.TruncateAt r29, int r30) {
-        /*
-            r16 = this;
-            r8 = r16
-            r9 = r18
-            r10 = r29
-            java.lang.CharSequence r1 = createEllipsizer(r10, r9)
-            r0 = r16
-            r2 = r19
-            r3 = r20
-            r4 = r21
-            r5 = r22
-            r6 = r23
-            r7 = r24
-            r0.<init>(r1, r2, r3, r4, r5, r6, r7)
-            android.graphics.Rect r0 = new android.graphics.Rect
-            r0.<init>()
-            r8.mTempRect = r0
-            r0 = r17
-            r1 = r19
-            r2 = r20
-            android.text.DynamicLayout$Builder r3 = android.text.DynamicLayout.Builder.obtain(r0, r1, r2)
-            android.text.DynamicLayout$Builder r3 = r3.setAlignment(r4)
-            android.text.DynamicLayout$Builder r3 = r3.setTextDirection(r5)
-            android.text.DynamicLayout$Builder r3 = r3.setLineSpacing(r7, r6)
-            r11 = r30
-            android.text.DynamicLayout$Builder r3 = r3.setEllipsizedWidth(r11)
-            android.text.DynamicLayout$Builder r3 = r3.setEllipsize(r10)
-            r8.mDisplay = r9
-            r12 = r25
-            r8.mIncludePad = r12
-            r13 = r26
-            r8.mBreakStrategy = r13
-            r14 = r28
-            r8.mJustificationMode = r14
-            r15 = r27
-            r8.mHyphenationFrequency = r15
-            r8.generate(r3)
-            android.text.DynamicLayout.Builder.recycle(r3)
-            return
-        */
-        throw new UnsupportedOperationException("Method not decompiled: android.text.DynamicLayout.<init>(java.lang.CharSequence, java.lang.CharSequence, android.text.TextPaint, int, android.text.Layout$Alignment, android.text.TextDirectionHeuristic, float, float, boolean, int, int, int, android.text.TextUtils$TruncateAt, int):void");
+    @UnsupportedAppUsage(maxTargetSdk = 28, trackingBug = 115609023)
+    @Deprecated
+    public DynamicLayout(CharSequence base, CharSequence display, TextPaint paint, int width, Layout.Alignment align, TextDirectionHeuristic textDir, float spacingmult, float spacingadd, boolean includepad, int breakStrategy, int hyphenationFrequency, int justificationMode, TextUtils.TruncateAt ellipsize, int ellipsizedWidth) {
+        super(createEllipsizer(ellipsize, display), paint, width, align, textDir, spacingmult, spacingadd);
+        this.mTempRect = new Rect();
+        Builder b = Builder.obtain(base, paint, width).setAlignment(align).setTextDirection(textDir).setLineSpacing(spacingadd, spacingmult).setEllipsizedWidth(ellipsizedWidth).setEllipsize(ellipsize);
+        this.mDisplay = display;
+        this.mIncludePad = includepad;
+        this.mBreakStrategy = breakStrategy;
+        this.mJustificationMode = justificationMode;
+        this.mHyphenationFrequency = hyphenationFrequency;
+        generate(b);
+        Builder.recycle(b);
     }
 
     private DynamicLayout(Builder b) {
@@ -324,601 +278,217 @@ public class DynamicLayout extends Layout {
             }
             Spannable sp = (Spannable) this.mBase;
             ChangeWatcher[] spans = (ChangeWatcher[]) sp.getSpans(0, baseLength, ChangeWatcher.class);
-            for (ChangeWatcher removeSpan : spans) {
-                sp.removeSpan(removeSpan);
+            for (ChangeWatcher changeWatcher : spans) {
+                sp.removeSpan(changeWatcher);
             }
             sp.setSpan(this.mWatcher, 0, baseLength, 8388626);
         }
     }
 
-    /* JADX WARNING: Code restructure failed: missing block: B:42:0x00b4, code lost:
-        if (r0 != null) goto L_0x00d1;
-     */
-    /* JADX WARNING: Code restructure failed: missing block: B:43:0x00b6, code lost:
-        r5 = android.text.StaticLayout.Builder.obtain(r2, r9, r9 + r10, getPaint(), getWidth());
-        r14 = new android.text.StaticLayout((java.lang.CharSequence) null);
-     */
-    /* JADX WARNING: Code restructure failed: missing block: B:44:0x00d1, code lost:
-        r14 = r0;
-        r5 = r18;
-     */
-    /* JADX WARNING: Code restructure failed: missing block: B:45:0x00d4, code lost:
-        r21 = r6;
-        r22 = r8;
-        r0 = r5.setText(r2, r9, r9 + r10).setPaint(getPaint()).setWidth(getWidth()).setTextDirection(getTextDirectionHeuristic()).setLineSpacing(getSpacingAdd(), getSpacingMultiplier()).setUseLineSpacingFromFallbacks(r1.mFallbackLineSpacing).setEllipsizedWidth(r1.mEllipsizedWidth).setEllipsize(r1.mEllipsizeAt).setBreakStrategy(r1.mBreakStrategy).setHyphenationFrequency(r1.mHyphenationFrequency).setJustificationMode(r1.mJustificationMode);
-     */
-    /* JADX WARNING: Code restructure failed: missing block: B:46:0x0126, code lost:
-        if (r13 != false) goto L_0x012a;
-     */
-    /* JADX WARNING: Code restructure failed: missing block: B:47:0x0128, code lost:
-        r6 = true;
-     */
-    /* JADX WARNING: Code restructure failed: missing block: B:48:0x012a, code lost:
-        r6 = false;
-     */
-    /* JADX WARNING: Code restructure failed: missing block: B:49:0x012c, code lost:
-        r0.setAddLastLineLineSpacing(r6);
-        r14.generate(r5, false, true);
-        r0 = r14.getLineCount();
-     */
-    /* JADX WARNING: Code restructure failed: missing block: B:50:0x013a, code lost:
-        if ((r9 + r10) == r4) goto L_0x0148;
-     */
-    /* JADX WARNING: Code restructure failed: missing block: B:52:0x0144, code lost:
-        if (r14.getLineStart(r0 - 1) != (r9 + r10)) goto L_0x0148;
-     */
-    /* JADX WARNING: Code restructure failed: missing block: B:53:0x0146, code lost:
-        r0 = r0 - 1;
-     */
-    /* JADX WARNING: Code restructure failed: missing block: B:54:0x0148, code lost:
-        r6 = r0;
-        r1.mInts.deleteAt(r3, r11 - r3);
-        r1.mObjects.deleteAt(r3, r11 - r3);
-        r0 = r14.getLineTop(r6);
-        r8 = 0;
-        r18 = 0;
-        r23 = r4;
-     */
-    /* JADX WARNING: Code restructure failed: missing block: B:55:0x0162, code lost:
-        if (r1.mIncludePad == 0) goto L_0x016d;
-     */
-    /* JADX WARNING: Code restructure failed: missing block: B:56:0x0164, code lost:
-        if (r3 != 0) goto L_0x016d;
-     */
-    /* JADX WARNING: Code restructure failed: missing block: B:57:0x0166, code lost:
-        r8 = r14.getTopPadding();
-        r1.mTopPadding = r8;
-        r0 = r0 - r8;
-     */
-    /* JADX WARNING: Code restructure failed: missing block: B:59:0x016f, code lost:
-        if (r1.mIncludePad == false) goto L_0x017c;
-     */
-    /* JADX WARNING: Code restructure failed: missing block: B:60:0x0171, code lost:
-        if (r13 == false) goto L_0x017c;
-     */
-    /* JADX WARNING: Code restructure failed: missing block: B:61:0x0173, code lost:
-        r4 = r14.getBottomPadding();
-        r1.mBottomPadding = r4;
-        r0 = r0 + r4;
-        r18 = r4;
-     */
-    /* JADX WARNING: Code restructure failed: missing block: B:62:0x017c, code lost:
-        r4 = r0;
-        r24 = r13;
-        r25 = r15;
-        r1.mInts.adjustValuesBelow(r3, 0, r10 - r15);
-        r1.mInts.adjustValuesBelow(r3, 1, (r7 - r12) + r4);
-     */
-    /* JADX WARNING: Code restructure failed: missing block: B:63:0x0195, code lost:
-        if (r1.mEllipsize == false) goto L_0x019f;
-     */
-    /* JADX WARNING: Code restructure failed: missing block: B:64:0x0197, code lost:
-        r0 = new int[7];
-        r0[5] = Integer.MIN_VALUE;
-     */
-    /* JADX WARNING: Code restructure failed: missing block: B:65:0x019f, code lost:
-        r0 = new int[5];
-     */
-    /* JADX WARNING: Code restructure failed: missing block: B:66:0x01a1, code lost:
-        r15 = r0;
-        r13 = new android.text.Layout.Directions[1];
-        r0 = 0;
-     */
-    /* JADX WARNING: Code restructure failed: missing block: B:67:0x01a6, code lost:
-        if (r0 >= r6) goto L_0x025b;
-     */
-    /* JADX WARNING: Code restructure failed: missing block: B:68:0x01a8, code lost:
-        r27 = r4;
-        r4 = r14.getLineStart(r0);
-        r15[0] = r4;
-        r15[0] = r15[0] | (r14.getParagraphDirection(r0) << 30);
-        r20 = r15[0];
-     */
-    /* JADX WARNING: Code restructure failed: missing block: B:69:0x01c4, code lost:
-        if (r14.getLineContainsTab(r0) == false) goto L_0x01c9;
-     */
-    /* JADX WARNING: Code restructure failed: missing block: B:70:0x01c6, code lost:
-        r28 = 536870912;
-     */
-    /* JADX WARNING: Code restructure failed: missing block: B:71:0x01c9, code lost:
-        r28 = 0;
-     */
-    /* JADX WARNING: Code restructure failed: missing block: B:72:0x01cb, code lost:
-        r15[0] = r20 | r28;
-        r20 = r14.getLineTop(r0) + r7;
-     */
-    /* JADX WARNING: Code restructure failed: missing block: B:73:0x01d5, code lost:
-        if (r0 <= 0) goto L_0x01d9;
-     */
-    /* JADX WARNING: Code restructure failed: missing block: B:74:0x01d7, code lost:
-        r20 = r20 - r8;
-     */
-    /* JADX WARNING: Code restructure failed: missing block: B:75:0x01d9, code lost:
-        r15[1] = r20;
-        r28 = r14.getLineDescent(r0);
-        r29 = r7;
-     */
-    /* JADX WARNING: Code restructure failed: missing block: B:76:0x01e5, code lost:
-        if (r0 != (r6 - 1)) goto L_0x01e9;
-     */
-    /* JADX WARNING: Code restructure failed: missing block: B:77:0x01e7, code lost:
-        r28 = r28 + r18;
-     */
-    /* JADX WARNING: Code restructure failed: missing block: B:78:0x01e9, code lost:
-        r15[2] = r28;
-        r15[3] = r14.getLineExtra(r0);
-        r13[0] = r14.getLineDirections(r0);
-     */
-    /* JADX WARNING: Code restructure failed: missing block: B:79:0x01fd, code lost:
-        if (r0 != (r6 - 1)) goto L_0x0202;
-     */
-    /* JADX WARNING: Code restructure failed: missing block: B:80:0x01ff, code lost:
-        r7 = r9 + r10;
-     */
-    /* JADX WARNING: Code restructure failed: missing block: B:81:0x0202, code lost:
-        r7 = r14.getLineStart(r0 + 1);
-     */
-    /* JADX WARNING: Code restructure failed: missing block: B:82:0x0208, code lost:
-        r31 = r8;
-        r32 = r9;
-        r15[4] = android.text.StaticLayout.packHyphenEdit(r14.getStartHyphenEdit(r0), r14.getEndHyphenEdit(r0));
-        r8 = r15[4];
-     */
-    /* JADX WARNING: Code restructure failed: missing block: B:83:0x0222, code lost:
-        if (contentMayProtrudeFromLineTopOrBottom(r2, r4, r7) == false) goto L_0x0227;
-     */
-    /* JADX WARNING: Code restructure failed: missing block: B:84:0x0224, code lost:
-        r30 = 256;
-     */
-    /* JADX WARNING: Code restructure failed: missing block: B:85:0x0227, code lost:
-        r30 = 0;
-     */
-    /* JADX WARNING: Code restructure failed: missing block: B:86:0x0229, code lost:
-        r15[4] = r8 | r30;
-     */
-    /* JADX WARNING: Code restructure failed: missing block: B:87:0x022f, code lost:
-        if (r1.mEllipsize == false) goto L_0x0240;
-     */
-    /* JADX WARNING: Code restructure failed: missing block: B:88:0x0231, code lost:
-        r15[5] = r14.getEllipsisStart(r0);
-        r15[6] = r14.getEllipsisCount(r0);
-     */
-    /* JADX WARNING: Code restructure failed: missing block: B:90:0x0241, code lost:
-        r1.mInts.insertAt(r3 + r0, r15);
-        r1.mObjects.insertAt(r3 + r0, r13);
-        r0 = r0 + 1;
-        r4 = r27;
-        r7 = r29;
-        r8 = r31;
-        r9 = r32;
-     */
-    /* JADX WARNING: Code restructure failed: missing block: B:91:0x025b, code lost:
-        r27 = r4;
-        r29 = r7;
-        r31 = r8;
-        r32 = r9;
-        updateBlocks(r3, r11 - 1, r6);
-        r5.finish();
-        r4 = sLock;
-     */
-    /* JADX WARNING: Code restructure failed: missing block: B:92:0x026d, code lost:
-        monitor-enter(r4);
-     */
-    /* JADX WARNING: Code restructure failed: missing block: B:94:?, code lost:
-        sStaticLayout = r14;
-        sBuilder = r5;
-     */
-    /* JADX WARNING: Code restructure failed: missing block: B:95:0x0272, code lost:
-        monitor-exit(r4);
-     */
-    /* JADX WARNING: Code restructure failed: missing block: B:96:0x0273, code lost:
-        return;
-     */
-    @com.android.internal.annotations.VisibleForTesting(visibility = com.android.internal.annotations.VisibleForTesting.Visibility.PACKAGE)
-    /* Code decompiled incorrectly, please refer to instructions dump. */
-    public void reflow(java.lang.CharSequence r34, int r35, int r36, int r37) {
-        /*
-            r33 = this;
-            r1 = r33
-            java.lang.CharSequence r2 = r1.mBase
-            r3 = r34
-            if (r3 == r2) goto L_0x0009
-            return
-        L_0x0009:
-            java.lang.CharSequence r2 = r1.mDisplay
-            int r4 = r2.length()
-            int r5 = r35 + -1
-            r6 = 10
-            int r5 = android.text.TextUtils.lastIndexOf(r2, r6, r5)
-            r7 = 1
-            if (r5 >= 0) goto L_0x001c
-            r5 = 0
-            goto L_0x001d
-        L_0x001c:
-            int r5 = r5 + r7
-        L_0x001d:
-            int r8 = r35 - r5
-            int r9 = r36 + r8
-            int r10 = r37 + r8
-            int r0 = r35 - r8
-            int r8 = r0 + r10
-            int r6 = android.text.TextUtils.indexOf((java.lang.CharSequence) r2, (char) r6, (int) r8)
-            if (r6 >= 0) goto L_0x002f
-            r6 = r4
-            goto L_0x0030
-        L_0x002f:
-            int r6 = r6 + r7
-        L_0x0030:
-            int r8 = r0 + r10
-            int r8 = r6 - r8
-            int r9 = r9 + r8
-            int r10 = r10 + r8
-            boolean r11 = r2 instanceof android.text.Spanned
-            if (r11 == 0) goto L_0x007e
-            r11 = r2
-            android.text.Spanned r11 = (android.text.Spanned) r11
-        L_0x003d:
-            r13 = 0
-            int r14 = r0 + r10
-            java.lang.Class<android.text.style.WrapTogetherSpan> r15 = android.text.style.WrapTogetherSpan.class
-            java.lang.Object[] r14 = r11.getSpans(r0, r14, r15)
-            r15 = r9
-            r9 = r0
-            r0 = 0
-        L_0x0049:
-            int r7 = r14.length
-            if (r0 >= r7) goto L_0x0075
-            r7 = r14[r0]
-            int r7 = r11.getSpanStart(r7)
-            r12 = r14[r0]
-            int r12 = r11.getSpanEnd(r12)
-            if (r7 >= r9) goto L_0x0063
-            r13 = 1
-            int r18 = r9 - r7
-            int r15 = r15 + r18
-            int r10 = r10 + r18
-            int r9 = r9 - r18
-        L_0x0063:
-            int r3 = r9 + r10
-            if (r12 <= r3) goto L_0x006f
-            r3 = 1
-            int r13 = r9 + r10
-            int r13 = r12 - r13
-            int r15 = r15 + r13
-            int r10 = r10 + r13
-            r13 = r3
-        L_0x006f:
-            int r0 = r0 + 1
-            r3 = r34
-            r7 = 1
-            goto L_0x0049
-        L_0x0075:
-            if (r13 != 0) goto L_0x0078
-            goto L_0x0080
-        L_0x0078:
-            r0 = r9
-            r9 = r15
-            r3 = r34
-            r7 = 1
-            goto L_0x003d
-        L_0x007e:
-            r15 = r9
-            r9 = r0
-        L_0x0080:
-            int r3 = r1.getLineForOffset(r9)
-            int r7 = r1.getLineTop(r3)
-            int r0 = r9 + r15
-            int r0 = r1.getLineForOffset(r0)
-            int r11 = r9 + r10
-            if (r11 != r4) goto L_0x0096
-            int r0 = r33.getLineCount()
-        L_0x0096:
-            r11 = r0
-            int r12 = r1.getLineTop(r11)
-            int r0 = r33.getLineCount()
-            if (r11 != r0) goto L_0x00a3
-            r0 = 1
-            goto L_0x00a4
-        L_0x00a3:
-            r0 = 0
-        L_0x00a4:
-            r13 = r0
-            java.lang.Object[] r14 = sLock
-            monitor-enter(r14)
-            android.text.StaticLayout r0 = sStaticLayout     // Catch:{ all -> 0x0287 }
-            android.text.StaticLayout$Builder r18 = sBuilder     // Catch:{ all -> 0x0287 }
-            r19 = r5
-            r5 = 0
-            sStaticLayout = r5     // Catch:{ all -> 0x0277 }
-            sBuilder = r5     // Catch:{ all -> 0x0277 }
-            monitor-exit(r14)     // Catch:{ all -> 0x0277 }
-            if (r0 != 0) goto L_0x00d1
-            android.text.StaticLayout r14 = new android.text.StaticLayout
-            r14.<init>((java.lang.CharSequence) r5)
-            r0 = r14
-            int r5 = r9 + r10
-            android.text.TextPaint r14 = r33.getPaint()
-            r20 = r0
-            int r0 = r33.getWidth()
-            android.text.StaticLayout$Builder r18 = android.text.StaticLayout.Builder.obtain(r2, r9, r5, r14, r0)
-            r5 = r18
-            r14 = r20
-            goto L_0x00d4
-        L_0x00d1:
-            r14 = r0
-            r5 = r18
-        L_0x00d4:
-            int r0 = r9 + r10
-            android.text.StaticLayout$Builder r0 = r5.setText(r2, r9, r0)
-            r21 = r6
-            android.text.TextPaint r6 = r33.getPaint()
-            android.text.StaticLayout$Builder r0 = r0.setPaint(r6)
-            int r6 = r33.getWidth()
-            android.text.StaticLayout$Builder r0 = r0.setWidth(r6)
-            android.text.TextDirectionHeuristic r6 = r33.getTextDirectionHeuristic()
-            android.text.StaticLayout$Builder r0 = r0.setTextDirection(r6)
-            float r6 = r33.getSpacingAdd()
-            r22 = r8
-            float r8 = r33.getSpacingMultiplier()
-            android.text.StaticLayout$Builder r0 = r0.setLineSpacing(r6, r8)
-            boolean r6 = r1.mFallbackLineSpacing
-            android.text.StaticLayout$Builder r0 = r0.setUseLineSpacingFromFallbacks(r6)
-            int r6 = r1.mEllipsizedWidth
-            android.text.StaticLayout$Builder r0 = r0.setEllipsizedWidth(r6)
-            android.text.TextUtils$TruncateAt r6 = r1.mEllipsizeAt
-            android.text.StaticLayout$Builder r0 = r0.setEllipsize(r6)
-            int r6 = r1.mBreakStrategy
-            android.text.StaticLayout$Builder r0 = r0.setBreakStrategy(r6)
-            int r6 = r1.mHyphenationFrequency
-            android.text.StaticLayout$Builder r0 = r0.setHyphenationFrequency(r6)
-            int r6 = r1.mJustificationMode
-            android.text.StaticLayout$Builder r0 = r0.setJustificationMode(r6)
-            if (r13 != 0) goto L_0x012a
-            r6 = 1
-            goto L_0x012c
-        L_0x012a:
-            r6 = 0
-        L_0x012c:
-            r0.setAddLastLineLineSpacing(r6)
-            r0 = 1
-            r6 = 0
-            r14.generate(r5, r6, r0)
-            int r0 = r14.getLineCount()
-            int r6 = r9 + r10
-            if (r6 == r4) goto L_0x0148
-            int r6 = r0 + -1
-            int r6 = r14.getLineStart(r6)
-            int r8 = r9 + r10
-            if (r6 != r8) goto L_0x0148
-            int r0 = r0 + -1
-        L_0x0148:
-            r6 = r0
-            android.text.PackedIntVector r0 = r1.mInts
-            int r8 = r11 - r3
-            r0.deleteAt(r3, r8)
-            android.text.PackedObjectVector<android.text.Layout$Directions> r0 = r1.mObjects
-            int r8 = r11 - r3
-            r0.deleteAt(r3, r8)
-            int r0 = r14.getLineTop(r6)
-            r8 = 0
-            r18 = 0
-            r23 = r4
-            boolean r4 = r1.mIncludePad
-            if (r4 == 0) goto L_0x016d
-            if (r3 != 0) goto L_0x016d
-            int r8 = r14.getTopPadding()
-            r1.mTopPadding = r8
-            int r0 = r0 - r8
-        L_0x016d:
-            boolean r4 = r1.mIncludePad
-            if (r4 == 0) goto L_0x017c
-            if (r13 == 0) goto L_0x017c
-            int r4 = r14.getBottomPadding()
-            r1.mBottomPadding = r4
-            int r0 = r0 + r4
-            r18 = r4
-        L_0x017c:
-            r4 = r0
-            android.text.PackedIntVector r0 = r1.mInts
-            r24 = r13
-            int r13 = r10 - r15
-            r25 = r15
-            r15 = 0
-            r0.adjustValuesBelow(r3, r15, r13)
-            android.text.PackedIntVector r0 = r1.mInts
-            int r13 = r7 - r12
-            int r13 = r13 + r4
-            r15 = 1
-            r0.adjustValuesBelow(r3, r15, r13)
-            boolean r0 = r1.mEllipsize
-            r13 = 5
-            if (r0 == 0) goto L_0x019f
-            r0 = 7
-            int[] r0 = new int[r0]
-            r15 = -2147483648(0xffffffff80000000, float:-0.0)
-            r0[r13] = r15
-            goto L_0x01a1
-        L_0x019f:
-            int[] r0 = new int[r13]
-        L_0x01a1:
-            r15 = r0
-            r0 = 1
-            android.text.Layout$Directions[] r13 = new android.text.Layout.Directions[r0]
-            r0 = 0
-        L_0x01a6:
-            if (r0 >= r6) goto L_0x025b
-            r27 = r4
-            int r4 = r14.getLineStart(r0)
-            r17 = 0
-            r15[r17] = r4
-            r20 = r15[r17]
-            int r28 = r14.getParagraphDirection(r0)
-            int r28 = r28 << 30
-            r20 = r20 | r28
-            r15[r17] = r20
-            r20 = r15[r17]
-            boolean r28 = r14.getLineContainsTab(r0)
-            if (r28 == 0) goto L_0x01c9
-            r28 = 536870912(0x20000000, float:1.0842022E-19)
-            goto L_0x01cb
-        L_0x01c9:
-            r28 = r17
-        L_0x01cb:
-            r20 = r20 | r28
-            r15[r17] = r20
-            int r20 = r14.getLineTop(r0)
-            int r20 = r20 + r7
-            if (r0 <= 0) goto L_0x01d9
-            int r20 = r20 - r8
-        L_0x01d9:
-            r16 = 1
-            r15[r16] = r20
-            int r28 = r14.getLineDescent(r0)
-            r29 = r7
-            int r7 = r6 + -1
-            if (r0 != r7) goto L_0x01e9
-            int r28 = r28 + r18
-        L_0x01e9:
-            r7 = 2
-            r15[r7] = r28
-            r7 = 3
-            int r30 = r14.getLineExtra(r0)
-            r15[r7] = r30
-            android.text.Layout$Directions r7 = r14.getLineDirections(r0)
-            r17 = 0
-            r13[r17] = r7
-            int r7 = r6 + -1
-            if (r0 != r7) goto L_0x0202
-            int r7 = r9 + r10
-            goto L_0x0208
-        L_0x0202:
-            int r7 = r0 + 1
-            int r7 = r14.getLineStart(r7)
-        L_0x0208:
-            r31 = r8
-            int r8 = r14.getStartHyphenEdit(r0)
-            r32 = r9
-            int r9 = r14.getEndHyphenEdit(r0)
-            int r8 = android.text.StaticLayout.packHyphenEdit(r8, r9)
-            r9 = 4
-            r15[r9] = r8
-            r8 = r15[r9]
-            boolean r30 = r1.contentMayProtrudeFromLineTopOrBottom(r2, r4, r7)
-            if (r30 == 0) goto L_0x0227
-            r30 = 256(0x100, float:3.59E-43)
-            goto L_0x0229
-        L_0x0227:
-            r30 = r17
-        L_0x0229:
-            r8 = r8 | r30
-            r15[r9] = r8
-            boolean r8 = r1.mEllipsize
-            if (r8 == 0) goto L_0x0240
-            int r8 = r14.getEllipsisStart(r0)
-            r9 = 5
-            r15[r9] = r8
-            r8 = 6
-            int r26 = r14.getEllipsisCount(r0)
-            r15[r8] = r26
-            goto L_0x0241
-        L_0x0240:
-            r9 = 5
-        L_0x0241:
-            android.text.PackedIntVector r8 = r1.mInts
-            int r9 = r3 + r0
-            r8.insertAt(r9, r15)
-            android.text.PackedObjectVector<android.text.Layout$Directions> r8 = r1.mObjects
-            int r9 = r3 + r0
-            r8.insertAt(r9, r13)
-            int r0 = r0 + 1
-            r4 = r27
-            r7 = r29
-            r8 = r31
-            r9 = r32
-            goto L_0x01a6
-        L_0x025b:
-            r27 = r4
-            r29 = r7
-            r31 = r8
-            r32 = r9
-            int r0 = r11 + -1
-            r1.updateBlocks(r3, r0, r6)
-            r5.finish()
-            java.lang.Object[] r4 = sLock
-            monitor-enter(r4)
-            sStaticLayout = r14     // Catch:{ all -> 0x0274 }
-            sBuilder = r5     // Catch:{ all -> 0x0274 }
-            monitor-exit(r4)     // Catch:{ all -> 0x0274 }
-            return
-        L_0x0274:
-            r0 = move-exception
-            monitor-exit(r4)     // Catch:{ all -> 0x0274 }
-            throw r0
-        L_0x0277:
-            r0 = move-exception
-            r23 = r4
-            r21 = r6
-            r29 = r7
-            r22 = r8
-            r32 = r9
-            r24 = r13
-            r25 = r15
-            goto L_0x0298
-        L_0x0287:
-            r0 = move-exception
-            r23 = r4
-            r19 = r5
-            r21 = r6
-            r29 = r7
-            r22 = r8
-            r32 = r9
-            r24 = r13
-            r25 = r15
-        L_0x0298:
-            monitor-exit(r14)     // Catch:{ all -> 0x029a }
-            throw r0
-        L_0x029a:
-            r0 = move-exception
-            goto L_0x0298
-        */
-        throw new UnsupportedOperationException("Method not decompiled: android.text.DynamicLayout.reflow(java.lang.CharSequence, int, int, int):void");
+    @VisibleForTesting(visibility = VisibleForTesting.Visibility.PACKAGE)
+    public void reflow(CharSequence s, int where, int before, int after) {
+        int find;
+        int look;
+        int before2;
+        int where2;
+        StaticLayout reflowed;
+        StaticLayout.Builder b;
+        StaticLayout reflowed2;
+        StaticLayout.Builder b2;
+        int[] ints;
+        if (s != this.mBase) {
+            return;
+        }
+        CharSequence text = this.mDisplay;
+        int len = text.length();
+        int find2 = TextUtils.lastIndexOf(text, '\n', where - 1);
+        if (find2 < 0) {
+            find = 0;
+        } else {
+            find = find2 + 1;
+        }
+        int diff = where - find;
+        int before3 = before + diff;
+        int after2 = after + diff;
+        int where3 = where - diff;
+        int look2 = TextUtils.indexOf(text, '\n', where3 + after2);
+        if (look2 < 0) {
+            look = len;
+        } else {
+            look = look2 + 1;
+        }
+        int change = look - (where3 + after2);
+        int where4 = before3 + change;
+        int after3 = after2 + change;
+        if (text instanceof Spanned) {
+            Spanned sp = (Spanned) text;
+            while (true) {
+                boolean again = false;
+                Object[] force = sp.getSpans(where3, where3 + after3, WrapTogetherSpan.class);
+                before2 = where4;
+                where2 = where3;
+                for (int where5 = 0; where5 < force.length; where5++) {
+                    int st = sp.getSpanStart(force[where5]);
+                    int en = sp.getSpanEnd(force[where5]);
+                    if (st < where2) {
+                        again = true;
+                        int diff2 = where2 - st;
+                        before2 += diff2;
+                        after3 += diff2;
+                        where2 -= diff2;
+                    }
+                    if (en > where2 + after3) {
+                        int diff3 = en - (where2 + after3);
+                        before2 += diff3;
+                        after3 += diff3;
+                        again = true;
+                    }
+                }
+                if (!again) {
+                    break;
+                }
+                where3 = where2;
+                where4 = before2;
+            }
+        } else {
+            before2 = where4;
+            where2 = where3;
+        }
+        int startline = getLineForOffset(where2);
+        int startv = getLineTop(startline);
+        int endline = getLineForOffset(where2 + before2);
+        if (where2 + after3 == len) {
+            endline = getLineCount();
+        }
+        int endline2 = endline;
+        int endv = getLineTop(endline2);
+        boolean islast = endline2 == getLineCount();
+        synchronized (sLock) {
+            try {
+                reflowed = sStaticLayout;
+                b = sBuilder;
+            } catch (Throwable th) {
+                th = th;
+            }
+            try {
+                sStaticLayout = null;
+                sBuilder = null;
+                if (reflowed == null) {
+                    StaticLayout reflowed3 = new StaticLayout((CharSequence) null);
+                    StaticLayout.Builder b3 = StaticLayout.Builder.obtain(text, where2, where2 + after3, getPaint(), getWidth());
+                    b2 = b3;
+                    reflowed2 = reflowed3;
+                } else {
+                    reflowed2 = reflowed;
+                    b2 = b;
+                }
+                b2.setText(text, where2, where2 + after3).setPaint(getPaint()).setWidth(getWidth()).setTextDirection(getTextDirectionHeuristic()).setLineSpacing(getSpacingAdd(), getSpacingMultiplier()).setUseLineSpacingFromFallbacks(this.mFallbackLineSpacing).setEllipsizedWidth(this.mEllipsizedWidth).setEllipsize(this.mEllipsizeAt).setBreakStrategy(this.mBreakStrategy).setHyphenationFrequency(this.mHyphenationFrequency).setJustificationMode(this.mJustificationMode).setAddLastLineLineSpacing(!islast);
+                reflowed2.generate(b2, false, true);
+                int n = reflowed2.getLineCount();
+                if (where2 + after3 != len && reflowed2.getLineStart(n - 1) == where2 + after3) {
+                    n--;
+                }
+                int n2 = n;
+                this.mInts.deleteAt(startline, endline2 - startline);
+                this.mObjects.deleteAt(startline, endline2 - startline);
+                int ht = reflowed2.getLineTop(n2);
+                int toppad = 0;
+                int botpad = 0;
+                if (this.mIncludePad && startline == 0) {
+                    toppad = reflowed2.getTopPadding();
+                    this.mTopPadding = toppad;
+                    ht -= toppad;
+                }
+                if (this.mIncludePad && islast) {
+                    int botpad2 = reflowed2.getBottomPadding();
+                    this.mBottomPadding = botpad2;
+                    ht += botpad2;
+                    botpad = botpad2;
+                }
+                int ht2 = ht;
+                this.mInts.adjustValuesBelow(startline, 0, after3 - before2);
+                this.mInts.adjustValuesBelow(startline, 1, (startv - endv) + ht2);
+                if (this.mEllipsize) {
+                    ints = new int[7];
+                    ints[5] = Integer.MIN_VALUE;
+                } else {
+                    ints = new int[5];
+                }
+                int[] ints2 = ints;
+                Layout.Directions[] objects = new Layout.Directions[1];
+                int i = 0;
+                while (i < n2) {
+                    int ht3 = ht2;
+                    int start = reflowed2.getLineStart(i);
+                    ints2[0] = start;
+                    ints2[0] = ints2[0] | (reflowed2.getParagraphDirection(i) << 30);
+                    ints2[0] = ints2[0] | (reflowed2.getLineContainsTab(i) ? 536870912 : 0);
+                    int top = reflowed2.getLineTop(i) + startv;
+                    if (i > 0) {
+                        top -= toppad;
+                    }
+                    ints2[1] = top;
+                    int desc = reflowed2.getLineDescent(i);
+                    int startv2 = startv;
+                    if (i == n2 - 1) {
+                        desc += botpad;
+                    }
+                    ints2[2] = desc;
+                    ints2[3] = reflowed2.getLineExtra(i);
+                    objects[0] = reflowed2.getLineDirections(i);
+                    int end = i == n2 + (-1) ? where2 + after3 : reflowed2.getLineStart(i + 1);
+                    int toppad2 = toppad;
+                    int where6 = where2;
+                    ints2[4] = StaticLayout.packHyphenEdit(reflowed2.getStartHyphenEdit(i), reflowed2.getEndHyphenEdit(i));
+                    ints2[4] = ints2[4] | (contentMayProtrudeFromLineTopOrBottom(text, start, end) ? 256 : 0);
+                    if (this.mEllipsize) {
+                        ints2[5] = reflowed2.getEllipsisStart(i);
+                        ints2[6] = reflowed2.getEllipsisCount(i);
+                    }
+                    this.mInts.insertAt(startline + i, ints2);
+                    this.mObjects.insertAt(startline + i, objects);
+                    i++;
+                    ht2 = ht3;
+                    startv = startv2;
+                    toppad = toppad2;
+                    where2 = where6;
+                }
+                updateBlocks(startline, endline2 - 1, n2);
+                b2.finish();
+                synchronized (sLock) {
+                    sStaticLayout = reflowed2;
+                    sBuilder = b2;
+                }
+            } catch (Throwable th2) {
+                th = th2;
+                while (true) {
+                    try {
+                        break;
+                    } catch (Throwable th3) {
+                        th = th3;
+                    }
+                }
+                throw th;
+            }
+        }
     }
 
     private boolean contentMayProtrudeFromLineTopOrBottom(CharSequence text, int start, int end) {
-        if ((text instanceof Spanned) && ((ReplacementSpan[]) ((Spanned) text).getSpans(start, end, ReplacementSpan.class)).length > 0) {
-            return true;
+        if (text instanceof Spanned) {
+            Spanned spanned = (Spanned) text;
+            if (((ReplacementSpan[]) spanned.getSpans(start, end, ReplacementSpan.class)).length > 0) {
+                return true;
+            }
         }
         Paint paint = getPaint();
         if (text instanceof PrecomputedText) {
-            ((PrecomputedText) text).getBounds(start, end, this.mTempRect);
+            PrecomputedText precomputed = (PrecomputedText) text;
+            precomputed.getBounds(start, end, this.mTempRect);
         } else {
             paint.getTextBounds(text, start, end, this.mTempRect);
         }
         Paint.FontMetricsInt fm = paint.getFontMetricsInt();
-        if (this.mTempRect.top < fm.top || this.mTempRect.bottom > fm.bottom) {
-            return true;
-        }
-        return false;
+        return this.mTempRect.top < fm.top || this.mTempRect.bottom > fm.bottom;
     }
 
     private void createBlocks() {
@@ -926,7 +496,7 @@ public class DynamicLayout extends Layout {
         this.mNumberOfBlocks = 0;
         CharSequence text = this.mDisplay;
         while (true) {
-            int offset2 = TextUtils.indexOf(text, 10, offset);
+            int offset2 = TextUtils.indexOf(text, '\n', offset);
             if (offset2 < 0) {
                 break;
             }
@@ -968,7 +538,10 @@ public class DynamicLayout extends Layout {
             this.mBlockEndLines[this.mNumberOfBlocks] = line;
             updateAlwaysNeedsToBeRedrawn(this.mNumberOfBlocks);
             this.mNumberOfBlocks++;
-        } else if (line > this.mBlockEndLines[this.mNumberOfBlocks - 1]) {
+            return;
+        }
+        int previousBlockEndLine = this.mBlockEndLines[this.mNumberOfBlocks - 1];
+        if (line > previousBlockEndLine) {
             this.mBlockEndLines = GrowingArrayUtils.append(this.mBlockEndLines, this.mNumberOfBlocks, line);
             updateAlwaysNeedsToBeRedrawn(this.mNumberOfBlocks);
             this.mNumberOfBlocks++;
@@ -977,52 +550,72 @@ public class DynamicLayout extends Layout {
 
     @VisibleForTesting(visibility = VisibleForTesting.Visibility.PACKAGE)
     public void updateBlocks(int startLine, int endLine, int newLineCount) {
+        int i;
+        boolean createBlockBefore;
         boolean createBlock;
         boolean createBlockAfter;
         int lastBlockEndLine;
+        boolean createBlock2;
+        boolean createBlockAfter2;
         int newFirstChangedBlock;
-        int i = startLine;
-        int i2 = endLine;
         if (this.mBlockEndLines == null) {
             createBlocks();
             return;
         }
         int firstBlock = -1;
         int lastBlock = -1;
-        int i3 = 0;
+        int i2 = 0;
         while (true) {
-            if (i3 >= this.mNumberOfBlocks) {
-                break;
-            } else if (this.mBlockEndLines[i3] >= i) {
-                firstBlock = i3;
-                break;
+            if (i2 < this.mNumberOfBlocks) {
+                if (this.mBlockEndLines[i2] < startLine) {
+                    i2++;
+                } else {
+                    firstBlock = i2;
+                    break;
+                }
             } else {
-                i3++;
+                break;
             }
         }
-        int i4 = firstBlock;
+        int i3 = firstBlock;
         while (true) {
-            if (i4 >= this.mNumberOfBlocks) {
-                break;
-            } else if (this.mBlockEndLines[i4] >= i2) {
-                lastBlock = i4;
-                break;
+            if (i3 < this.mNumberOfBlocks) {
+                if (this.mBlockEndLines[i3] < endLine) {
+                    i3++;
+                } else {
+                    lastBlock = i3;
+                    break;
+                }
             } else {
-                i4++;
+                break;
             }
         }
         int lastBlockEndLine2 = this.mBlockEndLines[lastBlock];
-        boolean createBlockBefore = i > (firstBlock == 0 ? 0 : this.mBlockEndLines[firstBlock + -1] + 1);
-        boolean createBlock2 = newLineCount > 0;
-        boolean createBlockAfter2 = i2 < this.mBlockEndLines[lastBlock];
-        int numAddedBlocks = 0;
-        if (createBlockBefore) {
-            numAddedBlocks = 0 + 1;
+        if (firstBlock != 0) {
+            i = this.mBlockEndLines[firstBlock - 1] + 1;
+        } else {
+            i = 0;
         }
-        if (createBlock2) {
+        if (startLine <= i) {
+            createBlockBefore = false;
+        } else {
+            createBlockBefore = true;
+        }
+        if (newLineCount <= 0) {
+            createBlock = false;
+        } else {
+            createBlock = true;
+        }
+        if (endLine >= this.mBlockEndLines[lastBlock]) {
+            createBlockAfter = false;
+        } else {
+            createBlockAfter = true;
+        }
+        int numAddedBlocks = createBlockBefore ? 0 + 1 : 0;
+        if (createBlock) {
             numAddedBlocks++;
         }
-        if (createBlockAfter2) {
+        if (createBlockAfter) {
             numAddedBlocks++;
         }
         int numRemovedBlocks = (lastBlock - firstBlock) + 1;
@@ -1039,48 +632,48 @@ public class DynamicLayout extends Layout {
             lastBlockEndLine = lastBlockEndLine2;
             System.arraycopy(this.mBlockEndLines, 0, blockEndLines, 0, firstBlock);
             System.arraycopy(this.mBlockIndices, 0, blockIndices, 0, firstBlock);
-            createBlockAfter = createBlockAfter2;
-            createBlock = createBlock2;
+            createBlockAfter2 = createBlockAfter;
+            createBlock2 = createBlock;
             System.arraycopy(this.mBlockEndLines, lastBlock + 1, blockEndLines, firstBlock + numAddedBlocks, (this.mNumberOfBlocks - lastBlock) - 1);
             System.arraycopy(this.mBlockIndices, lastBlock + 1, blockIndices, firstBlock + numAddedBlocks, (this.mNumberOfBlocks - lastBlock) - 1);
             this.mBlockEndLines = blockEndLines;
             this.mBlockIndices = blockIndices;
         } else {
             lastBlockEndLine = lastBlockEndLine2;
-            createBlock = createBlock2;
-            createBlockAfter = createBlockAfter2;
+            createBlock2 = createBlock;
+            createBlockAfter2 = createBlockAfter;
             if (numAddedBlocks + numRemovedBlocks != 0) {
                 System.arraycopy(this.mBlockEndLines, lastBlock + 1, this.mBlockEndLines, firstBlock + numAddedBlocks, (this.mNumberOfBlocks - lastBlock) - 1);
                 System.arraycopy(this.mBlockIndices, lastBlock + 1, this.mBlockIndices, firstBlock + numAddedBlocks, (this.mNumberOfBlocks - lastBlock) - 1);
             }
         }
-        if (!(numAddedBlocks + numRemovedBlocks == 0 || this.mBlocksAlwaysNeedToBeRedrawn == null)) {
+        if (numAddedBlocks + numRemovedBlocks != 0 && this.mBlocksAlwaysNeedToBeRedrawn != null) {
             ArraySet<Integer> set = new ArraySet<>();
             int changedBlockCount = numAddedBlocks - numRemovedBlocks;
-            int i5 = 0;
+            int i4 = 0;
             while (true) {
-                int i6 = i5;
-                if (i6 >= this.mBlocksAlwaysNeedToBeRedrawn.size()) {
+                int i5 = i4;
+                if (i5 >= this.mBlocksAlwaysNeedToBeRedrawn.size()) {
                     break;
                 }
-                Integer block = this.mBlocksAlwaysNeedToBeRedrawn.valueAt(i6);
+                Integer block = this.mBlocksAlwaysNeedToBeRedrawn.valueAt(i5);
                 if (block.intValue() < firstBlock) {
                     set.add(block);
                 }
                 if (block.intValue() > lastBlock) {
                     set.add(Integer.valueOf(block.intValue() + changedBlockCount));
                 }
-                i5 = i6 + 1;
+                i4 = i5 + 1;
             }
             this.mBlocksAlwaysNeedToBeRedrawn = set;
         }
         this.mNumberOfBlocks = newNumberOfBlocks;
-        int deltaLines = newLineCount - ((i2 - i) + 1);
+        int deltaLines = newLineCount - ((endLine - startLine) + 1);
         if (deltaLines != 0) {
             newFirstChangedBlock = firstBlock + numAddedBlocks;
-            for (int i7 = newFirstChangedBlock; i7 < this.mNumberOfBlocks; i7++) {
+            for (int i6 = newFirstChangedBlock; i6 < this.mNumberOfBlocks; i6++) {
                 int[] iArr = this.mBlockEndLines;
-                iArr[i7] = iArr[i7] + deltaLines;
+                iArr[i6] = iArr[i6] + deltaLines;
             }
         } else {
             newFirstChangedBlock = this.mNumberOfBlocks;
@@ -1088,18 +681,18 @@ public class DynamicLayout extends Layout {
         this.mIndexFirstChangedBlock = Math.min(this.mIndexFirstChangedBlock, newFirstChangedBlock);
         int blockIndex = firstBlock;
         if (createBlockBefore) {
-            this.mBlockEndLines[blockIndex] = i - 1;
+            this.mBlockEndLines[blockIndex] = startLine - 1;
             updateAlwaysNeedsToBeRedrawn(blockIndex);
             this.mBlockIndices[blockIndex] = -1;
             blockIndex++;
         }
-        if (createBlock) {
-            this.mBlockEndLines[blockIndex] = (i + newLineCount) - 1;
+        if (createBlock2) {
+            this.mBlockEndLines[blockIndex] = (startLine + newLineCount) - 1;
             updateAlwaysNeedsToBeRedrawn(blockIndex);
             this.mBlockIndices[blockIndex] = -1;
             blockIndex++;
         }
-        if (createBlockAfter) {
+        if (createBlockAfter2) {
             this.mBlockEndLines[blockIndex] = lastBlockEndLine + deltaLines;
             updateAlwaysNeedsToBeRedrawn(blockIndex);
             this.mBlockIndices[blockIndex] = -1;
@@ -1151,50 +744,62 @@ public class DynamicLayout extends Layout {
         this.mIndexFirstChangedBlock = i;
     }
 
+    @Override // android.text.Layout
     public int getLineCount() {
         return this.mInts.size() - 1;
     }
 
+    @Override // android.text.Layout
     public int getLineTop(int line) {
         return this.mInts.getValue(line, 1);
     }
 
+    @Override // android.text.Layout
     public int getLineDescent(int line) {
         return this.mInts.getValue(line, 2);
     }
 
+    @Override // android.text.Layout
     public int getLineExtra(int line) {
         return this.mInts.getValue(line, 3);
     }
 
+    @Override // android.text.Layout
     public int getLineStart(int line) {
         return this.mInts.getValue(line, 0) & 536870911;
     }
 
+    @Override // android.text.Layout
     public boolean getLineContainsTab(int line) {
         return (this.mInts.getValue(line, 0) & 536870912) != 0;
     }
 
+    @Override // android.text.Layout
     public int getParagraphDirection(int line) {
         return this.mInts.getValue(line, 0) >> 30;
     }
 
+    @Override // android.text.Layout
     public final Layout.Directions getLineDirections(int line) {
         return this.mObjects.getValue(line, 0);
     }
 
+    @Override // android.text.Layout
     public int getTopPadding() {
         return this.mTopPadding;
     }
 
+    @Override // android.text.Layout
     public int getBottomPadding() {
         return this.mBottomPadding;
     }
 
+    @Override // android.text.Layout
     public int getStartHyphenEdit(int line) {
         return StaticLayout.unpackStartHyphenEdit(this.mInts.getValue(line, 4) & 255);
     }
 
+    @Override // android.text.Layout
     public int getEndHyphenEdit(int line) {
         return StaticLayout.unpackEndHyphenEdit(this.mInts.getValue(line, 4) & 255);
     }
@@ -1203,10 +808,12 @@ public class DynamicLayout extends Layout {
         return (this.mInts.getValue(line, 4) & 256) != 0;
     }
 
+    @Override // android.text.Layout
     public int getEllipsizedWidth() {
         return this.mEllipsizedWidth;
     }
 
+    /* loaded from: classes4.dex */
     private static class ChangeWatcher implements TextWatcher, SpanWatcher {
         private WeakReference<DynamicLayout> mLayout;
 
@@ -1215,7 +822,7 @@ public class DynamicLayout extends Layout {
         }
 
         private void reflow(CharSequence s, int where, int before, int after) {
-            DynamicLayout ml = (DynamicLayout) this.mLayout.get();
+            DynamicLayout ml = this.mLayout.get();
             if (ml != null) {
                 ml.reflow(s, where, before, after);
             } else if (s instanceof Spannable) {
@@ -1223,28 +830,34 @@ public class DynamicLayout extends Layout {
             }
         }
 
+        @Override // android.text.TextWatcher
         public void beforeTextChanged(CharSequence s, int where, int before, int after) {
         }
 
+        @Override // android.text.TextWatcher
         public void onTextChanged(CharSequence s, int where, int before, int after) {
             reflow(s, where, before, after);
         }
 
+        @Override // android.text.TextWatcher
         public void afterTextChanged(Editable s) {
         }
 
+        @Override // android.text.SpanWatcher
         public void onSpanAdded(Spannable s, Object o, int start, int end) {
             if (o instanceof UpdateLayout) {
                 reflow(s, start, end - start, end - start);
             }
         }
 
+        @Override // android.text.SpanWatcher
         public void onSpanRemoved(Spannable s, Object o, int start, int end) {
             if (o instanceof UpdateLayout) {
                 reflow(s, start, end - start, end - start);
             }
         }
 
+        @Override // android.text.SpanWatcher
         public void onSpanChanged(Spannable s, Object o, int start, int end, int nstart, int nend) {
             if (o instanceof UpdateLayout) {
                 if (start > end) {
@@ -1256,6 +869,7 @@ public class DynamicLayout extends Layout {
         }
     }
 
+    @Override // android.text.Layout
     public int getEllipsisStart(int line) {
         if (this.mEllipsizeAt == null) {
             return 0;
@@ -1263,6 +877,7 @@ public class DynamicLayout extends Layout {
         return this.mInts.getValue(line, 5);
     }
 
+    @Override // android.text.Layout
     public int getEllipsisCount(int line) {
         if (this.mEllipsizeAt == null) {
             return 0;

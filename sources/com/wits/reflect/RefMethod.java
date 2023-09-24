@@ -6,6 +6,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Objects;
 
+/* loaded from: classes5.dex */
 public class RefMethod<T> {
     private static final String TAG = "RefMethod";
     private Method method;
@@ -19,21 +20,7 @@ public class RefMethod<T> {
         try {
             if (!field.isAnnotationPresent(MethodName.class)) {
                 int i = 0;
-                if (!field.isAnnotationPresent(MethodSignature.class)) {
-                    Method[] declaredMethods = cls.getDeclaredMethods();
-                    int length = declaredMethods.length;
-                    while (true) {
-                        if (i >= length) {
-                            break;
-                        }
-                        Method method2 = declaredMethods[i];
-                        if (method2.getName().equals(field.getName())) {
-                            result = method2;
-                            break;
-                        }
-                        i++;
-                    }
-                } else {
+                if (field.isAnnotationPresent(MethodSignature.class)) {
                     boolean arrayset = false;
                     MethodSignature annotation = (MethodSignature) Objects.requireNonNull((MethodSignature) field.getAnnotation(MethodSignature.class));
                     String[] typesNames = annotation.params();
@@ -48,7 +35,7 @@ public class RefMethod<T> {
                             try {
                                 arraySetType = Class.forName("java.util.ArraySet");
                             } catch (ClassNotFoundException e) {
-                                Log.e(TAG, e.getMessage());
+                                Log.m70e(TAG, e.getMessage());
                             }
                             if (arraySetType != null) {
                                 arraySetTypes[i] = arraySetType;
@@ -61,24 +48,40 @@ public class RefMethod<T> {
                     try {
                         result = getMethod(cls, field, classTypes, annotation.name());
                     } catch (Exception e2) {
-                        Log.e(TAG, e2.getMessage());
+                        Log.m70e(TAG, e2.getMessage());
                         if (arrayset) {
                             result = getMethod(cls, field, arraySetTypes, annotation.name());
+                        }
+                    }
+                } else {
+                    Method[] declaredMethods = cls.getDeclaredMethods();
+                    int length = declaredMethods.length;
+                    while (true) {
+                        if (i >= length) {
+                            break;
+                        }
+                        Method method = declaredMethods[i];
+                        if (!method.getName().equals(field.getName())) {
+                            i++;
+                        } else {
+                            result = method;
+                            break;
                         }
                     }
                 }
             } else {
                 MethodName annotation2 = (MethodName) Objects.requireNonNull((MethodName) field.getAnnotation(MethodName.class));
-                result = getMethod(cls, field, annotation2.params(), annotation2.name());
+                Class<?>[] types = annotation2.params();
+                result = getMethod(cls, field, types, annotation2.name());
                 result.setAccessible(true);
             }
             if (result != null) {
                 result.setAccessible(true);
             } else {
-                Log.e(TAG, "can not find method");
+                Log.m70e(TAG, "can not find method");
             }
         } catch (Exception e3) {
-            Log.e(TAG, e3.getMessage());
+            Log.m70e(TAG, e3.getMessage());
         }
         return result;
     }
@@ -91,14 +94,14 @@ public class RefMethod<T> {
     }
 
     public T call(Object receiver, Object... args) {
-        return callWithDefault(receiver, (Object) null, args);
+        return callWithDefault(receiver, null, args);
     }
 
     public T callWithDefault(Object receiver, T defaultValue, Object... args) {
         try {
             return callWithException(receiver, args);
         } catch (Throwable e) {
-            Log.e(TAG, e.getMessage(), e);
+            Log.m69e(TAG, e.getMessage(), e);
             if (defaultValue != null) {
                 return defaultValue;
             }
@@ -108,7 +111,7 @@ public class RefMethod<T> {
 
     public T callWithException(Object receiver, Object... args) throws Throwable {
         try {
-            return this.method.invoke(receiver, args);
+            return (T) this.method.invoke(receiver, args);
         } catch (InvocationTargetException e) {
             Throwable cause = e.getCause();
             if (cause != null) {

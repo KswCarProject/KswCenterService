@@ -5,6 +5,7 @@ import java.security.Signature;
 import javax.crypto.Cipher;
 import javax.crypto.Mac;
 
+/* loaded from: classes.dex */
 public class CryptoObject {
     private final Object mCrypto;
 
@@ -45,6 +46,6 @@ public class CryptoObject {
         if (this.mCrypto != null) {
             return AndroidKeyStoreProvider.getKeyStoreOperationHandle(this.mCrypto);
         }
-        return 0;
+        return 0L;
     }
 }

@@ -6,13 +6,13 @@ import android.animation.ObjectAnimator;
 import android.animation.TypeEvaluator;
 import android.graphics.Insets;
 import android.graphics.Rect;
-import android.os.RemoteException;
+import android.p007os.RemoteException;
 import android.util.ArraySet;
 import android.util.Log;
 import android.util.Pair;
 import android.util.Property;
 import android.util.SparseArray;
-import android.util.SparseIntArray;
+import android.view.SurfaceControl;
 import android.view.WindowInsets;
 import android.view.WindowInsetsAnimationListener;
 import android.view.animation.Interpolator;
@@ -22,48 +22,64 @@ import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.function.Supplier;
 
+/* loaded from: classes4.dex */
 public class InsetsController implements WindowInsetsController {
     private static final int ANIMATION_DURATION_HIDE_MS = 340;
     private static final int ANIMATION_DURATION_SHOW_MS = 275;
     private static final int DIRECTION_HIDE = 2;
     private static final int DIRECTION_NONE = 0;
     private static final int DIRECTION_SHOW = 1;
-    /* access modifiers changed from: private */
-    public static final Interpolator INTERPOLATOR = new PathInterpolator(0.4f, 0.0f, 0.2f, 1.0f);
-    /* access modifiers changed from: private */
-    public static TypeEvaluator<Insets> sEvaluator = $$Lambda$InsetsController$Cj7UJrCkdHvJAZ_cYKrXuTMsjz8.INSTANCE;
-    private final String TAG = "InsetsControllerImpl";
-    private final Runnable mAnimCallback;
+    private static final Interpolator INTERPOLATOR = new PathInterpolator(0.4f, 0.0f, 0.2f, 1.0f);
+    private static TypeEvaluator<Insets> sEvaluator = new TypeEvaluator() { // from class: android.view.-$$Lambda$InsetsController$Cj7UJrCkdHvJAZ_cYKrXuTMsjz8
+        @Override // android.animation.TypeEvaluator
+        public final Object evaluate(float f, Object obj, Object obj2) {
+            Insets m132of;
+            Insets insets = (Insets) obj;
+            Insets insets2 = (Insets) obj2;
+            m132of = Insets.m132of(0, (int) (insets.top + ((insets2.top - insets.top) * f)), 0, (int) (insets.bottom + ((insets2.bottom - insets.bottom) * f)));
+            return m132of;
+        }
+    };
     private boolean mAnimCallbackScheduled;
-    private final ArrayList<InsetsAnimationControlImpl> mAnimationControls = new ArrayList<>();
-    /* access modifiers changed from: private */
     @AnimationDirection
-    public int mAnimationDirection;
-    private final Rect mFrame = new Rect();
+    private int mAnimationDirection;
     private WindowInsets mLastInsets;
-    private final Rect mLastLegacyContentInsets = new Rect();
     private int mLastLegacySoftInputMode;
-    private final Rect mLastLegacyStableInsets = new Rect();
     private int mPendingTypesToShow;
-    private final SparseArray<InsetsSourceConsumer> mSourceConsumers = new SparseArray<>();
-    private final InsetsState mState = new InsetsState();
-    private final SparseArray<InsetsSourceControl> mTmpControlArray = new SparseArray<>();
-    private final ArrayList<InsetsAnimationControlImpl> mTmpFinishedControls = new ArrayList<>();
-    private final InsetsState mTmpState = new InsetsState();
     private final ViewRootImpl mViewRoot;
+    private final String TAG = "InsetsControllerImpl";
+    private final InsetsState mState = new InsetsState();
+    private final InsetsState mTmpState = new InsetsState();
+    private final Rect mFrame = new Rect();
+    private final SparseArray<InsetsSourceConsumer> mSourceConsumers = new SparseArray<>();
+    private final SparseArray<InsetsSourceControl> mTmpControlArray = new SparseArray<>();
+    private final ArrayList<InsetsAnimationControlImpl> mAnimationControls = new ArrayList<>();
+    private final ArrayList<InsetsAnimationControlImpl> mTmpFinishedControls = new ArrayList<>();
+    private final Rect mLastLegacyContentInsets = new Rect();
+    private final Rect mLastLegacyStableInsets = new Rect();
+    private final Runnable mAnimCallback = new Runnable() { // from class: android.view.-$$Lambda$InsetsController$HI9QZ2HvGm6iykc-WONz2KPG61Q
+        @Override // java.lang.Runnable
+        public final void run() {
+            InsetsController.lambda$new$1(InsetsController.this);
+        }
+    };
 
+    /* loaded from: classes4.dex */
     private @interface AnimationDirection {
     }
 
+    /* loaded from: classes4.dex */
     private static class InsetsProperty extends Property<WindowInsetsAnimationController, Insets> {
         InsetsProperty() {
             super(Insets.class, "Insets");
         }
 
+        @Override // android.util.Property
         public Insets get(WindowInsetsAnimationController object) {
             return object.getCurrentInsets();
         }
 
+        @Override // android.util.Property
         public void set(WindowInsetsAnimationController object, Insets value) {
             object.changeInsets(value);
         }
@@ -71,52 +87,49 @@ public class InsetsController implements WindowInsetsController {
 
     public InsetsController(ViewRootImpl viewRoot) {
         this.mViewRoot = viewRoot;
-        this.mAnimCallback = new Runnable() {
-            public final void run() {
-                InsetsController.lambda$new$1(InsetsController.this);
-            }
-        };
     }
 
     public static /* synthetic */ void lambda$new$1(InsetsController insetsController) {
         insetsController.mAnimCallbackScheduled = false;
-        if (!insetsController.mAnimationControls.isEmpty()) {
-            insetsController.mTmpFinishedControls.clear();
-            InsetsState state = new InsetsState(insetsController.mState, true);
-            for (int i = insetsController.mAnimationControls.size() - 1; i >= 0; i--) {
-                InsetsAnimationControlImpl control = insetsController.mAnimationControls.get(i);
-                if (insetsController.mAnimationControls.get(i).applyChangeInsets(state)) {
-                    insetsController.mTmpFinishedControls.add(control);
-                }
+        if (insetsController.mAnimationControls.isEmpty()) {
+            return;
+        }
+        insetsController.mTmpFinishedControls.clear();
+        InsetsState state = new InsetsState(insetsController.mState, true);
+        for (int i = insetsController.mAnimationControls.size() - 1; i >= 0; i--) {
+            InsetsAnimationControlImpl control = insetsController.mAnimationControls.get(i);
+            if (insetsController.mAnimationControls.get(i).applyChangeInsets(state)) {
+                insetsController.mTmpFinishedControls.add(control);
             }
-            insetsController.mViewRoot.mView.dispatchWindowInsetsAnimationProgress(state.calculateInsets(insetsController.mFrame, insetsController.mLastInsets.isRound(), insetsController.mLastInsets.shouldAlwaysConsumeSystemBars(), insetsController.mLastInsets.getDisplayCutout(), insetsController.mLastLegacyContentInsets, insetsController.mLastLegacyStableInsets, insetsController.mLastLegacySoftInputMode, (SparseIntArray) null));
-            int i2 = insetsController.mTmpFinishedControls.size() - 1;
-            while (true) {
-                int i3 = i2;
-                if (i3 >= 0) {
-                    insetsController.dispatchAnimationFinished(insetsController.mTmpFinishedControls.get(i3).getAnimation());
-                    i2 = i3 - 1;
-                } else {
-                    return;
-                }
+        }
+        WindowInsets insets = state.calculateInsets(insetsController.mFrame, insetsController.mLastInsets.isRound(), insetsController.mLastInsets.shouldAlwaysConsumeSystemBars(), insetsController.mLastInsets.getDisplayCutout(), insetsController.mLastLegacyContentInsets, insetsController.mLastLegacyStableInsets, insetsController.mLastLegacySoftInputMode, null);
+        insetsController.mViewRoot.mView.dispatchWindowInsetsAnimationProgress(insets);
+        int i2 = insetsController.mTmpFinishedControls.size() - 1;
+        while (true) {
+            int i3 = i2;
+            if (i3 >= 0) {
+                insetsController.dispatchAnimationFinished(insetsController.mTmpFinishedControls.get(i3).getAnimation());
+                i2 = i3 - 1;
+            } else {
+                return;
             }
         }
     }
 
     @VisibleForTesting
     public void onFrameChanged(Rect frame) {
-        if (!this.mFrame.equals(frame)) {
-            this.mViewRoot.notifyInsetsChanged();
-            this.mFrame.set(frame);
+        if (this.mFrame.equals(frame)) {
+            return;
         }
+        this.mViewRoot.notifyInsetsChanged();
+        this.mFrame.set(frame);
     }
 
     public InsetsState getState() {
         return this.mState;
     }
 
-    /* access modifiers changed from: package-private */
-    public boolean onStateChanged(InsetsState state) {
+    boolean onStateChanged(InsetsState state) {
         if (this.mState.equals(state)) {
             return false;
         }
@@ -135,7 +148,7 @@ public class InsetsController implements WindowInsetsController {
         this.mLastLegacyContentInsets.set(legacyContentInsets);
         this.mLastLegacyStableInsets.set(legacyStableInsets);
         this.mLastLegacySoftInputMode = legacySoftInputMode;
-        this.mLastInsets = this.mState.calculateInsets(this.mFrame, isScreenRound, alwaysConsumeSystemBars, cutout, legacyContentInsets, legacyStableInsets, legacySoftInputMode, (SparseIntArray) null);
+        this.mLastInsets = this.mState.calculateInsets(this.mFrame, isScreenRound, alwaysConsumeSystemBars, cutout, legacyContentInsets, legacyStableInsets, legacySoftInputMode, null);
         return this.mLastInsets;
     }
 
@@ -158,6 +171,7 @@ public class InsetsController implements WindowInsetsController {
         this.mTmpControlArray.clear();
     }
 
+    @Override // android.view.WindowInsetsController
     public void show(int types) {
         show(types, false);
     }
@@ -180,6 +194,7 @@ public class InsetsController implements WindowInsetsController {
         applyAnimation(typesReady, true, fromIme);
     }
 
+    @Override // android.view.WindowInsetsController
     public void hide(int types) {
         int typesReady = 0;
         ArraySet<Integer> internalTypes = InsetsState.toInternalType(types);
@@ -198,6 +213,7 @@ public class InsetsController implements WindowInsetsController {
         applyAnimation(typesReady, false, false);
     }
 
+    @Override // android.view.WindowInsetsController
     public void controlWindowInsetsAnimation(int types, WindowInsetsAnimationControlListener listener) {
         controlWindowInsetsAnimation(types, listener, false);
     }
@@ -211,28 +227,32 @@ public class InsetsController implements WindowInsetsController {
     }
 
     private void controlAnimationUnchecked(int types, WindowInsetsAnimationControlListener listener, Rect frame, boolean fromIme) {
-        if (types != 0) {
-            cancelExistingControllers(types);
-            InsetsState insetsState = this.mState;
-            ArraySet<Integer> internalTypes = InsetsState.toInternalType(types);
-            SparseArray<InsetsSourceConsumer> consumers = new SparseArray<>();
-            Pair<Integer, Boolean> typesReadyPair = collectConsumers(fromIme, internalTypes, consumers);
-            int typesReady = ((Integer) typesReadyPair.first).intValue();
-            if (!((Boolean) typesReadyPair.second).booleanValue()) {
-                this.mPendingTypesToShow = typesReady;
-                return;
-            }
-            int typesReady2 = collectPendingConsumers(typesReady, consumers);
-            if (typesReady2 == 0) {
-                listener.onCancelled();
-                return;
-            }
-            this.mAnimationControls.add(new InsetsAnimationControlImpl(consumers, frame, this.mState, listener, typesReady2, new Supplier() {
-                public final Object get() {
-                    return InsetsController.lambda$controlAnimationUnchecked$2(InsetsController.this);
-                }
-            }, this));
+        if (types == 0) {
+            return;
         }
+        cancelExistingControllers(types);
+        InsetsState insetsState = this.mState;
+        ArraySet<Integer> internalTypes = InsetsState.toInternalType(types);
+        SparseArray<InsetsSourceConsumer> consumers = new SparseArray<>();
+        Pair<Integer, Boolean> typesReadyPair = collectConsumers(fromIme, internalTypes, consumers);
+        int typesReady = typesReadyPair.first.intValue();
+        boolean isReady = typesReadyPair.second.booleanValue();
+        if (!isReady) {
+            this.mPendingTypesToShow = typesReady;
+            return;
+        }
+        int typesReady2 = collectPendingConsumers(typesReady, consumers);
+        if (typesReady2 == 0) {
+            listener.onCancelled();
+            return;
+        }
+        InsetsAnimationControlImpl controller = new InsetsAnimationControlImpl(consumers, frame, this.mState, listener, typesReady2, new Supplier() { // from class: android.view.-$$Lambda$InsetsController$n9dGLDW5oKSxT73i9ZlnIPWSzms
+            @Override // java.util.function.Supplier
+            public final Object get() {
+                return InsetsController.lambda$controlAnimationUnchecked$2(InsetsController.this);
+            }
+        }, this);
+        this.mAnimationControls.add(controller);
     }
 
     public static /* synthetic */ SyncRtSurfaceTransactionApplier lambda$controlAnimationUnchecked$2(InsetsController insetsController) {
@@ -300,8 +320,7 @@ public class InsetsController implements WindowInsetsController {
         showDirectly(controller.getTypes() & shownTypes);
     }
 
-    /* access modifiers changed from: package-private */
-    public void notifyControlRevoked(InsetsSourceConsumer consumer) {
+    void notifyControlRevoked(InsetsSourceConsumer consumer) {
         for (int i = this.mAnimationControls.size() - 1; i >= 0; i--) {
             InsetsAnimationControlImpl control = this.mAnimationControls.get(i);
             if ((control.getTypes() & InsetsState.toPublicType(consumer.getType())) != 0) {
@@ -317,7 +336,8 @@ public class InsetsController implements WindowInsetsController {
 
     private void applyLocalVisibilityOverride() {
         for (int i = this.mSourceConsumers.size() - 1; i >= 0; i--) {
-            this.mSourceConsumers.valueAt(i).applyLocalVisibilityOverride();
+            InsetsSourceConsumer controller = this.mSourceConsumers.valueAt(i);
+            controller.applyLocalVisibilityOverride();
         }
     }
 
@@ -346,8 +366,7 @@ public class InsetsController implements WindowInsetsController {
         getSourceConsumer(10).onWindowFocusLost();
     }
 
-    /* access modifiers changed from: package-private */
-    public ViewRootImpl getViewRoot() {
+    ViewRootImpl getViewRoot() {
         return this.mViewRoot;
     }
 
@@ -362,9 +381,19 @@ public class InsetsController implements WindowInsetsController {
 
     private InsetsSourceConsumer createConsumerOfType(int type) {
         if (type == 10) {
-            return new ImeInsetsSourceConsumer(this.mState, $$Lambda$9vBfnQOmNnsc9WU80IIatZHQGKc.INSTANCE, this);
+            return new ImeInsetsSourceConsumer(this.mState, new Supplier() { // from class: android.view.-$$Lambda$9vBfnQOmNnsc9WU80IIatZHQGKc
+                @Override // java.util.function.Supplier
+                public final Object get() {
+                    return new SurfaceControl.Transaction();
+                }
+            }, this);
         }
-        return new InsetsSourceConsumer(type, this.mState, $$Lambda$9vBfnQOmNnsc9WU80IIatZHQGKc.INSTANCE, this);
+        return new InsetsSourceConsumer(type, this.mState, new Supplier() { // from class: android.view.-$$Lambda$9vBfnQOmNnsc9WU80IIatZHQGKc
+            @Override // java.util.function.Supplier
+            public final Object get() {
+                return new SurfaceControl.Transaction();
+            }
+        }, this);
     }
 
     private void sendStateToWindowManager() {
@@ -378,65 +407,65 @@ public class InsetsController implements WindowInsetsController {
         try {
             this.mViewRoot.mWindowSession.insetsModified(this.mViewRoot.mWindow, tmpState);
         } catch (RemoteException e) {
-            Log.e("InsetsControllerImpl", "Failed to call insetsModified", e);
+            Log.m69e("InsetsControllerImpl", "Failed to call insetsModified", e);
         }
     }
 
     private void applyAnimation(final int types, final boolean show, boolean fromIme) {
-        if (types != 0) {
-            controlAnimationUnchecked(types, new WindowInsetsAnimationControlListener() {
-                private ObjectAnimator mAnimator;
-                private WindowInsetsAnimationController mController;
-
-                public void onReady(WindowInsetsAnimationController controller, int types) {
-                    long j;
-                    this.mController = controller;
-                    if (show) {
-                        InsetsController.this.showDirectly(types);
-                    } else {
-                        InsetsController.this.hideDirectly(types);
-                    }
-                    InsetsProperty insetsProperty = new InsetsProperty();
-                    TypeEvaluator access$200 = InsetsController.sEvaluator;
-                    Insets[] insetsArr = new Insets[2];
-                    insetsArr[0] = show ? controller.getHiddenStateInsets() : controller.getShownStateInsets();
-                    insetsArr[1] = show ? controller.getShownStateInsets() : controller.getHiddenStateInsets();
-                    this.mAnimator = ObjectAnimator.ofObject(controller, insetsProperty, access$200, (V[]) insetsArr);
-                    ObjectAnimator objectAnimator = this.mAnimator;
-                    if (show) {
-                        j = 275;
-                    } else {
-                        j = 340;
-                    }
-                    objectAnimator.setDuration(j);
-                    this.mAnimator.setInterpolator(InsetsController.INTERPOLATOR);
-                    this.mAnimator.addListener(new AnimatorListenerAdapter() {
-                        public void onAnimationEnd(Animator animation) {
-                            AnonymousClass1.this.onAnimationFinish();
-                        }
-                    });
-                    this.mAnimator.start();
-                }
-
-                public void onCancelled() {
-                    this.mAnimator.cancel();
-                }
-
-                /* access modifiers changed from: private */
-                public void onAnimationFinish() {
-                    int i = 0;
-                    int unused = InsetsController.this.mAnimationDirection = 0;
-                    WindowInsetsAnimationController windowInsetsAnimationController = this.mController;
-                    if (show) {
-                        i = types;
-                    }
-                    windowInsetsAnimationController.finish(i);
-                }
-            }, this.mState.getDisplayFrame(), fromIme);
+        if (types == 0) {
+            return;
         }
+        WindowInsetsAnimationControlListener listener = new WindowInsetsAnimationControlListener() { // from class: android.view.InsetsController.1
+            private ObjectAnimator mAnimator;
+            private WindowInsetsAnimationController mController;
+
+            @Override // android.view.WindowInsetsAnimationControlListener
+            public void onReady(WindowInsetsAnimationController controller, int types2) {
+                long j;
+                this.mController = controller;
+                if (show) {
+                    InsetsController.this.showDirectly(types2);
+                } else {
+                    InsetsController.this.hideDirectly(types2);
+                }
+                InsetsProperty insetsProperty = new InsetsProperty();
+                TypeEvaluator typeEvaluator = InsetsController.sEvaluator;
+                Insets[] insetsArr = new Insets[2];
+                insetsArr[0] = show ? controller.getHiddenStateInsets() : controller.getShownStateInsets();
+                insetsArr[1] = show ? controller.getShownStateInsets() : controller.getHiddenStateInsets();
+                this.mAnimator = ObjectAnimator.ofObject(controller, insetsProperty, typeEvaluator, insetsArr);
+                ObjectAnimator objectAnimator = this.mAnimator;
+                if (show) {
+                    j = 275;
+                } else {
+                    j = 340;
+                }
+                objectAnimator.setDuration(j);
+                this.mAnimator.setInterpolator(InsetsController.INTERPOLATOR);
+                this.mAnimator.addListener(new AnimatorListenerAdapter() { // from class: android.view.InsetsController.1.1
+                    @Override // android.animation.AnimatorListenerAdapter, android.animation.Animator.AnimatorListener
+                    public void onAnimationEnd(Animator animation) {
+                        onAnimationFinish();
+                    }
+                });
+                this.mAnimator.start();
+            }
+
+            @Override // android.view.WindowInsetsAnimationControlListener
+            public void onCancelled() {
+                this.mAnimator.cancel();
+            }
+
+            /* JADX INFO: Access modifiers changed from: private */
+            public void onAnimationFinish() {
+                InsetsController.this.mAnimationDirection = 0;
+                this.mController.finish(show ? types : 0);
+            }
+        };
+        controlAnimationUnchecked(types, listener, this.mState.getDisplayFrame(), fromIme);
     }
 
-    /* access modifiers changed from: private */
+    /* JADX INFO: Access modifiers changed from: private */
     public void hideDirectly(int types) {
         ArraySet<Integer> internalTypes = InsetsState.toInternalType(types);
         for (int i = internalTypes.size() - 1; i >= 0; i--) {
@@ -444,7 +473,7 @@ public class InsetsController implements WindowInsetsController {
         }
     }
 
-    /* access modifiers changed from: private */
+    /* JADX INFO: Access modifiers changed from: private */
     public void showDirectly(int types) {
         ArraySet<Integer> internalTypes = InsetsState.toInternalType(types);
         for (int i = internalTypes.size() - 1; i >= 0; i--) {
@@ -457,8 +486,7 @@ public class InsetsController implements WindowInsetsController {
         cancelExistingControllers(WindowInsets.Type.all());
     }
 
-    /* access modifiers changed from: package-private */
-    public void dump(String prefix, PrintWriter pw) {
+    void dump(String prefix, PrintWriter pw) {
         pw.println(prefix);
         pw.println("InsetsController:");
         InsetsState insetsState = this.mState;
@@ -478,7 +506,7 @@ public class InsetsController implements WindowInsetsController {
     @VisibleForTesting
     public void scheduleApplyChangeInsets() {
         if (!this.mAnimCallbackScheduled) {
-            this.mViewRoot.mChoreographer.postCallback(2, this.mAnimCallback, (Object) null);
+            this.mViewRoot.mChoreographer.postCallback(2, this.mAnimCallback, null);
             this.mAnimCallbackScheduled = true;
         }
     }

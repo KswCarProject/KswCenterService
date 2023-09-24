@@ -6,6 +6,7 @@ import android.filterfw.core.FilterFactory;
 import android.filterfw.core.FilterFunction;
 import android.filterfw.core.Frame;
 
+/* loaded from: classes3.dex */
 public class SingleFilterEffect extends FilterEffect {
     protected FilterFunction mFunction;
     protected String mInputName;
@@ -16,11 +17,14 @@ public class SingleFilterEffect extends FilterEffect {
         super(context, name);
         this.mInputName = inputName;
         this.mOutputName = outputName;
-        Filter filter = FilterFactory.sharedFactory().createFilterByClass(filterClass, filterClass.getSimpleName());
+        String filterName = filterClass.getSimpleName();
+        FilterFactory factory = FilterFactory.sharedFactory();
+        Filter filter = factory.createFilterByClass(filterClass, filterName);
         filter.initWithAssignmentList(finalParameters);
         this.mFunction = new FilterFunction(getFilterContext(), filter);
     }
 
+    @Override // android.media.effect.Effect
     public void apply(int inputTexId, int width, int height, int outputTexId) {
         beginGLEffect();
         Frame inputFrame = frameFromTexture(inputTexId, width, height);
@@ -33,10 +37,12 @@ public class SingleFilterEffect extends FilterEffect {
         endGLEffect();
     }
 
+    @Override // android.media.effect.Effect
     public void setParameter(String parameterKey, Object value) {
         this.mFunction.setInputValue(parameterKey, value);
     }
 
+    @Override // android.media.effect.Effect
     public void release() {
         this.mFunction.tearDown();
         this.mFunction = null;

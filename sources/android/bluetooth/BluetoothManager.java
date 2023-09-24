@@ -2,11 +2,12 @@ package android.bluetooth;
 
 import android.content.Context;
 import android.net.wifi.WifiEnterpriseConfig;
-import android.os.RemoteException;
+import android.p007os.RemoteException;
 import android.util.Log;
 import java.util.ArrayList;
 import java.util.List;
 
+/* loaded from: classes.dex */
 public final class BluetoothManager {
     private static final boolean DBG = false;
     private static final String TAG = "BluetoothManager";
@@ -14,15 +15,13 @@ public final class BluetoothManager {
 
     public BluetoothManager(Context context) {
         Context context2 = context.getApplicationContext();
-        if (context2 != null) {
-            this.mAdapter = BluetoothAdapter.getDefaultAdapter();
-            if (this.mAdapter != null) {
-                this.mAdapter.setContext(context2);
-                return;
-            }
-            return;
+        if (context2 == null) {
+            throw new IllegalArgumentException("context not associated with any application (using a mock context?)");
         }
-        throw new IllegalArgumentException("context not associated with any application (using a mock context?)");
+        this.mAdapter = BluetoothAdapter.getDefaultAdapter();
+        if (this.mAdapter != null) {
+            this.mAdapter.setContext(context2);
+        }
     }
 
     public BluetoothAdapter getAdapter() {
@@ -30,7 +29,8 @@ public final class BluetoothManager {
     }
 
     public int getConnectionState(BluetoothDevice device, int profile) {
-        for (BluetoothDevice connectedDevice : getConnectedDevices(profile)) {
+        List<BluetoothDevice> connectedDevices = getConnectedDevices(profile);
+        for (BluetoothDevice connectedDevice : connectedDevices) {
             if (device.equals(connectedDevice)) {
                 return 2;
             }
@@ -39,38 +39,32 @@ public final class BluetoothManager {
     }
 
     public List<BluetoothDevice> getConnectedDevices(int profile) {
-        if (profile == 7 || profile == 8) {
-            List<BluetoothDevice> connectedDevices = new ArrayList<>();
-            try {
-                IBluetoothGatt iGatt = this.mAdapter.getBluetoothManager().getBluetoothGatt();
-                if (iGatt == null) {
-                    return connectedDevices;
-                }
-                return iGatt.getDevicesMatchingConnectionStates(new int[]{2});
-            } catch (RemoteException e) {
-                Log.e(TAG, "", e);
-                return connectedDevices;
-            }
-        } else {
+        if (profile != 7 && profile != 8) {
             throw new IllegalArgumentException("Profile not supported: " + profile);
+        }
+        List<BluetoothDevice> connectedDevices = new ArrayList<>();
+        try {
+            IBluetoothManager managerService = this.mAdapter.getBluetoothManager();
+            IBluetoothGatt iGatt = managerService.getBluetoothGatt();
+            return iGatt == null ? connectedDevices : iGatt.getDevicesMatchingConnectionStates(new int[]{2});
+        } catch (RemoteException e) {
+            Log.m69e(TAG, "", e);
+            return connectedDevices;
         }
     }
 
     public List<BluetoothDevice> getDevicesMatchingConnectionStates(int profile, int[] states) {
-        if (profile == 7 || profile == 8) {
-            List<BluetoothDevice> devices = new ArrayList<>();
-            try {
-                IBluetoothGatt iGatt = this.mAdapter.getBluetoothManager().getBluetoothGatt();
-                if (iGatt == null) {
-                    return devices;
-                }
-                return iGatt.getDevicesMatchingConnectionStates(states);
-            } catch (RemoteException e) {
-                Log.e(TAG, "", e);
-                return devices;
-            }
-        } else {
+        if (profile != 7 && profile != 8) {
             throw new IllegalArgumentException("Profile not supported: " + profile);
+        }
+        List<BluetoothDevice> devices = new ArrayList<>();
+        try {
+            IBluetoothManager managerService = this.mAdapter.getBluetoothManager();
+            IBluetoothGatt iGatt = managerService.getBluetoothGatt();
+            return iGatt == null ? devices : iGatt.getDevicesMatchingConnectionStates(states);
+        } catch (RemoteException e) {
+            Log.m69e(TAG, "", e);
+            return devices;
         }
     }
 
@@ -83,18 +77,20 @@ public final class BluetoothManager {
             throw new IllegalArgumentException("null parameter: " + context + WifiEnterpriseConfig.CA_CERT_ALIAS_DELIMITER + callback);
         }
         try {
-            IBluetoothGatt iGatt = this.mAdapter.getBluetoothManager().getBluetoothGatt();
+            IBluetoothManager managerService = this.mAdapter.getBluetoothManager();
+            IBluetoothGatt iGatt = managerService.getBluetoothGatt();
             if (iGatt == null) {
-                Log.e(TAG, "Fail to get GATT Server connection");
+                Log.m70e(TAG, "Fail to get GATT Server connection");
                 return null;
             }
             BluetoothGattServer mGattServer = new BluetoothGattServer(iGatt, transport);
-            if (Boolean.valueOf(mGattServer.registerCallback(callback)).booleanValue()) {
+            Boolean regStatus = Boolean.valueOf(mGattServer.registerCallback(callback));
+            if (regStatus.booleanValue()) {
                 return mGattServer;
             }
             return null;
         } catch (RemoteException e) {
-            Log.e(TAG, "", e);
+            Log.m69e(TAG, "", e);
             return null;
         }
     }

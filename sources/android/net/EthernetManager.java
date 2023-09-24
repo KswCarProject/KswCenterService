@@ -3,41 +3,40 @@ package android.net;
 import android.annotation.UnsupportedAppUsage;
 import android.content.Context;
 import android.net.IEthernetServiceListener;
-import android.os.Handler;
-import android.os.Message;
-import android.os.RemoteException;
+import android.p007os.Handler;
+import android.p007os.Message;
+import android.p007os.RemoteException;
 import java.util.ArrayList;
 import java.util.Iterator;
 
+/* loaded from: classes3.dex */
 public class EthernetManager {
     private static final int MSG_AVAILABILITY_CHANGED = 1000;
     private static final String TAG = "EthernetManager";
     private final Context mContext;
-    /* access modifiers changed from: private */
-    public final Handler mHandler = new Handler() {
+    private final IEthernetManager mService;
+    private final Handler mHandler = new Handler() { // from class: android.net.EthernetManager.1
+        @Override // android.p007os.Handler
         public void handleMessage(Message msg) {
             if (msg.what == 1000) {
-                boolean z = true;
-                if (msg.arg1 != 1) {
-                    z = false;
-                }
-                boolean isAvailable = z;
+                boolean isAvailable = msg.arg1 == 1;
                 Iterator it = EthernetManager.this.mListeners.iterator();
                 while (it.hasNext()) {
-                    ((Listener) it.next()).onAvailabilityChanged((String) msg.obj, isAvailable);
+                    Listener listener = (Listener) it.next();
+                    listener.onAvailabilityChanged((String) msg.obj, isAvailable);
                 }
             }
         }
     };
-    /* access modifiers changed from: private */
-    public final ArrayList<Listener> mListeners = new ArrayList<>();
-    private final IEthernetManager mService;
-    private final IEthernetServiceListener.Stub mServiceListener = new IEthernetServiceListener.Stub() {
+    private final ArrayList<Listener> mListeners = new ArrayList<>();
+    private final IEthernetServiceListener.Stub mServiceListener = new IEthernetServiceListener.Stub() { // from class: android.net.EthernetManager.2
+        @Override // android.net.IEthernetServiceListener
         public void onAvailabilityChanged(String iface, boolean isAvailable) {
-            EthernetManager.this.mHandler.obtainMessage(1000, isAvailable, 0, iface).sendToTarget();
+            EthernetManager.this.mHandler.obtainMessage(1000, isAvailable ? 1 : 0, 0, iface).sendToTarget();
         }
     };
 
+    /* loaded from: classes3.dex */
     public interface Listener {
         @UnsupportedAppUsage
         void onAvailabilityChanged(String str, boolean z);
@@ -82,17 +81,16 @@ public class EthernetManager {
 
     @UnsupportedAppUsage
     public void addListener(Listener listener) {
-        if (listener != null) {
-            this.mListeners.add(listener);
-            if (this.mListeners.size() == 1) {
-                try {
-                    this.mService.addListener(this.mServiceListener);
-                } catch (RemoteException e) {
-                    throw e.rethrowFromSystemServer();
-                }
-            }
-        } else {
+        if (listener == null) {
             throw new IllegalArgumentException("listener must not be null");
+        }
+        this.mListeners.add(listener);
+        if (this.mListeners.size() == 1) {
+            try {
+                this.mService.addListener(this.mServiceListener);
+            } catch (RemoteException e) {
+                throw e.rethrowFromSystemServer();
+            }
         }
     }
 
@@ -107,17 +105,16 @@ public class EthernetManager {
 
     @UnsupportedAppUsage
     public void removeListener(Listener listener) {
-        if (listener != null) {
-            this.mListeners.remove(listener);
-            if (this.mListeners.isEmpty()) {
-                try {
-                    this.mService.removeListener(this.mServiceListener);
-                } catch (RemoteException e) {
-                    throw e.rethrowFromSystemServer();
-                }
-            }
-        } else {
+        if (listener == null) {
             throw new IllegalArgumentException("listener must not be null");
+        }
+        this.mListeners.remove(listener);
+        if (this.mListeners.isEmpty()) {
+            try {
+                this.mService.removeListener(this.mServiceListener);
+            } catch (RemoteException e) {
+                throw e.rethrowFromSystemServer();
+            }
         }
     }
 }

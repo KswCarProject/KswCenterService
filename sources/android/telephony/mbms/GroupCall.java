@@ -1,6 +1,6 @@
 package android.telephony.mbms;
 
-import android.os.RemoteException;
+import android.p007os.RemoteException;
 import android.telephony.MbmsGroupCallSession;
 import android.telephony.mbms.vendor.IMbmsGroupCallService;
 import android.util.Log;
@@ -8,6 +8,7 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.util.List;
 
+/* loaded from: classes4.dex */
 public class GroupCall implements AutoCloseable {
     private static final String LOG_TAG = "MbmsGroupCall";
     public static final int REASON_BY_USER_REQUEST = 1;
@@ -26,10 +27,12 @@ public class GroupCall implements AutoCloseable {
     private final long mTmgi;
 
     @Retention(RetentionPolicy.SOURCE)
+    /* loaded from: classes4.dex */
     public @interface GroupCallState {
     }
 
     @Retention(RetentionPolicy.SOURCE)
+    /* loaded from: classes4.dex */
     public @interface GroupCallStateChangeReason {
     }
 
@@ -46,39 +49,38 @@ public class GroupCall implements AutoCloseable {
     }
 
     public void updateGroupCall(List<Integer> saiList, List<Integer> frequencyList) {
-        if (this.mService != null) {
+        try {
+            if (this.mService == null) {
+                throw new IllegalStateException("No group call service attached");
+            }
             try {
                 this.mService.updateGroupCall(this.mSubscriptionId, this.mTmgi, saiList, frequencyList);
             } catch (RemoteException e) {
-                Log.w(LOG_TAG, "Remote process died");
+                Log.m64w(LOG_TAG, "Remote process died");
                 this.mService = null;
-                sendErrorToApp(3, (String) null);
-            } catch (Throwable th) {
-                this.mParentSession.onGroupCallStopped(this);
-                throw th;
+                sendErrorToApp(3, null);
             }
+        } finally {
             this.mParentSession.onGroupCallStopped(this);
-            return;
         }
-        throw new IllegalStateException("No group call service attached");
     }
 
+    @Override // java.lang.AutoCloseable
     public void close() {
-        if (this.mService != null) {
+        try {
+            if (this.mService == null) {
+                throw new IllegalStateException("No group call service attached");
+            }
             try {
                 this.mService.stopGroupCall(this.mSubscriptionId, this.mTmgi);
             } catch (RemoteException e) {
-                Log.w(LOG_TAG, "Remote process died");
+                Log.m64w(LOG_TAG, "Remote process died");
                 this.mService = null;
-                sendErrorToApp(3, (String) null);
-            } catch (Throwable th) {
-                this.mParentSession.onGroupCallStopped(this);
-                throw th;
+                sendErrorToApp(3, null);
             }
+        } finally {
             this.mParentSession.onGroupCallStopped(this);
-            return;
         }
-        throw new IllegalStateException("No group call service attached");
     }
 
     public InternalGroupCallCallback getCallback() {

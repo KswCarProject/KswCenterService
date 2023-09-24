@@ -4,15 +4,18 @@ import android.annotation.UnsupportedAppUsage;
 import android.content.Context;
 import android.util.Log;
 
+/* loaded from: classes4.dex */
 public abstract class ActionProvider {
     private static final String TAG = "ActionProvider";
     private SubUiVisibilityListener mSubUiVisibilityListener;
     private VisibilityListener mVisibilityListener;
 
+    /* loaded from: classes4.dex */
     public interface SubUiVisibilityListener {
         void onSubUiVisibilityChanged(boolean z);
     }
 
+    /* loaded from: classes4.dex */
     public interface VisibilityListener {
         void onActionProviderVisibilityChanged(boolean z);
     }
@@ -65,7 +68,7 @@ public abstract class ActionProvider {
 
     public void setVisibilityListener(VisibilityListener listener) {
         if (this.mVisibilityListener != null) {
-            Log.w(TAG, "setVisibilityListener: Setting a new ActionProvider.VisibilityListener when one is already set. Are you reusing this " + getClass().getSimpleName() + " instance while it is still in use somewhere else?");
+            Log.m64w(TAG, "setVisibilityListener: Setting a new ActionProvider.VisibilityListener when one is already set. Are you reusing this " + getClass().getSimpleName() + " instance while it is still in use somewhere else?");
         }
         this.mVisibilityListener = listener;
     }

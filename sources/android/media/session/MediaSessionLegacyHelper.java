@@ -14,25 +14,23 @@ import android.media.MediaMetadata;
 import android.media.MediaMetadataEditor;
 import android.media.Rating;
 import android.media.session.MediaSession;
-import android.os.Bundle;
-import android.os.Handler;
-import android.os.Looper;
-import android.os.Parcelable;
+import android.p007os.Bundle;
+import android.p007os.Handler;
+import android.p007os.Looper;
 import android.util.ArrayMap;
 import android.util.Log;
 import android.view.KeyEvent;
 
+/* loaded from: classes3.dex */
 public class MediaSessionLegacyHelper {
-    /* access modifiers changed from: private */
-    public static final boolean DEBUG = Log.isLoggable(TAG, 3);
-    private static final String TAG = "MediaSessionHelper";
     private static MediaSessionLegacyHelper sInstance;
-    private static final Object sLock = new Object();
     private Context mContext;
-    private Handler mHandler = new Handler(Looper.getMainLooper());
     private MediaSessionManager mSessionManager;
-    /* access modifiers changed from: private */
-    public ArrayMap<PendingIntent, SessionHolder> mSessions = new ArrayMap<>();
+    private static final String TAG = "MediaSessionHelper";
+    private static final boolean DEBUG = Log.isLoggable(TAG, 3);
+    private static final Object sLock = new Object();
+    private Handler mHandler = new Handler(Looper.getMainLooper());
+    private ArrayMap<PendingIntent, SessionHolder> mSessions = new ArrayMap<>();
 
     private MediaSessionLegacyHelper(Context context) {
         this.mContext = context;
@@ -56,9 +54,11 @@ public class MediaSessionLegacyHelper {
             oldMetadata.putString(String.valueOf(1), metadata.getString("android.media.metadata.ALBUM"));
         }
         if (includeArtwork && metadata.containsKey("android.media.metadata.ART")) {
-            oldMetadata.putParcelable(String.valueOf(100), scaleBitmapIfTooBig(metadata.getBitmap("android.media.metadata.ART"), artworkWidth, artworkHeight));
+            Bitmap art = metadata.getBitmap("android.media.metadata.ART");
+            oldMetadata.putParcelable(String.valueOf(100), scaleBitmapIfTooBig(art, artworkWidth, artworkHeight));
         } else if (includeArtwork && metadata.containsKey("android.media.metadata.ALBUM_ART")) {
-            oldMetadata.putParcelable(String.valueOf(100), scaleBitmapIfTooBig(metadata.getBitmap("android.media.metadata.ALBUM_ART"), artworkWidth, artworkHeight));
+            Bitmap art2 = metadata.getBitmap("android.media.metadata.ALBUM_ART");
+            oldMetadata.putParcelable(String.valueOf(100), scaleBitmapIfTooBig(art2, artworkWidth, artworkHeight));
         }
         if (metadata.containsKey("android.media.metadata.ALBUM_ARTIST")) {
             oldMetadata.putString(String.valueOf(13), metadata.getString("android.media.metadata.ALBUM_ARTIST"));
@@ -94,7 +94,7 @@ public class MediaSessionLegacyHelper {
             oldMetadata.putParcelable(String.valueOf(101), metadata.getRating("android.media.metadata.RATING"));
         }
         if (metadata.containsKey("android.media.metadata.USER_RATING")) {
-            oldMetadata.putParcelable(String.valueOf(MediaMetadataEditor.RATING_KEY_BY_USER), metadata.getRating("android.media.metadata.USER_RATING"));
+            oldMetadata.putParcelable(String.valueOf((int) MediaMetadataEditor.RATING_KEY_BY_USER), metadata.getRating("android.media.metadata.USER_RATING"));
         }
         if (metadata.containsKey("android.media.metadata.TITLE")) {
             oldMetadata.putString(String.valueOf(7), metadata.getString("android.media.metadata.TITLE"));
@@ -121,18 +121,18 @@ public class MediaSessionLegacyHelper {
 
     public void sendMediaButtonEvent(KeyEvent keyEvent, boolean needWakeLock) {
         if (keyEvent == null) {
-            Log.w(TAG, "Tried to send a null key event. Ignoring.");
+            Log.m64w(TAG, "Tried to send a null key event. Ignoring.");
             return;
         }
         this.mSessionManager.dispatchMediaKeyEvent(keyEvent, needWakeLock);
         if (DEBUG) {
-            Log.d(TAG, "dispatched media key " + keyEvent);
+            Log.m72d(TAG, "dispatched media key " + keyEvent);
         }
     }
 
     public void sendVolumeKeyEvent(KeyEvent keyEvent, int stream, boolean musicOnly) {
         if (keyEvent == null) {
-            Log.w(TAG, "Tried to send a null key event. Ignoring.");
+            Log.m64w(TAG, "Tried to send a null key event. Ignoring.");
         } else {
             this.mSessionManager.dispatchVolumeKeyEvent(keyEvent, stream, musicOnly);
         }
@@ -141,7 +141,7 @@ public class MediaSessionLegacyHelper {
     public void sendAdjustVolumeBy(int suggestedStream, int delta, int flags) {
         this.mSessionManager.dispatchAdjustVolume(suggestedStream, delta, flags);
         if (DEBUG) {
-            Log.d(TAG, "dispatched volume adjustment");
+            Log.m72d(TAG, "dispatched volume adjustment");
         }
     }
 
@@ -151,22 +151,26 @@ public class MediaSessionLegacyHelper {
 
     public void addRccListener(PendingIntent pi, MediaSession.Callback listener) {
         if (pi == null) {
-            Log.w(TAG, "Pending intent was null, can't add rcc listener.");
+            Log.m64w(TAG, "Pending intent was null, can't add rcc listener.");
             return;
         }
         SessionHolder holder = getHolder(pi, true);
-        if (holder != null) {
-            if (holder.mRccListener == null || holder.mRccListener != listener) {
-                holder.mRccListener = listener;
-                holder.mFlags |= 2;
-                holder.mSession.setFlags(holder.mFlags);
-                holder.update();
-                if (DEBUG) {
-                    Log.d(TAG, "Added rcc listener for " + pi + ".");
-                }
-            } else if (DEBUG) {
-                Log.d(TAG, "addRccListener listener already added.");
+        if (holder == null) {
+            return;
+        }
+        if (holder.mRccListener != null && holder.mRccListener == listener) {
+            if (DEBUG) {
+                Log.m72d(TAG, "addRccListener listener already added.");
+                return;
             }
+            return;
+        }
+        holder.mRccListener = listener;
+        holder.mFlags |= 2;
+        holder.mSession.setFlags(holder.mFlags);
+        holder.update();
+        if (DEBUG) {
+            Log.m72d(TAG, "Added rcc listener for " + pi + ".");
         }
     }
 
@@ -178,29 +182,30 @@ public class MediaSessionLegacyHelper {
             holder.mSession.setFlags(holder.mFlags);
             holder.update();
             if (DEBUG) {
-                Log.d(TAG, "Removed rcc listener for " + pi + ".");
+                Log.m72d(TAG, "Removed rcc listener for " + pi + ".");
             }
         }
     }
 
     public void addMediaButtonListener(PendingIntent pi, ComponentName mbrComponent, Context context) {
         if (pi == null) {
-            Log.w(TAG, "Pending intent was null, can't addMediaButtonListener.");
+            Log.m64w(TAG, "Pending intent was null, can't addMediaButtonListener.");
             return;
         }
         SessionHolder holder = getHolder(pi, true);
-        if (holder != null) {
-            if (holder.mMediaButtonListener != null && DEBUG) {
-                Log.d(TAG, "addMediaButtonListener already added " + pi);
-            }
-            holder.mMediaButtonListener = new MediaButtonListener(pi, context);
-            holder.mFlags = 1 | holder.mFlags;
-            holder.mSession.setFlags(holder.mFlags);
-            holder.mSession.setMediaButtonReceiver(pi);
-            holder.update();
-            if (DEBUG) {
-                Log.d(TAG, "addMediaButtonListener added " + pi);
-            }
+        if (holder == null) {
+            return;
+        }
+        if (holder.mMediaButtonListener != null && DEBUG) {
+            Log.m72d(TAG, "addMediaButtonListener already added " + pi);
+        }
+        holder.mMediaButtonListener = new MediaButtonListener(pi, context);
+        holder.mFlags = 1 | holder.mFlags;
+        holder.mSession.setFlags(holder.mFlags);
+        holder.mSession.setMediaButtonReceiver(pi);
+        holder.update();
+        if (DEBUG) {
+            Log.m72d(TAG, "addMediaButtonListener added " + pi);
         }
     }
 
@@ -212,26 +217,23 @@ public class MediaSessionLegacyHelper {
             holder.mMediaButtonListener = null;
             holder.update();
             if (DEBUG) {
-                Log.d(TAG, "removeMediaButtonListener removed " + pi);
+                Log.m72d(TAG, "removeMediaButtonListener removed " + pi);
             }
         }
     }
 
     private static Bitmap scaleBitmapIfTooBig(Bitmap bitmap, int maxWidth, int maxHeight) {
-        Bitmap bitmap2 = bitmap;
-        int i = maxWidth;
-        int i2 = maxHeight;
-        if (bitmap2 == null) {
-            return bitmap2;
+        if (bitmap == null) {
+            return bitmap;
         }
         int width = bitmap.getWidth();
         int height = bitmap.getHeight();
-        if (width <= i && height <= i2) {
-            return bitmap2;
+        if (width <= maxWidth && height <= maxHeight) {
+            return bitmap;
         }
-        float scale = Math.min(((float) i) / ((float) width), ((float) i2) / ((float) height));
-        int newWidth = Math.round(((float) width) * scale);
-        int newHeight = Math.round(((float) height) * scale);
+        float scale = Math.min(maxWidth / width, maxHeight / height);
+        int newWidth = Math.round(width * scale);
+        int newHeight = Math.round(height * scale);
         Bitmap.Config newConfig = bitmap.getConfig();
         if (newConfig == null) {
             newConfig = Bitmap.Config.ARGB_8888;
@@ -241,32 +243,33 @@ public class MediaSessionLegacyHelper {
         Paint paint = new Paint();
         paint.setAntiAlias(true);
         paint.setFilterBitmap(true);
-        canvas.drawBitmap(bitmap2, (Rect) null, new RectF(0.0f, 0.0f, (float) outBitmap.getWidth(), (float) outBitmap.getHeight()), paint);
+        canvas.drawBitmap(bitmap, (Rect) null, new RectF(0.0f, 0.0f, outBitmap.getWidth(), outBitmap.getHeight()), paint);
         return outBitmap;
     }
 
     private SessionHolder getHolder(PendingIntent pi, boolean createIfMissing) {
         SessionHolder holder = this.mSessions.get(pi);
-        if (holder != null || !createIfMissing) {
-            return holder;
+        if (holder == null && createIfMissing) {
+            Context context = this.mContext;
+            MediaSession session = new MediaSession(context, "MediaSessionHelper-" + pi.getCreatorPackage());
+            session.setActive(true);
+            SessionHolder holder2 = new SessionHolder(session, pi);
+            this.mSessions.put(pi, holder2);
+            return holder2;
         }
-        Context context = this.mContext;
-        MediaSession session = new MediaSession(context, "MediaSessionHelper-" + pi.getCreatorPackage());
-        session.setActive(true);
-        SessionHolder holder2 = new SessionHolder(session, pi);
-        this.mSessions.put(pi, holder2);
-        return holder2;
+        return holder;
     }
 
-    /* access modifiers changed from: private */
+    /* JADX INFO: Access modifiers changed from: private */
     public static void sendKeyEvent(PendingIntent pi, Context context, Intent intent) {
         try {
             pi.send(context, 0, intent);
         } catch (PendingIntent.CanceledException e) {
-            Log.e(TAG, "Error sending media key down event:", e);
+            Log.m69e(TAG, "Error sending media key down event:", e);
         }
     }
 
+    /* loaded from: classes3.dex */
     private static final class MediaButtonListener extends MediaSession.Callback {
         private final Context mContext;
         private final PendingIntent mPendingIntent;
@@ -276,35 +279,43 @@ public class MediaSessionLegacyHelper {
             this.mContext = context;
         }
 
+        @Override // android.media.session.MediaSession.Callback
         public boolean onMediaButtonEvent(Intent mediaButtonIntent) {
             MediaSessionLegacyHelper.sendKeyEvent(this.mPendingIntent, this.mContext, mediaButtonIntent);
             return true;
         }
 
+        @Override // android.media.session.MediaSession.Callback
         public void onPlay() {
             sendKeyEvent(126);
         }
 
+        @Override // android.media.session.MediaSession.Callback
         public void onPause() {
             sendKeyEvent(127);
         }
 
+        @Override // android.media.session.MediaSession.Callback
         public void onSkipToNext() {
             sendKeyEvent(87);
         }
 
+        @Override // android.media.session.MediaSession.Callback
         public void onSkipToPrevious() {
             sendKeyEvent(88);
         }
 
+        @Override // android.media.session.MediaSession.Callback
         public void onFastForward() {
             sendKeyEvent(90);
         }
 
+        @Override // android.media.session.MediaSession.Callback
         public void onRewind() {
             sendKeyEvent(89);
         }
 
+        @Override // android.media.session.MediaSession.Callback
         public void onStop() {
             sendKeyEvent(86);
         }
@@ -313,16 +324,18 @@ public class MediaSessionLegacyHelper {
             KeyEvent ke = new KeyEvent(0, keyCode);
             Intent intent = new Intent(Intent.ACTION_MEDIA_BUTTON);
             intent.addFlags(268435456);
-            intent.putExtra(Intent.EXTRA_KEY_EVENT, (Parcelable) ke);
+            intent.putExtra(Intent.EXTRA_KEY_EVENT, ke);
             MediaSessionLegacyHelper.sendKeyEvent(this.mPendingIntent, this.mContext, intent);
-            intent.putExtra(Intent.EXTRA_KEY_EVENT, (Parcelable) new KeyEvent(1, keyCode));
+            KeyEvent ke2 = new KeyEvent(1, keyCode);
+            intent.putExtra(Intent.EXTRA_KEY_EVENT, ke2);
             MediaSessionLegacyHelper.sendKeyEvent(this.mPendingIntent, this.mContext, intent);
             if (MediaSessionLegacyHelper.DEBUG) {
-                Log.d(MediaSessionLegacyHelper.TAG, "Sent " + keyCode + " to pending intent " + this.mPendingIntent);
+                Log.m72d(MediaSessionLegacyHelper.TAG, "Sent " + keyCode + " to pending intent " + this.mPendingIntent);
             }
         }
     }
 
+    /* loaded from: classes3.dex */
     private class SessionHolder {
         public SessionCallback mCb;
         public int mFlags;
@@ -338,76 +351,88 @@ public class MediaSessionLegacyHelper {
 
         public void update() {
             if (this.mMediaButtonListener == null && this.mRccListener == null) {
-                this.mSession.setCallback((MediaSession.Callback) null);
+                this.mSession.setCallback(null);
                 this.mSession.release();
                 this.mCb = null;
                 MediaSessionLegacyHelper.this.mSessions.remove(this.mPi);
             } else if (this.mCb == null) {
                 this.mCb = new SessionCallback();
-                this.mSession.setCallback(this.mCb, new Handler(Looper.getMainLooper()));
+                Handler handler = new Handler(Looper.getMainLooper());
+                this.mSession.setCallback(this.mCb, handler);
             }
         }
 
+        /* loaded from: classes3.dex */
         private class SessionCallback extends MediaSession.Callback {
             private SessionCallback() {
             }
 
+            @Override // android.media.session.MediaSession.Callback
             public boolean onMediaButtonEvent(Intent mediaButtonIntent) {
-                if (SessionHolder.this.mMediaButtonListener == null) {
+                if (SessionHolder.this.mMediaButtonListener != null) {
+                    SessionHolder.this.mMediaButtonListener.onMediaButtonEvent(mediaButtonIntent);
                     return true;
                 }
-                SessionHolder.this.mMediaButtonListener.onMediaButtonEvent(mediaButtonIntent);
                 return true;
             }
 
+            @Override // android.media.session.MediaSession.Callback
             public void onPlay() {
                 if (SessionHolder.this.mMediaButtonListener != null) {
                     SessionHolder.this.mMediaButtonListener.onPlay();
                 }
             }
 
+            @Override // android.media.session.MediaSession.Callback
             public void onPause() {
                 if (SessionHolder.this.mMediaButtonListener != null) {
                     SessionHolder.this.mMediaButtonListener.onPause();
                 }
             }
 
+            @Override // android.media.session.MediaSession.Callback
             public void onSkipToNext() {
                 if (SessionHolder.this.mMediaButtonListener != null) {
                     SessionHolder.this.mMediaButtonListener.onSkipToNext();
                 }
             }
 
+            @Override // android.media.session.MediaSession.Callback
             public void onSkipToPrevious() {
                 if (SessionHolder.this.mMediaButtonListener != null) {
                     SessionHolder.this.mMediaButtonListener.onSkipToPrevious();
                 }
             }
 
+            @Override // android.media.session.MediaSession.Callback
             public void onFastForward() {
                 if (SessionHolder.this.mMediaButtonListener != null) {
                     SessionHolder.this.mMediaButtonListener.onFastForward();
                 }
             }
 
+            @Override // android.media.session.MediaSession.Callback
             public void onRewind() {
                 if (SessionHolder.this.mMediaButtonListener != null) {
                     SessionHolder.this.mMediaButtonListener.onRewind();
                 }
             }
 
+            @Override // android.media.session.MediaSession.Callback
             public void onStop() {
                 if (SessionHolder.this.mMediaButtonListener != null) {
                     SessionHolder.this.mMediaButtonListener.onStop();
                 }
             }
 
+            @Override // android.media.session.MediaSession.Callback
             public void onSeekTo(long pos) {
                 if (SessionHolder.this.mRccListener != null) {
                     SessionHolder.this.mRccListener.onSeekTo(pos);
                 }
             }
 
+            @Override // android.media.session.MediaSession.Callback
             public void onSetRating(Rating rating) {
                 if (SessionHolder.this.mRccListener != null) {
                     SessionHolder.this.mRccListener.onSetRating(rating);

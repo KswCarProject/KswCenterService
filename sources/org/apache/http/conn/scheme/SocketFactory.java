@@ -8,6 +8,7 @@ import org.apache.http.conn.ConnectTimeoutException;
 import org.apache.http.params.HttpParams;
 
 @Deprecated
+/* loaded from: classes5.dex */
 public interface SocketFactory {
     Socket connectSocket(Socket socket, String str, int i, InetAddress inetAddress, int i2, HttpParams httpParams) throws IOException, UnknownHostException, ConnectTimeoutException;
 

@@ -3,6 +3,7 @@ package android.service.autofill.augmented;
 import android.annotation.SystemApi;
 
 @SystemApi
+/* loaded from: classes3.dex */
 public final class FillResponse {
     private final FillWindow mFillWindow;
 
@@ -10,15 +11,14 @@ public final class FillResponse {
         this.mFillWindow = builder.mFillWindow;
     }
 
-    /* access modifiers changed from: package-private */
-    public FillWindow getFillWindow() {
+    FillWindow getFillWindow() {
         return this.mFillWindow;
     }
 
     @SystemApi
+    /* loaded from: classes3.dex */
     public static final class Builder {
-        /* access modifiers changed from: private */
-        public FillWindow mFillWindow;
+        private FillWindow mFillWindow;
 
         public Builder setFillWindow(FillWindow fillWindow) {
             this.mFillWindow = fillWindow;

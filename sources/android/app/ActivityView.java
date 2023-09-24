@@ -11,16 +11,14 @@ import android.graphics.Region;
 import android.hardware.display.DisplayManager;
 import android.hardware.display.VirtualDisplay;
 import android.hardware.input.InputManager;
-import android.os.Handler;
-import android.os.RemoteException;
-import android.os.SystemClock;
-import android.os.UserHandle;
+import android.p007os.RemoteException;
+import android.p007os.SystemClock;
+import android.p007os.UserHandle;
 import android.util.AttributeSet;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.IWindowManager;
 import android.view.KeyEvent;
-import android.view.Surface;
 import android.view.SurfaceControl;
 import android.view.SurfaceHolder;
 import android.view.SurfaceSession;
@@ -34,32 +32,27 @@ import android.view.inputmethod.InputMethodManager;
 import dalvik.system.CloseGuard;
 import java.util.List;
 
+/* loaded from: classes.dex */
 public class ActivityView extends ViewGroup {
     private static final String DISPLAY_NAME = "ActivityViewVirtualDisplay";
     private static final String TAG = "ActivityView";
-    /* access modifiers changed from: private */
-    public IActivityTaskManager mActivityTaskManager;
-    /* access modifiers changed from: private */
-    public StateCallback mActivityViewCallback;
+    private IActivityTaskManager mActivityTaskManager;
+    private StateCallback mActivityViewCallback;
     private Insets mForwardedInsets;
     private final CloseGuard mGuard;
     private final int[] mLocationInWindow;
     private boolean mOpened;
-    /* access modifiers changed from: private */
-    public SurfaceControl mRootSurfaceControl;
+    private SurfaceControl mRootSurfaceControl;
     private final boolean mSingleTaskInstance;
     private final SurfaceCallback mSurfaceCallback;
-    /* access modifiers changed from: private */
-    public final SurfaceView mSurfaceView;
+    private final SurfaceView mSurfaceView;
     private final Region mTapExcludeRegion;
     private TaskStackListener mTaskStackListener;
-    /* access modifiers changed from: private */
-    public final SurfaceControl.Transaction mTmpTransaction;
-    /* access modifiers changed from: private */
-    public VirtualDisplay mVirtualDisplay;
+    private final SurfaceControl.Transaction mTmpTransaction;
+    private VirtualDisplay mVirtualDisplay;
 
     public ActivityView(Context context) {
-        this(context, (AttributeSet) null);
+        this(context, null);
     }
 
     public ActivityView(Context context, AttributeSet attrs) {
@@ -86,6 +79,7 @@ public class ActivityView extends ViewGroup {
         this.mGuard.open("release");
     }
 
+    /* loaded from: classes.dex */
     public static abstract class StateCallback {
         public abstract void onActivityViewDestroyed(ActivityView activityView);
 
@@ -113,16 +107,19 @@ public class ActivityView extends ViewGroup {
     }
 
     public void startActivity(Intent intent) {
-        getContext().startActivity(intent, prepareActivityOptions().toBundle());
+        ActivityOptions options = prepareActivityOptions();
+        getContext().startActivity(intent, options.toBundle());
     }
 
     public void startActivity(Intent intent, UserHandle user) {
-        getContext().startActivityAsUser(intent, prepareActivityOptions().toBundle(), user);
+        ActivityOptions options = prepareActivityOptions();
+        getContext().startActivityAsUser(intent, options.toBundle(), user);
     }
 
     public void startActivity(PendingIntent pendingIntent) {
+        ActivityOptions options = prepareActivityOptions();
         try {
-            pendingIntent.send((Context) null, 0, (Intent) null, (PendingIntent.OnFinished) null, (Handler) null, (String) null, prepareActivityOptions().toBundle());
+            pendingIntent.send(null, 0, null, null, null, null, options.toBundle());
         } catch (PendingIntent.CanceledException e) {
             throw new RuntimeException(e);
         }
@@ -131,70 +128,74 @@ public class ActivityView extends ViewGroup {
     public void startActivity(PendingIntent pendingIntent, ActivityOptions options) {
         options.setLaunchDisplayId(this.mVirtualDisplay.getDisplay().getDisplayId());
         try {
-            pendingIntent.send((Context) null, 0, (Intent) null, (PendingIntent.OnFinished) null, (Handler) null, (String) null, options.toBundle());
+            pendingIntent.send(null, 0, null, null, null, null, options.toBundle());
         } catch (PendingIntent.CanceledException e) {
             throw new RuntimeException(e);
         }
     }
 
     private ActivityOptions prepareActivityOptions() {
-        if (this.mVirtualDisplay != null) {
-            ActivityOptions options = ActivityOptions.makeBasic();
-            options.setLaunchDisplayId(this.mVirtualDisplay.getDisplay().getDisplayId());
-            return options;
+        if (this.mVirtualDisplay == null) {
+            throw new IllegalStateException("Trying to start activity before ActivityView is ready.");
         }
-        throw new IllegalStateException("Trying to start activity before ActivityView is ready.");
+        ActivityOptions options = ActivityOptions.makeBasic();
+        options.setLaunchDisplayId(this.mVirtualDisplay.getDisplay().getDisplayId());
+        return options;
     }
 
     public void release() {
-        if (this.mVirtualDisplay != null) {
-            performRelease();
-            return;
+        if (this.mVirtualDisplay == null) {
+            throw new IllegalStateException("Trying to release container that is not initialized.");
         }
-        throw new IllegalStateException("Trying to release container that is not initialized.");
+        performRelease();
     }
 
     public void onLocationChanged() {
         updateLocationAndTapExcludeRegion();
     }
 
-    /* access modifiers changed from: private */
+    /* JADX INFO: Access modifiers changed from: private */
     public void clearActivityViewGeometryForIme() {
-        if (this.mVirtualDisplay != null) {
-            ((InputMethodManager) this.mContext.getSystemService(InputMethodManager.class)).reportActivityView(this.mVirtualDisplay.getDisplay().getDisplayId(), (Matrix) null);
+        if (this.mVirtualDisplay == null) {
+            return;
         }
+        int displayId = this.mVirtualDisplay.getDisplay().getDisplayId();
+        ((InputMethodManager) this.mContext.getSystemService(InputMethodManager.class)).reportActivityView(displayId, null);
     }
 
+    @Override // android.view.ViewGroup, android.view.View
     public void onLayout(boolean changed, int l, int t, int r, int b) {
         this.mSurfaceView.layout(0, 0, r - l, b - t);
     }
 
+    @Override // android.view.ViewGroup, android.view.View
     public boolean gatherTransparentRegion(Region region) {
         updateLocationAndTapExcludeRegion();
         return super.gatherTransparentRegion(region);
     }
 
-    /* access modifiers changed from: private */
+    /* JADX INFO: Access modifiers changed from: private */
     public void updateLocationAndTapExcludeRegion() {
-        if (this.mVirtualDisplay != null && isAttachedToWindow()) {
-            try {
-                int x = this.mLocationInWindow[0];
-                int y = this.mLocationInWindow[1];
-                getLocationInWindow(this.mLocationInWindow);
-                if (!(x == this.mLocationInWindow[0] && y == this.mLocationInWindow[1])) {
-                    x = this.mLocationInWindow[0];
-                    y = this.mLocationInWindow[1];
-                    int displayId = this.mVirtualDisplay.getDisplay().getDisplayId();
-                    WindowManagerGlobal.getWindowSession().updateDisplayContentLocation(getWindow(), x, y, displayId);
-                    Matrix matrix = new Matrix();
-                    matrix.set(getMatrix());
-                    matrix.postTranslate((float) x, (float) y);
-                    ((InputMethodManager) this.mContext.getSystemService(InputMethodManager.class)).reportActivityView(displayId, matrix);
-                }
-                updateTapExcludeRegion(x, y);
-            } catch (RemoteException e) {
-                e.rethrowAsRuntimeException();
+        if (this.mVirtualDisplay == null || !isAttachedToWindow()) {
+            return;
+        }
+        try {
+            int x = this.mLocationInWindow[0];
+            int y = this.mLocationInWindow[1];
+            getLocationInWindow(this.mLocationInWindow);
+            if (x != this.mLocationInWindow[0] || y != this.mLocationInWindow[1]) {
+                x = this.mLocationInWindow[0];
+                y = this.mLocationInWindow[1];
+                int displayId = this.mVirtualDisplay.getDisplay().getDisplayId();
+                WindowManagerGlobal.getWindowSession().updateDisplayContentLocation(getWindow(), x, y, displayId);
+                Matrix matrix = new Matrix();
+                matrix.set(getMatrix());
+                matrix.postTranslate(x, y);
+                ((InputMethodManager) this.mContext.getSystemService(InputMethodManager.class)).reportActivityView(displayId, matrix);
             }
+            updateTapExcludeRegion(x, y);
+        } catch (RemoteException e) {
+            e.rethrowAsRuntimeException();
         }
     }
 
@@ -211,14 +212,16 @@ public class ActivityView extends ViewGroup {
         WindowManagerGlobal.getWindowSession().updateTapExcludeRegion(getWindow(), hashCode(), this.mTapExcludeRegion);
     }
 
+    /* loaded from: classes.dex */
     private class SurfaceCallback implements SurfaceHolder.Callback {
         private SurfaceCallback() {
         }
 
+        @Override // android.view.SurfaceHolder.Callback
         public void surfaceCreated(SurfaceHolder surfaceHolder) {
             if (ActivityView.this.mVirtualDisplay == null) {
                 ActivityView.this.initVirtualDisplay(new SurfaceSession());
-                if (!(ActivityView.this.mVirtualDisplay == null || ActivityView.this.mActivityViewCallback == null)) {
+                if (ActivityView.this.mVirtualDisplay != null && ActivityView.this.mActivityViewCallback != null) {
                     ActivityView.this.mActivityViewCallback.onActivityViewReady(ActivityView.this);
                 }
             } else {
@@ -230,6 +233,7 @@ public class ActivityView extends ViewGroup {
             ActivityView.this.updateLocationAndTapExcludeRegion();
         }
 
+        @Override // android.view.SurfaceHolder.Callback
         public void surfaceChanged(SurfaceHolder surfaceHolder, int format, int width, int height) {
             if (ActivityView.this.mVirtualDisplay != null) {
                 ActivityView.this.mVirtualDisplay.resize(width, height, ActivityView.this.getBaseDisplayDensity());
@@ -237,6 +241,7 @@ public class ActivityView extends ViewGroup {
             ActivityView.this.updateLocationAndTapExcludeRegion();
         }
 
+        @Override // android.view.SurfaceHolder.Callback
         public void surfaceDestroyed(SurfaceHolder surfaceHolder) {
             if (ActivityView.this.mVirtualDisplay != null) {
                 ActivityView.this.mVirtualDisplay.setDisplayState(false);
@@ -246,8 +251,8 @@ public class ActivityView extends ViewGroup {
         }
     }
 
-    /* access modifiers changed from: protected */
-    public void onVisibilityChanged(View changedView, int visibility) {
+    @Override // android.view.View
+    protected void onVisibilityChanged(View changedView, int visibility) {
         super.onVisibilityChanged(changedView, visibility);
         this.mSurfaceView.setVisibility(visibility);
     }
@@ -260,12 +265,13 @@ public class ActivityView extends ViewGroup {
     }
 
     public void performBackPress() {
-        if (this.mVirtualDisplay != null) {
-            int displayId = this.mVirtualDisplay.getDisplay().getDisplayId();
-            InputManager im = InputManager.getInstance();
-            im.injectInputEvent(createKeyEvent(0, 4, displayId), 0);
-            im.injectInputEvent(createKeyEvent(1, 4, displayId), 0);
+        if (this.mVirtualDisplay == null) {
+            return;
         }
+        int displayId = this.mVirtualDisplay.getDisplay().getDisplayId();
+        InputManager im = InputManager.getInstance();
+        im.injectInputEvent(createKeyEvent(0, 4, displayId), 0);
+        im.injectInputEvent(createKeyEvent(1, 4, displayId), 0);
     }
 
     private static KeyEvent createKeyEvent(int action, int code, int displayId) {
@@ -275,90 +281,92 @@ public class ActivityView extends ViewGroup {
         return ev;
     }
 
-    /* access modifiers changed from: private */
+    /* JADX INFO: Access modifiers changed from: private */
     public void initVirtualDisplay(SurfaceSession surfaceSession) {
-        if (this.mVirtualDisplay == null) {
-            int width = this.mSurfaceView.getWidth();
-            int height = this.mSurfaceView.getHeight();
-            this.mVirtualDisplay = ((DisplayManager) this.mContext.getSystemService(DisplayManager.class)).createVirtualDisplay("ActivityViewVirtualDisplay@" + System.identityHashCode(this), width, height, getBaseDisplayDensity(), (Surface) null, 265);
-            if (this.mVirtualDisplay == null) {
-                Log.e(TAG, "Failed to initialize ActivityView");
-                return;
-            }
-            int displayId = this.mVirtualDisplay.getDisplay().getDisplayId();
-            IWindowManager wm = WindowManagerGlobal.getWindowManagerService();
-            this.mRootSurfaceControl = new SurfaceControl.Builder(surfaceSession).setContainerLayer().setParent(this.mSurfaceView.getSurfaceControl()).setName(DISPLAY_NAME).build();
-            try {
-                WindowManagerGlobal.getWindowSession().reparentDisplayContent(getWindow(), this.mRootSurfaceControl, displayId);
-                wm.dontOverrideDisplayInfo(displayId);
-                if (this.mSingleTaskInstance) {
-                    this.mActivityTaskManager.setDisplayToSingleTaskInstance(displayId);
-                }
-                wm.setForwardedInsets(displayId, this.mForwardedInsets);
-            } catch (RemoteException e) {
-                e.rethrowAsRuntimeException();
-            }
-            this.mTmpTransaction.show(this.mRootSurfaceControl).apply();
-            this.mTaskStackListener = new TaskStackListenerImpl();
-            try {
-                this.mActivityTaskManager.registerTaskStackListener(this.mTaskStackListener);
-            } catch (RemoteException e2) {
-                Log.e(TAG, "Failed to register task stack listener", e2);
-            }
-        } else {
+        if (this.mVirtualDisplay != null) {
             throw new IllegalStateException("Trying to initialize for the second time.");
+        }
+        int width = this.mSurfaceView.getWidth();
+        int height = this.mSurfaceView.getHeight();
+        DisplayManager displayManager = (DisplayManager) this.mContext.getSystemService(DisplayManager.class);
+        this.mVirtualDisplay = displayManager.createVirtualDisplay("ActivityViewVirtualDisplay@" + System.identityHashCode(this), width, height, getBaseDisplayDensity(), null, 265);
+        if (this.mVirtualDisplay == null) {
+            Log.m70e(TAG, "Failed to initialize ActivityView");
+            return;
+        }
+        int displayId = this.mVirtualDisplay.getDisplay().getDisplayId();
+        IWindowManager wm = WindowManagerGlobal.getWindowManagerService();
+        this.mRootSurfaceControl = new SurfaceControl.Builder(surfaceSession).setContainerLayer().setParent(this.mSurfaceView.getSurfaceControl()).setName(DISPLAY_NAME).build();
+        try {
+            WindowManagerGlobal.getWindowSession().reparentDisplayContent(getWindow(), this.mRootSurfaceControl, displayId);
+            wm.dontOverrideDisplayInfo(displayId);
+            if (this.mSingleTaskInstance) {
+                this.mActivityTaskManager.setDisplayToSingleTaskInstance(displayId);
+            }
+            wm.setForwardedInsets(displayId, this.mForwardedInsets);
+        } catch (RemoteException e) {
+            e.rethrowAsRuntimeException();
+        }
+        this.mTmpTransaction.show(this.mRootSurfaceControl).apply();
+        this.mTaskStackListener = new TaskStackListenerImpl();
+        try {
+            this.mActivityTaskManager.registerTaskStackListener(this.mTaskStackListener);
+        } catch (RemoteException e2) {
+            Log.m69e(TAG, "Failed to register task stack listener", e2);
         }
     }
 
     private void performRelease() {
         boolean displayReleased;
-        if (this.mOpened) {
-            this.mSurfaceView.getHolder().removeCallback(this.mSurfaceCallback);
-            cleanTapExcludeRegion();
-            if (this.mTaskStackListener != null) {
-                try {
-                    this.mActivityTaskManager.unregisterTaskStackListener(this.mTaskStackListener);
-                } catch (RemoteException e) {
-                    Log.e(TAG, "Failed to unregister task stack listener", e);
-                }
-                this.mTaskStackListener = null;
-            }
-            if (this.mVirtualDisplay != null) {
-                this.mVirtualDisplay.release();
-                this.mVirtualDisplay = null;
-                displayReleased = true;
-            } else {
-                displayReleased = false;
-            }
-            if (displayReleased && this.mActivityViewCallback != null) {
-                this.mActivityViewCallback.onActivityViewDestroyed(this);
-            }
-            this.mGuard.close();
-            this.mOpened = false;
+        if (!this.mOpened) {
+            return;
         }
-    }
-
-    /* access modifiers changed from: private */
-    public void cleanTapExcludeRegion() {
-        if (isAttachedToWindow() && !this.mTapExcludeRegion.isEmpty()) {
+        this.mSurfaceView.getHolder().removeCallback(this.mSurfaceCallback);
+        cleanTapExcludeRegion();
+        if (this.mTaskStackListener != null) {
             try {
-                WindowManagerGlobal.getWindowSession().updateTapExcludeRegion(getWindow(), hashCode(), (Region) null);
-                this.mTapExcludeRegion.setEmpty();
+                this.mActivityTaskManager.unregisterTaskStackListener(this.mTaskStackListener);
             } catch (RemoteException e) {
-                e.rethrowAsRuntimeException();
+                Log.m69e(TAG, "Failed to unregister task stack listener", e);
             }
+            this.mTaskStackListener = null;
+        }
+        if (this.mVirtualDisplay != null) {
+            this.mVirtualDisplay.release();
+            this.mVirtualDisplay = null;
+            displayReleased = true;
+        } else {
+            displayReleased = false;
+        }
+        if (displayReleased && this.mActivityViewCallback != null) {
+            this.mActivityViewCallback.onActivityViewDestroyed(this);
+        }
+        this.mGuard.close();
+        this.mOpened = false;
+    }
+
+    /* JADX INFO: Access modifiers changed from: private */
+    public void cleanTapExcludeRegion() {
+        if (!isAttachedToWindow() || this.mTapExcludeRegion.isEmpty()) {
+            return;
+        }
+        try {
+            WindowManagerGlobal.getWindowSession().updateTapExcludeRegion(getWindow(), hashCode(), null);
+            this.mTapExcludeRegion.setEmpty();
+        } catch (RemoteException e) {
+            e.rethrowAsRuntimeException();
         }
     }
 
-    /* access modifiers changed from: private */
+    /* JADX INFO: Access modifiers changed from: private */
     public int getBaseDisplayDensity() {
+        WindowManager wm = (WindowManager) this.mContext.getSystemService(WindowManager.class);
         DisplayMetrics metrics = new DisplayMetrics();
-        ((WindowManager) this.mContext.getSystemService(WindowManager.class)).getDefaultDisplay().getMetrics(metrics);
+        wm.getDefaultDisplay().getMetrics(metrics);
         return metrics.densityDpi;
     }
 
-    /* access modifiers changed from: protected */
-    public void finalize() throws Throwable {
+    protected void finalize() throws Throwable {
         try {
             if (this.mGuard != null) {
                 this.mGuard.warnIfOpen();
@@ -371,19 +379,23 @@ public class ActivityView extends ViewGroup {
 
     public void setForwardedInsets(Insets insets) {
         this.mForwardedInsets = insets;
-        if (this.mVirtualDisplay != null) {
-            try {
-                WindowManagerGlobal.getWindowManagerService().setForwardedInsets(this.mVirtualDisplay.getDisplay().getDisplayId(), this.mForwardedInsets);
-            } catch (RemoteException e) {
-                e.rethrowAsRuntimeException();
-            }
+        if (this.mVirtualDisplay == null) {
+            return;
+        }
+        try {
+            IWindowManager wm = WindowManagerGlobal.getWindowManagerService();
+            wm.setForwardedInsets(this.mVirtualDisplay.getDisplay().getDisplayId(), this.mForwardedInsets);
+        } catch (RemoteException e) {
+            e.rethrowAsRuntimeException();
         }
     }
 
+    /* loaded from: classes.dex */
     private class TaskStackListenerImpl extends TaskStackListener {
         private TaskStackListenerImpl() {
         }
 
+        @Override // android.app.TaskStackListener, android.app.ITaskStackListener
         public void onTaskDescriptionChanged(ActivityManager.RunningTaskInfo taskInfo) throws RemoteException {
             ActivityManager.StackInfo stackInfo;
             if (ActivityView.this.mVirtualDisplay != null && taskInfo.displayId == ActivityView.this.mVirtualDisplay.getDisplay().getDisplayId() && (stackInfo = getTopMostStackInfo()) != null && taskInfo.taskId == stackInfo.taskIds[stackInfo.taskIds.length - 1]) {
@@ -391,6 +403,7 @@ public class ActivityView extends ViewGroup {
             }
         }
 
+        @Override // android.app.TaskStackListener, android.app.ITaskStackListener
         public void onTaskMovedToFront(ActivityManager.RunningTaskInfo taskInfo) throws RemoteException {
             ActivityManager.StackInfo stackInfo;
             if (ActivityView.this.mActivityViewCallback != null && ActivityView.this.mVirtualDisplay != null && taskInfo.displayId == ActivityView.this.mVirtualDisplay.getDisplay().getDisplayId() && (stackInfo = getTopMostStackInfo()) != null && taskInfo.taskId == stackInfo.taskIds[stackInfo.taskIds.length - 1]) {
@@ -398,6 +411,7 @@ public class ActivityView extends ViewGroup {
             }
         }
 
+        @Override // android.app.TaskStackListener, android.app.ITaskStackListener
         public void onTaskCreated(int taskId, ComponentName componentName) throws RemoteException {
             ActivityManager.StackInfo stackInfo;
             if (ActivityView.this.mActivityViewCallback != null && ActivityView.this.mVirtualDisplay != null && (stackInfo = getTopMostStackInfo()) != null && taskId == stackInfo.taskIds[stackInfo.taskIds.length - 1]) {
@@ -405,6 +419,7 @@ public class ActivityView extends ViewGroup {
             }
         }
 
+        @Override // android.app.TaskStackListener, android.app.ITaskStackListener
         public void onTaskRemovalStarted(ActivityManager.RunningTaskInfo taskInfo) throws RemoteException {
             if (ActivityView.this.mActivityViewCallback != null && ActivityView.this.mVirtualDisplay != null && taskInfo.displayId == ActivityView.this.mVirtualDisplay.getDisplay().getDisplayId()) {
                 ActivityView.this.mActivityViewCallback.onTaskRemovalStarted(taskInfo.taskId);

@@ -2,11 +2,12 @@ package android.database;
 
 import android.content.ContentResolver;
 import android.net.Uri;
-import android.os.Bundle;
+import android.p007os.Bundle;
 import java.io.Closeable;
 import java.util.Arrays;
 import java.util.List;
 
+/* loaded from: classes.dex */
 public interface Cursor extends Closeable {
     public static final int FIELD_TYPE_BLOB = 4;
     public static final int FIELD_TYPE_FLOAT = 2;
@@ -14,6 +15,7 @@ public interface Cursor extends Closeable {
     public static final int FIELD_TYPE_NULL = 0;
     public static final int FIELD_TYPE_STRING = 3;
 
+    @Override // java.io.Closeable, java.lang.AutoCloseable
     void close();
 
     void copyStringToBuffer(int i, CharArrayBuffer charArrayBuffer);
@@ -98,15 +100,15 @@ public interface Cursor extends Closeable {
 
     void unregisterDataSetObserver(DataSetObserver dataSetObserver);
 
-    void setNotificationUris(ContentResolver cr, List<Uri> uris) {
+    default void setNotificationUris(ContentResolver cr, List<Uri> uris) {
         setNotificationUri(cr, uris.get(0));
     }
 
-    List<Uri> getNotificationUris() {
+    default List<Uri> getNotificationUris() {
         Uri notifyUri = getNotificationUri();
         if (notifyUri == null) {
             return null;
         }
-        return Arrays.asList(new Uri[]{notifyUri});
+        return Arrays.asList(notifyUri);
     }
 }

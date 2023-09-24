@@ -1,33 +1,36 @@
 package android.net;
 
+/* loaded from: classes3.dex */
 public class LocalSocketAddress {
     private final String name;
     private final Namespace namespace;
 
+    /* loaded from: classes3.dex */
     public enum Namespace {
         ABSTRACT(0),
         RESERVED(1),
         FILESYSTEM(2);
         
-        private int id;
 
-        private Namespace(int id2) {
-            this.id = id2;
+        /* renamed from: id */
+        private int f129id;
+
+        Namespace(int id) {
+            this.f129id = id;
         }
 
-        /* access modifiers changed from: package-private */
-        public int getId() {
-            return this.id;
+        int getId() {
+            return this.f129id;
         }
     }
 
-    public LocalSocketAddress(String name2, Namespace namespace2) {
-        this.name = name2;
-        this.namespace = namespace2;
+    public LocalSocketAddress(String name, Namespace namespace) {
+        this.name = name;
+        this.namespace = namespace;
     }
 
-    public LocalSocketAddress(String name2) {
-        this(name2, Namespace.ABSTRACT);
+    public LocalSocketAddress(String name) {
+        this(name, Namespace.ABSTRACT);
     }
 
     public String getName() {

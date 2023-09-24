@@ -9,10 +9,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import java.lang.ref.WeakReference;
 
+/* loaded from: classes.dex */
 public class MediaRouteActionProvider extends ActionProvider {
     private static final String TAG = "MediaRouteActionProvider";
     private MediaRouteButton mButton;
-    private final MediaRouterCallback mCallback = new MediaRouterCallback(this);
+    private final MediaRouterCallback mCallback;
     private final Context mContext;
     private View.OnClickListener mExtendedSettingsListener;
     private int mRouteTypes;
@@ -22,6 +23,7 @@ public class MediaRouteActionProvider extends ActionProvider {
         super(context);
         this.mContext = context;
         this.mRouter = (MediaRouter) context.getSystemService(Context.MEDIA_ROUTER_SERVICE);
+        this.mCallback = new MediaRouterCallback(this);
         setRouteTypes(1);
     }
 
@@ -48,13 +50,15 @@ public class MediaRouteActionProvider extends ActionProvider {
         }
     }
 
+    @Override // android.view.ActionProvider
     public View onCreateActionView() {
         throw new UnsupportedOperationException("Use onCreateActionView(MenuItem) instead.");
     }
 
+    @Override // android.view.ActionProvider
     public View onCreateActionView(MenuItem item) {
         if (this.mButton != null) {
-            Log.e(TAG, "onCreateActionView: this ActionProvider is already associated with a menu item. Don't reuse MediaRouteActionProvider instances! Abandoning the old one...");
+            Log.m70e(TAG, "onCreateActionView: this ActionProvider is already associated with a menu item. Don't reuse MediaRouteActionProvider instances! Abandoning the old one...");
         }
         this.mButton = new MediaRouteButton(this.mContext);
         this.mButton.setRouteTypes(this.mRouteTypes);
@@ -63,6 +67,7 @@ public class MediaRouteActionProvider extends ActionProvider {
         return this.mButton;
     }
 
+    @Override // android.view.ActionProvider
     public boolean onPerformDefaultAction() {
         if (this.mButton != null) {
             return this.mButton.showDialogInternal();
@@ -70,19 +75,22 @@ public class MediaRouteActionProvider extends ActionProvider {
         return false;
     }
 
+    @Override // android.view.ActionProvider
     public boolean overridesItemVisibility() {
         return true;
     }
 
+    @Override // android.view.ActionProvider
     public boolean isVisible() {
         return this.mRouter.isRouteAvailable(this.mRouteTypes, 1);
     }
 
-    /* access modifiers changed from: private */
+    /* JADX INFO: Access modifiers changed from: private */
     public void refreshRoute() {
         refreshVisibility();
     }
 
+    /* loaded from: classes.dex */
     private static class MediaRouterCallback extends MediaRouter.SimpleCallback {
         private final WeakReference<MediaRouteActionProvider> mProviderWeak;
 
@@ -90,20 +98,23 @@ public class MediaRouteActionProvider extends ActionProvider {
             this.mProviderWeak = new WeakReference<>(provider);
         }
 
+        @Override // android.media.MediaRouter.SimpleCallback, android.media.MediaRouter.Callback
         public void onRouteAdded(MediaRouter router, MediaRouter.RouteInfo info) {
             refreshRoute(router);
         }
 
+        @Override // android.media.MediaRouter.SimpleCallback, android.media.MediaRouter.Callback
         public void onRouteRemoved(MediaRouter router, MediaRouter.RouteInfo info) {
             refreshRoute(router);
         }
 
+        @Override // android.media.MediaRouter.SimpleCallback, android.media.MediaRouter.Callback
         public void onRouteChanged(MediaRouter router, MediaRouter.RouteInfo info) {
             refreshRoute(router);
         }
 
         private void refreshRoute(MediaRouter router) {
-            MediaRouteActionProvider provider = (MediaRouteActionProvider) this.mProviderWeak.get();
+            MediaRouteActionProvider provider = this.mProviderWeak.get();
             if (provider != null) {
                 provider.refreshRoute();
             } else {

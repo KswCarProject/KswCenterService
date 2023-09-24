@@ -1,14 +1,16 @@
 package android.text;
 
+/* loaded from: classes4.dex */
 public interface Spannable extends Spanned {
     void removeSpan(Object obj);
 
     void setSpan(Object obj, int i, int i2, int i3);
 
-    void removeSpan(Object what, int flags) {
+    default void removeSpan(Object what, int flags) {
         removeSpan(what);
     }
 
+    /* loaded from: classes4.dex */
     public static class Factory {
         private static Factory sInstance = new Factory();
 

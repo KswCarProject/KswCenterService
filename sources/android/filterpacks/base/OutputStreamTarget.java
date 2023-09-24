@@ -1,5 +1,6 @@
 package android.filterpacks.base;
 
+import android.app.Instrumentation;
 import android.filterfw.core.Filter;
 import android.filterfw.core.FilterContext;
 import android.filterfw.core.Frame;
@@ -8,23 +9,27 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.nio.ByteBuffer;
 
+/* loaded from: classes.dex */
 public class OutputStreamTarget extends Filter {
-    @GenerateFieldPort(name = "stream")
+    @GenerateFieldPort(name = Instrumentation.REPORT_KEY_STREAMRESULT)
     private OutputStream mOutputStream;
 
     public OutputStreamTarget(String name) {
         super(name);
     }
 
+    @Override // android.filterfw.core.Filter
     public void setupPorts() {
         addInputPort("data");
     }
 
+    @Override // android.filterfw.core.Filter
     public void process(FilterContext context) {
         ByteBuffer data;
         Frame input = pullInput("data");
         if (input.getFormat().getObjectClass() == String.class) {
-            data = ByteBuffer.wrap(((String) input.getObjectValue()).getBytes());
+            String stringVal = (String) input.getObjectValue();
+            data = ByteBuffer.wrap(stringVal.getBytes());
         } else {
             data = input.getData();
         }

@@ -1,23 +1,28 @@
 package android.telephony;
 
 import android.annotation.SystemApi;
-import android.os.Parcel;
-import android.os.Parcelable;
+import android.p007os.Parcel;
+import android.p007os.Parcelable;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.util.Objects;
 
 @SystemApi
+/* loaded from: classes.dex */
 public class UiccSlotInfo implements Parcelable {
     public static final int CARD_STATE_INFO_ABSENT = 1;
     public static final int CARD_STATE_INFO_ERROR = 3;
     public static final int CARD_STATE_INFO_PRESENT = 2;
     public static final int CARD_STATE_INFO_RESTRICTED = 4;
-    public static final Parcelable.Creator<UiccSlotInfo> CREATOR = new Parcelable.Creator<UiccSlotInfo>() {
+    public static final Parcelable.Creator<UiccSlotInfo> CREATOR = new Parcelable.Creator<UiccSlotInfo>() { // from class: android.telephony.UiccSlotInfo.1
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public UiccSlotInfo createFromParcel(Parcel in) {
             return new UiccSlotInfo(in);
         }
 
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public UiccSlotInfo[] newArray(int size) {
             return new UiccSlotInfo[size];
         }
@@ -31,30 +36,32 @@ public class UiccSlotInfo implements Parcelable {
     private final int mLogicalSlotIdx;
 
     @Retention(RetentionPolicy.SOURCE)
+    /* loaded from: classes.dex */
     public @interface CardStateInfo {
     }
 
     private UiccSlotInfo(Parcel in) {
-        boolean z = false;
         this.mIsActive = in.readByte() != 0;
         this.mIsEuicc = in.readByte() != 0;
         this.mCardId = in.readString();
         this.mCardStateInfo = in.readInt();
         this.mLogicalSlotIdx = in.readInt();
         this.mIsExtendedApduSupported = in.readByte() != 0;
-        this.mIsRemovable = in.readByte() != 0 ? true : z;
+        this.mIsRemovable = in.readByte() != 0;
     }
 
+    @Override // android.p007os.Parcelable
     public void writeToParcel(Parcel dest, int flags) {
-        dest.writeByte(this.mIsActive ? (byte) 1 : 0);
-        dest.writeByte(this.mIsEuicc ? (byte) 1 : 0);
+        dest.writeByte(this.mIsActive ? (byte) 1 : (byte) 0);
+        dest.writeByte(this.mIsEuicc ? (byte) 1 : (byte) 0);
         dest.writeString(this.mCardId);
         dest.writeInt(this.mCardStateInfo);
         dest.writeInt(this.mLogicalSlotIdx);
-        dest.writeByte(this.mIsExtendedApduSupported ? (byte) 1 : 0);
-        dest.writeByte(this.mIsRemovable ? (byte) 1 : 0);
+        dest.writeByte(this.mIsExtendedApduSupported ? (byte) 1 : (byte) 0);
+        dest.writeByte(this.mIsRemovable ? (byte) 1 : (byte) 0);
     }
 
+    @Override // android.p007os.Parcelable
     public int describeContents() {
         return 0;
     }
@@ -123,7 +130,8 @@ public class UiccSlotInfo implements Parcelable {
     }
 
     public int hashCode() {
-        return (((((((((((((1 * 31) + (this.mIsActive ? 1 : 0)) * 31) + (this.mIsEuicc ? 1 : 0)) * 31) + Objects.hashCode(this.mCardId)) * 31) + this.mCardStateInfo) * 31) + this.mLogicalSlotIdx) * 31) + (this.mIsExtendedApduSupported ? 1 : 0)) * 31) + (this.mIsRemovable ? 1 : 0);
+        int result = (1 * 31) + (this.mIsActive ? 1 : 0);
+        return (((((((((((result * 31) + (this.mIsEuicc ? 1 : 0)) * 31) + Objects.hashCode(this.mCardId)) * 31) + this.mCardStateInfo) * 31) + this.mLogicalSlotIdx) * 31) + (this.mIsExtendedApduSupported ? 1 : 0)) * 31) + (this.mIsRemovable ? 1 : 0);
     }
 
     public String toString() {

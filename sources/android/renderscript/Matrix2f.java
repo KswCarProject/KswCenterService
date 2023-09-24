@@ -1,13 +1,16 @@
 package android.renderscript;
 
+/* loaded from: classes3.dex */
 public class Matrix2f {
-    final float[] mMat = new float[4];
+    final float[] mMat;
 
     public Matrix2f() {
+        this.mMat = new float[4];
         loadIdentity();
     }
 
     public Matrix2f(float[] dataArray) {
+        this.mMat = new float[4];
         System.arraycopy(dataArray, 0, this.mMat, 0, this.mMat.length);
     }
 
@@ -36,8 +39,8 @@ public class Matrix2f {
 
     public void loadRotate(float rot) {
         float rot2 = rot * 0.017453292f;
-        float c = (float) Math.cos((double) rot2);
-        float s = (float) Math.sin((double) rot2);
+        float c = (float) Math.cos(rot2);
+        float s = (float) Math.sin(rot2);
         this.mMat[0] = c;
         this.mMat[1] = -s;
         this.mMat[2] = s;
@@ -53,13 +56,13 @@ public class Matrix2f {
     public void loadMultiply(Matrix2f lhs, Matrix2f rhs) {
         for (int i = 0; i < 2; i++) {
             float ri1 = 0.0f;
-            float ri0 = 0.0f;
+            float ri12 = 0.0f;
             for (int j = 0; j < 2; j++) {
                 float rhs_ij = rhs.get(i, j);
-                ri0 += lhs.get(j, 0) * rhs_ij;
+                ri12 += lhs.get(j, 0) * rhs_ij;
                 ri1 += lhs.get(j, 1) * rhs_ij;
             }
-            set(i, 0, ri0);
+            set(i, 0, ri12);
             set(i, 1, ri1);
         }
     }

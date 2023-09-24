@@ -2,9 +2,12 @@ package android.hardware.vibrator.V1_0;
 
 import java.util.ArrayList;
 
+/* loaded from: classes.dex */
 public final class Status {
     public static final int BAD_VALUE = 2;
-    public static final int OK = 0;
+
+    /* renamed from: OK */
+    public static final int f108OK = 0;
     public static final int UNKNOWN_ERROR = 1;
     public static final int UNSUPPORTED_OPERATION = 3;
 

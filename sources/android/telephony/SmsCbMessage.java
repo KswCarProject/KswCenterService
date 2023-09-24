@@ -1,14 +1,19 @@
 package android.telephony;
 
-import android.os.Parcel;
-import android.os.Parcelable;
+import android.p007os.Parcel;
+import android.p007os.Parcelable;
 
+/* loaded from: classes.dex */
 public class SmsCbMessage implements Parcelable {
-    public static final Parcelable.Creator<SmsCbMessage> CREATOR = new Parcelable.Creator<SmsCbMessage>() {
+    public static final Parcelable.Creator<SmsCbMessage> CREATOR = new Parcelable.Creator<SmsCbMessage>() { // from class: android.telephony.SmsCbMessage.1
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public SmsCbMessage createFromParcel(Parcel in) {
             return new SmsCbMessage(in);
         }
 
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public SmsCbMessage[] newArray(int size) {
             return new SmsCbMessage[size];
         }
@@ -61,15 +66,16 @@ public class SmsCbMessage implements Parcelable {
         if (type == 67) {
             this.mEtwsWarningInfo = null;
             this.mCmasWarningInfo = new SmsCbCmasInfo(in);
-        } else if (type != 69) {
-            this.mEtwsWarningInfo = null;
+        } else if (type == 69) {
+            this.mEtwsWarningInfo = new SmsCbEtwsInfo(in);
             this.mCmasWarningInfo = null;
         } else {
-            this.mEtwsWarningInfo = new SmsCbEtwsInfo(in);
+            this.mEtwsWarningInfo = null;
             this.mCmasWarningInfo = null;
         }
     }
 
+    @Override // android.p007os.Parcelable
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeInt(this.mMessageFormat);
         dest.writeInt(this.mGeographicalScope);
@@ -176,6 +182,7 @@ public class SmsCbMessage implements Parcelable {
         return sb.toString();
     }
 
+    @Override // android.p007os.Parcelable
     public int describeContents() {
         return 0;
     }

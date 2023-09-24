@@ -9,6 +9,8 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
+import java.io.Reader;
+import java.io.Writer;
 import java.nio.charset.StandardCharsets;
 import java.security.cert.Certificate;
 import java.security.cert.CertificateEncodingException;
@@ -18,6 +20,7 @@ import java.security.cert.X509Certificate;
 import java.util.ArrayList;
 import java.util.List;
 
+/* loaded from: classes3.dex */
 public class Credentials {
     public static final String CA_CERTIFICATE = "CACERT_";
     public static final String EXTENSION_CER = ".cer";
@@ -46,7 +49,8 @@ public class Credentials {
     @UnsupportedAppUsage
     public static byte[] convertToPem(Certificate... objects) throws IOException, CertificateEncodingException {
         ByteArrayOutputStream bao = new ByteArrayOutputStream();
-        PemWriter pw = new PemWriter(new OutputStreamWriter(bao, StandardCharsets.US_ASCII));
+        Writer writer = new OutputStreamWriter(bao, StandardCharsets.US_ASCII);
+        PemWriter pw = new PemWriter(writer);
         for (Certificate o : objects) {
             pw.writeObject(new PemObject("CERTIFICATE", o.getEncoded()));
         }
@@ -54,21 +58,29 @@ public class Credentials {
         return bao.toByteArray();
     }
 
+    /* JADX WARN: Code restructure failed: missing block: B:10:0x005d, code lost:
+        throw new java.lang.IllegalArgumentException("Unknown type " + r5.getType());
+     */
+    /*
+        Code decompiled incorrectly, please refer to instructions dump.
+    */
     public static List<X509Certificate> convertFromPem(byte[] bytes) throws IOException, CertificateException {
-        PemReader pr = new PemReader(new InputStreamReader(new ByteArrayInputStream(bytes), StandardCharsets.US_ASCII));
+        ByteArrayInputStream bai = new ByteArrayInputStream(bytes);
+        Reader reader = new InputStreamReader(bai, StandardCharsets.US_ASCII);
+        PemReader pr = new PemReader(reader);
         try {
             CertificateFactory cf = CertificateFactory.getInstance("X509");
             List<X509Certificate> result = new ArrayList<>();
             while (true) {
-                PemObject readPemObject = pr.readPemObject();
-                PemObject o = readPemObject;
-                if (readPemObject == null) {
-                    return result;
-                }
-                if (o.getType().equals("CERTIFICATE")) {
-                    result.add((X509Certificate) cf.generateCertificate(new ByteArrayInputStream(o.getContent())));
+                PemObject o = pr.readPemObject();
+                if (o != null) {
+                    if (!o.getType().equals("CERTIFICATE")) {
+                        break;
+                    }
+                    Certificate c = cf.generateCertificate(new ByteArrayInputStream(o.getContent()));
+                    result.add((X509Certificate) c);
                 } else {
-                    throw new IllegalArgumentException("Unknown type " + o.getType());
+                    return result;
                 }
             }
         } finally {

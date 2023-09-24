@@ -7,12 +7,12 @@ import android.app.NotificationManager;
 import android.app.job.JobInfo;
 import android.content.ComponentName;
 import android.content.Context;
-import android.content.pm.ApplicationInfo;
-import android.content.pm.PackageManager;
+import android.content.p002pm.ApplicationInfo;
+import android.content.p002pm.PackageManager;
 import android.content.res.Resources;
 import android.net.Uri;
-import android.os.Parcel;
-import android.os.Parcelable;
+import android.p007os.Parcel;
+import android.p007os.Parcelable;
 import android.provider.Contacts;
 import android.provider.Settings;
 import android.provider.SettingsStringUtil;
@@ -25,7 +25,7 @@ import android.util.ArrayMap;
 import android.util.ArraySet;
 import android.util.Slog;
 import android.util.proto.ProtoOutputStream;
-import com.android.internal.R;
+import com.android.internal.C3132R;
 import com.android.internal.content.NativeLibraryHelper;
 import com.android.internal.telephony.IccCardConstants;
 import java.io.IOException;
@@ -42,6 +42,7 @@ import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
 import org.xmlpull.v1.XmlSerializer;
 
+/* loaded from: classes3.dex */
 public class ZenModeConfig implements Parcelable {
     private static final String ALLOW_ATT_ALARMS = "alarms";
     private static final String ALLOW_ATT_CALLS = "calls";
@@ -57,7 +58,6 @@ public class ZenModeConfig implements Parcelable {
     private static final String ALLOW_ATT_SCREEN_ON = "visualScreenOn";
     private static final String ALLOW_ATT_SYSTEM = "system";
     private static final String ALLOW_TAG = "allow";
-    public static final int[] ALL_DAYS = {1, 2, 3, 4, 5, 6, 7};
     private static final String AUTOMATIC_TAG = "automatic";
     private static final String CONDITION_ATT_FLAGS = "flags";
     private static final String CONDITION_ATT_ICON = "icon";
@@ -67,15 +67,6 @@ public class ZenModeConfig implements Parcelable {
     private static final String CONDITION_ATT_STATE = "state";
     private static final String CONDITION_ATT_SUMMARY = "summary";
     public static final String COUNTDOWN_PATH = "countdown";
-    public static final Parcelable.Creator<ZenModeConfig> CREATOR = new Parcelable.Creator<ZenModeConfig>() {
-        public ZenModeConfig createFromParcel(Parcel source) {
-            return new ZenModeConfig(source);
-        }
-
-        public ZenModeConfig[] newArray(int size) {
-            return new ZenModeConfig[size];
-        }
-    };
     private static final int DAY_MINUTES = 1440;
     private static final boolean DEFAULT_ALLOW_ALARMS = true;
     private static final boolean DEFAULT_ALLOW_CALLS = true;
@@ -87,19 +78,15 @@ public class ZenModeConfig implements Parcelable {
     private static final boolean DEFAULT_ALLOW_SYSTEM = false;
     private static final int DEFAULT_CALLS_SOURCE = 2;
     private static final boolean DEFAULT_CHANNELS_BYPASSING_DND = false;
-    public static final List<String> DEFAULT_RULE_IDS = Arrays.asList(new String[]{EVERY_NIGHT_DEFAULT_RULE_ID, EVENTS_DEFAULT_RULE_ID});
     private static final int DEFAULT_SOURCE = 1;
     private static final int DEFAULT_SUPPRESSED_VISUAL_EFFECTS = 0;
     private static final String DISALLOW_ATT_VISUAL_EFFECTS = "visualEffects";
     private static final String DISALLOW_TAG = "disallow";
-    public static final String EVENTS_DEFAULT_RULE_ID = "EVENTS_DEFAULT_RULE";
     public static final String EVENT_PATH = "event";
-    public static final String EVERY_NIGHT_DEFAULT_RULE_ID = "EVERY_NIGHT_DEFAULT_RULE";
     public static final String IS_ALARM_PATH = "alarm";
     private static final String MANUAL_TAG = "manual";
     public static final int MAX_SOURCE = 2;
     private static final int MINUTES_MS = 60000;
-    public static final int[] MINUTE_BUCKETS = generateMinuteBuckets();
     private static final String RULE_ATT_COMPONENT = "component";
     private static final String RULE_ATT_CONDITION_ID = "conditionId";
     private static final String RULE_ATT_CONFIG_ACTIVITY = "configActivity";
@@ -126,7 +113,6 @@ public class ZenModeConfig implements Parcelable {
     private static final String STATE_ATT_CHANNELS_BYPASSING_DND = "areChannelsBypassingDnd";
     private static final String STATE_TAG = "state";
     public static final String SYSTEM_AUTHORITY = "android";
-    private static String TAG = "ZenModeConfig";
     public static final int XML_VERSION = 8;
     private static final String ZEN_ATT_USER = "user";
     private static final String ZEN_ATT_VERSION = "version";
@@ -134,39 +120,118 @@ public class ZenModeConfig implements Parcelable {
     public static final String ZEN_TAG = "zen";
     private static final int ZERO_VALUE_MS = 10000;
     @UnsupportedAppUsage
-    public boolean allowAlarms = true;
-    public boolean allowCalls = true;
-    public int allowCallsFrom = 2;
-    public boolean allowEvents = false;
-    public boolean allowMedia = true;
-    public boolean allowMessages = false;
-    public int allowMessagesFrom = 1;
-    public boolean allowReminders = false;
-    public boolean allowRepeatCallers = true;
-    public boolean allowSystem = false;
-    public boolean areChannelsBypassingDnd = false;
+    public boolean allowAlarms;
+    public boolean allowCalls;
+    public int allowCallsFrom;
+    public boolean allowEvents;
+    public boolean allowMedia;
+    public boolean allowMessages;
+    public int allowMessagesFrom;
+    public boolean allowReminders;
+    public boolean allowRepeatCallers;
+    public boolean allowSystem;
+    public boolean areChannelsBypassingDnd;
     @UnsupportedAppUsage
-    public ArrayMap<String, ZenRule> automaticRules = new ArrayMap<>();
+    public ArrayMap<String, ZenRule> automaticRules;
     public ZenRule manualRule;
-    public int suppressedVisualEffects = 0;
-    public int user = 0;
+    public int suppressedVisualEffects;
+    public int user;
     public int version;
+    private static String TAG = "ZenModeConfig";
+    public static final String EVERY_NIGHT_DEFAULT_RULE_ID = "EVERY_NIGHT_DEFAULT_RULE";
+    public static final String EVENTS_DEFAULT_RULE_ID = "EVENTS_DEFAULT_RULE";
+    public static final List<String> DEFAULT_RULE_IDS = Arrays.asList(EVERY_NIGHT_DEFAULT_RULE_ID, EVENTS_DEFAULT_RULE_ID);
+    public static final int[] ALL_DAYS = {1, 2, 3, 4, 5, 6, 7};
+    public static final int[] MINUTE_BUCKETS = generateMinuteBuckets();
+    public static final Parcelable.Creator<ZenModeConfig> CREATOR = new Parcelable.Creator<ZenModeConfig>() { // from class: android.service.notification.ZenModeConfig.1
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
+        public ZenModeConfig createFromParcel(Parcel source) {
+            return new ZenModeConfig(source);
+        }
+
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
+        public ZenModeConfig[] newArray(int size) {
+            return new ZenModeConfig[size];
+        }
+    };
 
     @UnsupportedAppUsage
     public ZenModeConfig() {
+        this.allowAlarms = true;
+        this.allowMedia = true;
+        this.allowSystem = false;
+        this.allowCalls = true;
+        this.allowRepeatCallers = true;
+        this.allowMessages = false;
+        this.allowReminders = false;
+        this.allowEvents = false;
+        this.allowCallsFrom = 2;
+        this.allowMessagesFrom = 1;
+        this.user = 0;
+        this.suppressedVisualEffects = 0;
+        this.areChannelsBypassingDnd = false;
+        this.automaticRules = new ArrayMap<>();
     }
 
     public ZenModeConfig(Parcel source) {
-        boolean z = true;
-        this.allowCalls = source.readInt() == 1;
-        this.allowRepeatCallers = source.readInt() == 1;
-        this.allowMessages = source.readInt() == 1;
-        this.allowReminders = source.readInt() == 1;
-        this.allowEvents = source.readInt() == 1;
+        boolean z;
+        boolean z2;
+        boolean z3;
+        boolean z4;
+        boolean z5;
+        boolean z6;
+        boolean z7;
+        boolean z8;
+        this.allowAlarms = true;
+        this.allowMedia = true;
+        this.allowSystem = false;
+        this.allowCalls = true;
+        this.allowRepeatCallers = true;
+        this.allowMessages = false;
+        this.allowReminders = false;
+        this.allowEvents = false;
+        this.allowCallsFrom = 2;
+        this.allowMessagesFrom = 1;
+        this.user = 0;
+        this.suppressedVisualEffects = 0;
+        this.areChannelsBypassingDnd = false;
+        this.automaticRules = new ArrayMap<>();
+        if (source.readInt() == 1) {
+            z = true;
+        } else {
+            z = false;
+        }
+        this.allowCalls = z;
+        if (source.readInt() == 1) {
+            z2 = true;
+        } else {
+            z2 = false;
+        }
+        this.allowRepeatCallers = z2;
+        if (source.readInt() == 1) {
+            z3 = true;
+        } else {
+            z3 = false;
+        }
+        this.allowMessages = z3;
+        if (source.readInt() == 1) {
+            z4 = true;
+        } else {
+            z4 = false;
+        }
+        this.allowReminders = z4;
+        if (source.readInt() == 1) {
+            z5 = true;
+        } else {
+            z5 = false;
+        }
+        this.allowEvents = z5;
         this.allowCallsFrom = source.readInt();
         this.allowMessagesFrom = source.readInt();
         this.user = source.readInt();
-        this.manualRule = (ZenRule) source.readParcelable((ClassLoader) null);
+        this.manualRule = (ZenRule) source.readParcelable(null);
         int len = source.readInt();
         if (len > 0) {
             String[] ids = new String[len];
@@ -177,13 +242,29 @@ public class ZenModeConfig implements Parcelable {
                 this.automaticRules.put(ids[i], rules[i]);
             }
         }
-        this.allowAlarms = source.readInt() == 1;
-        this.allowMedia = source.readInt() == 1;
-        this.allowSystem = source.readInt() == 1;
+        if (source.readInt() == 1) {
+            z6 = true;
+        } else {
+            z6 = false;
+        }
+        this.allowAlarms = z6;
+        if (source.readInt() == 1) {
+            z7 = true;
+        } else {
+            z7 = false;
+        }
+        this.allowMedia = z7;
+        if (source.readInt() == 1) {
+            z8 = true;
+        } else {
+            z8 = false;
+        }
+        this.allowSystem = z8;
         this.suppressedVisualEffects = source.readInt();
-        this.areChannelsBypassingDnd = source.readInt() != 1 ? false : z;
+        this.areChannelsBypassingDnd = source.readInt() == 1;
     }
 
+    @Override // android.p007os.Parcelable
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeInt(this.allowCalls ? 1 : 0);
         dest.writeInt(this.allowRepeatCallers ? 1 : 0);
@@ -216,7 +297,7 @@ public class ZenModeConfig implements Parcelable {
     }
 
     public String toString() {
-        return ZenModeConfig.class.getSimpleName() + '[' + "user=" + this.user + ",allowAlarms=" + this.allowAlarms + ",allowMedia=" + this.allowMedia + ",allowSystem=" + this.allowSystem + ",allowReminders=" + this.allowReminders + ",allowEvents=" + this.allowEvents + ",allowCalls=" + this.allowCalls + ",allowRepeatCallers=" + this.allowRepeatCallers + ",allowMessages=" + this.allowMessages + ",allowCallsFrom=" + sourceToString(this.allowCallsFrom) + ",allowMessagesFrom=" + sourceToString(this.allowMessagesFrom) + ",suppressedVisualEffects=" + this.suppressedVisualEffects + ",areChannelsBypassingDnd=" + this.areChannelsBypassingDnd + ",\nautomaticRules=" + rulesToString() + ",\nmanualRule=" + this.manualRule + ']';
+        return ZenModeConfig.class.getSimpleName() + "[user=" + this.user + ",allowAlarms=" + this.allowAlarms + ",allowMedia=" + this.allowMedia + ",allowSystem=" + this.allowSystem + ",allowReminders=" + this.allowReminders + ",allowEvents=" + this.allowEvents + ",allowCalls=" + this.allowCalls + ",allowRepeatCallers=" + this.allowRepeatCallers + ",allowMessages=" + this.allowMessages + ",allowCallsFrom=" + sourceToString(this.allowCallsFrom) + ",allowMessagesFrom=" + sourceToString(this.allowMessagesFrom) + ",suppressedVisualEffects=" + this.suppressedVisualEffects + ",areChannelsBypassingDnd=" + this.areChannelsBypassingDnd + ",\nautomaticRules=" + rulesToString() + ",\nmanualRule=" + this.manualRule + ']';
     }
 
     private String rulesToString() {
@@ -229,7 +310,8 @@ public class ZenModeConfig implements Parcelable {
             if (i > 0) {
                 buffer.append(",\n");
             }
-            buffer.append(this.automaticRules.valueAt(i));
+            Object value = this.automaticRules.valueAt(i);
+            buffer.append(value);
         }
         buffer.append('}');
         return buffer.toString();
@@ -237,74 +319,74 @@ public class ZenModeConfig implements Parcelable {
 
     public Diff diff(ZenModeConfig to) {
         Diff d = new Diff();
-        if (to == null) {
-            return d.addLine("config", "delete");
-        }
-        if (this.user != to.user) {
-            d.addLine("user", Integer.valueOf(this.user), Integer.valueOf(to.user));
-        }
-        if (this.allowAlarms != to.allowAlarms) {
-            d.addLine("allowAlarms", Boolean.valueOf(this.allowAlarms), Boolean.valueOf(to.allowAlarms));
-        }
-        if (this.allowMedia != to.allowMedia) {
-            d.addLine("allowMedia", Boolean.valueOf(this.allowMedia), Boolean.valueOf(to.allowMedia));
-        }
-        if (this.allowSystem != to.allowSystem) {
-            d.addLine("allowSystem", Boolean.valueOf(this.allowSystem), Boolean.valueOf(to.allowSystem));
-        }
-        if (this.allowCalls != to.allowCalls) {
-            d.addLine("allowCalls", Boolean.valueOf(this.allowCalls), Boolean.valueOf(to.allowCalls));
-        }
-        if (this.allowReminders != to.allowReminders) {
-            d.addLine("allowReminders", Boolean.valueOf(this.allowReminders), Boolean.valueOf(to.allowReminders));
-        }
-        if (this.allowEvents != to.allowEvents) {
-            d.addLine("allowEvents", Boolean.valueOf(this.allowEvents), Boolean.valueOf(to.allowEvents));
-        }
-        if (this.allowRepeatCallers != to.allowRepeatCallers) {
-            d.addLine("allowRepeatCallers", Boolean.valueOf(this.allowRepeatCallers), Boolean.valueOf(to.allowRepeatCallers));
-        }
-        if (this.allowMessages != to.allowMessages) {
-            d.addLine("allowMessages", Boolean.valueOf(this.allowMessages), Boolean.valueOf(to.allowMessages));
-        }
-        if (this.allowCallsFrom != to.allowCallsFrom) {
-            d.addLine("allowCallsFrom", Integer.valueOf(this.allowCallsFrom), Integer.valueOf(to.allowCallsFrom));
-        }
-        if (this.allowMessagesFrom != to.allowMessagesFrom) {
-            d.addLine("allowMessagesFrom", Integer.valueOf(this.allowMessagesFrom), Integer.valueOf(to.allowMessagesFrom));
-        }
-        if (this.suppressedVisualEffects != to.suppressedVisualEffects) {
-            d.addLine("suppressedVisualEffects", Integer.valueOf(this.suppressedVisualEffects), Integer.valueOf(to.suppressedVisualEffects));
-        }
-        ArraySet<String> allRules = new ArraySet<>();
-        addKeys(allRules, this.automaticRules);
-        addKeys(allRules, to.automaticRules);
-        int N = allRules.size();
-        for (int i = 0; i < N; i++) {
-            String rule = allRules.valueAt(i);
-            ZenRule toRule = null;
-            ZenRule fromRule = this.automaticRules != null ? this.automaticRules.get(rule) : null;
-            if (to.automaticRules != null) {
-                toRule = to.automaticRules.get(rule);
+        if (to != null) {
+            if (this.user != to.user) {
+                d.addLine("user", Integer.valueOf(this.user), Integer.valueOf(to.user));
             }
-            ZenRule.appendDiff(d, "automaticRule[" + rule + "]", fromRule, toRule);
+            if (this.allowAlarms != to.allowAlarms) {
+                d.addLine("allowAlarms", Boolean.valueOf(this.allowAlarms), Boolean.valueOf(to.allowAlarms));
+            }
+            if (this.allowMedia != to.allowMedia) {
+                d.addLine("allowMedia", Boolean.valueOf(this.allowMedia), Boolean.valueOf(to.allowMedia));
+            }
+            if (this.allowSystem != to.allowSystem) {
+                d.addLine("allowSystem", Boolean.valueOf(this.allowSystem), Boolean.valueOf(to.allowSystem));
+            }
+            if (this.allowCalls != to.allowCalls) {
+                d.addLine("allowCalls", Boolean.valueOf(this.allowCalls), Boolean.valueOf(to.allowCalls));
+            }
+            if (this.allowReminders != to.allowReminders) {
+                d.addLine("allowReminders", Boolean.valueOf(this.allowReminders), Boolean.valueOf(to.allowReminders));
+            }
+            if (this.allowEvents != to.allowEvents) {
+                d.addLine("allowEvents", Boolean.valueOf(this.allowEvents), Boolean.valueOf(to.allowEvents));
+            }
+            if (this.allowRepeatCallers != to.allowRepeatCallers) {
+                d.addLine("allowRepeatCallers", Boolean.valueOf(this.allowRepeatCallers), Boolean.valueOf(to.allowRepeatCallers));
+            }
+            if (this.allowMessages != to.allowMessages) {
+                d.addLine("allowMessages", Boolean.valueOf(this.allowMessages), Boolean.valueOf(to.allowMessages));
+            }
+            if (this.allowCallsFrom != to.allowCallsFrom) {
+                d.addLine("allowCallsFrom", Integer.valueOf(this.allowCallsFrom), Integer.valueOf(to.allowCallsFrom));
+            }
+            if (this.allowMessagesFrom != to.allowMessagesFrom) {
+                d.addLine("allowMessagesFrom", Integer.valueOf(this.allowMessagesFrom), Integer.valueOf(to.allowMessagesFrom));
+            }
+            if (this.suppressedVisualEffects != to.suppressedVisualEffects) {
+                d.addLine("suppressedVisualEffects", Integer.valueOf(this.suppressedVisualEffects), Integer.valueOf(to.suppressedVisualEffects));
+            }
+            ArraySet<String> allRules = new ArraySet<>();
+            addKeys(allRules, this.automaticRules);
+            addKeys(allRules, to.automaticRules);
+            int N = allRules.size();
+            for (int i = 0; i < N; i++) {
+                String rule = allRules.valueAt(i);
+                ZenRule toRule = null;
+                ZenRule fromRule = this.automaticRules != null ? this.automaticRules.get(rule) : null;
+                if (to.automaticRules != null) {
+                    toRule = to.automaticRules.get(rule);
+                }
+                ZenRule.appendDiff(d, "automaticRule[" + rule + "]", fromRule, toRule);
+            }
+            ZenRule.appendDiff(d, "manualRule", this.manualRule, to.manualRule);
+            if (this.areChannelsBypassingDnd != to.areChannelsBypassingDnd) {
+                d.addLine(STATE_ATT_CHANNELS_BYPASSING_DND, Boolean.valueOf(this.areChannelsBypassingDnd), Boolean.valueOf(to.areChannelsBypassingDnd));
+            }
+            return d;
         }
-        ZenRule.appendDiff(d, "manualRule", this.manualRule, to.manualRule);
-        if (this.areChannelsBypassingDnd != to.areChannelsBypassingDnd) {
-            d.addLine(STATE_ATT_CHANNELS_BYPASSING_DND, Boolean.valueOf(this.areChannelsBypassingDnd), Boolean.valueOf(to.areChannelsBypassingDnd));
-        }
-        return d;
+        return d.addLine("config", "delete");
     }
 
     public static Diff diff(ZenModeConfig from, ZenModeConfig to) {
-        if (from != null) {
-            return from.diff(to);
+        if (from == null) {
+            Diff d = new Diff();
+            if (to != null) {
+                d.addLine("config", "insert");
+            }
+            return d;
         }
-        Diff d = new Diff();
-        if (to != null) {
-            Diff unused = d.addLine("config", "insert");
-        }
-        return d;
+        return from.diff(to);
     }
 
     private static <T> void addKeys(ArraySet<T> set, ArrayMap<T, ?> map) {
@@ -316,16 +398,16 @@ public class ZenModeConfig implements Parcelable {
     }
 
     public boolean isValid() {
-        if (!isValidManualRule(this.manualRule)) {
-            return false;
-        }
-        int N = this.automaticRules.size();
-        for (int i = 0; i < N; i++) {
-            if (!isValidAutomaticRule(this.automaticRules.valueAt(i))) {
-                return false;
+        if (isValidManualRule(this.manualRule)) {
+            int N = this.automaticRules.size();
+            for (int i = 0; i < N; i++) {
+                if (!isValidAutomaticRule(this.automaticRules.valueAt(i))) {
+                    return false;
+                }
             }
+            return true;
         }
-        return true;
+        return false;
     }
 
     private static boolean isValidManualRule(ZenRule rule) {
@@ -333,23 +415,14 @@ public class ZenModeConfig implements Parcelable {
     }
 
     private static boolean isValidAutomaticRule(ZenRule rule) {
-        return rule != null && !TextUtils.isEmpty(rule.name) && Settings.Global.isValidZenMode(rule.zenMode) && rule.conditionId != null && sameCondition(rule);
+        return (rule == null || TextUtils.isEmpty(rule.name) || !Settings.Global.isValidZenMode(rule.zenMode) || rule.conditionId == null || !sameCondition(rule)) ? false : true;
     }
 
     private static boolean sameCondition(ZenRule rule) {
         if (rule == null) {
             return false;
         }
-        if (rule.conditionId == null) {
-            if (rule.condition == null) {
-                return true;
-            }
-            return false;
-        } else if (rule.condition == null || rule.conditionId.equals(rule.condition.id)) {
-            return true;
-        } else {
-            return false;
-        }
+        return rule.conditionId == null ? rule.condition == null : rule.condition == null || rule.conditionId.equals(rule.condition.f239id);
     }
 
     private static int[] generateMinuteBuckets() {
@@ -377,24 +450,21 @@ public class ZenModeConfig implements Parcelable {
     }
 
     public boolean equals(Object o) {
-        if (!(o instanceof ZenModeConfig)) {
-            return false;
-        }
-        if (o == this) {
-            return true;
-        }
-        ZenModeConfig other = (ZenModeConfig) o;
-        if (other.allowAlarms == this.allowAlarms && other.allowMedia == this.allowMedia && other.allowSystem == this.allowSystem && other.allowCalls == this.allowCalls && other.allowRepeatCallers == this.allowRepeatCallers && other.allowMessages == this.allowMessages && other.allowCallsFrom == this.allowCallsFrom && other.allowMessagesFrom == this.allowMessagesFrom && other.allowReminders == this.allowReminders && other.allowEvents == this.allowEvents && other.user == this.user && Objects.equals(other.automaticRules, this.automaticRules) && Objects.equals(other.manualRule, this.manualRule) && other.suppressedVisualEffects == this.suppressedVisualEffects && other.areChannelsBypassingDnd == this.areChannelsBypassingDnd) {
-            return true;
+        if (o instanceof ZenModeConfig) {
+            if (o == this) {
+                return true;
+            }
+            ZenModeConfig other = (ZenModeConfig) o;
+            return other.allowAlarms == this.allowAlarms && other.allowMedia == this.allowMedia && other.allowSystem == this.allowSystem && other.allowCalls == this.allowCalls && other.allowRepeatCallers == this.allowRepeatCallers && other.allowMessages == this.allowMessages && other.allowCallsFrom == this.allowCallsFrom && other.allowMessagesFrom == this.allowMessagesFrom && other.allowReminders == this.allowReminders && other.allowEvents == this.allowEvents && other.user == this.user && Objects.equals(other.automaticRules, this.automaticRules) && Objects.equals(other.manualRule, this.manualRule) && other.suppressedVisualEffects == this.suppressedVisualEffects && other.areChannelsBypassingDnd == this.areChannelsBypassingDnd;
         }
         return false;
     }
 
     public int hashCode() {
-        return Objects.hash(new Object[]{Boolean.valueOf(this.allowAlarms), Boolean.valueOf(this.allowMedia), Boolean.valueOf(this.allowSystem), Boolean.valueOf(this.allowCalls), Boolean.valueOf(this.allowRepeatCallers), Boolean.valueOf(this.allowMessages), Integer.valueOf(this.allowCallsFrom), Integer.valueOf(this.allowMessagesFrom), Boolean.valueOf(this.allowReminders), Boolean.valueOf(this.allowEvents), Integer.valueOf(this.user), this.automaticRules, this.manualRule, Integer.valueOf(this.suppressedVisualEffects), Boolean.valueOf(this.areChannelsBypassingDnd)});
+        return Objects.hash(Boolean.valueOf(this.allowAlarms), Boolean.valueOf(this.allowMedia), Boolean.valueOf(this.allowSystem), Boolean.valueOf(this.allowCalls), Boolean.valueOf(this.allowRepeatCallers), Boolean.valueOf(this.allowMessages), Integer.valueOf(this.allowCallsFrom), Integer.valueOf(this.allowMessagesFrom), Boolean.valueOf(this.allowReminders), Boolean.valueOf(this.allowEvents), Integer.valueOf(this.user), this.automaticRules, this.manualRule, Integer.valueOf(this.suppressedVisualEffects), Boolean.valueOf(this.areChannelsBypassingDnd));
     }
 
-    /* access modifiers changed from: private */
+    /* JADX INFO: Access modifiers changed from: private */
     public static String toDayList(int[] days) {
         if (days == null || days.length == 0) {
             return "";
@@ -462,30 +532,22 @@ public class ZenModeConfig implements Parcelable {
     }
 
     public static ZenModeConfig readXml(XmlPullParser parser) throws XmlPullParserException, IOException {
-        int type = parser.getEventType();
-        if (type != 2) {
-            return null;
-        }
-        String tag = parser.getName();
-        if (!"zen".equals(tag)) {
+        if (parser.getEventType() != 2 || !"zen".equals(parser.getName())) {
             return null;
         }
         ZenModeConfig rt = new ZenModeConfig();
         rt.version = safeInt(parser, "version", 8);
         rt.user = safeInt(parser, "user", rt.user);
-        String str = tag;
-        int i = type;
         boolean readSuppressedEffects = false;
         while (true) {
-            int next = parser.next();
-            int type2 = next;
-            if (next != 1) {
-                String tag2 = parser.getName();
-                if (type2 == 3 && "zen".equals(tag2)) {
+            int type = parser.next();
+            if (type != 1) {
+                String tag = parser.getName();
+                if (type == 3 && "zen".equals(tag)) {
                     return rt;
                 }
-                if (type2 == 2) {
-                    if (ALLOW_TAG.equals(tag2)) {
+                if (type == 2) {
+                    if (ALLOW_TAG.equals(tag)) {
                         rt.allowCalls = safeBoolean(parser, ALLOW_ATT_CALLS, true);
                         rt.allowRepeatCallers = safeBoolean(parser, ALLOW_ATT_REPEAT_CALLERS, true);
                         rt.allowMessages = safeBoolean(parser, ALLOW_ATT_MESSAGES, false);
@@ -498,7 +560,7 @@ public class ZenModeConfig implements Parcelable {
                             rt.allowCallsFrom = callsFrom;
                             rt.allowMessagesFrom = messagesFrom;
                         } else if (isValidSource(from)) {
-                            Slog.i(TAG, "Migrating existing shared 'from': " + sourceToString(from));
+                            Slog.m54i(TAG, "Migrating existing shared 'from': " + sourceToString(from));
                             rt.allowCallsFrom = from;
                             rt.allowMessagesFrom = from;
                         } else {
@@ -523,20 +585,20 @@ public class ZenModeConfig implements Parcelable {
                             }
                         }
                         if (readSuppressedEffects) {
-                            Slog.d(TAG, "Migrated visual effects to " + rt.suppressedVisualEffects);
+                            Slog.m58d(TAG, "Migrated visual effects to " + rt.suppressedVisualEffects);
                         }
-                    } else if (DISALLOW_TAG.equals(tag2) && !readSuppressedEffects) {
+                    } else if (DISALLOW_TAG.equals(tag) && !readSuppressedEffects) {
                         rt.suppressedVisualEffects = safeInt(parser, DISALLOW_ATT_VISUAL_EFFECTS, 0);
-                    } else if ("manual".equals(tag2)) {
+                    } else if ("manual".equals(tag)) {
                         rt.manualRule = readRuleXml(parser);
-                    } else if (AUTOMATIC_TAG.equals(tag2)) {
-                        String id = parser.getAttributeValue((String) null, RULE_ATT_ID);
+                    } else if (AUTOMATIC_TAG.equals(tag)) {
+                        String id = parser.getAttributeValue(null, RULE_ATT_ID);
                         ZenRule automaticRule = readRuleXml(parser);
-                        if (!(id == null || automaticRule == null)) {
-                            automaticRule.id = id;
+                        if (id != null && automaticRule != null) {
+                            automaticRule.f242id = id;
                             rt.automaticRules.put(id, automaticRule);
                         }
-                    } else if ("state".equals(tag2)) {
+                    } else if ("state".equals(tag)) {
                         rt.areChannelsBypassingDnd = safeBoolean(parser, STATE_ATT_CHANNELS_BYPASSING_DND, false);
                     }
                 }
@@ -546,52 +608,54 @@ public class ZenModeConfig implements Parcelable {
         }
     }
 
-    public void writeXml(XmlSerializer out, Integer version2) throws IOException {
-        out.startTag((String) null, "zen");
-        out.attribute((String) null, "version", Integer.toString(version2 == null ? 8 : version2.intValue()));
-        out.attribute((String) null, "user", Integer.toString(this.user));
-        out.startTag((String) null, ALLOW_TAG);
-        out.attribute((String) null, ALLOW_ATT_CALLS, Boolean.toString(this.allowCalls));
-        out.attribute((String) null, ALLOW_ATT_REPEAT_CALLERS, Boolean.toString(this.allowRepeatCallers));
-        out.attribute((String) null, ALLOW_ATT_MESSAGES, Boolean.toString(this.allowMessages));
-        out.attribute((String) null, ALLOW_ATT_REMINDERS, Boolean.toString(this.allowReminders));
-        out.attribute((String) null, ALLOW_ATT_EVENTS, Boolean.toString(this.allowEvents));
-        out.attribute((String) null, ALLOW_ATT_CALLS_FROM, Integer.toString(this.allowCallsFrom));
-        out.attribute((String) null, ALLOW_ATT_MESSAGES_FROM, Integer.toString(this.allowMessagesFrom));
-        out.attribute((String) null, ALLOW_ATT_ALARMS, Boolean.toString(this.allowAlarms));
-        out.attribute((String) null, "media", Boolean.toString(this.allowMedia));
-        out.attribute((String) null, "system", Boolean.toString(this.allowSystem));
-        out.endTag((String) null, ALLOW_TAG);
-        out.startTag((String) null, DISALLOW_TAG);
-        out.attribute((String) null, DISALLOW_ATT_VISUAL_EFFECTS, Integer.toString(this.suppressedVisualEffects));
-        out.endTag((String) null, DISALLOW_TAG);
+    public void writeXml(XmlSerializer out, Integer version) throws IOException {
+        out.startTag(null, "zen");
+        out.attribute(null, "version", Integer.toString(version == null ? 8 : version.intValue()));
+        out.attribute(null, "user", Integer.toString(this.user));
+        out.startTag(null, ALLOW_TAG);
+        out.attribute(null, ALLOW_ATT_CALLS, Boolean.toString(this.allowCalls));
+        out.attribute(null, ALLOW_ATT_REPEAT_CALLERS, Boolean.toString(this.allowRepeatCallers));
+        out.attribute(null, ALLOW_ATT_MESSAGES, Boolean.toString(this.allowMessages));
+        out.attribute(null, ALLOW_ATT_REMINDERS, Boolean.toString(this.allowReminders));
+        out.attribute(null, ALLOW_ATT_EVENTS, Boolean.toString(this.allowEvents));
+        out.attribute(null, ALLOW_ATT_CALLS_FROM, Integer.toString(this.allowCallsFrom));
+        out.attribute(null, ALLOW_ATT_MESSAGES_FROM, Integer.toString(this.allowMessagesFrom));
+        out.attribute(null, ALLOW_ATT_ALARMS, Boolean.toString(this.allowAlarms));
+        out.attribute(null, "media", Boolean.toString(this.allowMedia));
+        out.attribute(null, "system", Boolean.toString(this.allowSystem));
+        out.endTag(null, ALLOW_TAG);
+        out.startTag(null, DISALLOW_TAG);
+        out.attribute(null, DISALLOW_ATT_VISUAL_EFFECTS, Integer.toString(this.suppressedVisualEffects));
+        out.endTag(null, DISALLOW_TAG);
         if (this.manualRule != null) {
-            out.startTag((String) null, "manual");
+            out.startTag(null, "manual");
             writeRuleXml(this.manualRule, out);
-            out.endTag((String) null, "manual");
+            out.endTag(null, "manual");
         }
         int N = this.automaticRules.size();
         for (int i = 0; i < N; i++) {
-            out.startTag((String) null, AUTOMATIC_TAG);
-            out.attribute((String) null, RULE_ATT_ID, this.automaticRules.keyAt(i));
-            writeRuleXml(this.automaticRules.valueAt(i), out);
-            out.endTag((String) null, AUTOMATIC_TAG);
+            String id = this.automaticRules.keyAt(i);
+            ZenRule automaticRule = this.automaticRules.valueAt(i);
+            out.startTag(null, AUTOMATIC_TAG);
+            out.attribute(null, RULE_ATT_ID, id);
+            writeRuleXml(automaticRule, out);
+            out.endTag(null, AUTOMATIC_TAG);
         }
-        out.startTag((String) null, "state");
-        out.attribute((String) null, STATE_ATT_CHANNELS_BYPASSING_DND, Boolean.toString(this.areChannelsBypassingDnd));
-        out.endTag((String) null, "state");
-        out.endTag((String) null, "zen");
+        out.startTag(null, "state");
+        out.attribute(null, STATE_ATT_CHANNELS_BYPASSING_DND, Boolean.toString(this.areChannelsBypassingDnd));
+        out.endTag(null, "state");
+        out.endTag(null, "zen");
     }
 
     public static ZenRule readRuleXml(XmlPullParser parser) {
         String str;
         ZenRule rt = new ZenRule();
         rt.enabled = safeBoolean(parser, "enabled", true);
-        rt.name = parser.getAttributeValue((String) null, "name");
-        String zen = parser.getAttributeValue((String) null, "zen");
+        rt.name = parser.getAttributeValue(null, "name");
+        String zen = parser.getAttributeValue(null, "zen");
         rt.zenMode = tryParseZenMode(zen, -1);
         if (rt.zenMode == -1) {
-            Slog.w(TAG, "Bad zen mode in rule xml:" + zen);
+            Slog.m50w(TAG, "Bad zen mode in rule xml:" + zen);
             return null;
         }
         rt.conditionId = safeUri(parser, RULE_ATT_CONDITION_ID);
@@ -605,11 +669,11 @@ public class ZenModeConfig implements Parcelable {
             str = null;
         }
         rt.pkg = str;
-        rt.creationTime = safeLong(parser, "creationTime", 0);
-        rt.enabler = parser.getAttributeValue((String) null, RULE_ATT_ENABLER);
+        rt.creationTime = safeLong(parser, "creationTime", 0L);
+        rt.enabler = parser.getAttributeValue(null, RULE_ATT_ENABLER);
         rt.condition = readConditionXml(parser);
         if (rt.zenMode != 1 && Condition.isValidId(rt.conditionId, "android")) {
-            Slog.i(TAG, "Updating zenMode of automatic rule " + rt.name);
+            Slog.m54i(TAG, "Updating zenMode of automatic rule " + rt.name);
             rt.zenMode = 1;
         }
         rt.modified = safeBoolean(parser, "modified", false);
@@ -618,23 +682,23 @@ public class ZenModeConfig implements Parcelable {
     }
 
     public static void writeRuleXml(ZenRule rule, XmlSerializer out) throws IOException {
-        out.attribute((String) null, "enabled", Boolean.toString(rule.enabled));
+        out.attribute(null, "enabled", Boolean.toString(rule.enabled));
         if (rule.name != null) {
-            out.attribute((String) null, "name", rule.name);
+            out.attribute(null, "name", rule.name);
         }
-        out.attribute((String) null, "zen", Integer.toString(rule.zenMode));
+        out.attribute(null, "zen", Integer.toString(rule.zenMode));
         if (rule.component != null) {
-            out.attribute((String) null, "component", rule.component.flattenToString());
+            out.attribute(null, "component", rule.component.flattenToString());
         }
         if (rule.configurationActivity != null) {
-            out.attribute((String) null, RULE_ATT_CONFIG_ACTIVITY, rule.configurationActivity.flattenToString());
+            out.attribute(null, RULE_ATT_CONFIG_ACTIVITY, rule.configurationActivity.flattenToString());
         }
         if (rule.conditionId != null) {
-            out.attribute((String) null, RULE_ATT_CONDITION_ID, rule.conditionId.toString());
+            out.attribute(null, RULE_ATT_CONDITION_ID, rule.conditionId.toString());
         }
-        out.attribute((String) null, "creationTime", Long.toString(rule.creationTime));
+        out.attribute(null, "creationTime", Long.toString(rule.creationTime));
         if (rule.enabler != null) {
-            out.attribute((String) null, RULE_ATT_ENABLER, rule.enabler);
+            out.attribute(null, RULE_ATT_ENABLER, rule.enabler);
         }
         if (rule.condition != null) {
             writeConditionXml(rule.condition, out);
@@ -642,45 +706,49 @@ public class ZenModeConfig implements Parcelable {
         if (rule.zenPolicy != null) {
             writeZenPolicyXml(rule.zenPolicy, out);
         }
-        out.attribute((String) null, "modified", Boolean.toString(rule.modified));
+        out.attribute(null, "modified", Boolean.toString(rule.modified));
     }
 
     public static Condition readConditionXml(XmlPullParser parser) {
-        XmlPullParser xmlPullParser = parser;
-        Uri id = safeUri(xmlPullParser, "id");
-        if (id == null) {
-            return null;
+        Uri id = safeUri(parser, "id");
+        if (id != null) {
+            String summary = parser.getAttributeValue(null, "summary");
+            String line1 = parser.getAttributeValue(null, CONDITION_ATT_LINE1);
+            String line2 = parser.getAttributeValue(null, CONDITION_ATT_LINE2);
+            int icon = safeInt(parser, "icon", -1);
+            int state = safeInt(parser, "state", -1);
+            int flags = safeInt(parser, "flags", -1);
+            try {
+                return new Condition(id, summary, line1, line2, icon, state, flags);
+            } catch (IllegalArgumentException e) {
+                Slog.m49w(TAG, "Unable to read condition xml", e);
+                return null;
+            }
         }
-        try {
-            return new Condition(id, xmlPullParser.getAttributeValue((String) null, "summary"), xmlPullParser.getAttributeValue((String) null, CONDITION_ATT_LINE1), xmlPullParser.getAttributeValue((String) null, CONDITION_ATT_LINE2), safeInt(xmlPullParser, "icon", -1), safeInt(xmlPullParser, "state", -1), safeInt(xmlPullParser, "flags", -1));
-        } catch (IllegalArgumentException e) {
-            Slog.w(TAG, "Unable to read condition xml", e);
-            return null;
-        }
+        return null;
     }
 
     public static void writeConditionXml(Condition c, XmlSerializer out) throws IOException {
-        out.attribute((String) null, "id", c.id.toString());
-        out.attribute((String) null, "summary", c.summary);
-        out.attribute((String) null, CONDITION_ATT_LINE1, c.line1);
-        out.attribute((String) null, CONDITION_ATT_LINE2, c.line2);
-        out.attribute((String) null, "icon", Integer.toString(c.icon));
-        out.attribute((String) null, "state", Integer.toString(c.state));
-        out.attribute((String) null, "flags", Integer.toString(c.flags));
+        out.attribute(null, "id", c.f239id.toString());
+        out.attribute(null, "summary", c.summary);
+        out.attribute(null, CONDITION_ATT_LINE1, c.line1);
+        out.attribute(null, CONDITION_ATT_LINE2, c.line2);
+        out.attribute(null, "icon", Integer.toString(c.icon));
+        out.attribute(null, "state", Integer.toString(c.state));
+        out.attribute(null, "flags", Integer.toString(c.flags));
     }
 
     public static ZenPolicy readZenPolicyXml(XmlPullParser parser) {
-        XmlPullParser xmlPullParser = parser;
         boolean policySet = false;
         ZenPolicy.Builder builder = new ZenPolicy.Builder();
-        int calls = safeInt(xmlPullParser, ALLOW_ATT_CALLS_FROM, 0);
-        int messages = safeInt(xmlPullParser, ALLOW_ATT_MESSAGES_FROM, 0);
-        int repeatCallers = safeInt(xmlPullParser, ALLOW_ATT_REPEAT_CALLERS, 0);
-        int alarms = safeInt(xmlPullParser, ALLOW_ATT_ALARMS, 0);
-        int media = safeInt(xmlPullParser, "media", 0);
-        int system = safeInt(xmlPullParser, "system", 0);
-        int events = safeInt(xmlPullParser, ALLOW_ATT_EVENTS, 0);
-        int reminders = safeInt(xmlPullParser, ALLOW_ATT_REMINDERS, 0);
+        int calls = safeInt(parser, ALLOW_ATT_CALLS_FROM, 0);
+        int messages = safeInt(parser, ALLOW_ATT_MESSAGES_FROM, 0);
+        int repeatCallers = safeInt(parser, ALLOW_ATT_REPEAT_CALLERS, 0);
+        int alarms = safeInt(parser, ALLOW_ATT_ALARMS, 0);
+        int media = safeInt(parser, "media", 0);
+        int system = safeInt(parser, "system", 0);
+        int events = safeInt(parser, ALLOW_ATT_EVENTS, 0);
+        int reminders = safeInt(parser, ALLOW_ATT_REMINDERS, 0);
         if (calls != 0) {
             builder.allowCalls(calls);
             policySet = true;
@@ -713,16 +781,14 @@ public class ZenModeConfig implements Parcelable {
             builder.allowReminders(reminders == 1);
             policySet = true;
         }
-        int fullScreenIntent = safeInt(xmlPullParser, SHOW_ATT_FULL_SCREEN_INTENT, 0);
-        int lights = safeInt(xmlPullParser, SHOW_ATT_LIGHTS, 0);
-        int peek = safeInt(xmlPullParser, SHOW_ATT_PEEK, 0);
-        int statusBar = safeInt(xmlPullParser, SHOW_ATT_STATUS_BAR_ICONS, 0);
+        int fullScreenIntent = safeInt(parser, SHOW_ATT_FULL_SCREEN_INTENT, 0);
+        int lights = safeInt(parser, SHOW_ATT_LIGHTS, 0);
+        int peek = safeInt(parser, SHOW_ATT_PEEK, 0);
+        int statusBar = safeInt(parser, SHOW_ATT_STATUS_BAR_ICONS, 0);
         boolean policySet2 = policySet;
-        int badges = safeInt(xmlPullParser, SHOW_ATT_BADGES, 0);
-        int i = calls;
-        int ambient = safeInt(xmlPullParser, SHOW_ATT_AMBIENT, 0);
-        int i2 = messages;
-        int notificationList = safeInt(xmlPullParser, SHOW_ATT_NOTIFICATION_LIST, 0);
+        int badges = safeInt(parser, SHOW_ATT_BADGES, 0);
+        int ambient = safeInt(parser, SHOW_ATT_AMBIENT, 0);
+        int notificationList = safeInt(parser, SHOW_ATT_NOTIFICATION_LIST, 0);
         if (fullScreenIntent != 0) {
             builder.showFullScreenIntent(fullScreenIntent == 1);
             policySet2 = true;
@@ -748,11 +814,7 @@ public class ZenModeConfig implements Parcelable {
             policySet2 = true;
         }
         if (notificationList != 0) {
-            boolean z = true;
-            if (notificationList != 1) {
-                z = false;
-            }
-            builder.showInNotificationList(z);
+            builder.showInNotificationList(notificationList == 1);
             policySet2 = true;
         }
         if (policySet2) {
@@ -782,10 +844,10 @@ public class ZenModeConfig implements Parcelable {
     private static void writeZenPolicyState(String attr, int val, XmlSerializer out) throws IOException {
         if (Objects.equals(attr, ALLOW_ATT_CALLS_FROM) || Objects.equals(attr, ALLOW_ATT_MESSAGES_FROM)) {
             if (val != 0) {
-                out.attribute((String) null, attr, Integer.toString(val));
+                out.attribute(null, attr, Integer.toString(val));
             }
         } else if (val != 0) {
-            out.attribute((String) null, attr, Integer.toString(val));
+            out.attribute(null, attr, Integer.toString(val));
         }
     }
 
@@ -802,7 +864,7 @@ public class ZenModeConfig implements Parcelable {
     }
 
     private static Boolean unsafeBoolean(XmlPullParser parser, String att) {
-        String val = parser.getAttributeValue((String) null, att);
+        String val = parser.getAttributeValue(null, att);
         if (TextUtils.isEmpty(val)) {
             return null;
         }
@@ -810,22 +872,21 @@ public class ZenModeConfig implements Parcelable {
     }
 
     private static boolean safeBoolean(XmlPullParser parser, String att, boolean defValue) {
-        return safeBoolean(parser.getAttributeValue((String) null, att), defValue);
+        String val = parser.getAttributeValue(null, att);
+        return safeBoolean(val, defValue);
     }
 
     private static boolean safeBoolean(String val, boolean defValue) {
-        if (TextUtils.isEmpty(val)) {
-            return defValue;
-        }
-        return Boolean.parseBoolean(val);
+        return TextUtils.isEmpty(val) ? defValue : Boolean.parseBoolean(val);
     }
 
     private static int safeInt(XmlPullParser parser, String att, int defValue) {
-        return tryParseInt(parser.getAttributeValue((String) null, att), defValue);
+        String val = parser.getAttributeValue(null, att);
+        return tryParseInt(val, defValue);
     }
 
     private static ComponentName safeComponentName(XmlPullParser parser, String att) {
-        String val = parser.getAttributeValue((String) null, att);
+        String val = parser.getAttributeValue(null, att);
         if (TextUtils.isEmpty(val)) {
             return null;
         }
@@ -833,7 +894,7 @@ public class ZenModeConfig implements Parcelable {
     }
 
     private static Uri safeUri(XmlPullParser parser, String att) {
-        String val = parser.getAttributeValue((String) null, att);
+        String val = parser.getAttributeValue(null, att);
         if (TextUtils.isEmpty(val)) {
             return null;
         }
@@ -841,9 +902,11 @@ public class ZenModeConfig implements Parcelable {
     }
 
     private static long safeLong(XmlPullParser parser, String att, long defValue) {
-        return tryParseLong(parser.getAttributeValue((String) null, att), defValue);
+        String val = parser.getAttributeValue(null, att);
+        return tryParseLong(val, defValue);
     }
 
+    @Override // android.p007os.Parcelable
     public int describeContents() {
         return 0;
     }
@@ -860,66 +923,65 @@ public class ZenModeConfig implements Parcelable {
     }
 
     public NotificationManager.Policy toNotificationPolicy(ZenPolicy zenPolicy) {
-        ZenPolicy zenPolicy2 = zenPolicy;
         NotificationManager.Policy defaultPolicy = toNotificationPolicy();
         int priorityCategories = 0;
-        int suppressedVisualEffects2 = 0;
+        int suppressedVisualEffects = 0;
         int callSenders = defaultPolicy.priorityCallSenders;
         int messageSenders = defaultPolicy.priorityMessageSenders;
-        if (zenPolicy2.isCategoryAllowed(0, isPriorityCategoryEnabled(1, defaultPolicy))) {
+        if (zenPolicy.isCategoryAllowed(0, isPriorityCategoryEnabled(1, defaultPolicy))) {
             priorityCategories = 0 | 1;
         }
-        if (zenPolicy2.isCategoryAllowed(1, isPriorityCategoryEnabled(2, defaultPolicy))) {
+        if (zenPolicy.isCategoryAllowed(1, isPriorityCategoryEnabled(2, defaultPolicy))) {
             priorityCategories |= 2;
         }
-        if (zenPolicy2.isCategoryAllowed(2, isPriorityCategoryEnabled(4, defaultPolicy))) {
+        if (zenPolicy.isCategoryAllowed(2, isPriorityCategoryEnabled(4, defaultPolicy))) {
             priorityCategories |= 4;
             messageSenders = getNotificationPolicySenders(zenPolicy.getPriorityMessageSenders(), messageSenders);
         }
-        if (zenPolicy2.isCategoryAllowed(3, isPriorityCategoryEnabled(8, defaultPolicy))) {
+        if (zenPolicy.isCategoryAllowed(3, isPriorityCategoryEnabled(8, defaultPolicy))) {
             priorityCategories |= 8;
             callSenders = getNotificationPolicySenders(zenPolicy.getPriorityCallSenders(), callSenders);
         }
-        if (zenPolicy2.isCategoryAllowed(4, isPriorityCategoryEnabled(16, defaultPolicy))) {
+        if (zenPolicy.isCategoryAllowed(4, isPriorityCategoryEnabled(16, defaultPolicy))) {
             priorityCategories |= 16;
         }
-        if (zenPolicy2.isCategoryAllowed(5, isPriorityCategoryEnabled(32, defaultPolicy))) {
+        if (zenPolicy.isCategoryAllowed(5, isPriorityCategoryEnabled(32, defaultPolicy))) {
             priorityCategories |= 32;
         }
-        if (zenPolicy2.isCategoryAllowed(6, isPriorityCategoryEnabled(64, defaultPolicy))) {
+        if (zenPolicy.isCategoryAllowed(6, isPriorityCategoryEnabled(64, defaultPolicy))) {
             priorityCategories |= 64;
         }
-        if (zenPolicy2.isCategoryAllowed(7, isPriorityCategoryEnabled(128, defaultPolicy))) {
+        if (zenPolicy.isCategoryAllowed(7, isPriorityCategoryEnabled(128, defaultPolicy))) {
             priorityCategories |= 128;
         }
-        boolean suppressFullScreenIntent = !zenPolicy2.isVisualEffectAllowed(0, isVisualEffectAllowed(4, defaultPolicy));
-        boolean suppressLights = !zenPolicy2.isVisualEffectAllowed(1, isVisualEffectAllowed(8, defaultPolicy));
-        boolean suppressAmbient = true ^ zenPolicy2.isVisualEffectAllowed(5, isVisualEffectAllowed(128, defaultPolicy));
+        boolean suppressFullScreenIntent = !zenPolicy.isVisualEffectAllowed(0, isVisualEffectAllowed(4, defaultPolicy));
+        boolean suppressLights = !zenPolicy.isVisualEffectAllowed(1, isVisualEffectAllowed(8, defaultPolicy));
+        boolean suppressAmbient = true ^ zenPolicy.isVisualEffectAllowed(5, isVisualEffectAllowed(128, defaultPolicy));
         if (suppressFullScreenIntent && suppressLights && suppressAmbient) {
-            suppressedVisualEffects2 = 0 | 1;
+            suppressedVisualEffects = 0 | 1;
         }
         if (suppressFullScreenIntent) {
-            suppressedVisualEffects2 |= 4;
+            suppressedVisualEffects |= 4;
         }
         if (suppressLights) {
-            suppressedVisualEffects2 |= 8;
+            suppressedVisualEffects |= 8;
         }
-        if (!zenPolicy2.isVisualEffectAllowed(2, isVisualEffectAllowed(16, defaultPolicy))) {
-            suppressedVisualEffects2 = suppressedVisualEffects2 | 16 | 2;
+        if (!zenPolicy.isVisualEffectAllowed(2, isVisualEffectAllowed(16, defaultPolicy))) {
+            suppressedVisualEffects = suppressedVisualEffects | 16 | 2;
         }
-        if (!zenPolicy2.isVisualEffectAllowed(3, isVisualEffectAllowed(32, defaultPolicy))) {
-            suppressedVisualEffects2 |= 32;
+        if (!zenPolicy.isVisualEffectAllowed(3, isVisualEffectAllowed(32, defaultPolicy))) {
+            suppressedVisualEffects |= 32;
         }
-        if (!zenPolicy2.isVisualEffectAllowed(4, isVisualEffectAllowed(64, defaultPolicy))) {
-            suppressedVisualEffects2 |= 64;
+        if (!zenPolicy.isVisualEffectAllowed(4, isVisualEffectAllowed(64, defaultPolicy))) {
+            suppressedVisualEffects |= 64;
         }
         if (suppressAmbient) {
-            suppressedVisualEffects2 |= 128;
+            suppressedVisualEffects |= 128;
         }
-        if (!zenPolicy2.isVisualEffectAllowed(6, isVisualEffectAllowed(256, defaultPolicy))) {
-            suppressedVisualEffects2 |= 256;
+        if (!zenPolicy.isVisualEffectAllowed(6, isVisualEffectAllowed(256, defaultPolicy))) {
+            suppressedVisualEffects |= 256;
         }
-        return new NotificationManager.Policy(priorityCategories, callSenders, messageSenders, suppressedVisualEffects2, defaultPolicy.state);
+        return new NotificationManager.Policy(priorityCategories, callSenders, messageSenders, suppressedVisualEffects, defaultPolicy.state);
     }
 
     private boolean isPriorityCategoryEnabled(int categoryType, NotificationManager.Policy policy) {
@@ -980,7 +1042,9 @@ public class ZenModeConfig implements Parcelable {
         if (this.allowSystem) {
             priorityCategories |= 128;
         }
-        return new NotificationManager.Policy(priorityCategories, sourceToPrioritySenders(this.allowCallsFrom, 1), sourceToPrioritySenders(this.allowMessagesFrom, 1), this.suppressedVisualEffects, this.areChannelsBypassingDnd ? 1 : 0);
+        int priorityCallSenders = sourceToPrioritySenders(this.allowCallsFrom, 1);
+        int priorityMessageSenders = sourceToPrioritySenders(this.allowMessagesFrom, 1);
+        return new NotificationManager.Policy(priorityCategories, priorityCallSenders, priorityMessageSenders, this.suppressedVisualEffects, this.areChannelsBypassingDnd ? 1 : 0);
     }
 
     public static ScheduleCalendar toScheduleCalendar(Uri conditionId) {
@@ -1021,27 +1085,24 @@ public class ZenModeConfig implements Parcelable {
     }
 
     public void applyNotificationPolicy(NotificationManager.Policy policy) {
-        if (policy != null) {
-            boolean z = false;
-            this.allowAlarms = (policy.priorityCategories & 32) != 0;
-            this.allowMedia = (policy.priorityCategories & 64) != 0;
-            this.allowSystem = (policy.priorityCategories & 128) != 0;
-            this.allowEvents = (policy.priorityCategories & 2) != 0;
-            this.allowReminders = (policy.priorityCategories & 1) != 0;
-            this.allowCalls = (policy.priorityCategories & 8) != 0;
-            this.allowMessages = (policy.priorityCategories & 4) != 0;
-            this.allowRepeatCallers = (policy.priorityCategories & 16) != 0;
-            this.allowCallsFrom = prioritySendersToSource(policy.priorityCallSenders, this.allowCallsFrom);
-            this.allowMessagesFrom = prioritySendersToSource(policy.priorityMessageSenders, this.allowMessagesFrom);
-            if (policy.suppressedVisualEffects != -1) {
-                this.suppressedVisualEffects = policy.suppressedVisualEffects;
-            }
-            if (policy.state != -1) {
-                if ((policy.state & 1) != 0) {
-                    z = true;
-                }
-                this.areChannelsBypassingDnd = z;
-            }
+        if (policy == null) {
+            return;
+        }
+        this.allowAlarms = (policy.priorityCategories & 32) != 0;
+        this.allowMedia = (policy.priorityCategories & 64) != 0;
+        this.allowSystem = (policy.priorityCategories & 128) != 0;
+        this.allowEvents = (policy.priorityCategories & 2) != 0;
+        this.allowReminders = (policy.priorityCategories & 1) != 0;
+        this.allowCalls = (policy.priorityCategories & 8) != 0;
+        this.allowMessages = (policy.priorityCategories & 4) != 0;
+        this.allowRepeatCallers = (policy.priorityCategories & 16) != 0;
+        this.allowCallsFrom = prioritySendersToSource(policy.priorityCallSenders, this.allowCallsFrom);
+        this.allowMessagesFrom = prioritySendersToSource(policy.priorityMessageSenders, this.allowMessagesFrom);
+        if (policy.suppressedVisualEffects != -1) {
+            this.suppressedVisualEffects = policy.suppressedVisualEffects;
+        }
+        if (policy.state != -1) {
+            this.areChannelsBypassingDnd = (policy.state & 1) != 0;
         }
     }
 
@@ -1050,70 +1111,56 @@ public class ZenModeConfig implements Parcelable {
     }
 
     public static Condition toTimeCondition(Context context, int minutesFromNow, int userHandle, boolean shortVersion) {
-        return toTimeCondition(context, System.currentTimeMillis() + (minutesFromNow == 0 ? JobInfo.MIN_BACKOFF_MILLIS : (long) (60000 * minutesFromNow)), minutesFromNow, userHandle, shortVersion);
+        long now = System.currentTimeMillis();
+        long millis = minutesFromNow == 0 ? JobInfo.MIN_BACKOFF_MILLIS : 60000 * minutesFromNow;
+        return toTimeCondition(context, now + millis, minutesFromNow, userHandle, shortVersion);
     }
 
     public static Condition toTimeCondition(Context context, long time, int minutes, int userHandle, boolean shortVersion) {
-        String summary;
-        String line1;
+        String string;
         String line2;
-        int summaryResId;
-        int line1ResId;
-        int summaryResId2;
-        int line1ResId2;
-        long j = time;
-        int i = minutes;
-        CharSequence formattedTime = getFormattedTime(context, j, isToday(time), userHandle);
+        String line1;
+        CharSequence formattedTime = getFormattedTime(context, time, isToday(time), userHandle);
         Resources res = context.getResources();
-        if (i < 60) {
-            int num = minutes;
-            if (shortVersion) {
-                summaryResId2 = R.plurals.zen_mode_duration_minutes_summary_short;
-            } else {
-                summaryResId2 = R.plurals.zen_mode_duration_minutes_summary;
-            }
-            summary = res.getQuantityString(summaryResId2, num, Integer.valueOf(num), formattedTime);
-            if (shortVersion) {
-                line1ResId2 = R.plurals.zen_mode_duration_minutes_short;
-            } else {
-                line1ResId2 = R.plurals.zen_mode_duration_minutes;
-            }
-            line1 = res.getQuantityString(line1ResId2, num, Integer.valueOf(num), formattedTime);
-            line2 = res.getString(R.string.zen_mode_until, formattedTime);
-        } else if (i < 1440) {
-            int num2 = Math.round(((float) i) / 60.0f);
-            if (shortVersion) {
-                summaryResId = R.plurals.zen_mode_duration_hours_summary_short;
-            } else {
-                summaryResId = R.plurals.zen_mode_duration_hours_summary;
-            }
-            summary = res.getQuantityString(summaryResId, num2, Integer.valueOf(num2), formattedTime);
-            if (shortVersion) {
-                line1ResId = R.plurals.zen_mode_duration_hours_short;
-            } else {
-                line1ResId = R.plurals.zen_mode_duration_hours;
-            }
-            line1 = res.getQuantityString(line1ResId, num2, Integer.valueOf(num2), formattedTime);
-            line2 = res.getString(R.string.zen_mode_until, formattedTime);
+        if (minutes < 60) {
+            int summaryResId = shortVersion ? C3132R.plurals.zen_mode_duration_minutes_summary_short : C3132R.plurals.zen_mode_duration_minutes_summary;
+            string = res.getQuantityString(summaryResId, minutes, Integer.valueOf(minutes), formattedTime);
+            int line1ResId = shortVersion ? C3132R.plurals.zen_mode_duration_minutes_short : C3132R.plurals.zen_mode_duration_minutes;
+            line1 = res.getQuantityString(line1ResId, minutes, Integer.valueOf(minutes), formattedTime);
+            line2 = res.getString(C3132R.string.zen_mode_until, formattedTime);
+        } else if (minutes >= 1440) {
+            string = res.getString(C3132R.string.zen_mode_until, formattedTime);
+            line2 = string;
+            line1 = string;
         } else {
-            summary = res.getString(R.string.zen_mode_until, formattedTime);
-            line2 = summary;
-            line1 = summary;
+            int num = Math.round(minutes / 60.0f);
+            int summaryResId2 = shortVersion ? C3132R.plurals.zen_mode_duration_hours_summary_short : C3132R.plurals.zen_mode_duration_hours_summary;
+            string = res.getQuantityString(summaryResId2, num, Integer.valueOf(num), formattedTime);
+            int line1ResId2 = shortVersion ? C3132R.plurals.zen_mode_duration_hours_short : C3132R.plurals.zen_mode_duration_hours;
+            line1 = res.getQuantityString(line1ResId2, num, Integer.valueOf(num), formattedTime);
+            line2 = res.getString(C3132R.string.zen_mode_until, formattedTime);
         }
-        return new Condition(toCountdownConditionId(j, false), summary, line1, line2, 0, 1, 1);
+        String summary = string;
+        Uri id = toCountdownConditionId(time, false);
+        return new Condition(id, summary, line1, line2, 0, 1, 1);
     }
 
     public static Condition toNextAlarmCondition(Context context, long alarm, int userHandle) {
-        long j = alarm;
-        CharSequence formattedTime = getFormattedTime(context, j, isToday(alarm), userHandle);
-        return new Condition(toCountdownConditionId(j, true), "", context.getResources().getString(R.string.zen_mode_until, formattedTime), "", 0, 1, 1);
+        boolean isSameDay = isToday(alarm);
+        CharSequence formattedTime = getFormattedTime(context, alarm, isSameDay, userHandle);
+        Resources res = context.getResources();
+        String line1 = res.getString(C3132R.string.zen_mode_until, formattedTime);
+        Uri id = toCountdownConditionId(alarm, true);
+        return new Condition(id, "", line1, "", 0, 1, 1);
     }
 
     public static CharSequence getFormattedTime(Context context, long time, boolean isSameDay, int userHandle) {
         StringBuilder sb = new StringBuilder();
         sb.append(!isSameDay ? "EEE " : "");
         sb.append(DateFormat.is24HourFormat(context, userHandle) ? com.ibm.icu.text.DateFormat.HOUR24_MINUTE : "hma");
-        return DateFormat.format((CharSequence) DateFormat.getBestDateTimePattern(Locale.getDefault(), sb.toString()), time);
+        String skeleton = sb.toString();
+        String pattern = DateFormat.getBestDateTimePattern(Locale.getDefault(), skeleton);
+        return DateFormat.format(pattern, time);
     }
 
     public static boolean isToday(long time) {
@@ -1131,16 +1178,16 @@ public class ZenModeConfig implements Parcelable {
     }
 
     public static long tryParseCountdownConditionId(Uri conditionId) {
-        if (!Condition.isValidId(conditionId, "android") || conditionId.getPathSegments().size() < 2 || !COUNTDOWN_PATH.equals(conditionId.getPathSegments().get(0))) {
-            return 0;
+        if (Condition.isValidId(conditionId, "android") && conditionId.getPathSegments().size() >= 2 && COUNTDOWN_PATH.equals(conditionId.getPathSegments().get(0))) {
+            try {
+                return Long.parseLong(conditionId.getPathSegments().get(1));
+            } catch (RuntimeException e) {
+                String str = TAG;
+                Slog.m49w(str, "Error parsing countdown condition: " + conditionId, e);
+                return 0L;
+            }
         }
-        try {
-            return Long.parseLong(conditionId.getPathSegments().get(1));
-        } catch (RuntimeException e) {
-            String str = TAG;
-            Slog.w(str, "Error parsing countdown condition: " + conditionId, e);
-            return 0;
-        }
+        return 0L;
     }
 
     public static boolean isValidCountdownConditionId(Uri conditionId) {
@@ -1155,7 +1202,7 @@ public class ZenModeConfig implements Parcelable {
             return Boolean.parseBoolean(conditionId.getPathSegments().get(3));
         } catch (RuntimeException e) {
             String str = TAG;
-            Slog.w(str, "Error parsing countdown alarm condition: " + conditionId, e);
+            Slog.m49w(str, "Error parsing countdown alarm condition: " + conditionId, e);
             return false;
         }
     }
@@ -1185,10 +1232,9 @@ public class ZenModeConfig implements Parcelable {
                 if (allowNever) {
                     return true;
                 }
-                if (info.days == null || info.days.length == 0) {
-                    return false;
+                if (info.days != null && info.days.length != 0) {
+                    return true;
                 }
-                return true;
             }
             return false;
         } catch (ArrayIndexOutOfBoundsException | NullPointerException e) {
@@ -1198,7 +1244,8 @@ public class ZenModeConfig implements Parcelable {
 
     @UnsupportedAppUsage
     public static ScheduleInfo tryParseScheduleConditionId(Uri conditionId) {
-        if (!(conditionId != null && Condition.SCHEME.equals(conditionId.getScheme()) && "android".equals(conditionId.getAuthority()) && conditionId.getPathSegments().size() == 1 && SCHEDULE_PATH.equals(conditionId.getPathSegments().get(0)))) {
+        boolean isSchedule = conditionId != null && Condition.SCHEME.equals(conditionId.getScheme()) && "android".equals(conditionId.getAuthority()) && conditionId.getPathSegments().size() == 1 && SCHEDULE_PATH.equals(conditionId.getPathSegments().get(0));
+        if (!isSchedule) {
             return null;
         }
         int[] start = tryParseHourAndMinute(conditionId.getQueryParameter(Telephony.BaseMmsColumns.START));
@@ -1220,6 +1267,7 @@ public class ZenModeConfig implements Parcelable {
         return new ComponentName("android", "ScheduleConditionProvider");
     }
 
+    /* loaded from: classes3.dex */
     public static class ScheduleInfo {
         @UnsupportedAppUsage
         public int[] days;
@@ -1239,12 +1287,9 @@ public class ZenModeConfig implements Parcelable {
         }
 
         public boolean equals(Object o) {
-            if (!(o instanceof ScheduleInfo)) {
-                return false;
-            }
-            ScheduleInfo other = (ScheduleInfo) o;
-            if (ZenModeConfig.toDayList(this.days).equals(ZenModeConfig.toDayList(other.days)) && this.startHour == other.startHour && this.startMinute == other.startMinute && this.endHour == other.endHour && this.endMinute == other.endMinute && this.exitAtAlarm == other.exitAtAlarm) {
-                return true;
+            if (o instanceof ScheduleInfo) {
+                ScheduleInfo other = (ScheduleInfo) o;
+                return ZenModeConfig.toDayList(this.days).equals(ZenModeConfig.toDayList(other.days)) && this.startHour == other.startHour && this.startMinute == other.startMinute && this.endHour == other.endHour && this.endMinute == other.endMinute && this.exitAtAlarm == other.exitAtAlarm;
             }
             return false;
         }
@@ -1265,16 +1310,17 @@ public class ZenModeConfig implements Parcelable {
         }
 
         public String toString() {
-            return "ScheduleInfo{days=" + Arrays.toString(this.days) + ", startHour=" + this.startHour + ", startMinute=" + this.startMinute + ", endHour=" + this.endHour + ", endMinute=" + this.endMinute + ", exitAtAlarm=" + this.exitAtAlarm + ", nextAlarm=" + ts(this.nextAlarm) + '}';
+            return "ScheduleInfo{days=" + Arrays.toString(this.days) + ", startHour=" + this.startHour + ", startMinute=" + this.startMinute + ", endHour=" + this.endHour + ", endMinute=" + this.endMinute + ", exitAtAlarm=" + this.exitAtAlarm + ", nextAlarm=" + m106ts(this.nextAlarm) + '}';
         }
 
-        protected static String ts(long time) {
+        /* renamed from: ts */
+        protected static String m106ts(long time) {
             return new Date(time) + " (" + time + ")";
         }
     }
 
     public static Uri toEventConditionId(EventInfo event) {
-        return new Uri.Builder().scheme(Condition.SCHEME).authority("android").appendPath("event").appendQueryParameter("userId", Long.toString((long) event.userId)).appendQueryParameter("calendar", event.calName != null ? event.calName : "").appendQueryParameter("calendarId", event.calendarId != null ? event.calendarId.toString() : "").appendQueryParameter("reply", Integer.toString(event.reply)).build();
+        return new Uri.Builder().scheme(Condition.SCHEME).authority("android").appendPath("event").appendQueryParameter("userId", Long.toString(event.userId)).appendQueryParameter("calendar", event.calName != null ? event.calName : "").appendQueryParameter("calendarId", event.calendarId != null ? event.calendarId.toString() : "").appendQueryParameter("reply", Integer.toString(event.reply)).build();
     }
 
     public static boolean isValidEventConditionId(Uri conditionId) {
@@ -1304,6 +1350,7 @@ public class ZenModeConfig implements Parcelable {
         return new ComponentName("android", "EventConditionProvider");
     }
 
+    /* loaded from: classes3.dex */
     public static class EventInfo {
         public static final int REPLY_ANY_EXCEPT_NO = 0;
         public static final int REPLY_YES = 2;
@@ -1314,18 +1361,15 @@ public class ZenModeConfig implements Parcelable {
         public int userId = -10000;
 
         public int hashCode() {
-            return Objects.hash(new Object[]{Integer.valueOf(this.userId), this.calName, this.calendarId, Integer.valueOf(this.reply)});
+            return Objects.hash(Integer.valueOf(this.userId), this.calName, this.calendarId, Integer.valueOf(this.reply));
         }
 
         public boolean equals(Object o) {
-            if (!(o instanceof EventInfo)) {
-                return false;
+            if (o instanceof EventInfo) {
+                EventInfo other = (EventInfo) o;
+                return this.userId == other.userId && Objects.equals(this.calName, other.calName) && this.reply == other.reply && Objects.equals(this.calendarId, other.calendarId);
             }
-            EventInfo other = (EventInfo) o;
-            if (this.userId != other.userId || !Objects.equals(this.calName, other.calName) || this.reply != other.reply || !Objects.equals(this.calendarId, other.calendarId)) {
-                return false;
-            }
-            return true;
+            return false;
         }
 
         public EventInfo copy() {
@@ -1337,22 +1381,22 @@ public class ZenModeConfig implements Parcelable {
             return rt;
         }
 
-        public static int resolveUserId(int userId2) {
-            return userId2 == -10000 ? ActivityManager.getCurrentUser() : userId2;
+        public static int resolveUserId(int userId) {
+            return userId == -10000 ? ActivityManager.getCurrentUser() : userId;
         }
     }
 
     private static int[] tryParseHourAndMinute(String value) {
         int i;
-        if (TextUtils.isEmpty(value) || (i = value.indexOf(46)) < 1 || i >= value.length() - 1) {
+        if (!TextUtils.isEmpty(value) && (i = value.indexOf(46)) >= 1 && i < value.length() - 1) {
+            int hour = tryParseInt(value.substring(0, i), -1);
+            int minute = tryParseInt(value.substring(i + 1), -1);
+            if (isValidHour(hour) && isValidMinute(minute)) {
+                return new int[]{hour, minute};
+            }
             return null;
         }
-        int hour = tryParseInt(value.substring(0, i), -1);
-        int minute = tryParseInt(value.substring(i + 1), -1);
-        if (!isValidHour(hour) || !isValidMinute(minute)) {
-            return null;
-        }
-        return new int[]{hour, minute};
+        return null;
     }
 
     private static int tryParseZenMode(String value, int defValue) {
@@ -1369,16 +1413,16 @@ public class ZenModeConfig implements Parcelable {
         PackageManager pm = context.getPackageManager();
         try {
             ApplicationInfo info = pm.getApplicationInfo(owner, 0);
-            if (info == null || (seq = info.loadLabel(pm)) == null) {
+            if (info != null && (seq = info.loadLabel(pm)) != null) {
+                String str = seq.toString().trim();
+                if (str.length() > 0) {
+                    return str;
+                }
                 return "";
-            }
-            String str = seq.toString().trim();
-            if (str.length() > 0) {
-                return str;
             }
             return "";
         } catch (Throwable e) {
-            Slog.w(TAG, "Error loading owner caption", e);
+            Slog.m49w(TAG, "Error loading owner caption", e);
             return "";
         }
     }
@@ -1388,48 +1432,51 @@ public class ZenModeConfig implements Parcelable {
     }
 
     private static String getConditionLine(Context context, ZenModeConfig config, int userHandle, boolean useLine1, boolean shortVersion) {
-        Context context2 = context;
-        ZenModeConfig zenModeConfig = config;
-        if (zenModeConfig == null) {
+        if (config == null) {
             return "";
         }
         String summary = "";
-        if (zenModeConfig.manualRule != null) {
-            Uri id = zenModeConfig.manualRule.conditionId;
-            if (zenModeConfig.manualRule.enabler != null) {
-                summary = getOwnerCaption(context2, zenModeConfig.manualRule.enabler);
+        if (config.manualRule != null) {
+            Uri id = config.manualRule.conditionId;
+            if (config.manualRule.enabler != null) {
+                summary = getOwnerCaption(context, config.manualRule.enabler);
             } else if (id == null) {
-                summary = context2.getString(R.string.zen_mode_forever);
+                summary = context.getString(C3132R.string.zen_mode_forever);
             } else {
                 long time = tryParseCountdownConditionId(id);
-                Condition c = zenModeConfig.manualRule.condition;
+                Condition c = config.manualRule.condition;
                 if (time > 0) {
-                    long span = time - System.currentTimeMillis();
-                    long j = span;
+                    long now = System.currentTimeMillis();
+                    long span = time - now;
                     c = toTimeCondition(context, time, Math.round(((float) span) / 60000.0f), userHandle, shortVersion);
                 }
                 String rt = c == null ? "" : useLine1 ? c.line1 : c.summary;
                 summary = TextUtils.isEmpty(rt) ? "" : rt;
             }
         }
-        for (ZenRule automaticRule : zenModeConfig.automaticRules.values()) {
+        for (ZenRule automaticRule : config.automaticRules.values()) {
             if (automaticRule.isAutomaticActive()) {
                 if (summary.isEmpty()) {
                     summary = automaticRule.name;
                 } else {
-                    summary = context.getResources().getString(R.string.zen_mode_rule_name_combination, summary, automaticRule.name);
+                    summary = context.getResources().getString(C3132R.string.zen_mode_rule_name_combination, summary, automaticRule.name);
                 }
             }
         }
         return summary;
     }
 
+    /* loaded from: classes3.dex */
     public static class ZenRule implements Parcelable {
-        public static final Parcelable.Creator<ZenRule> CREATOR = new Parcelable.Creator<ZenRule>() {
+        public static final Parcelable.Creator<ZenRule> CREATOR = new Parcelable.Creator<ZenRule>() { // from class: android.service.notification.ZenModeConfig.ZenRule.1
+            /* JADX WARN: Can't rename method to resolve collision */
+            @Override // android.p007os.Parcelable.Creator
             public ZenRule createFromParcel(Parcel source) {
                 return new ZenRule(source);
             }
 
+            /* JADX WARN: Can't rename method to resolve collision */
+            @Override // android.p007os.Parcelable.Creator
             public ZenRule[] newArray(int size) {
                 return new ZenRule[size];
             }
@@ -1444,7 +1491,9 @@ public class ZenModeConfig implements Parcelable {
         @UnsupportedAppUsage
         public boolean enabled;
         public String enabler;
-        public String id;
+
+        /* renamed from: id */
+        public String f242id;
         public boolean modified;
         @UnsupportedAppUsage
         public String name;
@@ -1459,33 +1508,34 @@ public class ZenModeConfig implements Parcelable {
         }
 
         public ZenRule(Parcel source) {
-            boolean z = false;
             this.enabled = source.readInt() == 1;
             this.snoozing = source.readInt() == 1;
             if (source.readInt() == 1) {
                 this.name = source.readString();
             }
             this.zenMode = source.readInt();
-            this.conditionId = (Uri) source.readParcelable((ClassLoader) null);
-            this.condition = (Condition) source.readParcelable((ClassLoader) null);
-            this.component = (ComponentName) source.readParcelable((ClassLoader) null);
-            this.configurationActivity = (ComponentName) source.readParcelable((ClassLoader) null);
+            this.conditionId = (Uri) source.readParcelable(null);
+            this.condition = (Condition) source.readParcelable(null);
+            this.component = (ComponentName) source.readParcelable(null);
+            this.configurationActivity = (ComponentName) source.readParcelable(null);
             if (source.readInt() == 1) {
-                this.id = source.readString();
+                this.f242id = source.readString();
             }
             this.creationTime = source.readLong();
             if (source.readInt() == 1) {
                 this.enabler = source.readString();
             }
-            this.zenPolicy = (ZenPolicy) source.readParcelable((ClassLoader) null);
-            this.modified = source.readInt() == 1 ? true : z;
+            this.zenPolicy = (ZenPolicy) source.readParcelable(null);
+            this.modified = source.readInt() == 1;
             this.pkg = source.readString();
         }
 
+        @Override // android.p007os.Parcelable
         public int describeContents() {
             return 0;
         }
 
+        @Override // android.p007os.Parcelable
         public void writeToParcel(Parcel dest, int flags) {
             dest.writeInt(this.enabled ? 1 : 0);
             dest.writeInt(this.snoozing ? 1 : 0);
@@ -1500,9 +1550,9 @@ public class ZenModeConfig implements Parcelable {
             dest.writeParcelable(this.condition, 0);
             dest.writeParcelable(this.component, 0);
             dest.writeParcelable(this.configurationActivity, 0);
-            if (this.id != null) {
+            if (this.f242id != null) {
                 dest.writeInt(1);
-                dest.writeString(this.id);
+                dest.writeString(this.f242id);
             } else {
                 dest.writeInt(0);
             }
@@ -1519,12 +1569,12 @@ public class ZenModeConfig implements Parcelable {
         }
 
         public String toString() {
-            return ZenRule.class.getSimpleName() + '[' + "id=" + this.id + ",enabled=" + String.valueOf(this.enabled).toUpperCase() + ",snoozing=" + this.snoozing + ",name=" + this.name + ",zenMode=" + Settings.Global.zenModeToString(this.zenMode) + ",conditionId=" + this.conditionId + ",condition=" + this.condition + ",pkg=" + this.pkg + ",component=" + this.component + ",configActivity=" + this.configurationActivity + ",creationTime=" + this.creationTime + ",enabler=" + this.enabler + ",zenPolicy=" + this.zenPolicy + ",modified=" + this.modified + ']';
+            return ZenRule.class.getSimpleName() + "[id=" + this.f242id + ",enabled=" + String.valueOf(this.enabled).toUpperCase() + ",snoozing=" + this.snoozing + ",name=" + this.name + ",zenMode=" + Settings.Global.zenModeToString(this.zenMode) + ",conditionId=" + this.conditionId + ",condition=" + this.condition + ",pkg=" + this.pkg + ",component=" + this.component + ",configActivity=" + this.configurationActivity + ",creationTime=" + this.creationTime + ",enabler=" + this.enabler + ",zenPolicy=" + this.zenPolicy + ",modified=" + this.modified + ']';
         }
 
         public void writeToProto(ProtoOutputStream proto, long fieldId) {
             long token = proto.start(fieldId);
-            proto.write(1138166333441L, this.id);
+            proto.write(1138166333441L, this.f242id);
             proto.write(1138166333442L, this.name);
             proto.write(1112396529667L, this.creationTime);
             proto.write(1133871366148L, this.enabled);
@@ -1547,82 +1597,84 @@ public class ZenModeConfig implements Parcelable {
             proto.end(token);
         }
 
-        /* access modifiers changed from: private */
+        /* JADX INFO: Access modifiers changed from: private */
         public static void appendDiff(Diff d, String item, ZenRule from, ZenRule to) {
-            if (d != null) {
-                if (from != null) {
-                    from.appendDiff(d, item, to);
-                } else if (to != null) {
-                    Diff unused = d.addLine(item, "insert");
-                }
+            if (d == null) {
+                return;
             }
+            if (from == null) {
+                if (to == null) {
+                    return;
+                }
+                d.addLine(item, "insert");
+                return;
+            }
+            from.appendDiff(d, item, to);
         }
 
         private void appendDiff(Diff d, String item, ZenRule to) {
-            if (to == null) {
-                Diff unused = d.addLine(item, "delete");
+            if (to != null) {
+                if (this.enabled != to.enabled) {
+                    d.addLine(item, "enabled", Boolean.valueOf(this.enabled), Boolean.valueOf(to.enabled));
+                }
+                if (this.snoozing != to.snoozing) {
+                    d.addLine(item, ZenModeConfig.RULE_ATT_SNOOZING, Boolean.valueOf(this.snoozing), Boolean.valueOf(to.snoozing));
+                }
+                if (!Objects.equals(this.name, to.name)) {
+                    d.addLine(item, "name", this.name, to.name);
+                }
+                if (this.zenMode != to.zenMode) {
+                    d.addLine(item, "zenMode", Integer.valueOf(this.zenMode), Integer.valueOf(to.zenMode));
+                }
+                if (!Objects.equals(this.conditionId, to.conditionId)) {
+                    d.addLine(item, ZenModeConfig.RULE_ATT_CONDITION_ID, this.conditionId, to.conditionId);
+                }
+                if (!Objects.equals(this.condition, to.condition)) {
+                    d.addLine(item, Condition.SCHEME, this.condition, to.condition);
+                }
+                if (!Objects.equals(this.component, to.component)) {
+                    d.addLine(item, "component", this.component, to.component);
+                }
+                if (!Objects.equals(this.configurationActivity, to.configurationActivity)) {
+                    d.addLine(item, ZenModeConfig.RULE_ATT_CONFIG_ACTIVITY, this.configurationActivity, to.configurationActivity);
+                }
+                if (!Objects.equals(this.f242id, to.f242id)) {
+                    d.addLine(item, "id", this.f242id, to.f242id);
+                }
+                if (this.creationTime != to.creationTime) {
+                    d.addLine(item, "creationTime", Long.valueOf(this.creationTime), Long.valueOf(to.creationTime));
+                }
+                if (!Objects.equals(this.enabler, to.enabler)) {
+                    d.addLine(item, ZenModeConfig.RULE_ATT_ENABLER, this.enabler, to.enabler);
+                }
+                if (!Objects.equals(this.zenPolicy, to.zenPolicy)) {
+                    d.addLine(item, "zenPolicy", this.zenPolicy, to.zenPolicy);
+                }
+                if (this.modified != to.modified) {
+                    d.addLine(item, "modified", Boolean.valueOf(this.modified), Boolean.valueOf(to.modified));
+                }
+                if (this.pkg != to.pkg) {
+                    d.addLine(item, "pkg", this.pkg, to.pkg);
+                    return;
+                }
                 return;
             }
-            if (this.enabled != to.enabled) {
-                d.addLine(item, "enabled", Boolean.valueOf(this.enabled), Boolean.valueOf(to.enabled));
-            }
-            if (this.snoozing != to.snoozing) {
-                d.addLine(item, ZenModeConfig.RULE_ATT_SNOOZING, Boolean.valueOf(this.snoozing), Boolean.valueOf(to.snoozing));
-            }
-            if (!Objects.equals(this.name, to.name)) {
-                d.addLine(item, "name", this.name, to.name);
-            }
-            if (this.zenMode != to.zenMode) {
-                d.addLine(item, "zenMode", Integer.valueOf(this.zenMode), Integer.valueOf(to.zenMode));
-            }
-            if (!Objects.equals(this.conditionId, to.conditionId)) {
-                d.addLine(item, ZenModeConfig.RULE_ATT_CONDITION_ID, this.conditionId, to.conditionId);
-            }
-            if (!Objects.equals(this.condition, to.condition)) {
-                d.addLine(item, Condition.SCHEME, this.condition, to.condition);
-            }
-            if (!Objects.equals(this.component, to.component)) {
-                d.addLine(item, "component", this.component, to.component);
-            }
-            if (!Objects.equals(this.configurationActivity, to.configurationActivity)) {
-                d.addLine(item, ZenModeConfig.RULE_ATT_CONFIG_ACTIVITY, this.configurationActivity, to.configurationActivity);
-            }
-            if (!Objects.equals(this.id, to.id)) {
-                d.addLine(item, "id", this.id, to.id);
-            }
-            if (this.creationTime != to.creationTime) {
-                d.addLine(item, "creationTime", Long.valueOf(this.creationTime), Long.valueOf(to.creationTime));
-            }
-            if (!Objects.equals(this.enabler, to.enabler)) {
-                d.addLine(item, ZenModeConfig.RULE_ATT_ENABLER, this.enabler, to.enabler);
-            }
-            if (!Objects.equals(this.zenPolicy, to.zenPolicy)) {
-                d.addLine(item, "zenPolicy", this.zenPolicy, to.zenPolicy);
-            }
-            if (this.modified != to.modified) {
-                d.addLine(item, "modified", Boolean.valueOf(this.modified), Boolean.valueOf(to.modified));
-            }
-            if (this.pkg != to.pkg) {
-                d.addLine(item, "pkg", this.pkg, to.pkg);
-            }
+            d.addLine(item, "delete");
         }
 
         public boolean equals(Object o) {
-            if (!(o instanceof ZenRule)) {
-                return false;
+            if (o instanceof ZenRule) {
+                if (o == this) {
+                    return true;
+                }
+                ZenRule other = (ZenRule) o;
+                return other.enabled == this.enabled && other.snoozing == this.snoozing && Objects.equals(other.name, this.name) && other.zenMode == this.zenMode && Objects.equals(other.conditionId, this.conditionId) && Objects.equals(other.condition, this.condition) && Objects.equals(other.component, this.component) && Objects.equals(other.configurationActivity, this.configurationActivity) && Objects.equals(other.f242id, this.f242id) && Objects.equals(other.enabler, this.enabler) && Objects.equals(other.zenPolicy, this.zenPolicy) && Objects.equals(other.pkg, this.pkg) && other.modified == this.modified;
             }
-            if (o == this) {
-                return true;
-            }
-            ZenRule other = (ZenRule) o;
-            if (other.enabled != this.enabled || other.snoozing != this.snoozing || !Objects.equals(other.name, this.name) || other.zenMode != this.zenMode || !Objects.equals(other.conditionId, this.conditionId) || !Objects.equals(other.condition, this.condition) || !Objects.equals(other.component, this.component) || !Objects.equals(other.configurationActivity, this.configurationActivity) || !Objects.equals(other.id, this.id) || !Objects.equals(other.enabler, this.enabler) || !Objects.equals(other.zenPolicy, this.zenPolicy) || !Objects.equals(other.pkg, this.pkg) || other.modified != this.modified) {
-                return false;
-            }
-            return true;
+            return false;
         }
 
         public int hashCode() {
-            return Objects.hash(new Object[]{Boolean.valueOf(this.enabled), Boolean.valueOf(this.snoozing), this.name, Integer.valueOf(this.zenMode), this.conditionId, this.condition, this.component, this.configurationActivity, this.pkg, this.id, this.enabler, this.zenPolicy, Boolean.valueOf(this.modified)});
+            return Objects.hash(Boolean.valueOf(this.enabled), Boolean.valueOf(this.snoozing), this.name, Integer.valueOf(this.zenMode), this.conditionId, this.condition, this.component, this.configurationActivity, this.pkg, this.f242id, this.enabler, this.zenPolicy, Boolean.valueOf(this.modified));
         }
 
         public boolean isAutomaticActive() {
@@ -1634,6 +1686,7 @@ public class ZenModeConfig implements Parcelable {
         }
     }
 
+    /* loaded from: classes3.dex */
     public static class Diff {
         private final ArrayList<String> lines = new ArrayList<>();
 
@@ -1650,7 +1703,7 @@ public class ZenModeConfig implements Parcelable {
             return sb.toString();
         }
 
-        /* access modifiers changed from: private */
+        /* JADX INFO: Access modifiers changed from: private */
         public Diff addLine(String item, String action) {
             ArrayList<String> arrayList = this.lines;
             arrayList.add(item + SettingsStringUtil.DELIMITER + action);
@@ -1667,44 +1720,35 @@ public class ZenModeConfig implements Parcelable {
     }
 
     public static boolean areAllPriorityOnlyNotificationZenSoundsMuted(NotificationManager.Policy policy) {
-        boolean allowReminders2 = (policy.priorityCategories & 1) != 0;
-        boolean allowCalls2 = (policy.priorityCategories & 8) != 0;
-        boolean allowMessages2 = (policy.priorityCategories & 4) != 0;
-        boolean allowEvents2 = (policy.priorityCategories & 2) != 0;
-        boolean allowRepeatCallers2 = (policy.priorityCategories & 16) != 0;
-        boolean areChannelsBypassingDnd2 = (policy.state & 1) != 0;
-        if (allowReminders2 || allowCalls2 || allowMessages2 || allowEvents2 || allowRepeatCallers2 || areChannelsBypassingDnd2) {
-            return false;
-        }
-        return true;
+        boolean allowReminders = (policy.priorityCategories & 1) != 0;
+        boolean allowCalls = (policy.priorityCategories & 8) != 0;
+        boolean allowMessages = (policy.priorityCategories & 4) != 0;
+        boolean allowEvents = (policy.priorityCategories & 2) != 0;
+        boolean allowRepeatCallers = (policy.priorityCategories & 16) != 0;
+        boolean areChannelsBypassingDnd = (policy.state & 1) != 0;
+        return (allowReminders || allowCalls || allowMessages || allowEvents || allowRepeatCallers || areChannelsBypassingDnd) ? false : true;
     }
 
     public static boolean areAllZenBehaviorSoundsMuted(NotificationManager.Policy policy) {
-        boolean allowAlarms2 = (policy.priorityCategories & 32) != 0;
-        boolean allowMedia2 = (policy.priorityCategories & 64) != 0;
-        boolean allowSystem2 = (policy.priorityCategories & 128) != 0;
-        if (allowAlarms2 || allowMedia2 || allowSystem2 || !areAllPriorityOnlyNotificationZenSoundsMuted(policy)) {
-            return false;
-        }
-        return true;
+        boolean allowAlarms = (policy.priorityCategories & 32) != 0;
+        boolean allowMedia = (policy.priorityCategories & 64) != 0;
+        boolean allowSystem = (policy.priorityCategories & 128) != 0;
+        return (allowAlarms || allowMedia || allowSystem || !areAllPriorityOnlyNotificationZenSoundsMuted(policy)) ? false : true;
     }
 
     public static boolean isZenOverridingRinger(int zen, NotificationManager.Policy consolidatedPolicy) {
         if (zen == 2 || zen == 3) {
             return true;
         }
-        if (zen != 1 || !areAllPriorityOnlyNotificationZenSoundsMuted(consolidatedPolicy)) {
-            return false;
-        }
-        return true;
+        return zen == 1 && areAllPriorityOnlyNotificationZenSoundsMuted(consolidatedPolicy);
     }
 
     public static boolean areAllPriorityOnlyNotificationZenSoundsMuted(ZenModeConfig config) {
-        return !config.allowReminders && !config.allowCalls && !config.allowMessages && !config.allowEvents && !config.allowRepeatCallers && !config.areChannelsBypassingDnd;
+        return (config.allowReminders || config.allowCalls || config.allowMessages || config.allowEvents || config.allowRepeatCallers || config.areChannelsBypassingDnd) ? false : true;
     }
 
     public static boolean areAllZenBehaviorSoundsMuted(ZenModeConfig config) {
-        return !config.allowAlarms && !config.allowMedia && !config.allowSystem && areAllPriorityOnlyNotificationZenSoundsMuted(config);
+        return (config.allowAlarms || config.allowMedia || config.allowSystem || !areAllPriorityOnlyNotificationZenSoundsMuted(config)) ? false : true;
     }
 
     public static String getDescription(Context context, boolean zenOn, ZenModeConfig config, boolean describeForeverCondition) {
@@ -1720,59 +1764,63 @@ public class ZenModeConfig implements Parcelable {
                 if (!appName.isEmpty()) {
                     secondaryText = appName;
                 }
-            } else if (id != null) {
+            } else if (id == null) {
+                if (!describeForeverCondition) {
+                    return null;
+                }
+                return context.getString(C3132R.string.zen_mode_forever);
+            } else {
                 latestEndTime = tryParseCountdownConditionId(id);
                 if (latestEndTime > 0) {
-                    secondaryText = context.getString(R.string.zen_mode_until, getFormattedTime(context, latestEndTime, isToday(latestEndTime), context.getUserId()));
+                    CharSequence formattedTime = getFormattedTime(context, latestEndTime, isToday(latestEndTime), context.getUserId());
+                    secondaryText = context.getString(C3132R.string.zen_mode_until, formattedTime);
                 }
-            } else if (describeForeverCondition) {
-                return context.getString(R.string.zen_mode_forever);
-            } else {
-                return null;
             }
         }
         for (ZenRule automaticRule : config.automaticRules.values()) {
             if (automaticRule.isAutomaticActive()) {
-                if (!isValidEventConditionId(automaticRule.conditionId) && !isValidScheduleConditionId(automaticRule.conditionId)) {
+                if (isValidEventConditionId(automaticRule.conditionId) || isValidScheduleConditionId(automaticRule.conditionId)) {
+                    long endTime = parseAutomaticRuleEndTime(context, automaticRule.conditionId);
+                    if (endTime > latestEndTime) {
+                        latestEndTime = endTime;
+                        secondaryText = automaticRule.name;
+                    }
+                } else {
                     return automaticRule.name;
-                }
-                long endTime = parseAutomaticRuleEndTime(context, automaticRule.conditionId);
-                if (endTime > latestEndTime) {
-                    latestEndTime = endTime;
-                    secondaryText = automaticRule.name;
                 }
             }
         }
-        if (!secondaryText.equals("")) {
-            return secondaryText;
+        if (secondaryText.equals("")) {
+            return null;
         }
-        return null;
+        return secondaryText;
     }
 
     private static long parseAutomaticRuleEndTime(Context context, Uri id) {
         if (isValidEventConditionId(id)) {
             return Long.MAX_VALUE;
         }
-        if (!isValidScheduleConditionId(id)) {
-            return -1;
-        }
-        ScheduleCalendar schedule = toScheduleCalendar(id);
-        long endTimeMs = schedule.getNextChangeTime(System.currentTimeMillis());
-        if (schedule.exitAtAlarm()) {
-            long nextAlarm = getNextAlarm(context);
-            schedule.maybeSetNextAlarm(System.currentTimeMillis(), nextAlarm);
-            if (schedule.shouldExitForAlarm(endTimeMs)) {
-                return nextAlarm;
+        if (isValidScheduleConditionId(id)) {
+            ScheduleCalendar schedule = toScheduleCalendar(id);
+            long endTimeMs = schedule.getNextChangeTime(System.currentTimeMillis());
+            if (schedule.exitAtAlarm()) {
+                long nextAlarm = getNextAlarm(context);
+                schedule.maybeSetNextAlarm(System.currentTimeMillis(), nextAlarm);
+                if (schedule.shouldExitForAlarm(endTimeMs)) {
+                    return nextAlarm;
+                }
             }
+            return endTimeMs;
         }
-        return endTimeMs;
+        return -1L;
     }
 
     private static long getNextAlarm(Context context) {
-        AlarmManager.AlarmClockInfo info = ((AlarmManager) context.getSystemService("alarm")).getNextAlarmClock(context.getUserId());
+        AlarmManager alarms = (AlarmManager) context.getSystemService("alarm");
+        AlarmManager.AlarmClockInfo info = alarms.getNextAlarmClock(context.getUserId());
         if (info != null) {
             return info.getTriggerTime();
         }
-        return 0;
+        return 0L;
     }
 }

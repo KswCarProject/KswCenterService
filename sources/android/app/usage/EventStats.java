@@ -1,10 +1,13 @@
 package android.app.usage;
 
-import android.os.Parcel;
-import android.os.Parcelable;
+import android.p007os.Parcel;
+import android.p007os.Parcelable;
 
+/* loaded from: classes.dex */
 public final class EventStats implements Parcelable {
-    public static final Parcelable.Creator<EventStats> CREATOR = new Parcelable.Creator<EventStats>() {
+    public static final Parcelable.Creator<EventStats> CREATOR = new Parcelable.Creator<EventStats>() { // from class: android.app.usage.EventStats.1
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public EventStats createFromParcel(Parcel in) {
             EventStats stats = new EventStats();
             stats.mEventType = in.readInt();
@@ -16,6 +19,8 @@ public final class EventStats implements Parcelable {
             return stats;
         }
 
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public EventStats[] newArray(int size) {
             return new EventStats[size];
         }
@@ -64,23 +69,24 @@ public final class EventStats implements Parcelable {
     }
 
     public void add(EventStats right) {
-        if (this.mEventType == right.mEventType) {
-            if (right.mBeginTimeStamp > this.mBeginTimeStamp) {
-                this.mLastEventTime = Math.max(this.mLastEventTime, right.mLastEventTime);
-            }
-            this.mBeginTimeStamp = Math.min(this.mBeginTimeStamp, right.mBeginTimeStamp);
-            this.mEndTimeStamp = Math.max(this.mEndTimeStamp, right.mEndTimeStamp);
-            this.mTotalTime += right.mTotalTime;
-            this.mCount += right.mCount;
-            return;
+        if (this.mEventType != right.mEventType) {
+            throw new IllegalArgumentException("Can't merge EventStats for event #" + this.mEventType + " with EventStats for event #" + right.mEventType);
         }
-        throw new IllegalArgumentException("Can't merge EventStats for event #" + this.mEventType + " with EventStats for event #" + right.mEventType);
+        if (right.mBeginTimeStamp > this.mBeginTimeStamp) {
+            this.mLastEventTime = Math.max(this.mLastEventTime, right.mLastEventTime);
+        }
+        this.mBeginTimeStamp = Math.min(this.mBeginTimeStamp, right.mBeginTimeStamp);
+        this.mEndTimeStamp = Math.max(this.mEndTimeStamp, right.mEndTimeStamp);
+        this.mTotalTime += right.mTotalTime;
+        this.mCount += right.mCount;
     }
 
+    @Override // android.p007os.Parcelable
     public int describeContents() {
         return 0;
     }
 
+    @Override // android.p007os.Parcelable
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeInt(this.mEventType);
         dest.writeLong(this.mBeginTimeStamp);

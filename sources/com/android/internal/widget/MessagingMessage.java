@@ -6,6 +6,7 @@ import android.view.View;
 import com.android.internal.widget.MessagingLinearLayout;
 import java.util.Objects;
 
+/* loaded from: classes4.dex */
 public interface MessagingMessage extends MessagingLinearLayout.MessagingChild {
     public static final String IMAGE_MIME_TYPE_PREFIX = "image/";
 
@@ -16,10 +17,10 @@ public interface MessagingMessage extends MessagingLinearLayout.MessagingChild {
     void setVisibility(int i);
 
     static MessagingMessage createMessage(MessagingLayout layout, Notification.MessagingStyle.Message m, ImageResolver resolver) {
-        if (!hasImage(m) || ActivityManager.isLowRamDeviceStatic()) {
-            return MessagingTextMessage.createMessage(layout, m);
+        if (hasImage(m) && !ActivityManager.isLowRamDeviceStatic()) {
+            return MessagingImageMessage.createMessage(layout, m, resolver);
         }
-        return MessagingImageMessage.createMessage(layout, m, resolver);
+        return MessagingTextMessage.createMessage(layout, m);
     }
 
     static void dropCache() {
@@ -31,75 +32,76 @@ public interface MessagingMessage extends MessagingLinearLayout.MessagingChild {
         return (m.getDataUri() == null || m.getDataMimeType() == null || !m.getDataMimeType().startsWith(IMAGE_MIME_TYPE_PREFIX)) ? false : true;
     }
 
-    boolean setMessage(Notification.MessagingStyle.Message message) {
+    default boolean setMessage(Notification.MessagingStyle.Message message) {
         getState().setMessage(message);
         return true;
     }
 
-    Notification.MessagingStyle.Message getMessage() {
+    default Notification.MessagingStyle.Message getMessage() {
         return getState().getMessage();
     }
 
-    boolean sameAs(Notification.MessagingStyle.Message message) {
+    default boolean sameAs(Notification.MessagingStyle.Message message) {
         Notification.MessagingStyle.Message ownMessage = getMessage();
-        if (!Objects.equals(message.getText(), ownMessage.getText()) || !Objects.equals(message.getSender(), ownMessage.getSender())) {
-            return false;
-        }
-        if (((message.isRemoteInputHistory() != ownMessage.isRemoteInputHistory()) || Objects.equals(Long.valueOf(message.getTimestamp()), Long.valueOf(ownMessage.getTimestamp()))) && Objects.equals(message.getDataMimeType(), ownMessage.getDataMimeType()) && Objects.equals(message.getDataUri(), ownMessage.getDataUri())) {
-            return true;
+        if (Objects.equals(message.getText(), ownMessage.getText()) && Objects.equals(message.getSender(), ownMessage.getSender())) {
+            boolean hasRemoteInputHistoryChanged = message.isRemoteInputHistory() != ownMessage.isRemoteInputHistory();
+            return (hasRemoteInputHistoryChanged || Objects.equals(Long.valueOf(message.getTimestamp()), Long.valueOf(ownMessage.getTimestamp()))) && Objects.equals(message.getDataMimeType(), ownMessage.getDataMimeType()) && Objects.equals(message.getDataUri(), ownMessage.getDataUri());
         }
         return false;
     }
 
-    boolean sameAs(MessagingMessage message) {
+    default boolean sameAs(MessagingMessage message) {
         return sameAs(message.getMessage());
     }
 
-    void removeMessage() {
+    default void removeMessage() {
         getGroup().removeMessage(this);
     }
 
-    void setMessagingGroup(MessagingGroup group) {
+    default void setMessagingGroup(MessagingGroup group) {
         getState().setGroup(group);
     }
 
-    void setIsHistoric(boolean isHistoric) {
+    default void setIsHistoric(boolean isHistoric) {
         getState().setIsHistoric(isHistoric);
     }
 
-    MessagingGroup getGroup() {
+    default MessagingGroup getGroup() {
         return getState().getGroup();
     }
 
-    void setIsHidingAnimated(boolean isHiding) {
+    default void setIsHidingAnimated(boolean isHiding) {
         getState().setIsHidingAnimated(isHiding);
     }
 
-    boolean isHidingAnimated() {
+    @Override // com.android.internal.widget.MessagingLinearLayout.MessagingChild
+    default boolean isHidingAnimated() {
         return getState().isHidingAnimated();
     }
 
-    void hideAnimated() {
+    @Override // com.android.internal.widget.MessagingLinearLayout.MessagingChild
+    default void hideAnimated() {
         setIsHidingAnimated(true);
-        getGroup().performRemoveAnimation(getView(), new Runnable() {
+        getGroup().performRemoveAnimation(getView(), new Runnable() { // from class: com.android.internal.widget.-$$Lambda$MessagingMessage$goi5oiwdlMBbUvfJzNl7fGbZ-K0
+            @Override // java.lang.Runnable
             public final void run() {
                 MessagingMessage.this.setIsHidingAnimated(false);
             }
         });
     }
 
-    boolean hasOverlappingRendering() {
+    default boolean hasOverlappingRendering() {
         return false;
     }
 
-    void recycle() {
+    default void recycle() {
         getState().recycle();
     }
 
-    View getView() {
+    default View getView() {
         return (View) this;
     }
 
-    void setColor(int textColor) {
+    default void setColor(int textColor) {
     }
 }

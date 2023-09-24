@@ -1,16 +1,18 @@
 package android.app;
 
 import android.annotation.UnsupportedAppUsage;
+import android.app.IWallpaperManagerCallback;
 import android.content.ComponentName;
 import android.graphics.Rect;
-import android.os.Binder;
-import android.os.Bundle;
-import android.os.IBinder;
-import android.os.IInterface;
-import android.os.Parcel;
-import android.os.ParcelFileDescriptor;
-import android.os.RemoteException;
+import android.p007os.Binder;
+import android.p007os.Bundle;
+import android.p007os.IBinder;
+import android.p007os.IInterface;
+import android.p007os.Parcel;
+import android.p007os.ParcelFileDescriptor;
+import android.p007os.RemoteException;
 
+/* loaded from: classes.dex */
 public interface IWallpaperManager extends IInterface {
     void clearWallpaper(String str, int i, int i2) throws RemoteException;
 
@@ -62,91 +64,116 @@ public interface IWallpaperManager extends IInterface {
 
     void unregisterWallpaperColorsCallback(IWallpaperManagerCallback iWallpaperManagerCallback, int i, int i2) throws RemoteException;
 
+    /* loaded from: classes.dex */
     public static class Default implements IWallpaperManager {
+        @Override // android.app.IWallpaperManager
         public ParcelFileDescriptor setWallpaper(String name, String callingPackage, Rect cropHint, boolean allowBackup, Bundle extras, int which, IWallpaperManagerCallback completion, int userId) throws RemoteException {
             return null;
         }
 
+        @Override // android.app.IWallpaperManager
         public void setWallpaperComponentChecked(ComponentName name, String callingPackage, int userId) throws RemoteException {
         }
 
+        @Override // android.app.IWallpaperManager
         public void setWallpaperComponent(ComponentName name) throws RemoteException {
         }
 
+        @Override // android.app.IWallpaperManager
         public ParcelFileDescriptor getWallpaper(String callingPkg, IWallpaperManagerCallback cb, int which, Bundle outParams, int userId) throws RemoteException {
             return null;
         }
 
+        @Override // android.app.IWallpaperManager
         public int getWallpaperIdForUser(int which, int userId) throws RemoteException {
             return 0;
         }
 
+        @Override // android.app.IWallpaperManager
         public WallpaperInfo getWallpaperInfo(int userId) throws RemoteException {
             return null;
         }
 
+        @Override // android.app.IWallpaperManager
         public void clearWallpaper(String callingPackage, int which, int userId) throws RemoteException {
         }
 
+        @Override // android.app.IWallpaperManager
         public boolean hasNamedWallpaper(String name) throws RemoteException {
             return false;
         }
 
+        @Override // android.app.IWallpaperManager
         public void setDimensionHints(int width, int height, String callingPackage, int displayId) throws RemoteException {
         }
 
+        @Override // android.app.IWallpaperManager
         public int getWidthHint(int displayId) throws RemoteException {
             return 0;
         }
 
+        @Override // android.app.IWallpaperManager
         public int getHeightHint(int displayId) throws RemoteException {
             return 0;
         }
 
+        @Override // android.app.IWallpaperManager
         public void setDisplayPadding(Rect padding, String callingPackage, int displayId) throws RemoteException {
         }
 
+        @Override // android.app.IWallpaperManager
         public String getName() throws RemoteException {
             return null;
         }
 
+        @Override // android.app.IWallpaperManager
         public void settingsRestored() throws RemoteException {
         }
 
+        @Override // android.app.IWallpaperManager
         public boolean isWallpaperSupported(String callingPackage) throws RemoteException {
             return false;
         }
 
+        @Override // android.app.IWallpaperManager
         public boolean isSetWallpaperAllowed(String callingPackage) throws RemoteException {
             return false;
         }
 
+        @Override // android.app.IWallpaperManager
         public boolean isWallpaperBackupEligible(int which, int userId) throws RemoteException {
             return false;
         }
 
+        @Override // android.app.IWallpaperManager
         public boolean setLockWallpaperCallback(IWallpaperManagerCallback cb) throws RemoteException {
             return false;
         }
 
+        @Override // android.app.IWallpaperManager
         public WallpaperColors getWallpaperColors(int which, int userId, int displayId) throws RemoteException {
             return null;
         }
 
+        @Override // android.app.IWallpaperManager
         public void registerWallpaperColorsCallback(IWallpaperManagerCallback cb, int userId, int displayId) throws RemoteException {
         }
 
+        @Override // android.app.IWallpaperManager
         public void unregisterWallpaperColorsCallback(IWallpaperManagerCallback cb, int userId, int displayId) throws RemoteException {
         }
 
+        @Override // android.app.IWallpaperManager
         public void setInAmbientMode(boolean inAmbientMode, long animationDuration) throws RemoteException {
         }
 
+        @Override // android.p007os.IInterface
         public IBinder asBinder() {
             return null;
         }
     }
 
+    /* loaded from: classes.dex */
     public static abstract class Stub extends Binder implements IWallpaperManager {
         private static final String DESCRIPTOR = "android.app.IWallpaperManager";
         static final int TRANSACTION_clearWallpaper = 7;
@@ -181,12 +208,13 @@ public interface IWallpaperManager extends IInterface {
                 return null;
             }
             IInterface iin = obj.queryLocalInterface(DESCRIPTOR);
-            if (iin == null || !(iin instanceof IWallpaperManager)) {
-                return new Proxy(obj);
+            if (iin != null && (iin instanceof IWallpaperManager)) {
+                return (IWallpaperManager) iin;
             }
-            return (IWallpaperManager) iin;
+            return new Proxy(obj);
         }
 
+        @Override // android.p007os.IInterface
         public IBinder asBinder() {
             return this;
         }
@@ -242,335 +270,218 @@ public interface IWallpaperManager extends IInterface {
             }
         }
 
+        @Override // android.p007os.Binder
         public String getTransactionName(int transactionCode) {
             return getDefaultTransactionName(transactionCode);
         }
 
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r0v11, resolved type: android.content.ComponentName} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r0v15, resolved type: android.content.ComponentName} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r0v30, resolved type: android.graphics.Rect} */
-        /* JADX WARNING: type inference failed for: r0v1 */
-        /* JADX WARNING: type inference failed for: r0v2 */
-        /* JADX WARNING: type inference failed for: r0v48 */
-        /* JADX WARNING: type inference failed for: r0v49 */
-        /* JADX WARNING: type inference failed for: r0v50 */
-        /* JADX WARNING: type inference failed for: r0v51 */
-        /* JADX WARNING: Multi-variable type inference failed */
-        /* Code decompiled incorrectly, please refer to instructions dump. */
-        public boolean onTransact(int r23, android.os.Parcel r24, android.os.Parcel r25, int r26) throws android.os.RemoteException {
-            /*
-                r22 = this;
-                r9 = r22
-                r10 = r23
-                r11 = r24
-                r12 = r25
-                java.lang.String r13 = "android.app.IWallpaperManager"
-                r0 = 1598968902(0x5f4e5446, float:1.4867585E19)
-                r14 = 1
-                if (r10 == r0) goto L_0x028d
-                r0 = 0
-                r15 = 0
-                switch(r10) {
-                    case 1: goto L_0x0226;
-                    case 2: goto L_0x0204;
-                    case 3: goto L_0x01ea;
-                    case 4: goto L_0x01a6;
-                    case 5: goto L_0x0190;
-                    case 6: goto L_0x0175;
-                    case 7: goto L_0x015f;
-                    case 8: goto L_0x014d;
-                    case 9: goto L_0x0133;
-                    case 10: goto L_0x0121;
-                    case 11: goto L_0x010f;
-                    case 12: goto L_0x00ed;
-                    case 13: goto L_0x00df;
-                    case 14: goto L_0x00d5;
-                    case 15: goto L_0x00c3;
-                    case 16: goto L_0x00b1;
-                    case 17: goto L_0x009b;
-                    case 18: goto L_0x0085;
-                    case 19: goto L_0x0062;
-                    case 20: goto L_0x0048;
-                    case 21: goto L_0x002e;
-                    case 22: goto L_0x001a;
-                    default: goto L_0x0015;
-                }
-            L_0x0015:
-                boolean r0 = super.onTransact(r23, r24, r25, r26)
-                return r0
-            L_0x001a:
-                r11.enforceInterface(r13)
-                int r0 = r24.readInt()
-                if (r0 == 0) goto L_0x0025
-                r15 = r14
-            L_0x0025:
-                r0 = r15
-                long r1 = r24.readLong()
-                r9.setInAmbientMode(r0, r1)
-                return r14
-            L_0x002e:
-                r11.enforceInterface(r13)
-                android.os.IBinder r0 = r24.readStrongBinder()
-                android.app.IWallpaperManagerCallback r0 = android.app.IWallpaperManagerCallback.Stub.asInterface(r0)
-                int r1 = r24.readInt()
-                int r2 = r24.readInt()
-                r9.unregisterWallpaperColorsCallback(r0, r1, r2)
-                r25.writeNoException()
-                return r14
-            L_0x0048:
-                r11.enforceInterface(r13)
-                android.os.IBinder r0 = r24.readStrongBinder()
-                android.app.IWallpaperManagerCallback r0 = android.app.IWallpaperManagerCallback.Stub.asInterface(r0)
-                int r1 = r24.readInt()
-                int r2 = r24.readInt()
-                r9.registerWallpaperColorsCallback(r0, r1, r2)
-                r25.writeNoException()
-                return r14
-            L_0x0062:
-                r11.enforceInterface(r13)
-                int r0 = r24.readInt()
-                int r1 = r24.readInt()
-                int r2 = r24.readInt()
-                android.app.WallpaperColors r3 = r9.getWallpaperColors(r0, r1, r2)
-                r25.writeNoException()
-                if (r3 == 0) goto L_0x0081
-                r12.writeInt(r14)
-                r3.writeToParcel(r12, r14)
-                goto L_0x0084
-            L_0x0081:
-                r12.writeInt(r15)
-            L_0x0084:
-                return r14
-            L_0x0085:
-                r11.enforceInterface(r13)
-                android.os.IBinder r0 = r24.readStrongBinder()
-                android.app.IWallpaperManagerCallback r0 = android.app.IWallpaperManagerCallback.Stub.asInterface(r0)
-                boolean r1 = r9.setLockWallpaperCallback(r0)
-                r25.writeNoException()
-                r12.writeInt(r1)
-                return r14
-            L_0x009b:
-                r11.enforceInterface(r13)
-                int r0 = r24.readInt()
-                int r1 = r24.readInt()
-                boolean r2 = r9.isWallpaperBackupEligible(r0, r1)
-                r25.writeNoException()
-                r12.writeInt(r2)
-                return r14
-            L_0x00b1:
-                r11.enforceInterface(r13)
-                java.lang.String r0 = r24.readString()
-                boolean r1 = r9.isSetWallpaperAllowed(r0)
-                r25.writeNoException()
-                r12.writeInt(r1)
-                return r14
-            L_0x00c3:
-                r11.enforceInterface(r13)
-                java.lang.String r0 = r24.readString()
-                boolean r1 = r9.isWallpaperSupported(r0)
-                r25.writeNoException()
-                r12.writeInt(r1)
-                return r14
-            L_0x00d5:
-                r11.enforceInterface(r13)
-                r22.settingsRestored()
-                r25.writeNoException()
-                return r14
-            L_0x00df:
-                r11.enforceInterface(r13)
-                java.lang.String r0 = r22.getName()
-                r25.writeNoException()
-                r12.writeString(r0)
-                return r14
-            L_0x00ed:
-                r11.enforceInterface(r13)
-                int r1 = r24.readInt()
-                if (r1 == 0) goto L_0x00ff
-                android.os.Parcelable$Creator<android.graphics.Rect> r0 = android.graphics.Rect.CREATOR
-                java.lang.Object r0 = r0.createFromParcel(r11)
-                android.graphics.Rect r0 = (android.graphics.Rect) r0
-                goto L_0x0100
-            L_0x00ff:
-            L_0x0100:
-                java.lang.String r1 = r24.readString()
-                int r2 = r24.readInt()
-                r9.setDisplayPadding(r0, r1, r2)
-                r25.writeNoException()
-                return r14
-            L_0x010f:
-                r11.enforceInterface(r13)
-                int r0 = r24.readInt()
-                int r1 = r9.getHeightHint(r0)
-                r25.writeNoException()
-                r12.writeInt(r1)
-                return r14
-            L_0x0121:
-                r11.enforceInterface(r13)
-                int r0 = r24.readInt()
-                int r1 = r9.getWidthHint(r0)
-                r25.writeNoException()
-                r12.writeInt(r1)
-                return r14
-            L_0x0133:
-                r11.enforceInterface(r13)
-                int r0 = r24.readInt()
-                int r1 = r24.readInt()
-                java.lang.String r2 = r24.readString()
-                int r3 = r24.readInt()
-                r9.setDimensionHints(r0, r1, r2, r3)
-                r25.writeNoException()
-                return r14
-            L_0x014d:
-                r11.enforceInterface(r13)
-                java.lang.String r0 = r24.readString()
-                boolean r1 = r9.hasNamedWallpaper(r0)
-                r25.writeNoException()
-                r12.writeInt(r1)
-                return r14
-            L_0x015f:
-                r11.enforceInterface(r13)
-                java.lang.String r0 = r24.readString()
-                int r1 = r24.readInt()
-                int r2 = r24.readInt()
-                r9.clearWallpaper(r0, r1, r2)
-                r25.writeNoException()
-                return r14
-            L_0x0175:
-                r11.enforceInterface(r13)
-                int r0 = r24.readInt()
-                android.app.WallpaperInfo r1 = r9.getWallpaperInfo(r0)
-                r25.writeNoException()
-                if (r1 == 0) goto L_0x018c
-                r12.writeInt(r14)
-                r1.writeToParcel(r12, r14)
-                goto L_0x018f
-            L_0x018c:
-                r12.writeInt(r15)
-            L_0x018f:
-                return r14
-            L_0x0190:
-                r11.enforceInterface(r13)
-                int r0 = r24.readInt()
-                int r1 = r24.readInt()
-                int r2 = r9.getWallpaperIdForUser(r0, r1)
-                r25.writeNoException()
-                r12.writeInt(r2)
-                return r14
-            L_0x01a6:
-                r11.enforceInterface(r13)
-                java.lang.String r6 = r24.readString()
-                android.os.IBinder r0 = r24.readStrongBinder()
-                android.app.IWallpaperManagerCallback r7 = android.app.IWallpaperManagerCallback.Stub.asInterface(r0)
-                int r8 = r24.readInt()
-                android.os.Bundle r0 = new android.os.Bundle
-                r0.<init>()
-                r5 = r0
-                int r16 = r24.readInt()
-                r0 = r22
-                r1 = r6
-                r2 = r7
-                r3 = r8
-                r4 = r5
-                r17 = r5
-                r5 = r16
-                android.os.ParcelFileDescriptor r0 = r0.getWallpaper(r1, r2, r3, r4, r5)
-                r25.writeNoException()
-                if (r0 == 0) goto L_0x01dd
-                r12.writeInt(r14)
-                r0.writeToParcel(r12, r14)
-                goto L_0x01e0
-            L_0x01dd:
-                r12.writeInt(r15)
-            L_0x01e0:
-                r12.writeInt(r14)
-                r1 = r17
-                r1.writeToParcel(r12, r14)
-                return r14
-            L_0x01ea:
-                r11.enforceInterface(r13)
-                int r1 = r24.readInt()
-                if (r1 == 0) goto L_0x01fc
-                android.os.Parcelable$Creator<android.content.ComponentName> r0 = android.content.ComponentName.CREATOR
-                java.lang.Object r0 = r0.createFromParcel(r11)
-                android.content.ComponentName r0 = (android.content.ComponentName) r0
-                goto L_0x01fd
-            L_0x01fc:
-            L_0x01fd:
-                r9.setWallpaperComponent(r0)
-                r25.writeNoException()
-                return r14
-            L_0x0204:
-                r11.enforceInterface(r13)
-                int r1 = r24.readInt()
-                if (r1 == 0) goto L_0x0216
-                android.os.Parcelable$Creator<android.content.ComponentName> r0 = android.content.ComponentName.CREATOR
-                java.lang.Object r0 = r0.createFromParcel(r11)
-                android.content.ComponentName r0 = (android.content.ComponentName) r0
-                goto L_0x0217
-            L_0x0216:
-            L_0x0217:
-                java.lang.String r1 = r24.readString()
-                int r2 = r24.readInt()
-                r9.setWallpaperComponentChecked(r0, r1, r2)
-                r25.writeNoException()
-                return r14
-            L_0x0226:
-                r11.enforceInterface(r13)
-                java.lang.String r16 = r24.readString()
-                java.lang.String r17 = r24.readString()
-                int r1 = r24.readInt()
-                if (r1 == 0) goto L_0x0241
-                android.os.Parcelable$Creator<android.graphics.Rect> r0 = android.graphics.Rect.CREATOR
-                java.lang.Object r0 = r0.createFromParcel(r11)
-                android.graphics.Rect r0 = (android.graphics.Rect) r0
-            L_0x023f:
-                r3 = r0
-                goto L_0x0242
-            L_0x0241:
-                goto L_0x023f
-            L_0x0242:
-                int r0 = r24.readInt()
-                if (r0 == 0) goto L_0x024a
-                r4 = r14
-                goto L_0x024b
-            L_0x024a:
-                r4 = r15
-            L_0x024b:
-                android.os.Bundle r0 = new android.os.Bundle
-                r0.<init>()
-                r8 = r0
-                int r18 = r24.readInt()
-                android.os.IBinder r0 = r24.readStrongBinder()
-                android.app.IWallpaperManagerCallback r19 = android.app.IWallpaperManagerCallback.Stub.asInterface(r0)
-                int r20 = r24.readInt()
-                r0 = r22
-                r1 = r16
-                r2 = r17
-                r5 = r8
-                r6 = r18
-                r7 = r19
-                r21 = r8
-                r8 = r20
-                android.os.ParcelFileDescriptor r0 = r0.setWallpaper(r1, r2, r3, r4, r5, r6, r7, r8)
-                r25.writeNoException()
-                if (r0 == 0) goto L_0x0280
-                r12.writeInt(r14)
-                r0.writeToParcel(r12, r14)
-                goto L_0x0283
-            L_0x0280:
-                r12.writeInt(r15)
-            L_0x0283:
-                r12.writeInt(r14)
-                r1 = r21
-                r1.writeToParcel(r12, r14)
-                return r14
-            L_0x028d:
-                r12.writeString(r13)
-                return r14
-            */
-            throw new UnsupportedOperationException("Method not decompiled: android.app.IWallpaperManager.Stub.onTransact(int, android.os.Parcel, android.os.Parcel, int):boolean");
+        @Override // android.p007os.Binder
+        public boolean onTransact(int code, Parcel data, Parcel reply, int flags) throws RemoteException {
+            if (code == 1598968902) {
+                reply.writeString(DESCRIPTOR);
+                return true;
+            }
+            switch (code) {
+                case 1:
+                    data.enforceInterface(DESCRIPTOR);
+                    String _arg0 = data.readString();
+                    String _arg1 = data.readString();
+                    Rect _arg2 = data.readInt() != 0 ? Rect.CREATOR.createFromParcel(data) : null;
+                    boolean _arg3 = data.readInt() != 0;
+                    Bundle _arg4 = new Bundle();
+                    int _arg5 = data.readInt();
+                    IWallpaperManagerCallback _arg6 = IWallpaperManagerCallback.Stub.asInterface(data.readStrongBinder());
+                    int _arg7 = data.readInt();
+                    ParcelFileDescriptor _result = setWallpaper(_arg0, _arg1, _arg2, _arg3, _arg4, _arg5, _arg6, _arg7);
+                    reply.writeNoException();
+                    if (_result != null) {
+                        reply.writeInt(1);
+                        _result.writeToParcel(reply, 1);
+                    } else {
+                        reply.writeInt(0);
+                    }
+                    reply.writeInt(1);
+                    _arg4.writeToParcel(reply, 1);
+                    return true;
+                case 2:
+                    data.enforceInterface(DESCRIPTOR);
+                    ComponentName _arg02 = data.readInt() != 0 ? ComponentName.CREATOR.createFromParcel(data) : null;
+                    String _arg12 = data.readString();
+                    int _arg22 = data.readInt();
+                    setWallpaperComponentChecked(_arg02, _arg12, _arg22);
+                    reply.writeNoException();
+                    return true;
+                case 3:
+                    data.enforceInterface(DESCRIPTOR);
+                    ComponentName _arg03 = data.readInt() != 0 ? ComponentName.CREATOR.createFromParcel(data) : null;
+                    setWallpaperComponent(_arg03);
+                    reply.writeNoException();
+                    return true;
+                case 4:
+                    data.enforceInterface(DESCRIPTOR);
+                    String _arg04 = data.readString();
+                    IWallpaperManagerCallback _arg13 = IWallpaperManagerCallback.Stub.asInterface(data.readStrongBinder());
+                    int _arg23 = data.readInt();
+                    Bundle _arg32 = new Bundle();
+                    ParcelFileDescriptor _result2 = getWallpaper(_arg04, _arg13, _arg23, _arg32, data.readInt());
+                    reply.writeNoException();
+                    if (_result2 != null) {
+                        reply.writeInt(1);
+                        _result2.writeToParcel(reply, 1);
+                    } else {
+                        reply.writeInt(0);
+                    }
+                    reply.writeInt(1);
+                    _arg32.writeToParcel(reply, 1);
+                    return true;
+                case 5:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg05 = data.readInt();
+                    int _arg14 = data.readInt();
+                    int _result3 = getWallpaperIdForUser(_arg05, _arg14);
+                    reply.writeNoException();
+                    reply.writeInt(_result3);
+                    return true;
+                case 6:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg06 = data.readInt();
+                    WallpaperInfo _result4 = getWallpaperInfo(_arg06);
+                    reply.writeNoException();
+                    if (_result4 != null) {
+                        reply.writeInt(1);
+                        _result4.writeToParcel(reply, 1);
+                    } else {
+                        reply.writeInt(0);
+                    }
+                    return true;
+                case 7:
+                    data.enforceInterface(DESCRIPTOR);
+                    String _arg07 = data.readString();
+                    int _arg15 = data.readInt();
+                    int _arg24 = data.readInt();
+                    clearWallpaper(_arg07, _arg15, _arg24);
+                    reply.writeNoException();
+                    return true;
+                case 8:
+                    data.enforceInterface(DESCRIPTOR);
+                    String _arg08 = data.readString();
+                    boolean hasNamedWallpaper = hasNamedWallpaper(_arg08);
+                    reply.writeNoException();
+                    reply.writeInt(hasNamedWallpaper ? 1 : 0);
+                    return true;
+                case 9:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg09 = data.readInt();
+                    int _arg16 = data.readInt();
+                    String _arg25 = data.readString();
+                    int _arg33 = data.readInt();
+                    setDimensionHints(_arg09, _arg16, _arg25, _arg33);
+                    reply.writeNoException();
+                    return true;
+                case 10:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg010 = data.readInt();
+                    int _result5 = getWidthHint(_arg010);
+                    reply.writeNoException();
+                    reply.writeInt(_result5);
+                    return true;
+                case 11:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg011 = data.readInt();
+                    int _result6 = getHeightHint(_arg011);
+                    reply.writeNoException();
+                    reply.writeInt(_result6);
+                    return true;
+                case 12:
+                    data.enforceInterface(DESCRIPTOR);
+                    Rect _arg012 = data.readInt() != 0 ? Rect.CREATOR.createFromParcel(data) : null;
+                    String _arg17 = data.readString();
+                    int _arg26 = data.readInt();
+                    setDisplayPadding(_arg012, _arg17, _arg26);
+                    reply.writeNoException();
+                    return true;
+                case 13:
+                    data.enforceInterface(DESCRIPTOR);
+                    String _result7 = getName();
+                    reply.writeNoException();
+                    reply.writeString(_result7);
+                    return true;
+                case 14:
+                    data.enforceInterface(DESCRIPTOR);
+                    settingsRestored();
+                    reply.writeNoException();
+                    return true;
+                case 15:
+                    data.enforceInterface(DESCRIPTOR);
+                    String _arg013 = data.readString();
+                    boolean isWallpaperSupported = isWallpaperSupported(_arg013);
+                    reply.writeNoException();
+                    reply.writeInt(isWallpaperSupported ? 1 : 0);
+                    return true;
+                case 16:
+                    data.enforceInterface(DESCRIPTOR);
+                    String _arg014 = data.readString();
+                    boolean isSetWallpaperAllowed = isSetWallpaperAllowed(_arg014);
+                    reply.writeNoException();
+                    reply.writeInt(isSetWallpaperAllowed ? 1 : 0);
+                    return true;
+                case 17:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg015 = data.readInt();
+                    int _arg18 = data.readInt();
+                    boolean isWallpaperBackupEligible = isWallpaperBackupEligible(_arg015, _arg18);
+                    reply.writeNoException();
+                    reply.writeInt(isWallpaperBackupEligible ? 1 : 0);
+                    return true;
+                case 18:
+                    data.enforceInterface(DESCRIPTOR);
+                    IWallpaperManagerCallback _arg016 = IWallpaperManagerCallback.Stub.asInterface(data.readStrongBinder());
+                    boolean lockWallpaperCallback = setLockWallpaperCallback(_arg016);
+                    reply.writeNoException();
+                    reply.writeInt(lockWallpaperCallback ? 1 : 0);
+                    return true;
+                case 19:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg017 = data.readInt();
+                    int _arg19 = data.readInt();
+                    int _arg27 = data.readInt();
+                    WallpaperColors _result8 = getWallpaperColors(_arg017, _arg19, _arg27);
+                    reply.writeNoException();
+                    if (_result8 != null) {
+                        reply.writeInt(1);
+                        _result8.writeToParcel(reply, 1);
+                    } else {
+                        reply.writeInt(0);
+                    }
+                    return true;
+                case 20:
+                    data.enforceInterface(DESCRIPTOR);
+                    IWallpaperManagerCallback _arg018 = IWallpaperManagerCallback.Stub.asInterface(data.readStrongBinder());
+                    int _arg110 = data.readInt();
+                    int _arg28 = data.readInt();
+                    registerWallpaperColorsCallback(_arg018, _arg110, _arg28);
+                    reply.writeNoException();
+                    return true;
+                case 21:
+                    data.enforceInterface(DESCRIPTOR);
+                    IWallpaperManagerCallback _arg019 = IWallpaperManagerCallback.Stub.asInterface(data.readStrongBinder());
+                    int _arg111 = data.readInt();
+                    int _arg29 = data.readInt();
+                    unregisterWallpaperColorsCallback(_arg019, _arg111, _arg29);
+                    reply.writeNoException();
+                    return true;
+                case 22:
+                    data.enforceInterface(DESCRIPTOR);
+                    boolean _arg020 = data.readInt() != 0;
+                    long _arg112 = data.readLong();
+                    setInAmbientMode(_arg020, _arg112);
+                    return true;
+                default:
+                    return super.onTransact(code, data, reply, flags);
+            }
         }
 
+        /* loaded from: classes.dex */
         private static class Proxy implements IWallpaperManager {
             public static IWallpaperManager sDefaultImpl;
             private IBinder mRemote;
@@ -579,6 +490,7 @@ public interface IWallpaperManager extends IInterface {
                 this.mRemote = remote;
             }
 
+            @Override // android.p007os.IInterface
             public IBinder asBinder() {
                 return this.mRemote;
             }
@@ -587,87 +499,77 @@ public interface IWallpaperManager extends IInterface {
                 return Stub.DESCRIPTOR;
             }
 
+            @Override // android.app.IWallpaperManager
             public ParcelFileDescriptor setWallpaper(String name, String callingPackage, Rect cropHint, boolean allowBackup, Bundle extras, int which, IWallpaperManagerCallback completion, int userId) throws RemoteException {
-                Rect rect = cropHint;
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    try {
-                        _data.writeString(name);
-                        try {
-                            _data.writeString(callingPackage);
-                            if (rect != null) {
-                                _data.writeInt(1);
-                                rect.writeToParcel(_data, 0);
-                            } else {
-                                _data.writeInt(0);
-                            }
-                        } catch (Throwable th) {
-                            th = th;
-                            boolean z = allowBackup;
-                            Bundle bundle = extras;
-                            _reply.recycle();
-                            _data.recycle();
-                            throw th;
-                        }
-                    } catch (Throwable th2) {
-                        th = th2;
-                        String str = callingPackage;
-                        boolean z2 = allowBackup;
-                        Bundle bundle2 = extras;
-                        _reply.recycle();
-                        _data.recycle();
-                        throw th;
+                } catch (Throwable th) {
+                    th = th;
+                }
+                try {
+                    _data.writeString(name);
+                } catch (Throwable th2) {
+                    th = th2;
+                    _reply.recycle();
+                    _data.recycle();
+                    throw th;
+                }
+                try {
+                    _data.writeString(callingPackage);
+                    if (cropHint != null) {
+                        _data.writeInt(1);
+                        cropHint.writeToParcel(_data, 0);
+                    } else {
+                        _data.writeInt(0);
                     }
-                    try {
-                        _data.writeInt(allowBackup ? 1 : 0);
-                        _data.writeInt(which);
-                        ParcelFileDescriptor _result = null;
-                        _data.writeStrongBinder(completion != null ? completion.asBinder() : null);
-                        _data.writeInt(userId);
-                        if (this.mRemote.transact(1, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
-                            _reply.readException();
-                            if (_reply.readInt() != 0) {
-                                _result = ParcelFileDescriptor.CREATOR.createFromParcel(_reply);
-                            }
-                            ParcelFileDescriptor _result2 = _result;
-                            if (_reply.readInt() != 0) {
-                                try {
-                                    extras.readFromParcel(_reply);
-                                } catch (Throwable th3) {
-                                    th = th3;
-                                }
-                            } else {
-                                Bundle bundle3 = extras;
-                            }
-                            _reply.recycle();
-                            _data.recycle();
-                            return _result2;
-                        }
+                } catch (Throwable th3) {
+                    th = th3;
+                    _reply.recycle();
+                    _data.recycle();
+                    throw th;
+                }
+                try {
+                    _data.writeInt(allowBackup ? 1 : 0);
+                    _data.writeInt(which);
+                    ParcelFileDescriptor _result = null;
+                    _data.writeStrongBinder(completion != null ? completion.asBinder() : null);
+                    _data.writeInt(userId);
+                    boolean _status = this.mRemote.transact(1, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         ParcelFileDescriptor wallpaper = Stub.getDefaultImpl().setWallpaper(name, callingPackage, cropHint, allowBackup, extras, which, completion, userId);
                         _reply.recycle();
                         _data.recycle();
                         return wallpaper;
-                    } catch (Throwable th4) {
-                        th = th4;
-                        Bundle bundle22 = extras;
-                        _reply.recycle();
-                        _data.recycle();
-                        throw th;
                     }
+                    _reply.readException();
+                    if (_reply.readInt() != 0) {
+                        _result = ParcelFileDescriptor.CREATOR.createFromParcel(_reply);
+                    }
+                    ParcelFileDescriptor _result2 = _result;
+                    if (_reply.readInt() != 0) {
+                        try {
+                            extras.readFromParcel(_reply);
+                        } catch (Throwable th4) {
+                            th = th4;
+                            _reply.recycle();
+                            _data.recycle();
+                            throw th;
+                        }
+                    }
+                    _reply.recycle();
+                    _data.recycle();
+                    return _result2;
                 } catch (Throwable th5) {
                     th = th5;
-                    String str2 = name;
-                    String str3 = callingPackage;
-                    boolean z22 = allowBackup;
-                    Bundle bundle222 = extras;
                     _reply.recycle();
                     _data.recycle();
                     throw th;
                 }
             }
 
+            @Override // android.app.IWallpaperManager
             public void setWallpaperComponentChecked(ComponentName name, String callingPackage, int userId) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -681,19 +583,19 @@ public interface IWallpaperManager extends IInterface {
                     }
                     _data.writeString(callingPackage);
                     _data.writeInt(userId);
-                    if (this.mRemote.transact(2, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(2, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().setWallpaperComponentChecked(name, callingPackage, userId);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().setWallpaperComponentChecked(name, callingPackage, userId);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.app.IWallpaperManager
             public void setWallpaperComponent(ComponentName name) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -705,100 +607,85 @@ public interface IWallpaperManager extends IInterface {
                     } else {
                         _data.writeInt(0);
                     }
-                    if (this.mRemote.transact(3, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(3, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().setWallpaperComponent(name);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().setWallpaperComponent(name);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.app.IWallpaperManager
             public ParcelFileDescriptor getWallpaper(String callingPkg, IWallpaperManagerCallback cb, int which, Bundle outParams, int userId) throws RemoteException {
                 ParcelFileDescriptor _result;
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    String str = callingPkg;
+                } catch (Throwable th) {
+                    th = th;
+                }
+                try {
+                    _data.writeString(callingPkg);
+                    _result = null;
+                    _data.writeStrongBinder(cb != null ? cb.asBinder() : null);
+                } catch (Throwable th2) {
+                    th = th2;
+                    _reply.recycle();
+                    _data.recycle();
+                    throw th;
+                }
+                try {
+                    _data.writeInt(which);
                     try {
-                        _data.writeString(callingPkg);
-                        _result = null;
-                        _data.writeStrongBinder(cb != null ? cb.asBinder() : null);
-                    } catch (Throwable th) {
-                        th = th;
-                        int i = which;
-                        Bundle bundle = outParams;
-                        int i2 = userId;
-                        _reply.recycle();
-                        _data.recycle();
-                        throw th;
-                    }
-                    try {
-                        _data.writeInt(which);
+                        _data.writeInt(userId);
                         try {
-                            _data.writeInt(userId);
-                        } catch (Throwable th2) {
-                            th = th2;
-                            Bundle bundle2 = outParams;
-                            _reply.recycle();
-                            _data.recycle();
-                            throw th;
-                        }
-                        try {
-                            if (this.mRemote.transact(4, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
-                                _reply.readException();
-                                if (_reply.readInt() != 0) {
-                                    _result = ParcelFileDescriptor.CREATOR.createFromParcel(_reply);
-                                }
-                                if (_reply.readInt() != 0) {
-                                    try {
-                                        outParams.readFromParcel(_reply);
-                                    } catch (Throwable th3) {
-                                        th = th3;
-                                    }
-                                } else {
-                                    Bundle bundle3 = outParams;
-                                }
+                            boolean _status = this.mRemote.transact(4, _data, _reply, 0);
+                            if (!_status && Stub.getDefaultImpl() != null) {
+                                ParcelFileDescriptor wallpaper = Stub.getDefaultImpl().getWallpaper(callingPkg, cb, which, outParams, userId);
                                 _reply.recycle();
                                 _data.recycle();
-                                return _result;
+                                return wallpaper;
                             }
-                            ParcelFileDescriptor wallpaper = Stub.getDefaultImpl().getWallpaper(callingPkg, cb, which, outParams, userId);
+                            _reply.readException();
+                            if (_reply.readInt() != 0) {
+                                _result = ParcelFileDescriptor.CREATOR.createFromParcel(_reply);
+                            }
+                            if (_reply.readInt() != 0) {
+                                try {
+                                    outParams.readFromParcel(_reply);
+                                } catch (Throwable th3) {
+                                    th = th3;
+                                    _reply.recycle();
+                                    _data.recycle();
+                                    throw th;
+                                }
+                            }
                             _reply.recycle();
                             _data.recycle();
-                            return wallpaper;
+                            return _result;
                         } catch (Throwable th4) {
                             th = th4;
-                            Bundle bundle22 = outParams;
                             _reply.recycle();
                             _data.recycle();
                             throw th;
                         }
                     } catch (Throwable th5) {
                         th = th5;
-                        Bundle bundle4 = outParams;
-                        int i22 = userId;
-                        _reply.recycle();
-                        _data.recycle();
-                        throw th;
                     }
                 } catch (Throwable th6) {
                     th = th6;
-                    String str2 = callingPkg;
-                    int i3 = which;
-                    Bundle bundle42 = outParams;
-                    int i222 = userId;
                     _reply.recycle();
                     _data.recycle();
                     throw th;
                 }
             }
 
+            @Override // android.app.IWallpaperManager
             public int getWallpaperIdForUser(int which, int userId) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -806,13 +693,12 @@ public interface IWallpaperManager extends IInterface {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeInt(which);
                     _data.writeInt(userId);
-                    if (!this.mRemote.transact(5, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(5, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().getWallpaperIdForUser(which, userId);
                     }
                     _reply.readException();
                     int _result = _reply.readInt();
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -820,6 +706,7 @@ public interface IWallpaperManager extends IInterface {
                 }
             }
 
+            @Override // android.app.IWallpaperManager
             public WallpaperInfo getWallpaperInfo(int userId) throws RemoteException {
                 WallpaperInfo _result;
                 Parcel _data = Parcel.obtain();
@@ -827,7 +714,8 @@ public interface IWallpaperManager extends IInterface {
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeInt(userId);
-                    if (!this.mRemote.transact(6, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(6, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().getWallpaperInfo(userId);
                     }
                     _reply.readException();
@@ -836,16 +724,14 @@ public interface IWallpaperManager extends IInterface {
                     } else {
                         _result = null;
                     }
-                    WallpaperInfo _result2 = _result;
-                    _reply.recycle();
-                    _data.recycle();
-                    return _result2;
+                    return _result;
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.app.IWallpaperManager
             public void clearWallpaper(String callingPackage, int which, int userId) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -854,43 +740,39 @@ public interface IWallpaperManager extends IInterface {
                     _data.writeString(callingPackage);
                     _data.writeInt(which);
                     _data.writeInt(userId);
-                    if (this.mRemote.transact(7, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(7, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().clearWallpaper(callingPackage, which, userId);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().clearWallpaper(callingPackage, which, userId);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.app.IWallpaperManager
             public boolean hasNamedWallpaper(String name) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeString(name);
-                    boolean z = false;
-                    if (!this.mRemote.transact(8, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(8, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().hasNamedWallpaper(name);
                     }
                     _reply.readException();
-                    if (_reply.readInt() != 0) {
-                        z = true;
-                    }
-                    boolean _status = z;
-                    _reply.recycle();
-                    _data.recycle();
-                    return _status;
+                    boolean _status2 = _reply.readInt() != 0;
+                    return _status2;
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.app.IWallpaperManager
             public void setDimensionHints(int width, int height, String callingPackage, int displayId) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -900,32 +782,31 @@ public interface IWallpaperManager extends IInterface {
                     _data.writeInt(height);
                     _data.writeString(callingPackage);
                     _data.writeInt(displayId);
-                    if (this.mRemote.transact(9, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(9, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().setDimensionHints(width, height, callingPackage, displayId);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().setDimensionHints(width, height, callingPackage, displayId);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.app.IWallpaperManager
             public int getWidthHint(int displayId) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeInt(displayId);
-                    if (!this.mRemote.transact(10, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(10, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().getWidthHint(displayId);
                     }
                     _reply.readException();
                     int _result = _reply.readInt();
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -933,19 +814,19 @@ public interface IWallpaperManager extends IInterface {
                 }
             }
 
+            @Override // android.app.IWallpaperManager
             public int getHeightHint(int displayId) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeInt(displayId);
-                    if (!this.mRemote.transact(11, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(11, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().getHeightHint(displayId);
                     }
                     _reply.readException();
                     int _result = _reply.readInt();
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -953,6 +834,7 @@ public interface IWallpaperManager extends IInterface {
                 }
             }
 
+            @Override // android.app.IWallpaperManager
             public void setDisplayPadding(Rect padding, String callingPackage, int displayId) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -966,31 +848,30 @@ public interface IWallpaperManager extends IInterface {
                     }
                     _data.writeString(callingPackage);
                     _data.writeInt(displayId);
-                    if (this.mRemote.transact(12, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(12, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().setDisplayPadding(padding, callingPackage, displayId);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().setDisplayPadding(padding, callingPackage, displayId);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.app.IWallpaperManager
             public String getName() throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    if (!this.mRemote.transact(13, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(13, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().getName();
                     }
                     _reply.readException();
                     String _result = _reply.readString();
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -998,72 +879,65 @@ public interface IWallpaperManager extends IInterface {
                 }
             }
 
+            @Override // android.app.IWallpaperManager
             public void settingsRestored() throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    if (this.mRemote.transact(14, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(14, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().settingsRestored();
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().settingsRestored();
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.app.IWallpaperManager
             public boolean isWallpaperSupported(String callingPackage) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeString(callingPackage);
-                    boolean z = false;
-                    if (!this.mRemote.transact(15, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(15, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().isWallpaperSupported(callingPackage);
                     }
                     _reply.readException();
-                    if (_reply.readInt() != 0) {
-                        z = true;
-                    }
-                    boolean _status = z;
-                    _reply.recycle();
-                    _data.recycle();
-                    return _status;
+                    boolean _status2 = _reply.readInt() != 0;
+                    return _status2;
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.app.IWallpaperManager
             public boolean isSetWallpaperAllowed(String callingPackage) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeString(callingPackage);
-                    boolean z = false;
-                    if (!this.mRemote.transact(16, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(16, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().isSetWallpaperAllowed(callingPackage);
                     }
                     _reply.readException();
-                    if (_reply.readInt() != 0) {
-                        z = true;
-                    }
-                    boolean _status = z;
-                    _reply.recycle();
-                    _data.recycle();
-                    return _status;
+                    boolean _status2 = _reply.readInt() != 0;
+                    return _status2;
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.app.IWallpaperManager
             public boolean isWallpaperBackupEligible(int which, int userId) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -1071,48 +945,40 @@ public interface IWallpaperManager extends IInterface {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeInt(which);
                     _data.writeInt(userId);
-                    boolean z = false;
-                    if (!this.mRemote.transact(17, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(17, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().isWallpaperBackupEligible(which, userId);
                     }
                     _reply.readException();
-                    if (_reply.readInt() != 0) {
-                        z = true;
-                    }
-                    boolean _status = z;
-                    _reply.recycle();
-                    _data.recycle();
-                    return _status;
+                    boolean _status2 = _reply.readInt() != 0;
+                    return _status2;
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.app.IWallpaperManager
             public boolean setLockWallpaperCallback(IWallpaperManagerCallback cb) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeStrongBinder(cb != null ? cb.asBinder() : null);
-                    boolean z = false;
-                    if (!this.mRemote.transact(18, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(18, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().setLockWallpaperCallback(cb);
                     }
                     _reply.readException();
-                    if (_reply.readInt() != 0) {
-                        z = true;
-                    }
-                    boolean _status = z;
-                    _reply.recycle();
-                    _data.recycle();
-                    return _status;
+                    boolean _status2 = _reply.readInt() != 0;
+                    return _status2;
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.app.IWallpaperManager
             public WallpaperColors getWallpaperColors(int which, int userId, int displayId) throws RemoteException {
                 WallpaperColors _result;
                 Parcel _data = Parcel.obtain();
@@ -1122,7 +988,8 @@ public interface IWallpaperManager extends IInterface {
                     _data.writeInt(which);
                     _data.writeInt(userId);
                     _data.writeInt(displayId);
-                    if (!this.mRemote.transact(19, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(19, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().getWallpaperColors(which, userId, displayId);
                     }
                     _reply.readException();
@@ -1131,16 +998,14 @@ public interface IWallpaperManager extends IInterface {
                     } else {
                         _result = null;
                     }
-                    WallpaperColors _result2 = _result;
-                    _reply.recycle();
-                    _data.recycle();
-                    return _result2;
+                    return _result;
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.app.IWallpaperManager
             public void registerWallpaperColorsCallback(IWallpaperManagerCallback cb, int userId, int displayId) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -1149,19 +1014,19 @@ public interface IWallpaperManager extends IInterface {
                     _data.writeStrongBinder(cb != null ? cb.asBinder() : null);
                     _data.writeInt(userId);
                     _data.writeInt(displayId);
-                    if (this.mRemote.transact(20, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(20, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().registerWallpaperColorsCallback(cb, userId, displayId);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().registerWallpaperColorsCallback(cb, userId, displayId);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.app.IWallpaperManager
             public void unregisterWallpaperColorsCallback(IWallpaperManagerCallback cb, int userId, int displayId) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -1170,28 +1035,27 @@ public interface IWallpaperManager extends IInterface {
                     _data.writeStrongBinder(cb != null ? cb.asBinder() : null);
                     _data.writeInt(userId);
                     _data.writeInt(displayId);
-                    if (this.mRemote.transact(21, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(21, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().unregisterWallpaperColorsCallback(cb, userId, displayId);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().unregisterWallpaperColorsCallback(cb, userId, displayId);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.app.IWallpaperManager
             public void setInAmbientMode(boolean inAmbientMode, long animationDuration) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    _data.writeInt(inAmbientMode);
+                    _data.writeInt(inAmbientMode ? 1 : 0);
                     _data.writeLong(animationDuration);
-                    if (this.mRemote.transact(22, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    boolean _status = this.mRemote.transact(22, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().setInAmbientMode(inAmbientMode, animationDuration);
                     }
                 } finally {
@@ -1201,11 +1065,11 @@ public interface IWallpaperManager extends IInterface {
         }
 
         public static boolean setDefaultImpl(IWallpaperManager impl) {
-            if (Proxy.sDefaultImpl != null || impl == null) {
-                return false;
+            if (Proxy.sDefaultImpl == null && impl != null) {
+                Proxy.sDefaultImpl = impl;
+                return true;
             }
-            Proxy.sDefaultImpl = impl;
-            return true;
+            return false;
         }
 
         public static IWallpaperManager getDefaultImpl() {

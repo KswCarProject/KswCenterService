@@ -6,13 +6,13 @@ import android.content.Intent;
 import android.content.res.TypedArray;
 import android.media.RingtoneManager;
 import android.net.Uri;
-import android.os.Parcelable;
 import android.preference.PreferenceManager;
 import android.text.TextUtils;
 import android.util.AttributeSet;
-import com.android.internal.R;
+import com.android.internal.C3132R;
 
 @Deprecated
+/* loaded from: classes3.dex */
 public class RingtonePreference extends Preference implements PreferenceManager.OnActivityResultListener {
     private static final String TAG = "RingtonePreference";
     @UnsupportedAppUsage
@@ -23,7 +23,7 @@ public class RingtonePreference extends Preference implements PreferenceManager.
 
     public RingtonePreference(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
         super(context, attrs, defStyleAttr, defStyleRes);
-        TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.RingtonePreference, defStyleAttr, defStyleRes);
+        TypedArray a = context.obtainStyledAttributes(attrs, C3132R.styleable.RingtonePreference, defStyleAttr, defStyleRes);
         this.mRingtoneType = a.getInt(0, 1);
         this.mShowDefault = a.getBoolean(1, true);
         this.mShowSilent = a.getBoolean(2, true);
@@ -39,7 +39,7 @@ public class RingtonePreference extends Preference implements PreferenceManager.
     }
 
     public RingtonePreference(Context context) {
-        this(context, (AttributeSet) null);
+        this(context, null);
     }
 
     public int getRingtoneType() {
@@ -66,8 +66,8 @@ public class RingtonePreference extends Preference implements PreferenceManager.
         this.mShowSilent = showSilent;
     }
 
-    /* access modifiers changed from: protected */
-    public void onClick() {
+    @Override // android.preference.Preference
+    protected void onClick() {
         Intent intent = new Intent(RingtoneManager.ACTION_RINGTONE_PICKER);
         onPrepareRingtonePickerIntent(intent);
         PreferenceFragment owningFragment = getPreferenceManager().getFragment();
@@ -78,12 +78,11 @@ public class RingtonePreference extends Preference implements PreferenceManager.
         }
     }
 
-    /* access modifiers changed from: protected */
-    public void onPrepareRingtonePickerIntent(Intent ringtonePickerIntent) {
-        ringtonePickerIntent.putExtra(RingtoneManager.EXTRA_RINGTONE_EXISTING_URI, (Parcelable) onRestoreRingtone());
+    protected void onPrepareRingtonePickerIntent(Intent ringtonePickerIntent) {
+        ringtonePickerIntent.putExtra(RingtoneManager.EXTRA_RINGTONE_EXISTING_URI, onRestoreRingtone());
         ringtonePickerIntent.putExtra(RingtoneManager.EXTRA_RINGTONE_SHOW_DEFAULT, this.mShowDefault);
         if (this.mShowDefault) {
-            ringtonePickerIntent.putExtra(RingtoneManager.EXTRA_RINGTONE_DEFAULT_URI, (Parcelable) RingtoneManager.getDefaultUri(getRingtoneType()));
+            ringtonePickerIntent.putExtra(RingtoneManager.EXTRA_RINGTONE_DEFAULT_URI, RingtoneManager.getDefaultUri(getRingtoneType()));
         }
         ringtonePickerIntent.putExtra(RingtoneManager.EXTRA_RINGTONE_SHOW_SILENT, this.mShowSilent);
         ringtonePickerIntent.putExtra(RingtoneManager.EXTRA_RINGTONE_TYPE, this.mRingtoneType);
@@ -91,52 +90,51 @@ public class RingtonePreference extends Preference implements PreferenceManager.
         ringtonePickerIntent.putExtra(RingtoneManager.EXTRA_RINGTONE_AUDIO_ATTRIBUTES_FLAGS, 64);
     }
 
-    /* access modifiers changed from: protected */
-    public void onSaveRingtone(Uri ringtoneUri) {
+    protected void onSaveRingtone(Uri ringtoneUri) {
         persistString(ringtoneUri != null ? ringtoneUri.toString() : "");
     }
 
-    /* access modifiers changed from: protected */
-    public Uri onRestoreRingtone() {
-        String uriString = getPersistedString((String) null);
-        if (!TextUtils.isEmpty(uriString)) {
-            return Uri.parse(uriString);
+    protected Uri onRestoreRingtone() {
+        String uriString = getPersistedString(null);
+        if (TextUtils.isEmpty(uriString)) {
+            return null;
         }
-        return null;
+        return Uri.parse(uriString);
     }
 
-    /* access modifiers changed from: protected */
-    public Object onGetDefaultValue(TypedArray a, int index) {
+    @Override // android.preference.Preference
+    protected Object onGetDefaultValue(TypedArray a, int index) {
         return a.getString(index);
     }
 
-    /* access modifiers changed from: protected */
-    public void onSetInitialValue(boolean restorePersistedValue, Object defaultValueObj) {
+    @Override // android.preference.Preference
+    protected void onSetInitialValue(boolean restorePersistedValue, Object defaultValueObj) {
         String defaultValue = (String) defaultValueObj;
         if (!restorePersistedValue && !TextUtils.isEmpty(defaultValue)) {
             onSaveRingtone(Uri.parse(defaultValue));
         }
     }
 
-    /* access modifiers changed from: protected */
-    public void onAttachedToHierarchy(PreferenceManager preferenceManager) {
+    @Override // android.preference.Preference
+    protected void onAttachedToHierarchy(PreferenceManager preferenceManager) {
         super.onAttachedToHierarchy(preferenceManager);
         preferenceManager.registerOnActivityResultListener(this);
         this.mRequestCode = preferenceManager.getNextRequestCode();
     }
 
+    @Override // android.preference.PreferenceManager.OnActivityResultListener
     public boolean onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode != this.mRequestCode) {
-            return false;
-        }
-        if (data == null) {
+        if (requestCode == this.mRequestCode) {
+            if (data != null) {
+                Uri uri = (Uri) data.getParcelableExtra(RingtoneManager.EXTRA_RINGTONE_PICKED_URI);
+                if (callChangeListener(uri != null ? uri.toString() : "")) {
+                    onSaveRingtone(uri);
+                    return true;
+                }
+                return true;
+            }
             return true;
         }
-        Uri uri = (Uri) data.getParcelableExtra(RingtoneManager.EXTRA_RINGTONE_PICKED_URI);
-        if (!callChangeListener(uri != null ? uri.toString() : "")) {
-            return true;
-        }
-        onSaveRingtone(uri);
-        return true;
+        return false;
     }
 }

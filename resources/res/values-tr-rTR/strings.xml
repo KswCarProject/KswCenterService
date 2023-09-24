@@ -9,7 +9,7 @@
     <string name="import_config_success">Yapılandırma başarısı alın!</string>
     <string name="no_update">HAYIR</string>
     <string name="ota_update">OTA UPDATE</string>
-    <string name="ota_update_message">Yükseltme dosyası algılandı.\10Şimdi yükseltmek ister misiniz?</string>
+    <string name="ota_update_message">Yükseltme dosyası algılandı.\nŞimdi yükseltmek ister misiniz?</string>
     <string name="update_success">Başarıyı Güncelle!</string>
     <string name="yes_update">EVET</string>
 </resources>

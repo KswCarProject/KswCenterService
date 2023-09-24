@@ -1,16 +1,21 @@
 package android.gsi;
 
-import android.os.Parcel;
-import android.os.Parcelable;
+import android.p007os.Parcel;
+import android.p007os.Parcelable;
 
+/* loaded from: classes.dex */
 public class GsiProgress implements Parcelable {
-    public static final Parcelable.Creator<GsiProgress> CREATOR = new Parcelable.Creator<GsiProgress>() {
+    public static final Parcelable.Creator<GsiProgress> CREATOR = new Parcelable.Creator<GsiProgress>() { // from class: android.gsi.GsiProgress.1
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public GsiProgress createFromParcel(Parcel _aidl_source) {
             GsiProgress _aidl_out = new GsiProgress();
             _aidl_out.readFromParcel(_aidl_source);
             return _aidl_out;
         }
 
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public GsiProgress[] newArray(int _aidl_size) {
             return new GsiProgress[_aidl_size];
         }
@@ -20,6 +25,7 @@ public class GsiProgress implements Parcelable {
     public String step;
     public long total_bytes;
 
+    @Override // android.p007os.Parcelable
     public final void writeToParcel(Parcel _aidl_parcel, int _aidl_flag) {
         int _aidl_start_pos = _aidl_parcel.dataPosition();
         _aidl_parcel.writeInt(0);
@@ -36,33 +42,31 @@ public class GsiProgress implements Parcelable {
     public final void readFromParcel(Parcel _aidl_parcel) {
         int _aidl_start_pos = _aidl_parcel.dataPosition();
         int _aidl_parcelable_size = _aidl_parcel.readInt();
-        if (_aidl_parcelable_size >= 0) {
-            try {
-                this.step = _aidl_parcel.readString();
-                if (_aidl_parcel.dataPosition() - _aidl_start_pos < _aidl_parcelable_size) {
-                    this.status = _aidl_parcel.readInt();
-                    if (_aidl_parcel.dataPosition() - _aidl_start_pos >= _aidl_parcelable_size) {
-                        _aidl_parcel.setDataPosition(_aidl_start_pos + _aidl_parcelable_size);
-                        return;
-                    }
-                    this.bytes_processed = _aidl_parcel.readLong();
-                    if (_aidl_parcel.dataPosition() - _aidl_start_pos >= _aidl_parcelable_size) {
-                        _aidl_parcel.setDataPosition(_aidl_start_pos + _aidl_parcelable_size);
-                        return;
-                    }
-                    this.total_bytes = _aidl_parcel.readLong();
-                    if (_aidl_parcel.dataPosition() - _aidl_start_pos >= _aidl_parcelable_size) {
-                        _aidl_parcel.setDataPosition(_aidl_start_pos + _aidl_parcelable_size);
-                    } else {
-                        _aidl_parcel.setDataPosition(_aidl_start_pos + _aidl_parcelable_size);
-                    }
-                }
-            } finally {
-                _aidl_parcel.setDataPosition(_aidl_start_pos + _aidl_parcelable_size);
+        if (_aidl_parcelable_size < 0) {
+            return;
+        }
+        try {
+            this.step = _aidl_parcel.readString();
+            if (_aidl_parcel.dataPosition() - _aidl_start_pos >= _aidl_parcelable_size) {
+                return;
             }
+            this.status = _aidl_parcel.readInt();
+            if (_aidl_parcel.dataPosition() - _aidl_start_pos >= _aidl_parcelable_size) {
+                return;
+            }
+            this.bytes_processed = _aidl_parcel.readLong();
+            if (_aidl_parcel.dataPosition() - _aidl_start_pos >= _aidl_parcelable_size) {
+                return;
+            }
+            this.total_bytes = _aidl_parcel.readLong();
+            if (_aidl_parcel.dataPosition() - _aidl_start_pos >= _aidl_parcelable_size) {
+            }
+        } finally {
+            _aidl_parcel.setDataPosition(_aidl_start_pos + _aidl_parcelable_size);
         }
     }
 
+    @Override // android.p007os.Parcelable
     public int describeContents() {
         return 0;
     }

@@ -2,8 +2,8 @@ package android.util;
 
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.os.Environment;
-import android.os.storage.StorageManager;
+import android.p007os.Environment;
+import android.p007os.storage.StorageManager;
 import android.security.keystore.KeyProperties;
 import android.text.TextUtils;
 import com.android.internal.annotations.VisibleForTesting;
@@ -13,6 +13,7 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 
+/* loaded from: classes4.dex */
 public class HashedStringCache {
     private static final long DAYS_TO_MILLIS = 86400000;
     private static final boolean DEBUG = false;
@@ -26,15 +27,15 @@ public class HashedStringCache {
     static final String HASH_SALT_GEN = "_hash_salt_gen";
     private static final int MAX_SALT_DAYS = 100;
     private static final String TAG = "HashedStringCache";
-    private static final Charset UTF_8 = Charset.forName("UTF-8");
-    private static HashedStringCache sHashedStringCache = null;
     private final MessageDigest mDigester;
-    private final LruCache<String, String> mHashes = new LruCache<>(100);
-    private final Object mPreferenceLock = new Object();
     private byte[] mSalt;
     private int mSaltGen;
-    private final SecureRandom mSecureRandom = new SecureRandom();
     private SharedPreferences mSharedPreferences;
+    private static HashedStringCache sHashedStringCache = null;
+    private static final Charset UTF_8 = Charset.forName("UTF-8");
+    private final Object mPreferenceLock = new Object();
+    private final LruCache<String, String> mHashes = new LruCache<>(100);
+    private final SecureRandom mSecureRandom = new SecureRandom();
 
     private HashedStringCache() {
         try {
@@ -64,7 +65,8 @@ public class HashedStringCache {
         this.mDigester.update(this.mSalt);
         this.mDigester.update(clearText.getBytes(UTF_8));
         byte[] bytes = this.mDigester.digest();
-        String hashText2 = Base64.encodeToString(bytes, 0, Math.min(8, bytes.length), 3);
+        int len = Math.min(8, bytes.length);
+        String hashText2 = Base64.encodeToString(bytes, 0, len, 3);
         this.mHashes.put(clearText, hashText2);
         return new HashResult(hashText2, this.mSaltGen);
     }
@@ -77,22 +79,21 @@ public class HashedStringCache {
         if (saltExpirationDays2 > 100) {
             saltExpirationDays2 = 100;
         }
-        long delta = System.currentTimeMillis() - saltDate;
-        if (delta >= ((long) saltExpirationDays2) * 86400000 || delta < 0) {
-            return true;
-        }
-        return false;
+        long now = System.currentTimeMillis();
+        long delta = now - saltDate;
+        return delta >= ((long) saltExpirationDays2) * 86400000 || delta < 0;
     }
 
     private void populateSaltValues(Context context, String tag, int saltExpirationDays) {
         synchronized (this.mPreferenceLock) {
             this.mSharedPreferences = getHashSharedPreferences(context);
-            boolean needsNewSalt = checkNeedsNewSalt(tag, saltExpirationDays, this.mSharedPreferences.getLong(tag + HASH_SALT_DATE, 0));
+            long saltDate = this.mSharedPreferences.getLong(tag + HASH_SALT_DATE, 0L);
+            boolean needsNewSalt = checkNeedsNewSalt(tag, saltExpirationDays, saltDate);
             if (needsNewSalt) {
                 this.mHashes.evictAll();
             }
             if (this.mSalt == null || needsNewSalt) {
-                String saltString = this.mSharedPreferences.getString(tag + HASH_SALT, (String) null);
+                String saltString = this.mSharedPreferences.getString(tag + HASH_SALT, null);
                 this.mSaltGen = this.mSharedPreferences.getInt(tag + HASH_SALT_GEN, 0);
                 if (saltString == null || needsNewSalt) {
                     this.mSaltGen++;
@@ -107,9 +108,11 @@ public class HashedStringCache {
     }
 
     private SharedPreferences getHashSharedPreferences(Context context) {
-        return context.getSharedPreferences(new File(new File(Environment.getDataUserCePackageDirectory(StorageManager.UUID_PRIVATE_INTERNAL, context.getUserId(), context.getPackageName()), "shared_prefs"), "hashed_cache.xml"), 0);
+        File prefsFile = new File(new File(Environment.getDataUserCePackageDirectory(StorageManager.UUID_PRIVATE_INTERNAL, context.getUserId(), context.getPackageName()), "shared_prefs"), "hashed_cache.xml");
+        return context.getSharedPreferences(prefsFile, 0);
     }
 
+    /* loaded from: classes4.dex */
     public class HashResult {
         public String hashedString;
         public int saltGeneration;

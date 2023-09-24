@@ -2,13 +2,15 @@ package android.app;
 
 import android.annotation.UnsupportedAppUsage;
 import android.app.AlarmManager;
-import android.os.Binder;
-import android.os.IBinder;
-import android.os.IInterface;
-import android.os.Parcel;
-import android.os.RemoteException;
-import android.os.WorkSource;
+import android.app.IAlarmListener;
+import android.p007os.Binder;
+import android.p007os.IBinder;
+import android.p007os.IInterface;
+import android.p007os.Parcel;
+import android.p007os.RemoteException;
+import android.p007os.WorkSource;
 
+/* loaded from: classes.dex */
 public interface IAlarmManager extends IInterface {
     long currentNetworkTimeMillis() throws RemoteException;
 
@@ -27,37 +29,47 @@ public interface IAlarmManager extends IInterface {
 
     void setTimeZone(String str) throws RemoteException;
 
+    /* loaded from: classes.dex */
     public static class Default implements IAlarmManager {
+        @Override // android.app.IAlarmManager
         public void set(String callingPackage, int type, long triggerAtTime, long windowLength, long interval, int flags, PendingIntent operation, IAlarmListener listener, String listenerTag, WorkSource workSource, AlarmManager.AlarmClockInfo alarmClock) throws RemoteException {
         }
 
+        @Override // android.app.IAlarmManager
         public boolean setTime(long millis) throws RemoteException {
             return false;
         }
 
+        @Override // android.app.IAlarmManager
         public void setTimeZone(String zone) throws RemoteException {
         }
 
+        @Override // android.app.IAlarmManager
         public void remove(PendingIntent operation, IAlarmListener listener) throws RemoteException {
         }
 
+        @Override // android.app.IAlarmManager
         public long getNextWakeFromIdleTime() throws RemoteException {
-            return 0;
+            return 0L;
         }
 
+        @Override // android.app.IAlarmManager
         public AlarmManager.AlarmClockInfo getNextAlarmClock(int userId) throws RemoteException {
             return null;
         }
 
+        @Override // android.app.IAlarmManager
         public long currentNetworkTimeMillis() throws RemoteException {
-            return 0;
+            return 0L;
         }
 
+        @Override // android.p007os.IInterface
         public IBinder asBinder() {
             return null;
         }
     }
 
+    /* loaded from: classes.dex */
     public static abstract class Stub extends Binder implements IAlarmManager {
         private static final String DESCRIPTOR = "android.app.IAlarmManager";
         static final int TRANSACTION_currentNetworkTimeMillis = 7;
@@ -77,12 +89,13 @@ public interface IAlarmManager extends IInterface {
                 return null;
             }
             IInterface iin = obj.queryLocalInterface(DESCRIPTOR);
-            if (iin == null || !(iin instanceof IAlarmManager)) {
-                return new Proxy(obj);
+            if (iin != null && (iin instanceof IAlarmManager)) {
+                return (IAlarmManager) iin;
             }
-            return (IAlarmManager) iin;
+            return new Proxy(obj);
         }
 
+        @Override // android.p007os.IInterface
         public IBinder asBinder() {
             return this;
         }
@@ -108,169 +121,84 @@ public interface IAlarmManager extends IInterface {
             }
         }
 
+        @Override // android.p007os.Binder
         public String getTransactionName(int transactionCode) {
             return getDefaultTransactionName(transactionCode);
         }
 
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r0v2, resolved type: android.app.PendingIntent} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r0v3, resolved type: android.app.PendingIntent} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r14v0, resolved type: android.app.AlarmManager$AlarmClockInfo} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r0v10, resolved type: android.app.PendingIntent} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r0v18, resolved type: android.app.PendingIntent} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r0v19, resolved type: android.app.PendingIntent} */
-        /* JADX WARNING: type inference failed for: r0v7, types: [android.app.AlarmManager$AlarmClockInfo] */
-        /*  JADX ERROR: NullPointerException in pass: CodeShrinkVisitor
-            java.lang.NullPointerException
-            */
-        /* JADX WARNING: Multi-variable type inference failed */
-        public boolean onTransact(int r30, android.os.Parcel r31, android.os.Parcel r32, int r33) throws android.os.RemoteException {
-            /*
-                r29 = this;
-                r15 = r29
-                r12 = r30
-                r11 = r31
-                r9 = r32
-                java.lang.String r7 = "android.app.IAlarmManager"
-                r0 = 1598968902(0x5f4e5446, float:1.4867585E19)
-                r8 = 1
-                if (r12 == r0) goto L_0x010c
-                r0 = 0
-                switch(r12) {
-                    case 1: goto L_0x0093;
-                    case 2: goto L_0x0081;
-                    case 3: goto L_0x0073;
-                    case 4: goto L_0x0051;
-                    case 5: goto L_0x0043;
-                    case 6: goto L_0x0027;
-                    case 7: goto L_0x0019;
-                    default: goto L_0x0014;
-                }
-            L_0x0014:
-                boolean r0 = super.onTransact(r30, r31, r32, r33)
-                return r0
-            L_0x0019:
-                r11.enforceInterface(r7)
-                long r0 = r29.currentNetworkTimeMillis()
-                r32.writeNoException()
-                r9.writeLong(r0)
-                return r8
-            L_0x0027:
-                r11.enforceInterface(r7)
-                int r0 = r31.readInt()
-                android.app.AlarmManager$AlarmClockInfo r1 = r15.getNextAlarmClock(r0)
-                r32.writeNoException()
-                if (r1 == 0) goto L_0x003e
-                r9.writeInt(r8)
-                r1.writeToParcel(r9, r8)
-                goto L_0x0042
-            L_0x003e:
-                r2 = 0
-                r9.writeInt(r2)
-            L_0x0042:
-                return r8
-            L_0x0043:
-                r11.enforceInterface(r7)
-                long r0 = r29.getNextWakeFromIdleTime()
-                r32.writeNoException()
-                r9.writeLong(r0)
-                return r8
-            L_0x0051:
-                r11.enforceInterface(r7)
-                int r1 = r31.readInt()
-                if (r1 == 0) goto L_0x0063
-                android.os.Parcelable$Creator<android.app.PendingIntent> r0 = android.app.PendingIntent.CREATOR
-                java.lang.Object r0 = r0.createFromParcel(r11)
-                android.app.PendingIntent r0 = (android.app.PendingIntent) r0
-                goto L_0x0064
-            L_0x0063:
-            L_0x0064:
-                android.os.IBinder r1 = r31.readStrongBinder()
-                android.app.IAlarmListener r1 = android.app.IAlarmListener.Stub.asInterface(r1)
-                r15.remove(r0, r1)
-                r32.writeNoException()
-                return r8
-            L_0x0073:
-                r11.enforceInterface(r7)
-                java.lang.String r0 = r31.readString()
-                r15.setTimeZone(r0)
-                r32.writeNoException()
-                return r8
-            L_0x0081:
-                r11.enforceInterface(r7)
-                long r0 = r31.readLong()
-                boolean r2 = r15.setTime(r0)
-                r32.writeNoException()
-                r9.writeInt(r2)
-                return r8
-            L_0x0093:
-                r11.enforceInterface(r7)
-                java.lang.String r16 = r31.readString()
-                int r17 = r31.readInt()
-                long r18 = r31.readLong()
-                long r20 = r31.readLong()
-                long r22 = r31.readLong()
-                int r24 = r31.readInt()
-                int r1 = r31.readInt()
-                if (r1 == 0) goto L_0x00be
-                android.os.Parcelable$Creator<android.app.PendingIntent> r1 = android.app.PendingIntent.CREATOR
-                java.lang.Object r1 = r1.createFromParcel(r11)
-                android.app.PendingIntent r1 = (android.app.PendingIntent) r1
-                r10 = r1
-                goto L_0x00bf
-            L_0x00be:
-                r10 = r0
-            L_0x00bf:
-                android.os.IBinder r1 = r31.readStrongBinder()
-                android.app.IAlarmListener r25 = android.app.IAlarmListener.Stub.asInterface(r1)
-                java.lang.String r26 = r31.readString()
-                int r1 = r31.readInt()
-                if (r1 == 0) goto L_0x00db
-                android.os.Parcelable$Creator<android.os.WorkSource> r1 = android.os.WorkSource.CREATOR
-                java.lang.Object r1 = r1.createFromParcel(r11)
-                android.os.WorkSource r1 = (android.os.WorkSource) r1
-                r13 = r1
-                goto L_0x00dc
-            L_0x00db:
-                r13 = r0
-            L_0x00dc:
-                int r1 = r31.readInt()
-                if (r1 == 0) goto L_0x00ec
-                android.os.Parcelable$Creator<android.app.AlarmManager$AlarmClockInfo> r0 = android.app.AlarmManager.AlarmClockInfo.CREATOR
-                java.lang.Object r0 = r0.createFromParcel(r11)
-                android.app.AlarmManager$AlarmClockInfo r0 = (android.app.AlarmManager.AlarmClockInfo) r0
-            L_0x00ea:
-                r14 = r0
-                goto L_0x00ed
-            L_0x00ec:
-                goto L_0x00ea
-            L_0x00ed:
-                r0 = r29
-                r1 = r16
-                r2 = r17
-                r3 = r18
-                r5 = r20
-                r15 = r7
-                r27 = r8
-                r7 = r22
-                r28 = r15
-                r15 = r9
-                r9 = r24
-                r11 = r25
-                r12 = r26
-                r0.set(r1, r2, r3, r5, r7, r9, r10, r11, r12, r13, r14)
-                r32.writeNoException()
-                return r27
-            L_0x010c:
-                r28 = r7
-                r27 = r8
-                r15 = r9
-                r0 = r28
-                r15.writeString(r0)
-                return r27
-            */
-            throw new UnsupportedOperationException("Method not decompiled: android.app.IAlarmManager.Stub.onTransact(int, android.os.Parcel, android.os.Parcel, int):boolean");
+        @Override // android.p007os.Binder
+        public boolean onTransact(int code, Parcel data, Parcel reply, int flags) throws RemoteException {
+            if (code == 1598968902) {
+                reply.writeString(DESCRIPTOR);
+                return true;
+            }
+            switch (code) {
+                case 1:
+                    data.enforceInterface(DESCRIPTOR);
+                    String _arg0 = data.readString();
+                    int _arg1 = data.readInt();
+                    long _arg2 = data.readLong();
+                    long _arg3 = data.readLong();
+                    long _arg4 = data.readLong();
+                    int _arg5 = data.readInt();
+                    PendingIntent _arg6 = data.readInt() != 0 ? PendingIntent.CREATOR.createFromParcel(data) : null;
+                    IAlarmListener _arg7 = IAlarmListener.Stub.asInterface(data.readStrongBinder());
+                    String _arg8 = data.readString();
+                    WorkSource _arg9 = data.readInt() != 0 ? WorkSource.CREATOR.createFromParcel(data) : null;
+                    AlarmManager.AlarmClockInfo _arg10 = data.readInt() != 0 ? AlarmManager.AlarmClockInfo.CREATOR.createFromParcel(data) : null;
+                    set(_arg0, _arg1, _arg2, _arg3, _arg4, _arg5, _arg6, _arg7, _arg8, _arg9, _arg10);
+                    reply.writeNoException();
+                    return true;
+                case 2:
+                    data.enforceInterface(DESCRIPTOR);
+                    long _arg02 = data.readLong();
+                    boolean time = setTime(_arg02);
+                    reply.writeNoException();
+                    reply.writeInt(time ? 1 : 0);
+                    return true;
+                case 3:
+                    data.enforceInterface(DESCRIPTOR);
+                    String _arg03 = data.readString();
+                    setTimeZone(_arg03);
+                    reply.writeNoException();
+                    return true;
+                case 4:
+                    data.enforceInterface(DESCRIPTOR);
+                    PendingIntent _arg04 = data.readInt() != 0 ? PendingIntent.CREATOR.createFromParcel(data) : null;
+                    IAlarmListener _arg12 = IAlarmListener.Stub.asInterface(data.readStrongBinder());
+                    remove(_arg04, _arg12);
+                    reply.writeNoException();
+                    return true;
+                case 5:
+                    data.enforceInterface(DESCRIPTOR);
+                    long _result = getNextWakeFromIdleTime();
+                    reply.writeNoException();
+                    reply.writeLong(_result);
+                    return true;
+                case 6:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg05 = data.readInt();
+                    AlarmManager.AlarmClockInfo _result2 = getNextAlarmClock(_arg05);
+                    reply.writeNoException();
+                    if (_result2 != null) {
+                        reply.writeInt(1);
+                        _result2.writeToParcel(reply, 1);
+                    } else {
+                        reply.writeInt(0);
+                    }
+                    return true;
+                case 7:
+                    data.enforceInterface(DESCRIPTOR);
+                    long _result3 = currentNetworkTimeMillis();
+                    reply.writeNoException();
+                    reply.writeLong(_result3);
+                    return true;
+                default:
+                    return super.onTransact(code, data, reply, flags);
+            }
         }
 
+        /* loaded from: classes.dex */
         private static class Proxy implements IAlarmManager {
             public static IAlarmManager sDefaultImpl;
             private IBinder mRemote;
@@ -279,6 +207,7 @@ public interface IAlarmManager extends IInterface {
                 this.mRemote = remote;
             }
 
+            @Override // android.p007os.IInterface
             public IBinder asBinder() {
                 return this.mRemote;
             }
@@ -287,13 +216,15 @@ public interface IAlarmManager extends IInterface {
                 return Stub.DESCRIPTOR;
             }
 
+            /* JADX WARN: Multi-variable type inference failed */
+            /* JADX WARN: Type inference failed for: r16v3 */
+            /* JADX WARN: Type inference failed for: r16v4 */
+            /* JADX WARN: Type inference failed for: r16v8 */
+            @Override // android.app.IAlarmManager
             public void set(String callingPackage, int type, long triggerAtTime, long windowLength, long interval, int flags, PendingIntent operation, IAlarmListener listener, String listenerTag, WorkSource workSource, AlarmManager.AlarmClockInfo alarmClock) throws RemoteException {
-                Parcel _data;
                 Parcel _reply;
+                Parcel _data;
                 int i;
-                PendingIntent pendingIntent = operation;
-                WorkSource workSource2 = workSource;
-                AlarmManager.AlarmClockInfo alarmClockInfo = alarmClock;
                 Parcel _data2 = Parcel.obtain();
                 Parcel _reply2 = Parcel.obtain();
                 try {
@@ -304,48 +235,49 @@ public interface IAlarmManager extends IInterface {
                     _data2.writeLong(windowLength);
                     _data2.writeLong(interval);
                     _data2.writeInt(flags);
-                    if (pendingIntent != null) {
+                    if (operation != null) {
                         try {
                             _data2.writeInt(1);
-                            pendingIntent.writeToParcel(_data2, 0);
+                            operation.writeToParcel(_data2, 0);
                         } catch (Throwable th) {
                             th = th;
                             _reply = _reply2;
                             _data = _data2;
+                            _reply.recycle();
+                            _data.recycle();
+                            throw th;
                         }
                     } else {
                         _data2.writeInt(0);
                     }
-                    _data2.writeStrongBinder(listener != null ? listener.asBinder() : null);
+                    _reply = listener != null ? listener.asBinder() : 0;
+                    _data2.writeStrongBinder(_reply);
                     _data2.writeString(listenerTag);
-                    if (workSource2 != null) {
+                    if (workSource != null) {
                         _data2.writeInt(1);
                         i = 0;
-                        workSource2.writeToParcel(_data2, 0);
+                        workSource.writeToParcel(_data2, 0);
                     } else {
                         i = 0;
                         _data2.writeInt(0);
                     }
-                    if (alarmClockInfo != null) {
+                    if (alarmClock != null) {
                         _data2.writeInt(1);
-                        alarmClockInfo.writeToParcel(_data2, 0);
+                        alarmClock.writeToParcel(_data2, 0);
                     } else {
                         _data2.writeInt(i);
                     }
-                    if (this.mRemote.transact(1, _data2, _reply2, 0) || Stub.getDefaultImpl() == null) {
-                        _reply = _reply2;
-                        _data = _data2;
-                        _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
-                    }
-                    _reply = _reply2;
-                    _data = _data2;
+                    boolean _status = this.mRemote.transact(1, _data2, _reply2, 0);
                     try {
+                        if (_status || Stub.getDefaultImpl() == null) {
+                            _reply2.readException();
+                            _reply2.recycle();
+                            _data2.recycle();
+                            return;
+                        }
                         Stub.getDefaultImpl().set(callingPackage, type, triggerAtTime, windowLength, interval, flags, operation, listener, listenerTag, workSource, alarmClock);
-                        _reply.recycle();
-                        _data.recycle();
+                        _reply2.recycle();
+                        _data2.recycle();
                     } catch (Throwable th2) {
                         th = th2;
                         _reply.recycle();
@@ -356,55 +288,49 @@ public interface IAlarmManager extends IInterface {
                     th = th3;
                     _reply = _reply2;
                     _data = _data2;
-                    _reply.recycle();
-                    _data.recycle();
-                    throw th;
                 }
             }
 
+            @Override // android.app.IAlarmManager
             public boolean setTime(long millis) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeLong(millis);
-                    boolean z = false;
-                    if (!this.mRemote.transact(2, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(2, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().setTime(millis);
                     }
                     _reply.readException();
-                    if (_reply.readInt() != 0) {
-                        z = true;
-                    }
-                    boolean _status = z;
-                    _reply.recycle();
-                    _data.recycle();
-                    return _status;
+                    boolean _status2 = _reply.readInt() != 0;
+                    return _status2;
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.app.IAlarmManager
             public void setTimeZone(String zone) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeString(zone);
-                    if (this.mRemote.transact(3, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(3, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().setTimeZone(zone);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().setTimeZone(zone);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.app.IAlarmManager
             public void remove(PendingIntent operation, IAlarmListener listener) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -417,31 +343,30 @@ public interface IAlarmManager extends IInterface {
                         _data.writeInt(0);
                     }
                     _data.writeStrongBinder(listener != null ? listener.asBinder() : null);
-                    if (this.mRemote.transact(4, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(4, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().remove(operation, listener);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().remove(operation, listener);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.app.IAlarmManager
             public long getNextWakeFromIdleTime() throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    if (!this.mRemote.transact(5, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(5, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().getNextWakeFromIdleTime();
                     }
                     _reply.readException();
                     long _result = _reply.readLong();
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -449,6 +374,7 @@ public interface IAlarmManager extends IInterface {
                 }
             }
 
+            @Override // android.app.IAlarmManager
             public AlarmManager.AlarmClockInfo getNextAlarmClock(int userId) throws RemoteException {
                 AlarmManager.AlarmClockInfo _result;
                 Parcel _data = Parcel.obtain();
@@ -456,7 +382,8 @@ public interface IAlarmManager extends IInterface {
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeInt(userId);
-                    if (!this.mRemote.transact(6, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(6, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().getNextAlarmClock(userId);
                     }
                     _reply.readException();
@@ -465,28 +392,25 @@ public interface IAlarmManager extends IInterface {
                     } else {
                         _result = null;
                     }
-                    AlarmManager.AlarmClockInfo _result2 = _result;
-                    _reply.recycle();
-                    _data.recycle();
-                    return _result2;
+                    return _result;
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.app.IAlarmManager
             public long currentNetworkTimeMillis() throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    if (!this.mRemote.transact(7, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(7, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().currentNetworkTimeMillis();
                     }
                     _reply.readException();
                     long _result = _reply.readLong();
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -496,11 +420,11 @@ public interface IAlarmManager extends IInterface {
         }
 
         public static boolean setDefaultImpl(IAlarmManager impl) {
-            if (Proxy.sDefaultImpl != null || impl == null) {
-                return false;
+            if (Proxy.sDefaultImpl == null && impl != null) {
+                Proxy.sDefaultImpl = impl;
+                return true;
             }
-            Proxy.sDefaultImpl = impl;
-            return true;
+            return false;
         }
 
         public static IAlarmManager getDefaultImpl() {

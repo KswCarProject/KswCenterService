@@ -1,5 +1,6 @@
 package com.android.internal.telephony;
 
+/* loaded from: classes4.dex */
 public interface TelephonyProperties {
     public static final String ADD_PARTICIPANT_KEY = "add_participant";
     public static final String CURRENT_ACTIVE_PHONE = "gsm.current.phone-type";

@@ -2,6 +2,7 @@ package com.android.internal.inputmethod;
 
 import java.util.StringJoiner;
 
+/* loaded from: classes4.dex */
 public final class InputMethodDebug {
     private InputMethodDebug() {
     }
@@ -88,10 +89,10 @@ public final class InputMethodDebug {
             joiner.add("ADJUST_RESIZE");
         } else if (adjust == 32) {
             joiner.add("ADJUST_PAN");
-        } else if (adjust != 48) {
-            joiner.add("ADJUST_UNKNOWN(" + adjust + ")");
-        } else {
+        } else if (adjust == 48) {
             joiner.add("ADJUST_NOTHING");
+        } else {
+            joiner.add("ADJUST_UNKNOWN(" + adjust + ")");
         }
         if (isForwardNav) {
             joiner.add("IS_FORWARD_NAVIGATION");

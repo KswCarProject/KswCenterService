@@ -5,7 +5,7 @@ import android.app.ActivityThread;
 import android.hardware.camera2.legacy.LegacyCameraDevice;
 import android.hardware.camera2.legacy.LegacyExceptionUtils;
 import android.hardware.camera2.params.StreamConfigurationMap;
-import android.os.SystemProperties;
+import android.p007os.SystemProperties;
 import android.text.TextUtils;
 import android.util.Range;
 import android.util.Size;
@@ -15,6 +15,7 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 
+/* loaded from: classes.dex */
 public class SurfaceUtils {
     public static boolean isSurfaceForPreview(Surface surface) {
         return LegacyCameraDevice.isPreviewConsumer(surface);
@@ -28,7 +29,7 @@ public class SurfaceUtils {
         try {
             return LegacyCameraDevice.getSurfaceId(surface);
         } catch (LegacyExceptionUtils.BufferQueueAbandonedException e) {
-            return 0;
+            return 0L;
         }
     }
 
@@ -72,33 +73,38 @@ public class SurfaceUtils {
         List<Size> highSpeedSizes;
         if (surfaces == null || surfaces.size() == 0 || surfaces.size() > 2) {
             throw new IllegalArgumentException("Output target surface list must not be null and the size must be 1 or 2");
-        } else if (!isPrivilegedApp()) {
-            if (fpsRange == null) {
-                highSpeedSizes = Arrays.asList(config.getHighSpeedVideoSizes());
-            } else {
-                Range<Integer>[] highSpeedFpsRanges = config.getHighSpeedVideoFpsRanges();
-                if (Arrays.asList(highSpeedFpsRanges).contains(fpsRange)) {
-                    highSpeedSizes = Arrays.asList(config.getHighSpeedVideoSizesFor(fpsRange));
-                } else {
-                    throw new IllegalArgumentException("Fps range " + fpsRange.toString() + " in the request is not a supported high speed fps range " + Arrays.toString(highSpeedFpsRanges));
-                }
+        }
+        if (isPrivilegedApp()) {
+            return;
+        }
+        if (fpsRange == null) {
+            highSpeedSizes = Arrays.asList(config.getHighSpeedVideoSizes());
+        } else {
+            Range<Integer>[] highSpeedFpsRanges = config.getHighSpeedVideoFpsRanges();
+            if (!Arrays.asList(highSpeedFpsRanges).contains(fpsRange)) {
+                throw new IllegalArgumentException("Fps range " + fpsRange.toString() + " in the request is not a supported high speed fps range " + Arrays.toString(highSpeedFpsRanges));
             }
-            for (Surface surface : surfaces) {
-                checkHighSpeedSurfaceFormat(surface);
-                Size surfaceSize = getSurfaceSize(surface);
-                if (!highSpeedSizes.contains(surfaceSize)) {
-                    throw new IllegalArgumentException("Surface size " + surfaceSize.toString() + " is not part of the high speed supported size list " + Arrays.toString(highSpeedSizes.toArray()));
-                } else if (!isSurfaceForPreview(surface) && !isSurfaceForHwVideoEncoder(surface)) {
-                    throw new IllegalArgumentException("This output surface is neither preview nor hardware video encoding surface");
-                } else if (isSurfaceForPreview(surface) && isSurfaceForHwVideoEncoder(surface)) {
+            highSpeedSizes = Arrays.asList(config.getHighSpeedVideoSizesFor(fpsRange));
+        }
+        for (Surface surface : surfaces) {
+            checkHighSpeedSurfaceFormat(surface);
+            Size surfaceSize = getSurfaceSize(surface);
+            if (!highSpeedSizes.contains(surfaceSize)) {
+                throw new IllegalArgumentException("Surface size " + surfaceSize.toString() + " is not part of the high speed supported size list " + Arrays.toString(highSpeedSizes.toArray()));
+            } else if (!isSurfaceForPreview(surface) && !isSurfaceForHwVideoEncoder(surface)) {
+                throw new IllegalArgumentException("This output surface is neither preview nor hardware video encoding surface");
+            } else {
+                if (isSurfaceForPreview(surface) && isSurfaceForHwVideoEncoder(surface)) {
                     throw new IllegalArgumentException("This output surface can not be both preview and hardware video encoding surface");
                 }
             }
-            if (surfaces.size() == 2) {
-                Iterator<Surface> iterator = surfaces.iterator();
-                if (isSurfaceForPreview(iterator.next()) == isSurfaceForPreview(iterator.next())) {
-                    throw new IllegalArgumentException("The 2 output surfaces must have different type");
-                }
+        }
+        if (surfaces.size() == 2) {
+            Iterator<Surface> iterator = surfaces.iterator();
+            boolean isFirstSurfacePreview = isSurfaceForPreview(iterator.next());
+            boolean isSecondSurfacePreview = isSurfaceForPreview(iterator.next());
+            if (isFirstSurfacePreview == isSecondSurfacePreview) {
+                throw new IllegalArgumentException("The 2 output surfaces must have different type");
             }
         }
     }
@@ -106,15 +112,15 @@ public class SurfaceUtils {
     private static boolean isPrivilegedApp() {
         String packageName = ActivityThread.currentOpPackageName();
         String packageList = SystemProperties.get("persist.camera.privapp.list");
-        if (packageList.length() <= 0) {
-            return false;
-        }
-        TextUtils.StringSplitter<String> splitter = new TextUtils.SimpleStringSplitter(',');
-        splitter.setString(packageList);
-        for (String str : splitter) {
-            if (packageName.equals(str)) {
-                return true;
+        if (packageList.length() > 0) {
+            TextUtils.StringSplitter splitter = new TextUtils.SimpleStringSplitter(',');
+            splitter.setString(packageList);
+            for (String str : splitter) {
+                if (packageName.equals(str)) {
+                    return true;
+                }
             }
+            return false;
         }
         return false;
     }

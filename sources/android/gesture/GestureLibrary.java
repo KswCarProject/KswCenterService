@@ -3,6 +3,7 @@ package android.gesture;
 import java.util.ArrayList;
 import java.util.Set;
 
+/* loaded from: classes.dex */
 public abstract class GestureLibrary {
     protected final GestureStore mStore = new GestureStore();
 

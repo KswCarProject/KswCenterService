@@ -3,6 +3,7 @@ package android.telephony;
 import android.annotation.SystemApi;
 
 @SystemApi
+/* loaded from: classes.dex */
 public interface NumberVerificationCallback {
     public static final int REASON_CONCURRENT_REQUESTS = 4;
     public static final int REASON_IN_ECBM = 5;
@@ -12,12 +13,13 @@ public interface NumberVerificationCallback {
     public static final int REASON_TOO_MANY_CALLS = 3;
     public static final int REASON_UNSPECIFIED = 0;
 
+    /* loaded from: classes.dex */
     public @interface NumberVerificationFailureReason {
     }
 
-    void onCallReceived(String phoneNumber) {
+    default void onCallReceived(String phoneNumber) {
     }
 
-    void onVerificationFailed(@NumberVerificationFailureReason int reason) {
+    default void onVerificationFailed(@NumberVerificationFailureReason int reason) {
     }
 }

@@ -1,16 +1,26 @@
 package android.hardware.usb;
 
-import android.os.Parcel;
-import android.os.Parcelable;
+import android.p007os.Parcel;
+import android.p007os.Parcelable;
 import com.android.internal.annotations.Immutable;
 
 @Immutable
+/* loaded from: classes.dex */
 public final class ParcelableUsbPort implements Parcelable {
-    public static final Parcelable.Creator<ParcelableUsbPort> CREATOR = new Parcelable.Creator<ParcelableUsbPort>() {
+    public static final Parcelable.Creator<ParcelableUsbPort> CREATOR = new Parcelable.Creator<ParcelableUsbPort>() { // from class: android.hardware.usb.ParcelableUsbPort.1
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public ParcelableUsbPort createFromParcel(Parcel in) {
-            return new ParcelableUsbPort(in.readString(), in.readInt(), in.readInt(), in.readBoolean(), in.readBoolean());
+            String id = in.readString();
+            int supportedModes = in.readInt();
+            int supportedContaminantProtectionModes = in.readInt();
+            boolean supportsEnableContaminantPresenceProtection = in.readBoolean();
+            boolean supportsEnableContaminantPresenceDetection = in.readBoolean();
+            return new ParcelableUsbPort(id, supportedModes, supportedContaminantProtectionModes, supportsEnableContaminantPresenceProtection, supportsEnableContaminantPresenceDetection);
         }
 
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public ParcelableUsbPort[] newArray(int size) {
             return new ParcelableUsbPort[size];
         }
@@ -29,7 +39,8 @@ public final class ParcelableUsbPort implements Parcelable {
         this.mSupportsEnableContaminantPresenceDetection = supportsEnableContaminantPresenceDetection;
     }
 
-    public static ParcelableUsbPort of(UsbPort port) {
+    /* renamed from: of */
+    public static ParcelableUsbPort m119of(UsbPort port) {
         return new ParcelableUsbPort(port.getId(), port.getSupportedModes(), port.getSupportedContaminantProtectionModes(), port.supportsEnableContaminantPresenceProtection(), port.supportsEnableContaminantPresenceDetection());
     }
 
@@ -37,10 +48,12 @@ public final class ParcelableUsbPort implements Parcelable {
         return new UsbPort(usbManager, this.mId, this.mSupportedModes, this.mSupportedContaminantProtectionModes, this.mSupportsEnableContaminantPresenceProtection, this.mSupportsEnableContaminantPresenceDetection);
     }
 
+    @Override // android.p007os.Parcelable
     public int describeContents() {
         return 0;
     }
 
+    @Override // android.p007os.Parcelable
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeString(this.mId);
         dest.writeInt(this.mSupportedModes);

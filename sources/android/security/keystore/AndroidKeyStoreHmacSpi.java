@@ -1,6 +1,6 @@
 package android.security.keystore;
 
-import android.os.IBinder;
+import android.p007os.IBinder;
 import android.security.KeyStore;
 import android.security.KeyStoreException;
 import android.security.keymaster.KeymasterArguments;
@@ -14,6 +14,7 @@ import java.security.ProviderException;
 import java.security.spec.AlgorithmParameterSpec;
 import javax.crypto.MacSpi;
 
+/* loaded from: classes3.dex */
 public abstract class AndroidKeyStoreHmacSpi extends MacSpi implements KeyStoreCryptoOperation {
     private KeyStoreCryptoOperationChunkedStreamer mChunkedStreamer;
     private AndroidKeyStoreSecretKey mKey;
@@ -23,30 +24,35 @@ public abstract class AndroidKeyStoreHmacSpi extends MacSpi implements KeyStoreC
     private long mOperationHandle;
     private IBinder mOperationToken;
 
+    /* loaded from: classes3.dex */
     public static class HmacSHA1 extends AndroidKeyStoreHmacSpi {
         public HmacSHA1() {
             super(2);
         }
     }
 
+    /* loaded from: classes3.dex */
     public static class HmacSHA224 extends AndroidKeyStoreHmacSpi {
         public HmacSHA224() {
             super(3);
         }
     }
 
+    /* loaded from: classes3.dex */
     public static class HmacSHA256 extends AndroidKeyStoreHmacSpi {
         public HmacSHA256() {
             super(4);
         }
     }
 
+    /* loaded from: classes3.dex */
     public static class HmacSHA384 extends AndroidKeyStoreHmacSpi {
         public HmacSHA384() {
             super(5);
         }
     }
 
+    /* loaded from: classes3.dex */
     public static class HmacSHA512 extends AndroidKeyStoreHmacSpi {
         public HmacSHA512() {
             super(6);
@@ -58,13 +64,13 @@ public abstract class AndroidKeyStoreHmacSpi extends MacSpi implements KeyStoreC
         this.mMacSizeBits = KeymasterUtils.getDigestOutputSizeBits(keymasterDigest);
     }
 
-    /* access modifiers changed from: protected */
-    public int engineGetMacLength() {
+    @Override // javax.crypto.MacSpi
+    protected int engineGetMacLength() {
         return (this.mMacSizeBits + 7) / 8;
     }
 
-    /* access modifiers changed from: protected */
-    public void engineInit(Key key, AlgorithmParameterSpec params) throws InvalidKeyException, InvalidAlgorithmParameterException {
+    @Override // javax.crypto.MacSpi
+    protected void engineInit(Key key, AlgorithmParameterSpec params) throws InvalidKeyException, InvalidAlgorithmParameterException {
         resetAll();
         boolean success = false;
         try {
@@ -81,13 +87,13 @@ public abstract class AndroidKeyStoreHmacSpi extends MacSpi implements KeyStoreC
     private void init(Key key, AlgorithmParameterSpec params) throws InvalidKeyException, InvalidAlgorithmParameterException {
         if (key == null) {
             throw new InvalidKeyException("key == null");
-        } else if (key instanceof AndroidKeyStoreSecretKey) {
-            this.mKey = (AndroidKeyStoreSecretKey) key;
-            if (params != null) {
-                throw new InvalidAlgorithmParameterException("Unsupported algorithm parameters: " + params);
-            }
-        } else {
+        }
+        if (!(key instanceof AndroidKeyStoreSecretKey)) {
             throw new InvalidKeyException("Only Android KeyStore secret keys supported. Key: " + key);
+        }
+        this.mKey = (AndroidKeyStoreSecretKey) key;
+        if (params != null) {
+            throw new InvalidAlgorithmParameterException("Unsupported algorithm parameters: " + params);
         }
     }
 
@@ -98,7 +104,7 @@ public abstract class AndroidKeyStoreHmacSpi extends MacSpi implements KeyStoreC
             this.mKeyStore.abort(operationToken);
         }
         this.mOperationToken = null;
-        this.mOperationHandle = 0;
+        this.mOperationHandle = 0L;
         this.mChunkedStreamer = null;
     }
 
@@ -108,52 +114,52 @@ public abstract class AndroidKeyStoreHmacSpi extends MacSpi implements KeyStoreC
             this.mKeyStore.abort(operationToken);
         }
         this.mOperationToken = null;
-        this.mOperationHandle = 0;
+        this.mOperationHandle = 0L;
         this.mChunkedStreamer = null;
     }
 
-    /* access modifiers changed from: protected */
-    public void engineReset() {
+    @Override // javax.crypto.MacSpi
+    protected void engineReset() {
         resetWhilePreservingInitState();
     }
 
     private void ensureKeystoreOperationInitialized() throws InvalidKeyException {
-        if (this.mChunkedStreamer == null) {
-            if (this.mKey != null) {
-                KeymasterArguments keymasterArgs = new KeymasterArguments();
-                keymasterArgs.addEnum(KeymasterDefs.KM_TAG_ALGORITHM, 128);
-                keymasterArgs.addEnum(KeymasterDefs.KM_TAG_DIGEST, this.mKeymasterDigest);
-                keymasterArgs.addUnsignedInt(KeymasterDefs.KM_TAG_MAC_LENGTH, (long) this.mMacSizeBits);
-                OperationResult opResult = this.mKeyStore.begin(this.mKey.getAlias(), 2, true, keymasterArgs, (byte[]) null, this.mKey.getUid());
-                if (opResult != null) {
-                    this.mOperationToken = opResult.token;
-                    this.mOperationHandle = opResult.operationHandle;
-                    InvalidKeyException e = KeyStoreCryptoOperationUtils.getInvalidKeyExceptionForInit(this.mKeyStore, this.mKey, opResult.resultCode);
-                    if (e != null) {
-                        throw e;
-                    } else if (this.mOperationToken == null) {
-                        throw new ProviderException("Keystore returned null operation token");
-                    } else if (this.mOperationHandle != 0) {
-                        this.mChunkedStreamer = new KeyStoreCryptoOperationChunkedStreamer(new KeyStoreCryptoOperationChunkedStreamer.MainDataStream(this.mKeyStore, this.mOperationToken));
-                    } else {
-                        throw new ProviderException("Keystore returned invalid operation handle");
-                    }
-                } else {
-                    throw new KeyStoreConnectException();
-                }
-            } else {
-                throw new IllegalStateException("Not initialized");
-            }
+        if (this.mChunkedStreamer != null) {
+            return;
         }
+        if (this.mKey == null) {
+            throw new IllegalStateException("Not initialized");
+        }
+        KeymasterArguments keymasterArgs = new KeymasterArguments();
+        keymasterArgs.addEnum(KeymasterDefs.KM_TAG_ALGORITHM, 128);
+        keymasterArgs.addEnum(KeymasterDefs.KM_TAG_DIGEST, this.mKeymasterDigest);
+        keymasterArgs.addUnsignedInt(KeymasterDefs.KM_TAG_MAC_LENGTH, this.mMacSizeBits);
+        OperationResult opResult = this.mKeyStore.begin(this.mKey.getAlias(), 2, true, keymasterArgs, null, this.mKey.getUid());
+        if (opResult == null) {
+            throw new KeyStoreConnectException();
+        }
+        this.mOperationToken = opResult.token;
+        this.mOperationHandle = opResult.operationHandle;
+        InvalidKeyException e = KeyStoreCryptoOperationUtils.getInvalidKeyExceptionForInit(this.mKeyStore, this.mKey, opResult.resultCode);
+        if (e != null) {
+            throw e;
+        }
+        if (this.mOperationToken == null) {
+            throw new ProviderException("Keystore returned null operation token");
+        }
+        if (this.mOperationHandle == 0) {
+            throw new ProviderException("Keystore returned invalid operation handle");
+        }
+        this.mChunkedStreamer = new KeyStoreCryptoOperationChunkedStreamer(new KeyStoreCryptoOperationChunkedStreamer.MainDataStream(this.mKeyStore, this.mOperationToken));
     }
 
-    /* access modifiers changed from: protected */
-    public void engineUpdate(byte input) {
+    @Override // javax.crypto.MacSpi
+    protected void engineUpdate(byte input) {
         engineUpdate(new byte[]{input}, 0, 1);
     }
 
-    /* access modifiers changed from: protected */
-    public void engineUpdate(byte[] input, int offset, int len) {
+    @Override // javax.crypto.MacSpi
+    protected void engineUpdate(byte[] input, int offset, int len) {
         try {
             ensureKeystoreOperationInitialized();
             try {
@@ -169,12 +175,12 @@ public abstract class AndroidKeyStoreHmacSpi extends MacSpi implements KeyStoreC
         }
     }
 
-    /* access modifiers changed from: protected */
-    public byte[] engineDoFinal() {
+    @Override // javax.crypto.MacSpi
+    protected byte[] engineDoFinal() {
         try {
             ensureKeystoreOperationInitialized();
             try {
-                byte[] result = this.mChunkedStreamer.doFinal((byte[]) null, 0, 0, (byte[]) null, (byte[]) null);
+                byte[] result = this.mChunkedStreamer.doFinal(null, 0, 0, null, null);
                 resetWhilePreservingInitState();
                 return result;
             } catch (KeyStoreException e) {
@@ -196,6 +202,7 @@ public abstract class AndroidKeyStoreHmacSpi extends MacSpi implements KeyStoreC
         }
     }
 
+    @Override // android.security.keystore.KeyStoreCryptoOperation
     public long getOperationHandle() {
         return this.mOperationHandle;
     }

@@ -4,32 +4,32 @@ import android.bluetooth.BluetoothDevice;
 import android.media.midi.IMidiDeviceListener;
 import android.media.midi.IMidiDeviceOpenCallback;
 import android.media.midi.MidiDeviceServer;
-import android.os.Binder;
-import android.os.Bundle;
-import android.os.Handler;
-import android.os.IBinder;
-import android.os.RemoteException;
+import android.p007os.Binder;
+import android.p007os.Bundle;
+import android.p007os.Handler;
+import android.p007os.IBinder;
+import android.p007os.RemoteException;
 import android.util.Log;
 import java.util.concurrent.ConcurrentHashMap;
 
+/* loaded from: classes3.dex */
 public final class MidiManager {
     public static final String BLUETOOTH_MIDI_SERVICE_CLASS = "com.android.bluetoothmidiservice.BluetoothMidiService";
     public static final String BLUETOOTH_MIDI_SERVICE_INTENT = "android.media.midi.BluetoothMidiService";
     public static final String BLUETOOTH_MIDI_SERVICE_PACKAGE = "com.android.bluetoothmidiservice";
     private static final String TAG = "MidiManager";
+    private final IMidiManager mService;
+    private final IBinder mToken = new Binder();
     private ConcurrentHashMap<DeviceCallback, DeviceListener> mDeviceListeners = new ConcurrentHashMap<>();
-    /* access modifiers changed from: private */
-    public final IMidiManager mService;
-    /* access modifiers changed from: private */
-    public final IBinder mToken = new Binder();
 
+    /* loaded from: classes3.dex */
     public interface OnDeviceOpenedListener {
         void onDeviceOpened(MidiDevice midiDevice);
     }
 
+    /* loaded from: classes3.dex */
     private class DeviceListener extends IMidiDeviceListener.Stub {
-        /* access modifiers changed from: private */
-        public final DeviceCallback mCallback;
+        private final DeviceCallback mCallback;
         private final Handler mHandler;
 
         public DeviceListener(DeviceCallback callback, Handler handler) {
@@ -37,46 +37,50 @@ public final class MidiManager {
             this.mHandler = handler;
         }
 
-        public void onDeviceAdded(MidiDeviceInfo device) {
+        @Override // android.media.midi.IMidiDeviceListener
+        public void onDeviceAdded(final MidiDeviceInfo device) {
             if (this.mHandler != null) {
-                final MidiDeviceInfo deviceF = device;
-                this.mHandler.post(new Runnable() {
+                this.mHandler.post(new Runnable() { // from class: android.media.midi.MidiManager.DeviceListener.1
+                    @Override // java.lang.Runnable
                     public void run() {
-                        DeviceListener.this.mCallback.onDeviceAdded(deviceF);
+                        DeviceListener.this.mCallback.onDeviceAdded(device);
                     }
                 });
-                return;
+            } else {
+                this.mCallback.onDeviceAdded(device);
             }
-            this.mCallback.onDeviceAdded(device);
         }
 
-        public void onDeviceRemoved(MidiDeviceInfo device) {
+        @Override // android.media.midi.IMidiDeviceListener
+        public void onDeviceRemoved(final MidiDeviceInfo device) {
             if (this.mHandler != null) {
-                final MidiDeviceInfo deviceF = device;
-                this.mHandler.post(new Runnable() {
+                this.mHandler.post(new Runnable() { // from class: android.media.midi.MidiManager.DeviceListener.2
+                    @Override // java.lang.Runnable
                     public void run() {
-                        DeviceListener.this.mCallback.onDeviceRemoved(deviceF);
+                        DeviceListener.this.mCallback.onDeviceRemoved(device);
                     }
                 });
-                return;
+            } else {
+                this.mCallback.onDeviceRemoved(device);
             }
-            this.mCallback.onDeviceRemoved(device);
         }
 
-        public void onDeviceStatusChanged(MidiDeviceStatus status) {
+        @Override // android.media.midi.IMidiDeviceListener
+        public void onDeviceStatusChanged(final MidiDeviceStatus status) {
             if (this.mHandler != null) {
-                final MidiDeviceStatus statusF = status;
-                this.mHandler.post(new Runnable() {
+                this.mHandler.post(new Runnable() { // from class: android.media.midi.MidiManager.DeviceListener.3
+                    @Override // java.lang.Runnable
                     public void run() {
-                        DeviceListener.this.mCallback.onDeviceStatusChanged(statusF);
+                        DeviceListener.this.mCallback.onDeviceStatusChanged(status);
                     }
                 });
-                return;
+            } else {
+                this.mCallback.onDeviceStatusChanged(status);
             }
-            this.mCallback.onDeviceStatusChanged(status);
         }
     }
 
+    /* loaded from: classes3.dex */
     public static class DeviceCallback {
         public void onDeviceAdded(MidiDeviceInfo device) {
         }
@@ -121,10 +125,11 @@ public final class MidiManager {
         }
     }
 
-    /* access modifiers changed from: private */
+    /* JADX INFO: Access modifiers changed from: private */
     public void sendOpenDeviceResponse(final MidiDevice device, final OnDeviceOpenedListener listener, Handler handler) {
         if (handler != null) {
-            handler.post(new Runnable() {
+            handler.post(new Runnable() { // from class: android.media.midi.MidiManager.1
+                @Override // java.lang.Runnable
                 public void run() {
                     listener.onDeviceOpened(device);
                 }
@@ -134,68 +139,65 @@ public final class MidiManager {
         }
     }
 
-    public void openDevice(MidiDeviceInfo deviceInfo, OnDeviceOpenedListener listener, Handler handler) {
-        final MidiDeviceInfo deviceInfoF = deviceInfo;
-        final OnDeviceOpenedListener listenerF = listener;
-        final Handler handlerF = handler;
-        try {
-            this.mService.openDevice(this.mToken, deviceInfo, new IMidiDeviceOpenCallback.Stub() {
-                public void onDeviceOpened(IMidiDeviceServer server, IBinder deviceToken) {
-                    MidiDevice device;
-                    if (server != null) {
-                        device = new MidiDevice(deviceInfoF, server, MidiManager.this.mService, MidiManager.this.mToken, deviceToken);
-                    } else {
-                        device = null;
-                    }
-                    MidiManager.this.sendOpenDeviceResponse(device, listenerF, handlerF);
+    public void openDevice(final MidiDeviceInfo deviceInfo, final OnDeviceOpenedListener listener, final Handler handler) {
+        IMidiDeviceOpenCallback callback = new IMidiDeviceOpenCallback.Stub() { // from class: android.media.midi.MidiManager.2
+            @Override // android.media.midi.IMidiDeviceOpenCallback
+            public void onDeviceOpened(IMidiDeviceServer server, IBinder deviceToken) {
+                MidiDevice device;
+                if (server != null) {
+                    device = new MidiDevice(deviceInfo, server, MidiManager.this.mService, MidiManager.this.mToken, deviceToken);
+                } else {
+                    device = null;
                 }
-            });
+                MidiManager.this.sendOpenDeviceResponse(device, listener, handler);
+            }
+        };
+        try {
+            this.mService.openDevice(this.mToken, deviceInfo, callback);
         } catch (RemoteException e) {
             throw e.rethrowFromSystemServer();
         }
     }
 
-    public void openBluetoothDevice(BluetoothDevice bluetoothDevice, OnDeviceOpenedListener listener, Handler handler) {
-        final OnDeviceOpenedListener listenerF = listener;
-        final Handler handlerF = handler;
-        try {
-            this.mService.openBluetoothDevice(this.mToken, bluetoothDevice, new IMidiDeviceOpenCallback.Stub() {
-                public void onDeviceOpened(IMidiDeviceServer server, IBinder deviceToken) {
-                    MidiDevice device = null;
-                    if (server != null) {
-                        try {
-                            device = new MidiDevice(server.getDeviceInfo(), server, MidiManager.this.mService, MidiManager.this.mToken, deviceToken);
-                        } catch (RemoteException e) {
-                            Log.e(MidiManager.TAG, "remote exception in getDeviceInfo()");
-                        }
+    public void openBluetoothDevice(BluetoothDevice bluetoothDevice, final OnDeviceOpenedListener listener, final Handler handler) {
+        IMidiDeviceOpenCallback callback = new IMidiDeviceOpenCallback.Stub() { // from class: android.media.midi.MidiManager.3
+            @Override // android.media.midi.IMidiDeviceOpenCallback
+            public void onDeviceOpened(IMidiDeviceServer server, IBinder deviceToken) {
+                MidiDevice device = null;
+                if (server != null) {
+                    try {
+                        MidiDeviceInfo deviceInfo = server.getDeviceInfo();
+                        device = new MidiDevice(deviceInfo, server, MidiManager.this.mService, MidiManager.this.mToken, deviceToken);
+                    } catch (RemoteException e) {
+                        Log.m70e(MidiManager.TAG, "remote exception in getDeviceInfo()");
                     }
-                    MidiManager.this.sendOpenDeviceResponse(device, listenerF, handlerF);
                 }
-            });
+                MidiManager.this.sendOpenDeviceResponse(device, listener, handler);
+            }
+        };
+        try {
+            this.mService.openBluetoothDevice(this.mToken, bluetoothDevice, callback);
         } catch (RemoteException e) {
             throw e.rethrowFromSystemServer();
         }
     }
 
     public MidiDeviceServer createDeviceServer(MidiReceiver[] inputPortReceivers, int numOutputPorts, String[] inputPortNames, String[] outputPortNames, Bundle properties, int type, MidiDeviceServer.Callback callback) {
-        MidiReceiver[] midiReceiverArr = inputPortReceivers;
         try {
             try {
                 MidiDeviceServer server = new MidiDeviceServer(this.mService, inputPortReceivers, numOutputPorts, callback);
-                if (this.mService.registerDeviceServer(server.getBinderInterface(), midiReceiverArr.length, numOutputPorts, inputPortNames, outputPortNames, properties, type) != null) {
-                    return server;
+                MidiDeviceInfo deviceInfo = this.mService.registerDeviceServer(server.getBinderInterface(), inputPortReceivers.length, numOutputPorts, inputPortNames, outputPortNames, properties, type);
+                if (deviceInfo == null) {
+                    Log.m70e(TAG, "registerVirtualDevice failed");
+                    return null;
                 }
-                Log.e(TAG, "registerVirtualDevice failed");
-                return null;
+                return server;
             } catch (RemoteException e) {
                 e = e;
                 throw e.rethrowFromSystemServer();
             }
         } catch (RemoteException e2) {
             e = e2;
-            int i = numOutputPorts;
-            MidiDeviceServer.Callback callback2 = callback;
-            throw e.rethrowFromSystemServer();
         }
     }
 }

@@ -1,15 +1,16 @@
 package android.webkit;
 
-import android.content.pm.PackageInfo;
-import android.os.Build;
-import android.os.ChildZygoteProcess;
-import android.os.Process;
-import android.os.ZygoteProcess;
+import android.content.p002pm.PackageInfo;
+import android.p007os.Build;
+import android.p007os.ChildZygoteProcess;
+import android.p007os.Process;
+import android.p007os.ZygoteProcess;
 import android.telephony.SmsManager;
 import android.text.TextUtils;
 import android.util.Log;
 import com.android.internal.annotations.GuardedBy;
 
+/* loaded from: classes4.dex */
 public class WebViewZygote {
     private static final String LOGTAG = "WebViewZygote";
     private static final Object sLock = new Object();
@@ -23,12 +24,10 @@ public class WebViewZygote {
     public static ZygoteProcess getProcess() {
         synchronized (sLock) {
             if (sZygote != null) {
-                ChildZygoteProcess childZygoteProcess = sZygote;
-                return childZygoteProcess;
+                return sZygote;
             }
             connectToZygoteIfNeededLocked();
-            ChildZygoteProcess childZygoteProcess2 = sZygote;
-            return childZygoteProcess2;
+            return sZygote;
         }
     }
 
@@ -77,20 +76,21 @@ public class WebViewZygote {
 
     @GuardedBy({"sLock"})
     private static void connectToZygoteIfNeededLocked() {
-        if (sZygote == null) {
-            if (sPackage == null) {
-                Log.e(LOGTAG, "Cannot connect to zygote, no package specified");
-                return;
-            }
-            try {
-                String abi = sPackage.applicationInfo.primaryCpuAbi;
-                sZygote = Process.ZYGOTE_PROCESS.startChildZygote("com.android.internal.os.WebViewZygoteInit", "webview_zygote", 1053, 1053, (int[]) null, 0, "webview_zygote", abi, TextUtils.join((CharSequence) SmsManager.REGEX_PREFIX_DELIMITER, (Object[]) Build.SUPPORTED_ABIS), (String) null, Process.FIRST_ISOLATED_UID, Integer.MAX_VALUE);
-                ZygoteProcess.waitForConnectionToZygote(sZygote.getPrimarySocketAddress());
-                sZygote.preloadApp(sPackage.applicationInfo, abi);
-            } catch (Exception e) {
-                Log.e(LOGTAG, "Error connecting to webview zygote", e);
-                stopZygoteLocked();
-            }
+        if (sZygote != null) {
+            return;
+        }
+        if (sPackage == null) {
+            Log.m70e(LOGTAG, "Cannot connect to zygote, no package specified");
+            return;
+        }
+        try {
+            String abi = sPackage.applicationInfo.primaryCpuAbi;
+            sZygote = Process.ZYGOTE_PROCESS.startChildZygote("com.android.internal.os.WebViewZygoteInit", "webview_zygote", 1053, 1053, null, 0, "webview_zygote", abi, TextUtils.join(SmsManager.REGEX_PREFIX_DELIMITER, Build.SUPPORTED_ABIS), null, Process.FIRST_ISOLATED_UID, Integer.MAX_VALUE);
+            ZygoteProcess.waitForConnectionToZygote(sZygote.getPrimarySocketAddress());
+            sZygote.preloadApp(sPackage.applicationInfo, abi);
+        } catch (Exception e) {
+            Log.m69e(LOGTAG, "Error connecting to webview zygote", e);
+            stopZygoteLocked();
         }
     }
 }

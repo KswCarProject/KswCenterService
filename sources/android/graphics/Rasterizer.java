@@ -1,7 +1,7 @@
 package android.graphics;
 
+/* loaded from: classes.dex */
 public class Rasterizer {
-    /* access modifiers changed from: protected */
-    public void finalize() throws Throwable {
+    protected void finalize() throws Throwable {
     }
 }

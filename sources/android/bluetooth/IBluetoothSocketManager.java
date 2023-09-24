@@ -1,13 +1,14 @@
 package android.bluetooth;
 
-import android.os.Binder;
-import android.os.IBinder;
-import android.os.IInterface;
-import android.os.Parcel;
-import android.os.ParcelFileDescriptor;
-import android.os.ParcelUuid;
-import android.os.RemoteException;
+import android.p007os.Binder;
+import android.p007os.IBinder;
+import android.p007os.IInterface;
+import android.p007os.Parcel;
+import android.p007os.ParcelFileDescriptor;
+import android.p007os.ParcelUuid;
+import android.p007os.RemoteException;
 
+/* loaded from: classes.dex */
 public interface IBluetoothSocketManager extends IInterface {
     ParcelFileDescriptor connectSocket(BluetoothDevice bluetoothDevice, int i, ParcelUuid parcelUuid, int i2, int i3) throws RemoteException;
 
@@ -15,23 +16,29 @@ public interface IBluetoothSocketManager extends IInterface {
 
     void requestMaximumTxDataLength(BluetoothDevice bluetoothDevice) throws RemoteException;
 
+    /* loaded from: classes.dex */
     public static class Default implements IBluetoothSocketManager {
+        @Override // android.bluetooth.IBluetoothSocketManager
         public ParcelFileDescriptor connectSocket(BluetoothDevice device, int type, ParcelUuid uuid, int port, int flag) throws RemoteException {
             return null;
         }
 
+        @Override // android.bluetooth.IBluetoothSocketManager
         public ParcelFileDescriptor createSocketChannel(int type, String serviceName, ParcelUuid uuid, int port, int flag) throws RemoteException {
             return null;
         }
 
+        @Override // android.bluetooth.IBluetoothSocketManager
         public void requestMaximumTxDataLength(BluetoothDevice device) throws RemoteException {
         }
 
+        @Override // android.p007os.IInterface
         public IBinder asBinder() {
             return null;
         }
     }
 
+    /* loaded from: classes.dex */
     public static abstract class Stub extends Binder implements IBluetoothSocketManager {
         private static final String DESCRIPTOR = "android.bluetooth.IBluetoothSocketManager";
         static final int TRANSACTION_connectSocket = 1;
@@ -47,12 +54,13 @@ public interface IBluetoothSocketManager extends IInterface {
                 return null;
             }
             IInterface iin = obj.queryLocalInterface(DESCRIPTOR);
-            if (iin == null || !(iin instanceof IBluetoothSocketManager)) {
-                return new Proxy(obj);
+            if (iin != null && (iin instanceof IBluetoothSocketManager)) {
+                return (IBluetoothSocketManager) iin;
             }
-            return (IBluetoothSocketManager) iin;
+            return new Proxy(obj);
         }
 
+        @Override // android.p007os.IInterface
         public IBinder asBinder() {
             return this;
         }
@@ -70,140 +78,62 @@ public interface IBluetoothSocketManager extends IInterface {
             }
         }
 
+        @Override // android.p007os.Binder
         public String getTransactionName(int transactionCode) {
             return getDefaultTransactionName(transactionCode);
         }
 
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r6v0, resolved type: android.os.ParcelUuid} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r6v1, resolved type: android.os.ParcelUuid} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r6v6, resolved type: android.os.ParcelUuid} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r6v12, resolved type: android.os.ParcelUuid} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r4v3, resolved type: android.bluetooth.BluetoothDevice} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r6v15, resolved type: android.os.ParcelUuid} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r6v16, resolved type: android.os.ParcelUuid} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r6v17, resolved type: android.os.ParcelUuid} */
-        /* JADX WARNING: type inference failed for: r6v14, types: [android.bluetooth.BluetoothDevice] */
-        /* JADX WARNING: Multi-variable type inference failed */
-        /* Code decompiled incorrectly, please refer to instructions dump. */
-        public boolean onTransact(int r18, android.os.Parcel r19, android.os.Parcel r20, int r21) throws android.os.RemoteException {
-            /*
-                r17 = this;
-                r0 = r18
-                r1 = r19
-                r2 = r20
-                java.lang.String r3 = "android.bluetooth.IBluetoothSocketManager"
-                r4 = 1598968902(0x5f4e5446, float:1.4867585E19)
-                r5 = 1
-                if (r0 == r4) goto L_0x00c3
-                r4 = 0
-                r6 = 0
-                switch(r0) {
-                    case 1: goto L_0x0077;
-                    case 2: goto L_0x0036;
-                    case 3: goto L_0x0018;
-                    default: goto L_0x0013;
-                }
-            L_0x0013:
-                boolean r4 = super.onTransact(r18, r19, r20, r21)
-                return r4
-            L_0x0018:
-                r1.enforceInterface(r3)
-                int r4 = r19.readInt()
-                if (r4 == 0) goto L_0x002b
-                android.os.Parcelable$Creator<android.bluetooth.BluetoothDevice> r4 = android.bluetooth.BluetoothDevice.CREATOR
-                java.lang.Object r4 = r4.createFromParcel(r1)
-                r6 = r4
-                android.bluetooth.BluetoothDevice r6 = (android.bluetooth.BluetoothDevice) r6
-                goto L_0x002c
-            L_0x002b:
-            L_0x002c:
-                r4 = r6
-                r13 = r17
-                r13.requestMaximumTxDataLength(r4)
-                r20.writeNoException()
-                return r5
-            L_0x0036:
-                r13 = r17
-                r1.enforceInterface(r3)
-                int r12 = r19.readInt()
-                java.lang.String r14 = r19.readString()
-                int r7 = r19.readInt()
-                if (r7 == 0) goto L_0x0053
-                android.os.Parcelable$Creator<android.os.ParcelUuid> r6 = android.os.ParcelUuid.CREATOR
-                java.lang.Object r6 = r6.createFromParcel(r1)
-                android.os.ParcelUuid r6 = (android.os.ParcelUuid) r6
-            L_0x0051:
-                r9 = r6
-                goto L_0x0054
-            L_0x0053:
-                goto L_0x0051
-            L_0x0054:
-                int r15 = r19.readInt()
-                int r16 = r19.readInt()
-                r6 = r17
-                r7 = r12
-                r8 = r14
-                r10 = r15
-                r11 = r16
-                android.os.ParcelFileDescriptor r6 = r6.createSocketChannel(r7, r8, r9, r10, r11)
-                r20.writeNoException()
-                if (r6 == 0) goto L_0x0073
-                r2.writeInt(r5)
-                r6.writeToParcel(r2, r5)
-                goto L_0x0076
-            L_0x0073:
-                r2.writeInt(r4)
-            L_0x0076:
-                return r5
-            L_0x0077:
-                r13 = r17
-                r1.enforceInterface(r3)
-                int r7 = r19.readInt()
-                if (r7 == 0) goto L_0x008c
-                android.os.Parcelable$Creator<android.bluetooth.BluetoothDevice> r7 = android.bluetooth.BluetoothDevice.CREATOR
-                java.lang.Object r7 = r7.createFromParcel(r1)
-                android.bluetooth.BluetoothDevice r7 = (android.bluetooth.BluetoothDevice) r7
-                r8 = r7
-                goto L_0x008d
-            L_0x008c:
-                r8 = r6
-            L_0x008d:
-                int r14 = r19.readInt()
-                int r7 = r19.readInt()
-                if (r7 == 0) goto L_0x00a1
-                android.os.Parcelable$Creator<android.os.ParcelUuid> r6 = android.os.ParcelUuid.CREATOR
-                java.lang.Object r6 = r6.createFromParcel(r1)
-                android.os.ParcelUuid r6 = (android.os.ParcelUuid) r6
-            L_0x009f:
-                r10 = r6
-                goto L_0x00a2
-            L_0x00a1:
-                goto L_0x009f
-            L_0x00a2:
-                int r6 = r19.readInt()
-                int r15 = r19.readInt()
-                r7 = r17
-                r9 = r14
-                r11 = r6
-                r12 = r15
-                android.os.ParcelFileDescriptor r7 = r7.connectSocket(r8, r9, r10, r11, r12)
-                r20.writeNoException()
-                if (r7 == 0) goto L_0x00bf
-                r2.writeInt(r5)
-                r7.writeToParcel(r2, r5)
-                goto L_0x00c2
-            L_0x00bf:
-                r2.writeInt(r4)
-            L_0x00c2:
-                return r5
-            L_0x00c3:
-                r13 = r17
-                r2.writeString(r3)
-                return r5
-            */
-            throw new UnsupportedOperationException("Method not decompiled: android.bluetooth.IBluetoothSocketManager.Stub.onTransact(int, android.os.Parcel, android.os.Parcel, int):boolean");
+        @Override // android.p007os.Binder
+        public boolean onTransact(int code, Parcel data, Parcel reply, int flags) throws RemoteException {
+            if (code == 1598968902) {
+                reply.writeString(DESCRIPTOR);
+                return true;
+            }
+            switch (code) {
+                case 1:
+                    data.enforceInterface(DESCRIPTOR);
+                    BluetoothDevice _arg0 = data.readInt() != 0 ? BluetoothDevice.CREATOR.createFromParcel(data) : null;
+                    int _arg1 = data.readInt();
+                    ParcelUuid _arg2 = data.readInt() != 0 ? ParcelUuid.CREATOR.createFromParcel(data) : null;
+                    int _arg3 = data.readInt();
+                    int _arg4 = data.readInt();
+                    ParcelFileDescriptor _result = connectSocket(_arg0, _arg1, _arg2, _arg3, _arg4);
+                    reply.writeNoException();
+                    if (_result != null) {
+                        reply.writeInt(1);
+                        _result.writeToParcel(reply, 1);
+                    } else {
+                        reply.writeInt(0);
+                    }
+                    return true;
+                case 2:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg02 = data.readInt();
+                    String _arg12 = data.readString();
+                    ParcelUuid _arg22 = data.readInt() != 0 ? ParcelUuid.CREATOR.createFromParcel(data) : null;
+                    int _arg32 = data.readInt();
+                    int _arg42 = data.readInt();
+                    ParcelFileDescriptor _result2 = createSocketChannel(_arg02, _arg12, _arg22, _arg32, _arg42);
+                    reply.writeNoException();
+                    if (_result2 != null) {
+                        reply.writeInt(1);
+                        _result2.writeToParcel(reply, 1);
+                    } else {
+                        reply.writeInt(0);
+                    }
+                    return true;
+                case 3:
+                    data.enforceInterface(DESCRIPTOR);
+                    BluetoothDevice _arg03 = data.readInt() != 0 ? BluetoothDevice.CREATOR.createFromParcel(data) : null;
+                    requestMaximumTxDataLength(_arg03);
+                    reply.writeNoException();
+                    return true;
+                default:
+                    return super.onTransact(code, data, reply, flags);
+            }
         }
 
+        /* loaded from: classes.dex */
         private static class Proxy implements IBluetoothSocketManager {
             public static IBluetoothSocketManager sDefaultImpl;
             private IBinder mRemote;
@@ -212,6 +142,7 @@ public interface IBluetoothSocketManager extends IInterface {
                 this.mRemote = remote;
             }
 
+            @Override // android.p007os.IInterface
             public IBinder asBinder() {
                 return this.mRemote;
             }
@@ -220,6 +151,7 @@ public interface IBluetoothSocketManager extends IInterface {
                 return Stub.DESCRIPTOR;
             }
 
+            @Override // android.bluetooth.IBluetoothSocketManager
             public ParcelFileDescriptor connectSocket(BluetoothDevice device, int type, ParcelUuid uuid, int port, int flag) throws RemoteException {
                 ParcelFileDescriptor _result;
                 Parcel _data = Parcel.obtain();
@@ -241,7 +173,8 @@ public interface IBluetoothSocketManager extends IInterface {
                     }
                     _data.writeInt(port);
                     _data.writeInt(flag);
-                    if (!this.mRemote.transact(1, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(1, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().connectSocket(device, type, uuid, port, flag);
                     }
                     _reply.readException();
@@ -250,16 +183,14 @@ public interface IBluetoothSocketManager extends IInterface {
                     } else {
                         _result = null;
                     }
-                    ParcelFileDescriptor _result2 = _result;
-                    _reply.recycle();
-                    _data.recycle();
-                    return _result2;
+                    return _result;
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.bluetooth.IBluetoothSocketManager
             public ParcelFileDescriptor createSocketChannel(int type, String serviceName, ParcelUuid uuid, int port, int flag) throws RemoteException {
                 ParcelFileDescriptor _result;
                 Parcel _data = Parcel.obtain();
@@ -276,7 +207,8 @@ public interface IBluetoothSocketManager extends IInterface {
                     }
                     _data.writeInt(port);
                     _data.writeInt(flag);
-                    if (!this.mRemote.transact(2, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(2, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().createSocketChannel(type, serviceName, uuid, port, flag);
                     }
                     _reply.readException();
@@ -285,16 +217,14 @@ public interface IBluetoothSocketManager extends IInterface {
                     } else {
                         _result = null;
                     }
-                    ParcelFileDescriptor _result2 = _result;
-                    _reply.recycle();
-                    _data.recycle();
-                    return _result2;
+                    return _result;
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.bluetooth.IBluetoothSocketManager
             public void requestMaximumTxDataLength(BluetoothDevice device) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -306,13 +236,12 @@ public interface IBluetoothSocketManager extends IInterface {
                     } else {
                         _data.writeInt(0);
                     }
-                    if (this.mRemote.transact(3, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(3, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().requestMaximumTxDataLength(device);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().requestMaximumTxDataLength(device);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
@@ -321,11 +250,11 @@ public interface IBluetoothSocketManager extends IInterface {
         }
 
         public static boolean setDefaultImpl(IBluetoothSocketManager impl) {
-            if (Proxy.sDefaultImpl != null || impl == null) {
-                return false;
+            if (Proxy.sDefaultImpl == null && impl != null) {
+                Proxy.sDefaultImpl = impl;
+                return true;
             }
-            Proxy.sDefaultImpl = impl;
-            return true;
+            return false;
         }
 
         public static IBluetoothSocketManager getDefaultImpl() {

@@ -5,9 +5,12 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.res.TypedArray;
 import android.graphics.Rect;
-import android.os.Bundle;
+import android.p007os.Bundle;
+import android.p007os.Trace;
 import android.util.AttributeSet;
+import android.util.MathUtils;
 import android.util.SparseArray;
+import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.RemotableViewMethod;
 import android.view.SoundEffectConstants;
@@ -15,20 +18,22 @@ import android.view.View;
 import android.view.ViewDebug;
 import android.view.ViewGroup;
 import android.view.ViewHierarchyEncoder;
+import android.view.ViewRootImpl;
 import android.view.accessibility.AccessibilityNodeInfo;
+import android.view.accessibility.AccessibilityNodeProvider;
 import android.view.animation.GridLayoutAnimationController;
 import android.view.inspector.InspectionCompanion;
 import android.view.inspector.PropertyMapper;
 import android.view.inspector.PropertyReader;
 import android.widget.AbsListView;
 import android.widget.RemoteViews;
-import com.android.internal.R;
+import com.android.internal.C3132R;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.util.Objects;
-import java.util.function.IntFunction;
 
 @RemoteViews.RemoteView
+/* loaded from: classes4.dex */
 public class GridView extends AbsListView {
     public static final int AUTO_FIT = -1;
     public static final int NO_STRETCH = 0;
@@ -56,9 +61,11 @@ public class GridView extends AbsListView {
     private int mVerticalSpacing;
 
     @Retention(RetentionPolicy.SOURCE)
+    /* loaded from: classes4.dex */
     public @interface StretchMode {
     }
 
+    /* loaded from: classes4.dex */
     public final class InspectionCompanion implements android.view.inspector.InspectionCompanion<GridView> {
         private int mColumnWidthId;
         private int mGravityId;
@@ -68,6 +75,7 @@ public class GridView extends AbsListView {
         private int mStretchModeId;
         private int mVerticalSpacingId;
 
+        @Override // android.view.inspector.InspectionCompanion
         public void mapProperties(PropertyMapper propertyMapper) {
             this.mColumnWidthId = propertyMapper.mapInt("columnWidth", 16843031);
             this.mGravityId = propertyMapper.mapGravity("gravity", 16842927);
@@ -79,31 +87,27 @@ public class GridView extends AbsListView {
             stretchModeEnumMapping.put(2, "columnWidth");
             stretchModeEnumMapping.put(3, "spacingWidthUniform");
             Objects.requireNonNull(stretchModeEnumMapping);
-            this.mStretchModeId = propertyMapper.mapIntEnum("stretchMode", 16843030, new IntFunction() {
-                public final Object apply(int i) {
-                    return (String) SparseArray.this.get(i);
-                }
-            });
+            this.mStretchModeId = propertyMapper.mapIntEnum("stretchMode", 16843030, new $$Lambda$QY3N4tzLteuFdjRnyJFCbR1ajSI(stretchModeEnumMapping));
             this.mVerticalSpacingId = propertyMapper.mapInt("verticalSpacing", 16843029);
             this.mPropertiesMapped = true;
         }
 
+        @Override // android.view.inspector.InspectionCompanion
         public void readProperties(GridView node, PropertyReader propertyReader) {
-            if (this.mPropertiesMapped) {
-                propertyReader.readInt(this.mColumnWidthId, node.getColumnWidth());
-                propertyReader.readGravity(this.mGravityId, node.getGravity());
-                propertyReader.readInt(this.mHorizontalSpacingId, node.getHorizontalSpacing());
-                propertyReader.readInt(this.mNumColumnsId, node.getNumColumns());
-                propertyReader.readIntEnum(this.mStretchModeId, node.getStretchMode());
-                propertyReader.readInt(this.mVerticalSpacingId, node.getVerticalSpacing());
-                return;
+            if (!this.mPropertiesMapped) {
+                throw new InspectionCompanion.UninitializedPropertyMapException();
             }
-            throw new InspectionCompanion.UninitializedPropertyMapException();
+            propertyReader.readInt(this.mColumnWidthId, node.getColumnWidth());
+            propertyReader.readGravity(this.mGravityId, node.getGravity());
+            propertyReader.readInt(this.mHorizontalSpacingId, node.getHorizontalSpacing());
+            propertyReader.readInt(this.mNumColumnsId, node.getNumColumns());
+            propertyReader.readIntEnum(this.mStretchModeId, node.getStretchMode());
+            propertyReader.readInt(this.mVerticalSpacingId, node.getVerticalSpacing());
         }
     }
 
     public GridView(Context context) {
-        this(context, (AttributeSet) null);
+        this(context, null);
     }
 
     public GridView(Context context, AttributeSet attrs) {
@@ -124,10 +128,12 @@ public class GridView extends AbsListView {
         this.mReferenceViewInSelectedRow = null;
         this.mGravity = 8388611;
         this.mTempRect = new Rect();
-        TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.GridView, defStyleAttr, defStyleRes);
-        saveAttributeDataForStyleable(context, R.styleable.GridView, attrs, a, defStyleAttr, defStyleRes);
-        setHorizontalSpacing(a.getDimensionPixelOffset(1, 0));
-        setVerticalSpacing(a.getDimensionPixelOffset(2, 0));
+        TypedArray a = context.obtainStyledAttributes(attrs, C3132R.styleable.GridView, defStyleAttr, defStyleRes);
+        saveAttributeDataForStyleable(context, C3132R.styleable.GridView, attrs, a, defStyleAttr, defStyleRes);
+        int hSpacing = a.getDimensionPixelOffset(1, 0);
+        setHorizontalSpacing(hSpacing);
+        int vSpacing = a.getDimensionPixelOffset(2, 0);
+        setVerticalSpacing(vSpacing);
         int index = a.getInt(3, 2);
         if (index >= 0) {
             setStretchMode(index);
@@ -136,7 +142,8 @@ public class GridView extends AbsListView {
         if (columnWidth > 0) {
             setColumnWidth(columnWidth);
         }
-        setNumColumns(a.getInt(5, 1));
+        int numColumns = a.getInt(5, 1);
+        setNumColumns(numColumns);
         int index2 = a.getInt(0, -1);
         if (index2 >= 0) {
             setGravity(index2);
@@ -144,18 +151,21 @@ public class GridView extends AbsListView {
         a.recycle();
     }
 
+    @Override // android.widget.AdapterView
     public ListAdapter getAdapter() {
         return this.mAdapter;
     }
 
+    @Override // android.widget.AbsListView
     @RemotableViewMethod(asyncImpl = "setRemoteViewsAdapterAsync")
     public void setRemoteViewsAdapter(Intent intent) {
         super.setRemoteViewsAdapter(intent);
     }
 
+    @Override // android.widget.AbsListView, android.widget.AdapterView
     public void setAdapter(ListAdapter adapter) {
         int position;
-        if (!(this.mAdapter == null || this.mDataSetObserver == null)) {
+        if (this.mAdapter != null && this.mDataSetObserver != null) {
             this.mAdapter.unregisterDataSetObserver(this.mDataSetObserver);
         }
         resetList();
@@ -187,16 +197,17 @@ public class GridView extends AbsListView {
         requestLayout();
     }
 
-    /* access modifiers changed from: package-private */
-    public int lookForSelectablePosition(int position, boolean lookDown) {
-        if (this.mAdapter == null || isInTouchMode() || position < 0 || position >= this.mItemCount) {
+    @Override // android.widget.AdapterView
+    int lookForSelectablePosition(int position, boolean lookDown) {
+        ListAdapter adapter = this.mAdapter;
+        if (adapter == null || isInTouchMode() || position < 0 || position >= this.mItemCount) {
             return -1;
         }
         return position;
     }
 
-    /* access modifiers changed from: package-private */
-    public void fillGap(boolean down) {
+    @Override // android.widget.AbsListView
+    void fillGap(boolean down) {
         int position;
         int numColumns = this.mNumColumns;
         int verticalSpacing = this.mVerticalSpacing;
@@ -263,14 +274,15 @@ public class GridView extends AbsListView {
             nextLeft = this.mListPadding.left + (this.mStretchMode == 3 ? horizontalSpacing : 0);
         }
         int nextLeft2 = nextLeft;
-        if (this.mStackFromBottom == 0) {
+        if (!this.mStackFromBottom) {
             last = Math.min(startPos + this.mNumColumns, this.mItemCount);
             startPos2 = startPos;
         } else {
             last = startPos + 1;
             int startPos3 = Math.max(0, (startPos - this.mNumColumns) + 1);
             if (last - startPos3 < this.mNumColumns) {
-                nextLeft2 += (isLayoutRtl ? -1 : 1) * (this.mNumColumns - (last - startPos3)) * (columnWidth + horizontalSpacing);
+                int deltaLeft = (this.mNumColumns - (last - startPos3)) * (columnWidth + horizontalSpacing);
+                nextLeft2 += (isLayoutRtl ? -1 : 1) * deltaLeft;
             }
             startPos2 = startPos3;
         }
@@ -289,22 +301,20 @@ public class GridView extends AbsListView {
                 break;
             }
             boolean selected = pos2 == selectedPosition ? true : z;
-            int pos3 = pos2;
-            View view = child;
+            int where = flow ? -1 : pos2 - startPos2;
             int selectedPosition2 = selectedPosition;
-            child = makeAndAddView(pos2, y, flow, nextLeft3, selected, flow ? -1 : pos2 - startPos2);
+            child = makeAndAddView(pos2, y, flow, nextLeft3, selected, where);
             nextLeft3 += nextChildDir * columnWidth;
-            if (pos3 < last2 - 1) {
+            if (pos2 < last2 - 1) {
                 nextLeft3 += nextChildDir * horizontalSpacing;
             }
             if (selected && (hasFocus || inClick)) {
                 selectedView = child;
             }
-            pos = pos3 + 1;
+            pos = pos2 + 1;
             selectedPosition = selectedPosition2;
             z = false;
         }
-        int i = selectedPosition;
         this.mReferenceView = child;
         if (selectedView != null) {
             this.mReferenceViewInSelectedRow = this.mReferenceView;
@@ -347,7 +357,8 @@ public class GridView extends AbsListView {
 
     private View fillFromBottom(int lastPosition, int nextBottom) {
         int invertedPosition = (this.mItemCount - 1) - Math.min(Math.max(lastPosition, this.mSelectedPosition), this.mItemCount - 1);
-        return fillUp((this.mItemCount - 1) - (invertedPosition - (invertedPosition % this.mNumColumns)), nextBottom);
+        int lastPosition2 = (this.mItemCount - 1) - (invertedPosition - (invertedPosition % this.mNumColumns));
+        return fillUp(lastPosition2, nextBottom);
     }
 
     private View fillSelection(int childrenTop, int childrenBottom) {
@@ -364,7 +375,8 @@ public class GridView extends AbsListView {
             invertedSelection = Math.max(0, (rowEnd - numColumns) + 1);
         }
         int fadingEdgeLength = getVerticalFadingEdgeLength();
-        View sel = makeRow(this.mStackFromBottom ? rowEnd : invertedSelection, getTopSelectionPixel(childrenTop, fadingEdgeLength, invertedSelection), true);
+        int topSelectionPixel = getTopSelectionPixel(childrenTop, fadingEdgeLength, invertedSelection);
+        View sel = makeRow(this.mStackFromBottom ? rowEnd : invertedSelection, topSelectionPixel, true);
         this.mFirstPosition = invertedSelection;
         View referenceView = this.mReferenceView;
         if (!this.mStackFromBottom) {
@@ -373,7 +385,9 @@ public class GridView extends AbsListView {
             fillUp(invertedSelection - numColumns, referenceView.getTop() - verticalSpacing);
             adjustViewsUpOrDown();
         } else {
-            offsetChildrenTopAndBottom(getBottomSelectionPixel(childrenBottom, fadingEdgeLength, numColumns, invertedSelection) - referenceView.getBottom());
+            int bottomSelectionPixel = getBottomSelectionPixel(childrenBottom, fadingEdgeLength, numColumns, invertedSelection);
+            int offset = bottomSelectionPixel - referenceView.getBottom();
+            offsetChildrenTopAndBottom(offset);
             fillUp(invertedSelection - 1, referenceView.getTop() - verticalSpacing);
             pinToTop(childrenTop);
             fillDown(rowEnd + numColumns, referenceView.getBottom() + verticalSpacing);
@@ -383,39 +397,45 @@ public class GridView extends AbsListView {
     }
 
     private void pinToTop(int childrenTop) {
-        int offset;
-        if (this.mFirstPosition == 0 && (offset = childrenTop - getChildAt(0).getTop()) < 0) {
-            offsetChildrenTopAndBottom(offset);
+        if (this.mFirstPosition == 0) {
+            int top = getChildAt(0).getTop();
+            int offset = childrenTop - top;
+            if (offset < 0) {
+                offsetChildrenTopAndBottom(offset);
+            }
         }
     }
 
     private void pinToBottom(int childrenBottom) {
-        int offset;
         int count = getChildCount();
-        if (this.mFirstPosition + count == this.mItemCount && (offset = childrenBottom - getChildAt(count - 1).getBottom()) > 0) {
-            offsetChildrenTopAndBottom(offset);
+        if (this.mFirstPosition + count == this.mItemCount) {
+            int bottom = getChildAt(count - 1).getBottom();
+            int offset = childrenBottom - bottom;
+            if (offset > 0) {
+                offsetChildrenTopAndBottom(offset);
+            }
         }
     }
 
-    /* access modifiers changed from: package-private */
-    public int findMotionRow(int y) {
+    @Override // android.widget.AbsListView
+    int findMotionRow(int y) {
         int childCount = getChildCount();
-        if (childCount <= 0) {
-            return -1;
-        }
-        int numColumns = this.mNumColumns;
-        if (!this.mStackFromBottom) {
-            for (int i = 0; i < childCount; i += numColumns) {
-                if (y <= getChildAt(i).getBottom()) {
-                    return this.mFirstPosition + i;
+        if (childCount > 0) {
+            int numColumns = this.mNumColumns;
+            if (!this.mStackFromBottom) {
+                for (int i = 0; i < childCount; i += numColumns) {
+                    if (y <= getChildAt(i).getBottom()) {
+                        return this.mFirstPosition + i;
+                    }
+                }
+                return -1;
+            }
+            for (int i2 = childCount - 1; i2 >= 0; i2 -= numColumns) {
+                if (y >= getChildAt(i2).getTop()) {
+                    return this.mFirstPosition + i2;
                 }
             }
             return -1;
-        }
-        for (int i2 = childCount - 1; i2 >= 0; i2 -= numColumns) {
-            if (y >= getChildAt(i2).getTop()) {
-                return this.mFirstPosition + i2;
-            }
         }
         return -1;
     }
@@ -467,26 +487,24 @@ public class GridView extends AbsListView {
     }
 
     private void correctTooHigh(int numColumns, int verticalSpacing, int childCount) {
-        int i = 1;
-        if ((this.mFirstPosition + childCount) - 1 == this.mItemCount - 1 && childCount > 0) {
-            int bottomOffset = ((this.mBottom - this.mTop) - this.mListPadding.bottom) - getChildAt(childCount - 1).getBottom();
+        int lastPosition = (this.mFirstPosition + childCount) - 1;
+        if (lastPosition == this.mItemCount - 1 && childCount > 0) {
+            View lastChild = getChildAt(childCount - 1);
+            int lastBottom = lastChild.getBottom();
+            int end = (this.mBottom - this.mTop) - this.mListPadding.bottom;
+            int bottomOffset = end - lastBottom;
             View firstChild = getChildAt(0);
             int firstTop = firstChild.getTop();
-            if (bottomOffset <= 0) {
-                return;
-            }
-            if (this.mFirstPosition > 0 || firstTop < this.mListPadding.top) {
-                if (this.mFirstPosition == 0) {
-                    bottomOffset = Math.min(bottomOffset, this.mListPadding.top - firstTop);
-                }
-                offsetChildrenTopAndBottom(bottomOffset);
-                if (this.mFirstPosition > 0) {
-                    int i2 = this.mFirstPosition;
-                    if (!this.mStackFromBottom) {
-                        i = numColumns;
+            if (bottomOffset > 0) {
+                if (this.mFirstPosition > 0 || firstTop < this.mListPadding.top) {
+                    if (this.mFirstPosition == 0) {
+                        bottomOffset = Math.min(bottomOffset, this.mListPadding.top - firstTop);
                     }
-                    fillUp(i2 - i, firstChild.getTop() - verticalSpacing);
-                    adjustViewsUpOrDown();
+                    offsetChildrenTopAndBottom(bottomOffset);
+                    if (this.mFirstPosition > 0) {
+                        fillUp(this.mFirstPosition - (this.mStackFromBottom ? 1 : numColumns), firstChild.getTop() - verticalSpacing);
+                        adjustViewsUpOrDown();
+                    }
                 }
             }
         }
@@ -494,28 +512,24 @@ public class GridView extends AbsListView {
 
     private void correctTooLow(int numColumns, int verticalSpacing, int childCount) {
         if (this.mFirstPosition == 0 && childCount > 0) {
-            int firstTop = getChildAt(0).getTop();
+            View firstChild = getChildAt(0);
+            int firstTop = firstChild.getTop();
             int start = this.mListPadding.top;
             int end = (this.mBottom - this.mTop) - this.mListPadding.bottom;
             int topOffset = firstTop - start;
             View lastChild = getChildAt(childCount - 1);
             int lastBottom = lastChild.getBottom();
-            int i = 1;
             int lastPosition = (this.mFirstPosition + childCount) - 1;
-            if (topOffset <= 0) {
-                return;
-            }
-            if (lastPosition < this.mItemCount - 1 || lastBottom > end) {
-                if (lastPosition == this.mItemCount - 1) {
-                    topOffset = Math.min(topOffset, lastBottom - end);
-                }
-                offsetChildrenTopAndBottom(-topOffset);
-                if (lastPosition < this.mItemCount - 1) {
-                    if (this.mStackFromBottom) {
-                        i = numColumns;
+            if (topOffset > 0) {
+                if (lastPosition < this.mItemCount - 1 || lastBottom > end) {
+                    if (lastPosition == this.mItemCount - 1) {
+                        topOffset = Math.min(topOffset, lastBottom - end);
                     }
-                    fillDown(i + lastPosition, lastChild.getBottom() + verticalSpacing);
-                    adjustViewsUpOrDown();
+                    offsetChildrenTopAndBottom(-topOffset);
+                    if (lastPosition < this.mItemCount - 1) {
+                        fillDown((this.mStackFromBottom ? numColumns : 1) + lastPosition, lastChild.getBottom() + verticalSpacing);
+                        adjustViewsUpOrDown();
+                    }
                 }
             }
         }
@@ -555,38 +569,46 @@ public class GridView extends AbsListView {
     }
 
     private int getBottomSelectionPixel(int childrenBottom, int fadingEdgeLength, int numColumns, int rowStart) {
-        int bottomSelectionPixel = childrenBottom;
-        if ((rowStart + numColumns) - 1 < this.mItemCount - 1) {
-            return bottomSelectionPixel - fadingEdgeLength;
+        if ((rowStart + numColumns) - 1 >= this.mItemCount - 1) {
+            return childrenBottom;
         }
+        int bottomSelectionPixel = childrenBottom - fadingEdgeLength;
         return bottomSelectionPixel;
     }
 
     private int getTopSelectionPixel(int childrenTop, int fadingEdgeLength, int rowStart) {
-        int topSelectionPixel = childrenTop;
-        if (rowStart > 0) {
-            return topSelectionPixel + fadingEdgeLength;
+        if (rowStart <= 0) {
+            return childrenTop;
         }
+        int topSelectionPixel = childrenTop + fadingEdgeLength;
         return topSelectionPixel;
     }
 
     private void adjustForBottomFadingEdge(View childInSelectedRow, int topSelectionPixel, int bottomSelectionPixel) {
         if (childInSelectedRow.getBottom() > bottomSelectionPixel) {
-            offsetChildrenTopAndBottom(-Math.min(childInSelectedRow.getTop() - topSelectionPixel, childInSelectedRow.getBottom() - bottomSelectionPixel));
+            int spaceAbove = childInSelectedRow.getTop() - topSelectionPixel;
+            int spaceBelow = childInSelectedRow.getBottom() - bottomSelectionPixel;
+            int offset = Math.min(spaceAbove, spaceBelow);
+            offsetChildrenTopAndBottom(-offset);
         }
     }
 
     private void adjustForTopFadingEdge(View childInSelectedRow, int topSelectionPixel, int bottomSelectionPixel) {
         if (childInSelectedRow.getTop() < topSelectionPixel) {
-            offsetChildrenTopAndBottom(Math.min(topSelectionPixel - childInSelectedRow.getTop(), bottomSelectionPixel - childInSelectedRow.getBottom()));
+            int spaceAbove = topSelectionPixel - childInSelectedRow.getTop();
+            int spaceBelow = bottomSelectionPixel - childInSelectedRow.getBottom();
+            int offset = Math.min(spaceAbove, spaceBelow);
+            offsetChildrenTopAndBottom(offset);
         }
     }
 
+    @Override // android.widget.AbsListView
     @RemotableViewMethod
     public void smoothScrollToPosition(int position) {
         super.smoothScrollToPosition(position);
     }
 
+    @Override // android.widget.AbsListView
     @RemotableViewMethod
     public void smoothScrollByOffset(int offset) {
         super.smoothScrollByOffset(offset);
@@ -595,8 +617,11 @@ public class GridView extends AbsListView {
     private View moveSelection(int delta, int childrenTop, int childrenBottom) {
         int rowStart;
         int oldRowStart;
+        int top;
         View referenceView;
         View sel;
+        int top2;
+        int bottom;
         int fadingEdgeLength = getVerticalFadingEdgeLength();
         int selectedPosition = this.mSelectedPosition;
         int numColumns = this.mNumColumns;
@@ -606,34 +631,50 @@ public class GridView extends AbsListView {
             oldRowStart = (selectedPosition - delta) - ((selectedPosition - delta) % numColumns);
             rowStart = selectedPosition - (selectedPosition % numColumns);
         } else {
-            int invertedSelection = (this.mItemCount - 1) - selectedPosition;
+            int oldRowStart2 = this.mItemCount;
+            int invertedSelection = (oldRowStart2 - 1) - selectedPosition;
             rowEnd = (this.mItemCount - 1) - (invertedSelection - (invertedSelection % numColumns));
             rowStart = Math.max(0, (rowEnd - numColumns) + 1);
             int invertedSelection2 = (this.mItemCount - 1) - (selectedPosition - delta);
-            oldRowStart = Math.max(0, (((this.mItemCount - 1) - (invertedSelection2 - (invertedSelection2 % numColumns))) - numColumns) + 1);
+            int oldRowStart3 = (this.mItemCount - 1) - (invertedSelection2 - (invertedSelection2 % numColumns));
+            oldRowStart = Math.max(0, (oldRowStart3 - numColumns) + 1);
         }
-        int rowDelta = rowStart - oldRowStart;
+        int invertedSelection3 = rowStart - oldRowStart;
         int topSelectionPixel = getTopSelectionPixel(childrenTop, fadingEdgeLength, rowStart);
         int bottomSelectionPixel = getBottomSelectionPixel(childrenBottom, fadingEdgeLength, numColumns, rowStart);
         this.mFirstPosition = rowStart;
-        if (rowDelta > 0) {
-            int i = fadingEdgeLength;
-            View sel2 = makeRow(this.mStackFromBottom ? rowEnd : rowStart, (this.mReferenceViewInSelectedRow == null ? 0 : this.mReferenceViewInSelectedRow.getBottom()) + verticalSpacing, true);
+        if (invertedSelection3 > 0) {
+            if (this.mReferenceViewInSelectedRow != null) {
+                bottom = this.mReferenceViewInSelectedRow.getBottom();
+            } else {
+                bottom = 0;
+            }
+            int oldBottom = bottom;
+            View sel2 = makeRow(this.mStackFromBottom ? rowEnd : rowStart, oldBottom + verticalSpacing, true);
             View referenceView2 = this.mReferenceView;
             adjustForBottomFadingEdge(referenceView2, topSelectionPixel, bottomSelectionPixel);
-            View view = referenceView2;
             referenceView = sel2;
-            sel = view;
-        } else {
-            if (rowDelta < 0) {
-                referenceView = makeRow(this.mStackFromBottom ? rowEnd : rowStart, (this.mReferenceViewInSelectedRow == null ? 0 : this.mReferenceViewInSelectedRow.getTop()) - verticalSpacing, false);
-                View referenceView3 = this.mReferenceView;
-                adjustForTopFadingEdge(referenceView3, topSelectionPixel, bottomSelectionPixel);
-                sel = referenceView3;
+            sel = referenceView2;
+        } else if (invertedSelection3 >= 0) {
+            if (this.mReferenceViewInSelectedRow != null) {
+                top = this.mReferenceViewInSelectedRow.getTop();
             } else {
-                referenceView = makeRow(this.mStackFromBottom ? rowEnd : rowStart, this.mReferenceViewInSelectedRow == null ? 0 : this.mReferenceViewInSelectedRow.getTop(), true);
-                sel = this.mReferenceView;
+                top = 0;
             }
+            int oldTop = top;
+            referenceView = makeRow(this.mStackFromBottom ? rowEnd : rowStart, oldTop, true);
+            sel = this.mReferenceView;
+        } else {
+            if (this.mReferenceViewInSelectedRow != null) {
+                top2 = this.mReferenceViewInSelectedRow.getTop();
+            } else {
+                top2 = 0;
+            }
+            int oldTop2 = top2;
+            referenceView = makeRow(this.mStackFromBottom ? rowEnd : rowStart, oldTop2 - verticalSpacing, false);
+            View referenceView3 = this.mReferenceView;
+            adjustForTopFadingEdge(referenceView3, topSelectionPixel, bottomSelectionPixel);
+            sel = referenceView3;
         }
         if (!this.mStackFromBottom) {
             fillUp(rowStart - numColumns, sel.getTop() - verticalSpacing);
@@ -653,17 +694,22 @@ public class GridView extends AbsListView {
         int stretchMode = this.mStretchMode;
         int requestedColumnWidth = this.mRequestedColumnWidth;
         boolean didNotInitiallyFit = false;
-        if (this.mRequestedNumColumns != -1) {
-            this.mNumColumns = this.mRequestedNumColumns;
-        } else if (requestedColumnWidth > 0) {
-            this.mNumColumns = (availableSpace + requestedHorizontalSpacing) / (requestedColumnWidth + requestedHorizontalSpacing);
+        if (this.mRequestedNumColumns == -1) {
+            if (requestedColumnWidth > 0) {
+                this.mNumColumns = (availableSpace + requestedHorizontalSpacing) / (requestedColumnWidth + requestedHorizontalSpacing);
+            } else {
+                this.mNumColumns = 2;
+            }
         } else {
-            this.mNumColumns = 2;
+            this.mNumColumns = this.mRequestedNumColumns;
         }
         if (this.mNumColumns <= 0) {
             this.mNumColumns = 1;
         }
-        if (stretchMode != 0) {
+        if (stretchMode == 0) {
+            this.mColumnWidth = requestedColumnWidth;
+            this.mHorizontalSpacing = requestedHorizontalSpacing;
+        } else {
             int spaceLeftOver = (availableSpace - (this.mNumColumns * requestedColumnWidth)) - ((this.mNumColumns - 1) * requestedHorizontalSpacing);
             if (spaceLeftOver < 0) {
                 didNotInitiallyFit = true;
@@ -671,11 +717,11 @@ public class GridView extends AbsListView {
             switch (stretchMode) {
                 case 1:
                     this.mColumnWidth = requestedColumnWidth;
-                    if (this.mNumColumns <= 1) {
-                        this.mHorizontalSpacing = requestedHorizontalSpacing + spaceLeftOver;
+                    if (this.mNumColumns > 1) {
+                        this.mHorizontalSpacing = (spaceLeftOver / (this.mNumColumns - 1)) + requestedHorizontalSpacing;
                         break;
                     } else {
-                        this.mHorizontalSpacing = (spaceLeftOver / (this.mNumColumns - 1)) + requestedHorizontalSpacing;
+                        this.mHorizontalSpacing = requestedHorizontalSpacing + spaceLeftOver;
                         break;
                     }
                 case 2:
@@ -684,188 +730,91 @@ public class GridView extends AbsListView {
                     break;
                 case 3:
                     this.mColumnWidth = requestedColumnWidth;
-                    if (this.mNumColumns <= 1) {
-                        this.mHorizontalSpacing = requestedHorizontalSpacing + spaceLeftOver;
+                    if (this.mNumColumns > 1) {
+                        this.mHorizontalSpacing = (spaceLeftOver / (this.mNumColumns + 1)) + requestedHorizontalSpacing;
                         break;
                     } else {
-                        this.mHorizontalSpacing = (spaceLeftOver / (this.mNumColumns + 1)) + requestedHorizontalSpacing;
+                        this.mHorizontalSpacing = requestedHorizontalSpacing + spaceLeftOver;
                         break;
                     }
             }
-        } else {
-            this.mColumnWidth = requestedColumnWidth;
-            this.mHorizontalSpacing = requestedHorizontalSpacing;
         }
         return didNotInitiallyFit;
     }
 
-    /* JADX WARNING: type inference failed for: r15v11, types: [android.view.ViewGroup$LayoutParams] */
-    /* access modifiers changed from: protected */
-    /* JADX WARNING: Multi-variable type inference failed */
-    /* Code decompiled incorrectly, please refer to instructions dump. */
-    public void onMeasure(int r18, int r19) {
-        /*
-            r17 = this;
-            r0 = r17
-            super.onMeasure(r18, r19)
-            int r1 = android.view.View.MeasureSpec.getMode(r18)
-            int r2 = android.view.View.MeasureSpec.getMode(r19)
-            int r3 = android.view.View.MeasureSpec.getSize(r18)
-            int r4 = android.view.View.MeasureSpec.getSize(r19)
-            if (r1 != 0) goto L_0x0036
-            int r5 = r0.mColumnWidth
-            if (r5 <= 0) goto L_0x0028
-            int r5 = r0.mColumnWidth
-            android.graphics.Rect r6 = r0.mListPadding
-            int r6 = r6.left
-            int r5 = r5 + r6
-            android.graphics.Rect r6 = r0.mListPadding
-            int r6 = r6.right
-            int r5 = r5 + r6
-            goto L_0x0031
-        L_0x0028:
-            android.graphics.Rect r5 = r0.mListPadding
-            int r5 = r5.left
-            android.graphics.Rect r6 = r0.mListPadding
-            int r6 = r6.right
-            int r5 = r5 + r6
-        L_0x0031:
-            int r3 = r17.getVerticalScrollbarWidth()
-            int r3 = r3 + r5
-        L_0x0036:
-            android.graphics.Rect r5 = r0.mListPadding
-            int r5 = r5.left
-            int r5 = r3 - r5
-            android.graphics.Rect r6 = r0.mListPadding
-            int r6 = r6.right
-            int r5 = r5 - r6
-            boolean r6 = r0.determineColumns(r5)
-            r7 = 0
-            r8 = 0
-            android.widget.ListAdapter r9 = r0.mAdapter
-            r10 = 0
-            if (r9 != 0) goto L_0x004e
-            r9 = r10
-            goto L_0x0054
-        L_0x004e:
-            android.widget.ListAdapter r9 = r0.mAdapter
-            int r9 = r9.getCount()
-        L_0x0054:
-            r0.mItemCount = r9
-            int r9 = r0.mItemCount
-            r12 = 1
-            if (r9 <= 0) goto L_0x00c1
-            boolean[] r13 = r0.mIsScrap
-            android.view.View r13 = r0.obtainView(r10, r13)
-            android.view.ViewGroup$LayoutParams r14 = r13.getLayoutParams()
-            android.widget.AbsListView$LayoutParams r14 = (android.widget.AbsListView.LayoutParams) r14
-            if (r14 != 0) goto L_0x0073
-            android.view.ViewGroup$LayoutParams r15 = r17.generateDefaultLayoutParams()
-            r14 = r15
-            android.widget.AbsListView$LayoutParams r14 = (android.widget.AbsListView.LayoutParams) r14
-            r13.setLayoutParams(r14)
-        L_0x0073:
-            android.widget.ListAdapter r15 = r0.mAdapter
-            int r15 = r15.getItemViewType(r10)
-            r14.viewType = r15
-            android.widget.ListAdapter r15 = r0.mAdapter
-            boolean r15 = r15.isEnabled(r10)
-            r14.isEnabled = r15
-            r14.forceAdd = r12
-            int r15 = android.view.View.MeasureSpec.getSize(r19)
-            int r15 = android.view.View.MeasureSpec.makeSafeMeasureSpec(r15, r10)
-            int r12 = r14.height
-            int r12 = getChildMeasureSpec(r15, r10, r12)
-            int r15 = r0.mColumnWidth
-            r11 = 1073741824(0x40000000, float:2.0)
-            int r11 = android.view.View.MeasureSpec.makeMeasureSpec(r15, r11)
-            int r15 = r14.width
-            int r11 = getChildMeasureSpec(r11, r10, r15)
-            r13.measure(r11, r12)
-            int r7 = r13.getMeasuredHeight()
-            int r15 = r13.getMeasuredState()
-            int r8 = combineMeasuredStates(r8, r15)
-            android.widget.AbsListView$RecycleBin r15 = r0.mRecycler
-            int r10 = r14.viewType
-            boolean r10 = r15.shouldRecycleViewType(r10)
-            if (r10 == 0) goto L_0x00c1
-            android.widget.AbsListView$RecycleBin r10 = r0.mRecycler
-            r15 = -1
-            r10.addScrapView(r13, r15)
-        L_0x00c1:
-            if (r2 != 0) goto L_0x00d5
-            android.graphics.Rect r10 = r0.mListPadding
-            int r10 = r10.top
-            android.graphics.Rect r11 = r0.mListPadding
-            int r11 = r11.bottom
-            int r10 = r10 + r11
-            int r10 = r10 + r7
-            int r11 = r17.getVerticalFadingEdgeLength()
-            int r11 = r11 * 2
-            int r4 = r10 + r11
-        L_0x00d5:
-            r10 = -2147483648(0xffffffff80000000, float:-0.0)
-            if (r2 != r10) goto L_0x00fa
-            android.graphics.Rect r11 = r0.mListPadding
-            int r11 = r11.top
-            android.graphics.Rect r12 = r0.mListPadding
-            int r12 = r12.bottom
-            int r11 = r11 + r12
-            int r12 = r0.mNumColumns
-            r16 = 0
-        L_0x00e6:
-            r13 = r16
-            if (r13 >= r9) goto L_0x00f9
-            int r11 = r11 + r7
-            int r14 = r13 + r12
-            if (r14 >= r9) goto L_0x00f2
-            int r14 = r0.mVerticalSpacing
-            int r11 = r11 + r14
-        L_0x00f2:
-            if (r11 < r4) goto L_0x00f6
-            r11 = r4
-            goto L_0x00f9
-        L_0x00f6:
-            int r16 = r13 + r12
-            goto L_0x00e6
-        L_0x00f9:
-            r4 = r11
-        L_0x00fa:
-            if (r1 != r10) goto L_0x011f
-            int r10 = r0.mRequestedNumColumns
-            r11 = -1
-            if (r10 == r11) goto L_0x011f
-            int r10 = r0.mRequestedNumColumns
-            int r11 = r0.mColumnWidth
-            int r10 = r10 * r11
-            int r11 = r0.mRequestedNumColumns
-            r12 = 1
-            int r11 = r11 - r12
-            int r12 = r0.mHorizontalSpacing
-            int r11 = r11 * r12
-            int r10 = r10 + r11
-            android.graphics.Rect r11 = r0.mListPadding
-            int r11 = r11.left
-            int r10 = r10 + r11
-            android.graphics.Rect r11 = r0.mListPadding
-            int r11 = r11.right
-            int r10 = r10 + r11
-            if (r10 > r3) goto L_0x011c
-            if (r6 == 0) goto L_0x011f
-        L_0x011c:
-            r11 = 16777216(0x1000000, float:2.3509887E-38)
-            r3 = r3 | r11
-        L_0x011f:
-            r0.setMeasuredDimension(r3, r4)
-            r10 = r18
-            r0.mWidthMeasureSpec = r10
-            return
-        */
-        throw new UnsupportedOperationException("Method not decompiled: android.widget.GridView.onMeasure(int, int):void");
+    @Override // android.widget.AbsListView, android.view.View
+    protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
+        super.onMeasure(widthMeasureSpec, heightMeasureSpec);
+        int widthMode = View.MeasureSpec.getMode(widthMeasureSpec);
+        int heightMode = View.MeasureSpec.getMode(heightMeasureSpec);
+        int widthSize = View.MeasureSpec.getSize(widthMeasureSpec);
+        int heightSize = View.MeasureSpec.getSize(heightMeasureSpec);
+        if (widthMode == 0) {
+            int widthSize2 = this.mColumnWidth > 0 ? this.mColumnWidth + this.mListPadding.left + this.mListPadding.right : this.mListPadding.left + this.mListPadding.right;
+            int widthSize3 = getVerticalScrollbarWidth();
+            widthSize = widthSize3 + widthSize2;
+        }
+        int childWidth = (widthSize - this.mListPadding.left) - this.mListPadding.right;
+        boolean didNotInitiallyFit = determineColumns(childWidth);
+        int childHeight = 0;
+        this.mItemCount = this.mAdapter == null ? 0 : this.mAdapter.getCount();
+        int count = this.mItemCount;
+        if (count > 0) {
+            View child = obtainView(0, this.mIsScrap);
+            AbsListView.LayoutParams p = (AbsListView.LayoutParams) child.getLayoutParams();
+            if (p == null) {
+                p = (AbsListView.LayoutParams) generateDefaultLayoutParams();
+                child.setLayoutParams(p);
+            }
+            p.viewType = this.mAdapter.getItemViewType(0);
+            p.isEnabled = this.mAdapter.isEnabled(0);
+            p.forceAdd = true;
+            int childHeightSpec = getChildMeasureSpec(View.MeasureSpec.makeSafeMeasureSpec(View.MeasureSpec.getSize(heightMeasureSpec), 0), 0, p.height);
+            int childWidthSpec = getChildMeasureSpec(View.MeasureSpec.makeMeasureSpec(this.mColumnWidth, 1073741824), 0, p.width);
+            child.measure(childWidthSpec, childHeightSpec);
+            childHeight = child.getMeasuredHeight();
+            combineMeasuredStates(0, child.getMeasuredState());
+            if (this.mRecycler.shouldRecycleViewType(p.viewType)) {
+                this.mRecycler.addScrapView(child, -1);
+            }
+        }
+        if (heightMode == 0) {
+            heightSize = this.mListPadding.top + this.mListPadding.bottom + childHeight + (getVerticalFadingEdgeLength() * 2);
+        }
+        if (heightMode == Integer.MIN_VALUE) {
+            int ourSize = this.mListPadding.top + this.mListPadding.bottom;
+            int numColumns = this.mNumColumns;
+            int i = 0;
+            while (true) {
+                int i2 = i;
+                if (i2 >= count) {
+                    break;
+                }
+                ourSize += childHeight;
+                if (i2 + numColumns < count) {
+                    ourSize += this.mVerticalSpacing;
+                }
+                if (ourSize < heightSize) {
+                    i = i2 + numColumns;
+                } else {
+                    ourSize = heightSize;
+                    break;
+                }
+            }
+            heightSize = ourSize;
+        }
+        if (widthMode == Integer.MIN_VALUE && this.mRequestedNumColumns != -1) {
+            int ourSize2 = (this.mRequestedNumColumns * this.mColumnWidth) + ((this.mRequestedNumColumns - 1) * this.mHorizontalSpacing) + this.mListPadding.left + this.mListPadding.right;
+            if (ourSize2 > widthSize || didNotInitiallyFit) {
+                widthSize |= 16777216;
+            }
+        }
+        setMeasuredDimension(widthSize, heightSize);
+        this.mWidthMeasureSpec = widthMeasureSpec;
     }
 
-    /* access modifiers changed from: protected */
-    public void attachLayoutAnimationParameters(View child, ViewGroup.LayoutParams params, int index, int count) {
+    @Override // android.view.ViewGroup
+    protected void attachLayoutAnimationParameters(View child, ViewGroup.LayoutParams params, int index, int count) {
         GridLayoutAnimationController.AnimationParameters animationParams = (GridLayoutAnimationController.AnimationParameters) params.layoutAnimationParameters;
         if (animationParams == null) {
             animationParams = new GridLayoutAnimationController.AnimationParameters();
@@ -885,656 +834,369 @@ public class GridView extends AbsListView {
         animationParams.row = (animationParams.rowsCount - 1) - (invertedIndex / this.mNumColumns);
     }
 
-    /* access modifiers changed from: protected */
-    /* JADX WARNING: Can't fix incorrect switch cases order */
-    /* JADX WARNING: Removed duplicated region for block: B:126:0x01c0 A[Catch:{ all -> 0x0295 }] */
-    /* JADX WARNING: Removed duplicated region for block: B:127:0x01cc A[Catch:{ all -> 0x0295 }] */
-    /* JADX WARNING: Removed duplicated region for block: B:149:0x0216 A[Catch:{ all -> 0x0295 }] */
-    /* JADX WARNING: Removed duplicated region for block: B:163:0x0266 A[Catch:{ all -> 0x0295 }] */
-    /* JADX WARNING: Removed duplicated region for block: B:166:0x0273 A[Catch:{ all -> 0x0295 }] */
-    /* JADX WARNING: Removed duplicated region for block: B:169:0x0289 A[Catch:{ all -> 0x0295 }] */
-    /* JADX WARNING: Removed duplicated region for block: B:172:0x0291  */
-    /* JADX WARNING: Removed duplicated region for block: B:177:0x029c  */
-    /* JADX WARNING: Removed duplicated region for block: B:185:? A[RETURN, SYNTHETIC] */
-    /* JADX WARNING: Removed duplicated region for block: B:70:0x00d6 A[Catch:{ all -> 0x0297 }] */
-    /* JADX WARNING: Removed duplicated region for block: B:77:0x00f2 A[Catch:{ all -> 0x0295 }] */
-    /* JADX WARNING: Removed duplicated region for block: B:80:0x0105 A[Catch:{ all -> 0x0295 }] */
-    /* JADX WARNING: Removed duplicated region for block: B:82:0x010a A[Catch:{ all -> 0x0295 }] */
-    /* JADX WARNING: Removed duplicated region for block: B:83:0x0110 A[Catch:{ all -> 0x0295 }] */
-    /* JADX WARNING: Removed duplicated region for block: B:84:0x011a A[Catch:{ all -> 0x0295 }] */
-    /* JADX WARNING: Removed duplicated region for block: B:85:0x0124 A[Catch:{ all -> 0x0295 }] */
-    /* JADX WARNING: Removed duplicated region for block: B:86:0x0131 A[Catch:{ all -> 0x0295 }] */
-    /* JADX WARNING: Removed duplicated region for block: B:89:0x0143 A[Catch:{ all -> 0x0295 }] */
-    /* Code decompiled incorrectly, please refer to instructions dump. */
-    public void layoutChildren() {
-        /*
-            r27 = this;
-            r1 = r27
-            boolean r2 = r1.mBlockLayoutRequests
-            r0 = 1
-            if (r2 != 0) goto L_0x0009
-            r1.mBlockLayoutRequests = r0
-        L_0x0009:
-            r3 = 0
-            super.layoutChildren()     // Catch:{ all -> 0x0297 }
-            r27.invalidate()     // Catch:{ all -> 0x0297 }
-            android.widget.ListAdapter r4 = r1.mAdapter     // Catch:{ all -> 0x0297 }
-            if (r4 != 0) goto L_0x0024
-            r27.resetList()     // Catch:{ all -> 0x001f }
-            r27.invokeOnItemScrollListener()     // Catch:{ all -> 0x001f }
-            if (r2 != 0) goto L_0x001e
-            r1.mBlockLayoutRequests = r3
-        L_0x001e:
-            return
-        L_0x001f:
-            r0 = move-exception
-            r21 = r2
-            goto L_0x029a
-        L_0x0024:
-            android.graphics.Rect r4 = r1.mListPadding     // Catch:{ all -> 0x0297 }
-            int r4 = r4.top     // Catch:{ all -> 0x0297 }
-            int r5 = r1.mBottom     // Catch:{ all -> 0x0297 }
-            int r6 = r1.mTop     // Catch:{ all -> 0x0297 }
-            int r5 = r5 - r6
-            android.graphics.Rect r6 = r1.mListPadding     // Catch:{ all -> 0x0297 }
-            int r6 = r6.bottom     // Catch:{ all -> 0x0297 }
-            int r5 = r5 - r6
-            int r6 = r27.getChildCount()     // Catch:{ all -> 0x0297 }
-            r7 = 0
-            r8 = 0
-            r9 = 0
-            r10 = 0
-            int r11 = r1.mLayoutMode     // Catch:{ all -> 0x0297 }
-            switch(r11) {
-                case 1: goto L_0x005c;
-                case 2: goto L_0x004d;
-                case 3: goto L_0x005c;
-                case 4: goto L_0x005c;
-                case 5: goto L_0x005c;
-                case 6: goto L_0x0042;
-                default: goto L_0x003f;
-            }     // Catch:{ all -> 0x0297 }
-        L_0x003f:
-            int r11 = r1.mSelectedPosition     // Catch:{ all -> 0x0297 }
-            goto L_0x005d
-        L_0x0042:
-            int r11 = r1.mNextSelectedPosition     // Catch:{ all -> 0x001f }
-            if (r11 < 0) goto L_0x006e
-            int r11 = r1.mNextSelectedPosition     // Catch:{ all -> 0x001f }
-            int r12 = r1.mSelectedPosition     // Catch:{ all -> 0x001f }
-            int r7 = r11 - r12
-            goto L_0x006e
-        L_0x004d:
-            int r11 = r1.mNextSelectedPosition     // Catch:{ all -> 0x001f }
-            int r12 = r1.mFirstPosition     // Catch:{ all -> 0x001f }
-            int r11 = r11 - r12
-            if (r11 < 0) goto L_0x006e
-            if (r11 >= r6) goto L_0x006e
-            android.view.View r12 = r1.getChildAt(r11)     // Catch:{ all -> 0x001f }
-            r10 = r12
-            goto L_0x006e
-        L_0x005c:
-            goto L_0x006e
-        L_0x005d:
-            int r12 = r1.mFirstPosition     // Catch:{ all -> 0x0297 }
-            int r11 = r11 - r12
-            if (r11 < 0) goto L_0x0069
-            if (r11 >= r6) goto L_0x0069
-            android.view.View r12 = r1.getChildAt(r11)     // Catch:{ all -> 0x001f }
-            r8 = r12
-        L_0x0069:
-            android.view.View r12 = r1.getChildAt(r3)     // Catch:{ all -> 0x0297 }
-            r9 = r12
-        L_0x006e:
-            boolean r11 = r1.mDataChanged     // Catch:{ all -> 0x0297 }
-            if (r11 == 0) goto L_0x0075
-            r27.handleDataChanged()     // Catch:{ all -> 0x001f }
-        L_0x0075:
-            int r12 = r1.mItemCount     // Catch:{ all -> 0x0297 }
-            if (r12 != 0) goto L_0x0084
-            r27.resetList()     // Catch:{ all -> 0x001f }
-            r27.invokeOnItemScrollListener()     // Catch:{ all -> 0x001f }
-            if (r2 != 0) goto L_0x0083
-            r1.mBlockLayoutRequests = r3
-        L_0x0083:
-            return
-        L_0x0084:
-            int r12 = r1.mNextSelectedPosition     // Catch:{ all -> 0x0297 }
-            r1.setSelectedPositionInt(r12)     // Catch:{ all -> 0x0297 }
-            r12 = 0
-            r13 = 0
-            r14 = -1
-            android.view.ViewRootImpl r15 = r27.getViewRootImpl()     // Catch:{ all -> 0x0297 }
-            if (r15 == 0) goto L_0x00ce
-            android.view.View r16 = r15.getAccessibilityFocusedHost()     // Catch:{ all -> 0x001f }
-            r17 = r16
-            r3 = r17
-            if (r3 == 0) goto L_0x00ce
-            android.view.View r16 = r1.getAccessibilityFocusedChild(r3)     // Catch:{ all -> 0x001f }
-            r18 = r16
-            r0 = r18
-            if (r0 == 0) goto L_0x00ce
-            if (r11 == 0) goto L_0x00b8
-            boolean r16 = r0.hasTransientState()     // Catch:{ all -> 0x001f }
-            if (r16 != 0) goto L_0x00b8
-            r19 = r12
-            boolean r12 = r1.mAdapterHasStableIds     // Catch:{ all -> 0x001f }
-            if (r12 == 0) goto L_0x00b5
-            goto L_0x00ba
-        L_0x00b5:
-            r12 = r19
-            goto L_0x00c5
-        L_0x00b8:
-            r19 = r12
-        L_0x00ba:
-            r12 = r3
-            android.view.accessibility.AccessibilityNodeInfo r13 = r15.getAccessibilityFocusedVirtualView()     // Catch:{ all -> 0x001f }
-            r26 = r13
-            r13 = r12
-            r12 = r26
-        L_0x00c5:
-            int r16 = r1.getPositionForView(r0)     // Catch:{ all -> 0x001f }
-            r14 = r16
-            r19 = r12
-            goto L_0x00d0
-        L_0x00ce:
-            r19 = r12
-        L_0x00d0:
-            int r0 = r1.mFirstPosition     // Catch:{ all -> 0x0297 }
-            android.widget.AbsListView$RecycleBin r3 = r1.mRecycler     // Catch:{ all -> 0x0297 }
-            if (r11 == 0) goto L_0x00f2
-            r12 = 0
-        L_0x00d7:
-            if (r12 >= r6) goto L_0x00ed
-            r20 = r11
-            android.view.View r11 = r1.getChildAt(r12)     // Catch:{ all -> 0x0297 }
-            r21 = r2
-            int r2 = r0 + r12
-            r3.addScrapView(r11, r2)     // Catch:{ all -> 0x0295 }
-            int r12 = r12 + 1
-            r11 = r20
-            r2 = r21
-            goto L_0x00d7
-        L_0x00ed:
-            r21 = r2
-            r20 = r11
-            goto L_0x00f9
-        L_0x00f2:
-            r21 = r2
-            r20 = r11
-            r3.fillActiveViews(r6, r0)     // Catch:{ all -> 0x0295 }
-        L_0x00f9:
-            r27.detachAllViewsFromParent()     // Catch:{ all -> 0x0295 }
-            r3.removeSkippedScrap()     // Catch:{ all -> 0x0295 }
-            int r2 = r1.mLayoutMode     // Catch:{ all -> 0x0295 }
-            r11 = -1
-            switch(r2) {
-                case 1: goto L_0x0143;
-                case 2: goto L_0x0131;
-                case 3: goto L_0x0124;
-                case 4: goto L_0x011a;
-                case 5: goto L_0x0110;
-                case 6: goto L_0x010a;
-                default: goto L_0x0105;
-            }     // Catch:{ all -> 0x0295 }
-        L_0x0105:
-            if (r6 != 0) goto L_0x0185
-            boolean r2 = r1.mStackFromBottom     // Catch:{ all -> 0x0295 }
-            goto L_0x014f
-        L_0x010a:
-            android.view.View r2 = r1.moveSelection(r7, r4, r5)     // Catch:{ all -> 0x0295 }
-            goto L_0x01bb
-        L_0x0110:
-            int r2 = r1.mSyncPosition     // Catch:{ all -> 0x0295 }
-            int r12 = r1.mSpecificTop     // Catch:{ all -> 0x0295 }
-            android.view.View r2 = r1.fillSpecific(r2, r12)     // Catch:{ all -> 0x0295 }
-            goto L_0x01bb
-        L_0x011a:
-            int r2 = r1.mSelectedPosition     // Catch:{ all -> 0x0295 }
-            int r12 = r1.mSpecificTop     // Catch:{ all -> 0x0295 }
-            android.view.View r2 = r1.fillSpecific(r2, r12)     // Catch:{ all -> 0x0295 }
-            goto L_0x01bb
-        L_0x0124:
-            int r2 = r1.mItemCount     // Catch:{ all -> 0x0295 }
-            r12 = 1
-            int r2 = r2 - r12
-            android.view.View r2 = r1.fillUp(r2, r5)     // Catch:{ all -> 0x0295 }
-            r27.adjustViewsUpOrDown()     // Catch:{ all -> 0x0295 }
-            goto L_0x01bb
-        L_0x0131:
-            if (r10 == 0) goto L_0x013d
-            int r2 = r10.getTop()     // Catch:{ all -> 0x0295 }
-            android.view.View r2 = r1.fillFromSelection(r2, r4, r5)     // Catch:{ all -> 0x0295 }
-            goto L_0x01bb
-        L_0x013d:
-            android.view.View r2 = r1.fillSelection(r4, r5)     // Catch:{ all -> 0x0295 }
-            goto L_0x01bb
-        L_0x0143:
-            r2 = 0
-            r1.mFirstPosition = r2     // Catch:{ all -> 0x0295 }
-            android.view.View r2 = r1.fillFromTop(r4)     // Catch:{ all -> 0x0295 }
-            r27.adjustViewsUpOrDown()     // Catch:{ all -> 0x0295 }
-            goto L_0x01bb
-        L_0x014f:
-            if (r2 != 0) goto L_0x0169
-            android.widget.ListAdapter r2 = r1.mAdapter     // Catch:{ all -> 0x0295 }
-            if (r2 == 0) goto L_0x015f
-            boolean r2 = r27.isInTouchMode()     // Catch:{ all -> 0x0295 }
-            if (r2 == 0) goto L_0x015c
-            goto L_0x015f
-        L_0x015c:
-            r2 = 0
-            goto L_0x0161
-        L_0x015f:
-            r2 = r11
-        L_0x0161:
-            r1.setSelectedPositionInt(r2)     // Catch:{ all -> 0x0295 }
-            android.view.View r2 = r1.fillFromTop(r4)     // Catch:{ all -> 0x0295 }
-            goto L_0x01bb
-        L_0x0169:
-            int r2 = r1.mItemCount     // Catch:{ all -> 0x0295 }
-            r12 = 1
-            int r2 = r2 - r12
-            android.widget.ListAdapter r12 = r1.mAdapter     // Catch:{ all -> 0x0295 }
-            if (r12 == 0) goto L_0x017a
-            boolean r12 = r27.isInTouchMode()     // Catch:{ all -> 0x0295 }
-            if (r12 == 0) goto L_0x0178
-            goto L_0x017a
-        L_0x0178:
-            r12 = r2
-            goto L_0x017c
-        L_0x017a:
-            r12 = r11
-        L_0x017c:
-            r1.setSelectedPositionInt(r12)     // Catch:{ all -> 0x0295 }
-            android.view.View r12 = r1.fillFromBottom(r2, r5)     // Catch:{ all -> 0x0295 }
-            r2 = r12
-            goto L_0x01bb
-        L_0x0185:
-            int r2 = r1.mSelectedPosition     // Catch:{ all -> 0x0295 }
-            if (r2 < 0) goto L_0x019f
-            int r2 = r1.mSelectedPosition     // Catch:{ all -> 0x0295 }
-            int r12 = r1.mItemCount     // Catch:{ all -> 0x0295 }
-            if (r2 >= r12) goto L_0x019f
-            int r2 = r1.mSelectedPosition     // Catch:{ all -> 0x0295 }
-            if (r8 != 0) goto L_0x0196
-            r12 = r4
-            goto L_0x019a
-        L_0x0196:
-            int r12 = r8.getTop()     // Catch:{ all -> 0x0295 }
-        L_0x019a:
-            android.view.View r2 = r1.fillSpecific(r2, r12)     // Catch:{ all -> 0x0295 }
-            goto L_0x01bb
-        L_0x019f:
-            int r2 = r1.mFirstPosition     // Catch:{ all -> 0x0295 }
-            int r12 = r1.mItemCount     // Catch:{ all -> 0x0295 }
-            if (r2 >= r12) goto L_0x01b5
-            int r2 = r1.mFirstPosition     // Catch:{ all -> 0x0295 }
-            if (r9 != 0) goto L_0x01ac
-            r12 = r4
-            goto L_0x01b0
-        L_0x01ac:
-            int r12 = r9.getTop()     // Catch:{ all -> 0x0295 }
-        L_0x01b0:
-            android.view.View r2 = r1.fillSpecific(r2, r12)     // Catch:{ all -> 0x0295 }
-            goto L_0x01bb
-        L_0x01b5:
-            r2 = 0
-            android.view.View r12 = r1.fillSpecific(r2, r4)     // Catch:{ all -> 0x0295 }
-            r2 = r12
-        L_0x01bb:
-            r3.scrapActiveViews()     // Catch:{ all -> 0x0295 }
-            if (r2 == 0) goto L_0x01cc
-            r1.positionSelector(r11, r2)     // Catch:{ all -> 0x0295 }
-            int r12 = r2.getTop()     // Catch:{ all -> 0x0295 }
-            r1.mSelectedTop = r12     // Catch:{ all -> 0x0295 }
-            r22 = r0
-            goto L_0x020d
-        L_0x01cc:
-            int r12 = r1.mTouchMode     // Catch:{ all -> 0x0295 }
-            if (r12 <= 0) goto L_0x01d7
-            int r12 = r1.mTouchMode     // Catch:{ all -> 0x0295 }
-            r11 = 3
-            if (r12 >= r11) goto L_0x01d7
-            r11 = 1
-            goto L_0x01d8
-        L_0x01d7:
-            r11 = 0
-        L_0x01d8:
-            if (r11 == 0) goto L_0x01ed
-            int r12 = r1.mMotionPosition     // Catch:{ all -> 0x0295 }
-            r22 = r0
-            int r0 = r1.mFirstPosition     // Catch:{ all -> 0x0295 }
-            int r12 = r12 - r0
-            android.view.View r0 = r1.getChildAt(r12)     // Catch:{ all -> 0x0295 }
-            if (r0 == 0) goto L_0x01ec
-            int r12 = r1.mMotionPosition     // Catch:{ all -> 0x0295 }
-            r1.positionSelector(r12, r0)     // Catch:{ all -> 0x0295 }
-        L_0x01ec:
-            goto L_0x020d
-        L_0x01ed:
-            r22 = r0
-            int r0 = r1.mSelectedPosition     // Catch:{ all -> 0x0295 }
-            r12 = -1
-            if (r0 == r12) goto L_0x0205
-            int r0 = r1.mSelectorPosition     // Catch:{ all -> 0x0295 }
-            int r12 = r1.mFirstPosition     // Catch:{ all -> 0x0295 }
-            int r0 = r0 - r12
-            android.view.View r0 = r1.getChildAt(r0)     // Catch:{ all -> 0x0295 }
-            if (r0 == 0) goto L_0x0204
-            int r12 = r1.mSelectorPosition     // Catch:{ all -> 0x0295 }
-            r1.positionSelector(r12, r0)     // Catch:{ all -> 0x0295 }
-        L_0x0204:
-            goto L_0x020d
-        L_0x0205:
-            r12 = 0
-            r1.mSelectedTop = r12     // Catch:{ all -> 0x0295 }
-            android.graphics.Rect r0 = r1.mSelectorRect     // Catch:{ all -> 0x0295 }
-            r0.setEmpty()     // Catch:{ all -> 0x0295 }
-        L_0x020d:
-            r0 = 0
-            if (r15 == 0) goto L_0x0266
-            android.view.View r11 = r15.getAccessibilityFocusedHost()     // Catch:{ all -> 0x0295 }
-            if (r11 != 0) goto L_0x0266
-            if (r13 == 0) goto L_0x0246
-            boolean r12 = r13.isAttachedToWindow()     // Catch:{ all -> 0x0295 }
-            if (r12 == 0) goto L_0x0246
-            android.view.accessibility.AccessibilityNodeProvider r12 = r13.getAccessibilityNodeProvider()     // Catch:{ all -> 0x0295 }
-            if (r19 == 0) goto L_0x023e
-            if (r12 == 0) goto L_0x023e
-            long r16 = r19.getSourceNodeId()     // Catch:{ all -> 0x0295 }
-            int r16 = android.view.accessibility.AccessibilityNodeInfo.getVirtualDescendantId(r16)     // Catch:{ all -> 0x0295 }
-            r23 = r16
-            r24 = r2
-            r2 = 64
-            r25 = r3
-            r3 = r23
-            r12.performAction(r3, r2, r0)     // Catch:{ all -> 0x0295 }
-            goto L_0x0245
-        L_0x023e:
-            r24 = r2
-            r25 = r3
-            r13.requestAccessibilityFocus()     // Catch:{ all -> 0x0295 }
-        L_0x0245:
-            goto L_0x026a
-        L_0x0246:
-            r24 = r2
-            r25 = r3
-            r2 = -1
-            if (r14 == r2) goto L_0x026a
-            int r2 = r1.mFirstPosition     // Catch:{ all -> 0x0295 }
-            int r2 = r14 - r2
-            int r3 = r27.getChildCount()     // Catch:{ all -> 0x0295 }
-            r12 = 1
-            int r3 = r3 - r12
-            r12 = 0
-            int r2 = android.util.MathUtils.constrain((int) r2, (int) r12, (int) r3)     // Catch:{ all -> 0x0295 }
-            android.view.View r3 = r1.getChildAt(r2)     // Catch:{ all -> 0x0295 }
-            if (r3 == 0) goto L_0x026a
-            r3.requestAccessibilityFocus()     // Catch:{ all -> 0x0295 }
-            goto L_0x026a
-        L_0x0266:
-            r24 = r2
-            r25 = r3
-        L_0x026a:
-            r2 = 0
-            r1.mLayoutMode = r2     // Catch:{ all -> 0x0295 }
-            r1.mDataChanged = r2     // Catch:{ all -> 0x0295 }
-            java.lang.Runnable r2 = r1.mPositionScrollAfterLayout     // Catch:{ all -> 0x0295 }
-            if (r2 == 0) goto L_0x027a
-            java.lang.Runnable r2 = r1.mPositionScrollAfterLayout     // Catch:{ all -> 0x0295 }
-            r1.post(r2)     // Catch:{ all -> 0x0295 }
-            r1.mPositionScrollAfterLayout = r0     // Catch:{ all -> 0x0295 }
-        L_0x027a:
-            r2 = 0
-            r1.mNeedSync = r2     // Catch:{ all -> 0x0295 }
-            int r0 = r1.mSelectedPosition     // Catch:{ all -> 0x0295 }
-            r1.setNextSelectedPositionInt(r0)     // Catch:{ all -> 0x0295 }
-            r27.updateScrollIndicators()     // Catch:{ all -> 0x0295 }
-            int r0 = r1.mItemCount     // Catch:{ all -> 0x0295 }
-            if (r0 <= 0) goto L_0x028c
-            r27.checkSelectionChanged()     // Catch:{ all -> 0x0295 }
-        L_0x028c:
-            r27.invokeOnItemScrollListener()     // Catch:{ all -> 0x0295 }
-            if (r21 != 0) goto L_0x0294
-            r2 = 0
-            r1.mBlockLayoutRequests = r2
-        L_0x0294:
-            return
-        L_0x0295:
-            r0 = move-exception
-            goto L_0x029a
-        L_0x0297:
-            r0 = move-exception
-            r21 = r2
-        L_0x029a:
-            if (r21 != 0) goto L_0x029f
-            r2 = 0
-            r1.mBlockLayoutRequests = r2
-        L_0x029f:
-            throw r0
-        */
-        throw new UnsupportedOperationException("Method not decompiled: android.widget.GridView.layoutChildren():void");
+    /* JADX WARN: Removed duplicated region for block: B:158:0x0273 A[Catch: all -> 0x0295, TryCatch #0 {all -> 0x0295, blocks: (B:67:0x00e3, B:70:0x00f9, B:71:0x0102, B:73:0x0107, B:83:0x0151, B:85:0x0155, B:90:0x0161, B:116:0x01bb, B:118:0x01c0, B:139:0x0210, B:142:0x0218, B:144:0x021f, B:147:0x0228, B:156:0x026a, B:158:0x0273, B:159:0x027a, B:161:0x0289, B:162:0x028c, B:148:0x023e, B:152:0x024d, B:154:0x0262, B:119:0x01cc, B:121:0x01d0, B:126:0x01da, B:128:0x01e7, B:130:0x01ed, B:132:0x01f4, B:134:0x01ff, B:136:0x0205, B:91:0x0169, B:93:0x0171, B:98:0x017c, B:99:0x0185, B:101:0x0189, B:103:0x018f, B:107:0x019a, B:106:0x0196, B:108:0x019f, B:110:0x01a5, B:114:0x01b0, B:113:0x01ac, B:115:0x01b5, B:74:0x010a, B:75:0x0110, B:76:0x011a, B:77:0x0124, B:79:0x0133, B:80:0x013d, B:81:0x0143, B:69:0x00f2), top: B:173:0x00d4 }] */
+    /* JADX WARN: Removed duplicated region for block: B:161:0x0289 A[Catch: all -> 0x0295, TryCatch #0 {all -> 0x0295, blocks: (B:67:0x00e3, B:70:0x00f9, B:71:0x0102, B:73:0x0107, B:83:0x0151, B:85:0x0155, B:90:0x0161, B:116:0x01bb, B:118:0x01c0, B:139:0x0210, B:142:0x0218, B:144:0x021f, B:147:0x0228, B:156:0x026a, B:158:0x0273, B:159:0x027a, B:161:0x0289, B:162:0x028c, B:148:0x023e, B:152:0x024d, B:154:0x0262, B:119:0x01cc, B:121:0x01d0, B:126:0x01da, B:128:0x01e7, B:130:0x01ed, B:132:0x01f4, B:134:0x01ff, B:136:0x0205, B:91:0x0169, B:93:0x0171, B:98:0x017c, B:99:0x0185, B:101:0x0189, B:103:0x018f, B:107:0x019a, B:106:0x0196, B:108:0x019f, B:110:0x01a5, B:114:0x01b0, B:113:0x01ac, B:115:0x01b5, B:74:0x010a, B:75:0x0110, B:76:0x011a, B:77:0x0124, B:79:0x0133, B:80:0x013d, B:81:0x0143, B:69:0x00f2), top: B:173:0x00d4 }] */
+    /* JADX WARN: Removed duplicated region for block: B:164:0x0291  */
+    /* JADX WARN: Removed duplicated region for block: B:181:? A[RETURN, SYNTHETIC] */
+    @Override // android.widget.AbsListView
+    /*
+        Code decompiled incorrectly, please refer to instructions dump.
+    */
+    protected void layoutChildren() {
+        boolean blockLayoutRequests;
+        AccessibilityNodeInfo accessibilityFocusLayoutRestoreNode;
+        View sel;
+        int i;
+        int i2;
+        View focusHost;
+        View focusChild;
+        AccessibilityNodeInfo accessibilityFocusLayoutRestoreNode2;
+        boolean blockLayoutRequests2 = this.mBlockLayoutRequests;
+        if (!blockLayoutRequests2) {
+            this.mBlockLayoutRequests = true;
+        }
+        try {
+            super.layoutChildren();
+            invalidate();
+            try {
+                if (this.mAdapter == null) {
+                    resetList();
+                    invokeOnItemScrollListener();
+                    if (blockLayoutRequests2) {
+                        return;
+                    }
+                    this.mBlockLayoutRequests = false;
+                    return;
+                }
+                int childrenTop = this.mListPadding.top;
+                int childrenBottom = (this.mBottom - this.mTop) - this.mListPadding.bottom;
+                int childCount = getChildCount();
+                int delta = 0;
+                View oldSel = null;
+                View oldFirst = null;
+                View newSel = null;
+                switch (this.mLayoutMode) {
+                    case 1:
+                    case 3:
+                    case 4:
+                    case 5:
+                        break;
+                    case 2:
+                        int index = this.mNextSelectedPosition - this.mFirstPosition;
+                        if (index >= 0 && index < childCount) {
+                            newSel = getChildAt(index);
+                            break;
+                        }
+                        break;
+                    case 6:
+                        if (this.mNextSelectedPosition >= 0) {
+                            delta = this.mNextSelectedPosition - this.mSelectedPosition;
+                            break;
+                        }
+                        break;
+                    default:
+                        int index2 = this.mSelectedPosition - this.mFirstPosition;
+                        if (index2 >= 0 && index2 < childCount) {
+                            oldSel = getChildAt(index2);
+                        }
+                        oldFirst = getChildAt(0);
+                        break;
+                }
+                boolean dataChanged = this.mDataChanged;
+                if (dataChanged) {
+                    handleDataChanged();
+                }
+                if (this.mItemCount == 0) {
+                    resetList();
+                    invokeOnItemScrollListener();
+                    if (blockLayoutRequests2) {
+                        return;
+                    }
+                    this.mBlockLayoutRequests = false;
+                    return;
+                }
+                setSelectedPositionInt(this.mNextSelectedPosition);
+                View accessibilityFocusLayoutRestoreView = null;
+                int accessibilityFocusPosition = -1;
+                ViewRootImpl viewRootImpl = getViewRootImpl();
+                if (viewRootImpl == null || (focusHost = viewRootImpl.getAccessibilityFocusedHost()) == null || (focusChild = getAccessibilityFocusedChild(focusHost)) == null) {
+                    accessibilityFocusLayoutRestoreNode = null;
+                } else {
+                    if (dataChanged && !focusChild.hasTransientState()) {
+                        if (!this.mAdapterHasStableIds) {
+                            accessibilityFocusLayoutRestoreNode2 = null;
+                            accessibilityFocusPosition = getPositionForView(focusChild);
+                            accessibilityFocusLayoutRestoreNode = accessibilityFocusLayoutRestoreNode2;
+                        }
+                    }
+                    accessibilityFocusLayoutRestoreView = focusHost;
+                    accessibilityFocusLayoutRestoreNode2 = viewRootImpl.getAccessibilityFocusedVirtualView();
+                    accessibilityFocusPosition = getPositionForView(focusChild);
+                    accessibilityFocusLayoutRestoreNode = accessibilityFocusLayoutRestoreNode2;
+                }
+                int firstPosition = this.mFirstPosition;
+                AbsListView.RecycleBin recycleBin = this.mRecycler;
+                try {
+                    if (dataChanged) {
+                        int i3 = 0;
+                        while (i3 < childCount) {
+                            boolean dataChanged2 = dataChanged;
+                            boolean blockLayoutRequests3 = blockLayoutRequests2;
+                            recycleBin.addScrapView(getChildAt(i3), firstPosition + i3);
+                            i3++;
+                            dataChanged = dataChanged2;
+                            blockLayoutRequests2 = blockLayoutRequests3;
+                        }
+                        blockLayoutRequests = blockLayoutRequests2;
+                    } else {
+                        blockLayoutRequests = blockLayoutRequests2;
+                        recycleBin.fillActiveViews(childCount, firstPosition);
+                    }
+                    detachAllViewsFromParent();
+                    recycleBin.removeSkippedScrap();
+                    switch (this.mLayoutMode) {
+                        case 1:
+                            this.mFirstPosition = 0;
+                            sel = fillFromTop(childrenTop);
+                            adjustViewsUpOrDown();
+                            break;
+                        case 2:
+                            if (newSel == null) {
+                                sel = fillSelection(childrenTop, childrenBottom);
+                                break;
+                            } else {
+                                sel = fillFromSelection(newSel.getTop(), childrenTop, childrenBottom);
+                                break;
+                            }
+                        case 3:
+                            sel = fillUp(this.mItemCount - 1, childrenBottom);
+                            adjustViewsUpOrDown();
+                            break;
+                        case 4:
+                            sel = fillSpecific(this.mSelectedPosition, this.mSpecificTop);
+                            break;
+                        case 5:
+                            sel = fillSpecific(this.mSyncPosition, this.mSpecificTop);
+                            break;
+                        case 6:
+                            sel = moveSelection(delta, childrenTop, childrenBottom);
+                            break;
+                        default:
+                            if (childCount != 0) {
+                                if (this.mSelectedPosition >= 0 && this.mSelectedPosition < this.mItemCount) {
+                                    sel = fillSpecific(this.mSelectedPosition, oldSel == null ? childrenTop : oldSel.getTop());
+                                    break;
+                                } else if (this.mFirstPosition >= this.mItemCount) {
+                                    sel = fillSpecific(0, childrenTop);
+                                    break;
+                                } else {
+                                    sel = fillSpecific(this.mFirstPosition, oldFirst == null ? childrenTop : oldFirst.getTop());
+                                    break;
+                                }
+                            } else if (this.mStackFromBottom) {
+                                int last = this.mItemCount - 1;
+                                if (this.mAdapter != null && !isInTouchMode()) {
+                                    i = last;
+                                    setSelectedPositionInt(i);
+                                    sel = fillFromBottom(last, childrenBottom);
+                                    break;
+                                }
+                                i = -1;
+                                setSelectedPositionInt(i);
+                                sel = fillFromBottom(last, childrenBottom);
+                            } else {
+                                if (this.mAdapter != null && !isInTouchMode()) {
+                                    i2 = 0;
+                                    setSelectedPositionInt(i2);
+                                    sel = fillFromTop(childrenTop);
+                                    break;
+                                }
+                                i2 = -1;
+                                setSelectedPositionInt(i2);
+                                sel = fillFromTop(childrenTop);
+                            }
+                            break;
+                    }
+                    recycleBin.scrapActiveViews();
+                    if (sel != null) {
+                        positionSelector(-1, sel);
+                        this.mSelectedTop = sel.getTop();
+                    } else {
+                        boolean inTouchMode = this.mTouchMode > 0 && this.mTouchMode < 3;
+                        if (inTouchMode) {
+                            View child = getChildAt(this.mMotionPosition - this.mFirstPosition);
+                            if (child != null) {
+                                positionSelector(this.mMotionPosition, child);
+                            }
+                        } else if (this.mSelectedPosition != -1) {
+                            View child2 = getChildAt(this.mSelectorPosition - this.mFirstPosition);
+                            if (child2 != null) {
+                                positionSelector(this.mSelectorPosition, child2);
+                            }
+                        } else {
+                            this.mSelectedTop = 0;
+                            this.mSelectorRect.setEmpty();
+                        }
+                    }
+                    if (viewRootImpl != null) {
+                        View newAccessibilityFocusedView = viewRootImpl.getAccessibilityFocusedHost();
+                        if (newAccessibilityFocusedView == null) {
+                            if (accessibilityFocusLayoutRestoreView != null && accessibilityFocusLayoutRestoreView.isAttachedToWindow()) {
+                                AccessibilityNodeProvider provider = accessibilityFocusLayoutRestoreView.getAccessibilityNodeProvider();
+                                if (accessibilityFocusLayoutRestoreNode == null || provider == null) {
+                                    accessibilityFocusLayoutRestoreView.requestAccessibilityFocus();
+                                } else {
+                                    int virtualViewId = AccessibilityNodeInfo.getVirtualDescendantId(accessibilityFocusLayoutRestoreNode.getSourceNodeId());
+                                    provider.performAction(virtualViewId, 64, null);
+                                }
+                            } else if (accessibilityFocusPosition != -1) {
+                                int position = MathUtils.constrain(accessibilityFocusPosition - this.mFirstPosition, 0, getChildCount() - 1);
+                                View restoreView = getChildAt(position);
+                                if (restoreView != null) {
+                                    restoreView.requestAccessibilityFocus();
+                                }
+                            }
+                            this.mLayoutMode = 0;
+                            this.mDataChanged = false;
+                            if (this.mPositionScrollAfterLayout != null) {
+                                post(this.mPositionScrollAfterLayout);
+                                this.mPositionScrollAfterLayout = null;
+                            }
+                            this.mNeedSync = false;
+                            setNextSelectedPositionInt(this.mSelectedPosition);
+                            updateScrollIndicators();
+                            if (this.mItemCount > 0) {
+                                checkSelectionChanged();
+                            }
+                            invokeOnItemScrollListener();
+                            if (blockLayoutRequests) {
+                                this.mBlockLayoutRequests = false;
+                                return;
+                            }
+                            return;
+                        }
+                    }
+                    this.mLayoutMode = 0;
+                    this.mDataChanged = false;
+                    if (this.mPositionScrollAfterLayout != null) {
+                    }
+                    this.mNeedSync = false;
+                    setNextSelectedPositionInt(this.mSelectedPosition);
+                    updateScrollIndicators();
+                    if (this.mItemCount > 0) {
+                    }
+                    invokeOnItemScrollListener();
+                    if (blockLayoutRequests) {
+                    }
+                } catch (Throwable th) {
+                    th = th;
+                    if (!blockLayoutRequests) {
+                        this.mBlockLayoutRequests = false;
+                    }
+                    throw th;
+                }
+            } catch (Throwable th2) {
+                th = th2;
+                blockLayoutRequests = blockLayoutRequests2;
+            }
+        } catch (Throwable th3) {
+            th = th3;
+            blockLayoutRequests = blockLayoutRequests2;
+        }
     }
 
     private View makeAndAddView(int position, int y, boolean flow, int childrenLeft, boolean selected, int where) {
         View activeView;
-        int i = position;
-        if (this.mDataChanged || (activeView = this.mRecycler.getActiveView(position)) == null) {
-            View child = obtainView(position, this.mIsScrap);
-            setupChild(child, position, y, flow, childrenLeft, selected, this.mIsScrap[0], where);
-            return child;
+        if (!this.mDataChanged && (activeView = this.mRecycler.getActiveView(position)) != null) {
+            setupChild(activeView, position, y, flow, childrenLeft, selected, true, where);
+            return activeView;
         }
-        setupChild(activeView, position, y, flow, childrenLeft, selected, true, where);
-        return activeView;
+        View child = obtainView(position, this.mIsScrap);
+        setupChild(child, position, y, flow, childrenLeft, selected, this.mIsScrap[0], where);
+        return child;
     }
 
-    /* JADX WARNING: type inference failed for: r18v0, types: [android.view.ViewGroup$LayoutParams] */
-    /* JADX WARNING: Multi-variable type inference failed */
-    /* Code decompiled incorrectly, please refer to instructions dump. */
-    private void setupChild(android.view.View r24, int r25, int r26, boolean r27, int r28, boolean r29, boolean r30, int r31) {
-        /*
-            r23 = this;
-            r0 = r23
-            r1 = r24
-            r2 = r25
-            r5 = r31
-            java.lang.String r6 = "setupGridItem"
-            r7 = 8
-            android.os.Trace.traceBegin(r7, r6)
-            if (r29 == 0) goto L_0x001a
-            boolean r10 = r23.shouldShowSelector()
-            if (r10 == 0) goto L_0x001a
-            r10 = 1
-            goto L_0x001b
-        L_0x001a:
-            r10 = 0
-        L_0x001b:
-            boolean r11 = r24.isSelected()
-            if (r10 == r11) goto L_0x0023
-            r11 = 1
-            goto L_0x0024
-        L_0x0023:
-            r11 = 0
-        L_0x0024:
-            int r12 = r0.mTouchMode
-            r13 = 3
-            if (r12 <= 0) goto L_0x0031
-            if (r12 >= r13) goto L_0x0031
-            int r14 = r0.mMotionPosition
-            if (r14 != r2) goto L_0x0031
-            r14 = 1
-            goto L_0x0032
-        L_0x0031:
-            r14 = 0
-        L_0x0032:
-            boolean r7 = r24.isPressed()
-            if (r14 == r7) goto L_0x003a
-            r7 = 1
-            goto L_0x003b
-        L_0x003a:
-            r7 = 0
-        L_0x003b:
-            if (r30 == 0) goto L_0x0048
-            if (r11 != 0) goto L_0x0048
-            boolean r8 = r24.isLayoutRequested()
-            if (r8 == 0) goto L_0x0046
-            goto L_0x0048
-        L_0x0046:
-            r8 = 0
-            goto L_0x0049
-        L_0x0048:
-            r8 = 1
-        L_0x0049:
-            android.view.ViewGroup$LayoutParams r17 = r24.getLayoutParams()
-            android.widget.AbsListView$LayoutParams r17 = (android.widget.AbsListView.LayoutParams) r17
-            if (r17 != 0) goto L_0x0059
-            android.view.ViewGroup$LayoutParams r18 = r23.generateDefaultLayoutParams()
-            r17 = r18
-            android.widget.AbsListView$LayoutParams r17 = (android.widget.AbsListView.LayoutParams) r17
-        L_0x0059:
-            r13 = r17
-            android.widget.ListAdapter r6 = r0.mAdapter
-            int r6 = r6.getItemViewType(r2)
-            r13.viewType = r6
-            android.widget.ListAdapter r6 = r0.mAdapter
-            boolean r6 = r6.isEnabled(r2)
-            r13.isEnabled = r6
-            if (r11 == 0) goto L_0x0075
-            r1.setSelected(r10)
-            if (r10 == 0) goto L_0x0075
-            r23.requestFocus()
-        L_0x0075:
-            if (r7 == 0) goto L_0x007a
-            r1.setPressed(r14)
-        L_0x007a:
-            int r6 = r0.mChoiceMode
-            if (r6 == 0) goto L_0x00aa
-            android.util.SparseBooleanArray r6 = r0.mCheckStates
-            if (r6 == 0) goto L_0x00aa
-            boolean r6 = r1 instanceof android.widget.Checkable
-            if (r6 == 0) goto L_0x0093
-            r6 = r1
-            android.widget.Checkable r6 = (android.widget.Checkable) r6
-            android.util.SparseBooleanArray r9 = r0.mCheckStates
-            boolean r9 = r9.get(r2)
-            r6.setChecked(r9)
-            goto L_0x00aa
-        L_0x0093:
-            android.content.Context r6 = r23.getContext()
-            android.content.pm.ApplicationInfo r6 = r6.getApplicationInfo()
-            int r6 = r6.targetSdkVersion
-            r9 = 11
-            if (r6 < r9) goto L_0x00aa
-            android.util.SparseBooleanArray r6 = r0.mCheckStates
-            boolean r6 = r6.get(r2)
-            r1.setActivated(r6)
-        L_0x00aa:
-            if (r30 == 0) goto L_0x00c6
-            boolean r6 = r13.forceAdd
-            if (r6 != 0) goto L_0x00c6
-            r0.attachViewToParent(r1, r5, r13)
-            if (r30 == 0) goto L_0x00c2
-            android.view.ViewGroup$LayoutParams r6 = r24.getLayoutParams()
-            android.widget.AbsListView$LayoutParams r6 = (android.widget.AbsListView.LayoutParams) r6
-            int r6 = r6.scrappedFromPosition
-            if (r6 == r2) goto L_0x00c0
-            goto L_0x00c2
-        L_0x00c0:
-            r6 = 0
-            goto L_0x00cd
-        L_0x00c2:
-            r24.jumpDrawablesToCurrentState()
-            goto L_0x00c0
-        L_0x00c6:
-            r6 = 0
-            r13.forceAdd = r6
-            r9 = 1
-            r0.addViewInLayout(r1, r5, r13, r9)
-        L_0x00cd:
-            if (r8 == 0) goto L_0x00ed
-            int r9 = android.view.View.MeasureSpec.makeMeasureSpec(r6, r6)
-            int r2 = r13.height
-            int r2 = android.view.ViewGroup.getChildMeasureSpec(r9, r6, r2)
-            int r9 = r0.mColumnWidth
-            r6 = 1073741824(0x40000000, float:2.0)
-            int r6 = android.view.View.MeasureSpec.makeMeasureSpec(r9, r6)
-            int r9 = r13.width
-            r4 = 0
-            int r4 = android.view.ViewGroup.getChildMeasureSpec(r6, r4, r9)
-            r1.measure(r4, r2)
-            goto L_0x00f0
-        L_0x00ed:
-            r23.cleanupLayoutState(r24)
-        L_0x00f0:
-            int r2 = r24.getMeasuredWidth()
-            int r4 = r24.getMeasuredHeight()
-            if (r27 == 0) goto L_0x00fd
-            r17 = r26
-            goto L_0x00ff
-        L_0x00fd:
-            int r17 = r26 - r4
-        L_0x00ff:
-            r19 = r17
-            int r5 = r23.getLayoutDirection()
-            int r6 = r0.mGravity
-            int r6 = android.view.Gravity.getAbsoluteGravity(r6, r5)
-            r20 = r5
-            r5 = r6 & 7
-            r21 = r6
-            r6 = 1
-            if (r5 == r6) goto L_0x0126
-            r6 = 3
-            if (r5 == r6) goto L_0x0123
-            r6 = 5
-            if (r5 == r6) goto L_0x011d
-            r5 = r28
-            goto L_0x012e
-        L_0x011d:
-            int r5 = r0.mColumnWidth
-            int r5 = r28 + r5
-            int r5 = r5 - r2
-            goto L_0x012e
-        L_0x0123:
-            r5 = r28
-            goto L_0x012e
-        L_0x0126:
-            int r5 = r0.mColumnWidth
-            int r5 = r5 - r2
-            int r5 = r5 / 2
-            int r5 = r28 + r5
-        L_0x012e:
-            if (r8 == 0) goto L_0x013d
-            int r6 = r5 + r2
-            r22 = r2
-            r2 = r19
-            int r3 = r2 + r4
-            r1.layout(r5, r2, r6, r3)
-            goto L_0x0153
-        L_0x013d:
-            r22 = r2
-            r2 = r19
-            int r3 = r24.getLeft()
-            int r3 = r5 - r3
-            r1.offsetLeftAndRight(r3)
-            int r3 = r24.getTop()
-            int r3 = r2 - r3
-            r1.offsetTopAndBottom(r3)
-        L_0x0153:
-            boolean r3 = r0.mCachingStarted
-            if (r3 == 0) goto L_0x0161
-            boolean r3 = r24.isDrawingCacheEnabled()
-            if (r3 != 0) goto L_0x0161
-            r3 = 1
-            r1.setDrawingCacheEnabled(r3)
-        L_0x0161:
-            r15 = 8
-            android.os.Trace.traceEnd(r15)
-            return
-        */
-        throw new UnsupportedOperationException("Method not decompiled: android.widget.GridView.setupChild(android.view.View, int, int, boolean, int, boolean, boolean, int):void");
+    private void setupChild(View child, int position, int y, boolean flowDown, int childrenLeft, boolean selected, boolean isAttachedToWindow, int where) {
+        int i;
+        int childLeft;
+        Trace.traceBegin(8L, "setupGridItem");
+        boolean isSelected = selected && shouldShowSelector();
+        boolean updateChildSelected = isSelected != child.isSelected();
+        int mode = this.mTouchMode;
+        boolean isPressed = mode > 0 && mode < 3 && this.mMotionPosition == position;
+        boolean updateChildPressed = isPressed != child.isPressed();
+        boolean needToMeasure = !isAttachedToWindow || updateChildSelected || child.isLayoutRequested();
+        AbsListView.LayoutParams p = (AbsListView.LayoutParams) child.getLayoutParams();
+        if (p == null) {
+            p = (AbsListView.LayoutParams) generateDefaultLayoutParams();
+        }
+        AbsListView.LayoutParams p2 = p;
+        p2.viewType = this.mAdapter.getItemViewType(position);
+        p2.isEnabled = this.mAdapter.isEnabled(position);
+        if (updateChildSelected) {
+            child.setSelected(isSelected);
+            if (isSelected) {
+                requestFocus();
+            }
+        }
+        if (updateChildPressed) {
+            child.setPressed(isPressed);
+        }
+        if (this.mChoiceMode != 0 && this.mCheckStates != null) {
+            if (child instanceof Checkable) {
+                ((Checkable) child).setChecked(this.mCheckStates.get(position));
+            } else if (getContext().getApplicationInfo().targetSdkVersion >= 11) {
+                child.setActivated(this.mCheckStates.get(position));
+            }
+        }
+        if (isAttachedToWindow && !p2.forceAdd) {
+            attachViewToParent(child, where, p2);
+            if (!isAttachedToWindow || ((AbsListView.LayoutParams) child.getLayoutParams()).scrappedFromPosition != position) {
+                child.jumpDrawablesToCurrentState();
+            }
+            i = 0;
+        } else {
+            i = 0;
+            p2.forceAdd = false;
+            addViewInLayout(child, where, p2, true);
+        }
+        if (needToMeasure) {
+            int childHeightSpec = ViewGroup.getChildMeasureSpec(View.MeasureSpec.makeMeasureSpec(i, i), i, p2.height);
+            int childWidthSpec = ViewGroup.getChildMeasureSpec(View.MeasureSpec.makeMeasureSpec(this.mColumnWidth, 1073741824), 0, p2.width);
+            child.measure(childWidthSpec, childHeightSpec);
+        } else {
+            cleanupLayoutState(child);
+        }
+        int w = child.getMeasuredWidth();
+        int h = child.getMeasuredHeight();
+        int childTop = flowDown ? y : y - h;
+        int absoluteGravity = Gravity.getAbsoluteGravity(this.mGravity, getLayoutDirection());
+        int layoutDirection = absoluteGravity & 7;
+        if (layoutDirection == 1) {
+            int childLeft2 = this.mColumnWidth;
+            childLeft = childrenLeft + ((childLeft2 - w) / 2);
+        } else if (layoutDirection == 3) {
+            childLeft = childrenLeft;
+        } else if (layoutDirection == 5) {
+            childLeft = (childrenLeft + this.mColumnWidth) - w;
+        } else {
+            childLeft = childrenLeft;
+        }
+        if (needToMeasure) {
+            int childRight = childLeft + w;
+            int childBottom = childTop + h;
+            child.layout(childLeft, childTop, childRight, childBottom);
+        } else {
+            child.offsetLeftAndRight(childLeft - child.getLeft());
+            child.offsetTopAndBottom(childTop - child.getTop());
+        }
+        if (this.mCachingStarted && !child.isDrawingCacheEnabled()) {
+            child.setDrawingCacheEnabled(true);
+        }
+        Trace.traceEnd(8L);
     }
 
+    @Override // android.widget.AdapterView
     public void setSelection(int position) {
         if (!isInTouchMode()) {
             setNextSelectedPositionInt(position);
@@ -1548,33 +1210,34 @@ public class GridView extends AbsListView {
         requestLayout();
     }
 
-    /* access modifiers changed from: package-private */
-    public void setSelectionInt(int position) {
-        int next;
+    @Override // android.widget.AbsListView
+    void setSelectionInt(int position) {
         int previousSelectedPosition = this.mNextSelectedPosition;
         if (this.mPositionScroller != null) {
             this.mPositionScroller.stop();
         }
         setNextSelectedPositionInt(position);
         layoutChildren();
-        if (this.mStackFromBottom) {
-            next = (this.mItemCount - 1) - this.mNextSelectedPosition;
-        } else {
-            next = this.mNextSelectedPosition;
-        }
-        if (next / this.mNumColumns != (this.mStackFromBottom ? (this.mItemCount - 1) - previousSelectedPosition : previousSelectedPosition) / this.mNumColumns) {
+        int next = this.mStackFromBottom ? (this.mItemCount - 1) - this.mNextSelectedPosition : this.mNextSelectedPosition;
+        int previous = this.mStackFromBottom ? (this.mItemCount - 1) - previousSelectedPosition : previousSelectedPosition;
+        int nextRow = next / this.mNumColumns;
+        int previousRow = previous / this.mNumColumns;
+        if (nextRow != previousRow) {
             awakenScrollBars();
         }
     }
 
+    @Override // android.widget.AbsListView, android.view.View, android.view.KeyEvent.Callback
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         return commonKey(keyCode, 1, event);
     }
 
+    @Override // android.view.View, android.view.KeyEvent.Callback
     public boolean onKeyMultiple(int keyCode, int repeatCount, KeyEvent event) {
         return commonKey(keyCode, repeatCount, event);
     }
 
+    @Override // android.widget.AbsListView, android.view.View, android.view.KeyEvent.Callback
     public boolean onKeyUp(int keyCode, KeyEvent event) {
         return commonKey(keyCode, 1, event);
     }
@@ -1595,24 +1258,20 @@ public class GridView extends AbsListView {
         if (!handled && action != 1) {
             switch (keyCode) {
                 case 19:
-                    if (!event.hasNoModifiers()) {
-                        if (event.hasModifiers(2)) {
-                            handled = resurrectSelectionIfNeeded() || fullScroll(33);
-                            break;
-                        }
-                    } else {
+                    if (event.hasNoModifiers()) {
                         handled = resurrectSelectionIfNeeded() || arrowScroll(33);
+                        break;
+                    } else if (event.hasModifiers(2)) {
+                        handled = resurrectSelectionIfNeeded() || fullScroll(33);
                         break;
                     }
                     break;
                 case 20:
-                    if (!event.hasNoModifiers()) {
-                        if (event.hasModifiers(2)) {
-                            handled = resurrectSelectionIfNeeded() || fullScroll(130);
-                            break;
-                        }
-                    } else {
+                    if (event.hasNoModifiers()) {
                         handled = resurrectSelectionIfNeeded() || arrowScroll(130);
+                        break;
+                    } else if (event.hasModifiers(2)) {
+                        handled = resurrectSelectionIfNeeded() || fullScroll(130);
                         break;
                     }
                     break;
@@ -1629,35 +1288,29 @@ public class GridView extends AbsListView {
                     }
                     break;
                 case 61:
-                    if (!event.hasNoModifiers()) {
-                        if (event.hasModifiers(1)) {
-                            handled = resurrectSelectionIfNeeded() || sequenceScroll(1);
-                            break;
-                        }
-                    } else {
+                    if (event.hasNoModifiers()) {
                         handled = resurrectSelectionIfNeeded() || sequenceScroll(2);
+                        break;
+                    } else if (event.hasModifiers(1)) {
+                        handled = resurrectSelectionIfNeeded() || sequenceScroll(1);
                         break;
                     }
                     break;
                 case 92:
-                    if (!event.hasNoModifiers()) {
-                        if (event.hasModifiers(2)) {
-                            handled = resurrectSelectionIfNeeded() || fullScroll(33);
-                            break;
-                        }
-                    } else {
+                    if (event.hasNoModifiers()) {
                         handled = resurrectSelectionIfNeeded() || pageScroll(33);
+                        break;
+                    } else if (event.hasModifiers(2)) {
+                        handled = resurrectSelectionIfNeeded() || fullScroll(33);
                         break;
                     }
                     break;
                 case 93:
-                    if (!event.hasNoModifiers()) {
-                        if (event.hasModifiers(2)) {
-                            handled = resurrectSelectionIfNeeded() || fullScroll(130);
-                            break;
-                        }
-                    } else {
+                    if (event.hasNoModifiers()) {
                         handled = resurrectSelectionIfNeeded() || pageScroll(130);
+                        break;
+                    } else if (event.hasModifiers(2)) {
+                        handled = resurrectSelectionIfNeeded() || fullScroll(130);
                         break;
                     }
                     break;
@@ -1699,25 +1352,23 @@ public class GridView extends AbsListView {
         }
     }
 
-    /* access modifiers changed from: package-private */
-    public boolean pageScroll(int direction) {
+    boolean pageScroll(int direction) {
         int nextPage = -1;
         if (direction == 33) {
             nextPage = Math.max(0, this.mSelectedPosition - getChildCount());
         } else if (direction == 130) {
             nextPage = Math.min(this.mItemCount - 1, this.mSelectedPosition + getChildCount());
         }
-        if (nextPage < 0) {
-            return false;
+        if (nextPage >= 0) {
+            setSelectionInt(nextPage);
+            invokeOnItemScrollListener();
+            awakenScrollBars();
+            return true;
         }
-        setSelectionInt(nextPage);
-        invokeOnItemScrollListener();
-        awakenScrollBars();
-        return true;
+        return false;
     }
 
-    /* access modifiers changed from: package-private */
-    public boolean fullScroll(int direction) {
+    boolean fullScroll(int direction) {
         boolean moved = false;
         if (direction == 33) {
             this.mLayoutMode = 2;
@@ -1736,8 +1387,7 @@ public class GridView extends AbsListView {
         return moved;
     }
 
-    /* access modifiers changed from: package-private */
-    public boolean arrowScroll(int direction) {
+    boolean arrowScroll(int direction) {
         int endOfRowPos;
         int startOfRowPos;
         int selectedPosition = this.mSelectedPosition;
@@ -1747,18 +1397,20 @@ public class GridView extends AbsListView {
             startOfRowPos = (selectedPosition / numColumns) * numColumns;
             endOfRowPos = Math.min((startOfRowPos + numColumns) - 1, this.mItemCount - 1);
         } else {
-            endOfRowPos = (this.mItemCount - 1) - ((((this.mItemCount - 1) - selectedPosition) / numColumns) * numColumns);
+            int startOfRowPos2 = this.mItemCount;
+            int invertedSelection = (startOfRowPos2 - 1) - selectedPosition;
+            endOfRowPos = (this.mItemCount - 1) - ((invertedSelection / numColumns) * numColumns);
             startOfRowPos = Math.max(0, (endOfRowPos - numColumns) + 1);
         }
-        if (direction != 33) {
-            if (direction == 130 && endOfRowPos < this.mItemCount - 1) {
+        if (direction == 33) {
+            if (startOfRowPos > 0) {
                 this.mLayoutMode = 6;
-                setSelectionInt(Math.min(selectedPosition + numColumns, this.mItemCount - 1));
+                setSelectionInt(Math.max(0, selectedPosition - numColumns));
                 moved = true;
             }
-        } else if (startOfRowPos > 0) {
+        } else if (direction == 130 && endOfRowPos < this.mItemCount - 1) {
             this.mLayoutMode = 6;
-            setSelectionInt(Math.max(0, selectedPosition - numColumns));
+            setSelectionInt(Math.min(selectedPosition + numColumns, this.mItemCount - 1));
             moved = true;
         }
         boolean isLayoutRtl = isLayoutRtl();
@@ -1781,20 +1433,20 @@ public class GridView extends AbsListView {
         return moved;
     }
 
-    /* access modifiers changed from: package-private */
     @UnsupportedAppUsage
-    public boolean sequenceScroll(int direction) {
+    boolean sequenceScroll(int direction) {
         int endOfRow;
         int startOfRow;
         int selectedPosition = this.mSelectedPosition;
         int numColumns = this.mNumColumns;
         int count = this.mItemCount;
-        boolean z = false;
         if (!this.mStackFromBottom) {
             startOfRow = (selectedPosition / numColumns) * numColumns;
             endOfRow = Math.min((startOfRow + numColumns) - 1, count - 1);
         } else {
-            endOfRow = (count - 1) - ((((count - 1) - selectedPosition) / numColumns) * numColumns);
+            int startOfRow2 = count - 1;
+            int invertedSelection = startOfRow2 - selectedPosition;
+            endOfRow = (count - 1) - ((invertedSelection / numColumns) * numColumns);
             startOfRow = Math.max(0, (endOfRow - numColumns) + 1);
         }
         boolean moved = false;
@@ -1805,10 +1457,7 @@ public class GridView extends AbsListView {
                     this.mLayoutMode = 6;
                     setSelectionInt(selectedPosition - 1);
                     moved = true;
-                    if (selectedPosition == startOfRow) {
-                        z = true;
-                    }
-                    showScroll = z;
+                    showScroll = selectedPosition == startOfRow;
                     break;
                 }
                 break;
@@ -1817,10 +1466,7 @@ public class GridView extends AbsListView {
                     this.mLayoutMode = 6;
                     setSelectionInt(selectedPosition + 1);
                     moved = true;
-                    if (selectedPosition == endOfRow) {
-                        z = true;
-                    }
-                    showScroll = z;
+                    showScroll = selectedPosition == endOfRow;
                     break;
                 }
                 break;
@@ -1835,8 +1481,8 @@ public class GridView extends AbsListView {
         return moved;
     }
 
-    /* access modifiers changed from: protected */
-    public void onFocusChanged(boolean gainFocus, int direction, Rect previouslyFocusedRect) {
+    @Override // android.widget.AbsListView, android.view.View
+    protected void onFocusChanged(boolean gainFocus, int direction, Rect previouslyFocusedRect) {
         super.onFocusChanged(gainFocus, direction, previouslyFocusedRect);
         int closestChildIndex = -1;
         if (gainFocus && previouslyFocusedRect != null) {
@@ -1873,46 +1519,27 @@ public class GridView extends AbsListView {
             rowStart = childIndex - (childIndex % this.mNumColumns);
             rowEnd = Math.min((this.mNumColumns + rowStart) - 1, count);
         } else {
-            rowEnd = (count - 1) - (invertedIndex - (invertedIndex % this.mNumColumns));
+            int rowStart2 = count - 1;
+            rowEnd = rowStart2 - (invertedIndex - (invertedIndex % this.mNumColumns));
             rowStart = Math.max(0, (rowEnd - this.mNumColumns) + 1);
         }
-        if (direction != 17) {
-            if (direction != 33) {
-                if (direction != 66) {
-                    if (direction != 130) {
-                        switch (direction) {
-                            case 1:
-                                if (childIndex == rowEnd && rowEnd == count - 1) {
-                                    return true;
-                                }
-                                return false;
-                            case 2:
-                                if (childIndex == rowStart && rowStart == 0) {
-                                    return true;
-                                }
-                                return false;
-                            default:
-                                throw new IllegalArgumentException("direction must be one of {FOCUS_UP, FOCUS_DOWN, FOCUS_LEFT, FOCUS_RIGHT, FOCUS_FORWARD, FOCUS_BACKWARD}.");
-                        }
-                    } else if (rowStart == 0) {
-                        return true;
-                    } else {
-                        return false;
-                    }
-                } else if (childIndex == rowStart) {
-                    return true;
-                } else {
-                    return false;
-                }
-            } else if (rowEnd == count - 1) {
-                return true;
-            } else {
-                return false;
-            }
-        } else if (childIndex == rowEnd) {
-            return true;
+        if (direction == 17) {
+            return childIndex == rowEnd;
+        } else if (direction == 33) {
+            return rowEnd == count + (-1);
+        } else if (direction == 66) {
+            return childIndex == rowStart;
+        } else if (direction == 130) {
+            return rowStart == 0;
         } else {
-            return false;
+            switch (direction) {
+                case 1:
+                    return childIndex == rowEnd && rowEnd == count + (-1);
+                case 2:
+                    return childIndex == rowStart && rowStart == 0;
+                default:
+                    throw new IllegalArgumentException("direction must be one of {FOCUS_UP, FOCUS_DOWN, FOCUS_LEFT, FOCUS_RIGHT, FOCUS_FORWARD, FOCUS_BACKWARD}.");
+            }
         }
     }
 
@@ -1996,7 +1623,8 @@ public class GridView extends AbsListView {
         int childCount = getChildCount();
         if (childCount > 0) {
             if (!this.mStackFromBottom) {
-                delta = getChildAt(0).getTop() - this.mListPadding.top;
+                View child = getChildAt(0);
+                delta = child.getTop() - this.mListPadding.top;
                 if (this.mFirstPosition != 0) {
                     delta -= this.mVerticalSpacing;
                 }
@@ -2004,9 +1632,10 @@ public class GridView extends AbsListView {
                     delta = 0;
                 }
             } else {
-                int delta2 = getChildAt(childCount - 1).getBottom() - (getHeight() - this.mListPadding.bottom);
+                View child2 = getChildAt(childCount - 1);
+                delta = child2.getBottom() - (getHeight() - this.mListPadding.bottom);
                 if (this.mFirstPosition + childCount < this.mItemCount) {
-                    delta2 += this.mVerticalSpacing;
+                    delta += this.mVerticalSpacing;
                 }
                 if (delta > 0) {
                     delta = 0;
@@ -2018,14 +1647,15 @@ public class GridView extends AbsListView {
         }
     }
 
-    /* access modifiers changed from: protected */
-    public int computeVerticalScrollExtent() {
+    @Override // android.widget.AbsListView, android.view.View, android.support.p011v4.view.ScrollingView
+    protected int computeVerticalScrollExtent() {
         int count = getChildCount();
         if (count <= 0) {
             return 0;
         }
         int numColumns = this.mNumColumns;
-        int extent = (((count + numColumns) - 1) / numColumns) * 100;
+        int rowCount = ((count + numColumns) - 1) / numColumns;
+        int extent = rowCount * 100;
         View view = getChildAt(0);
         int top = view.getTop();
         int height = view.getHeight();
@@ -2041,9 +1671,8 @@ public class GridView extends AbsListView {
         return extent;
     }
 
-    /* access modifiers changed from: protected */
-    public int computeVerticalScrollOffset() {
-        int oddItemsOnFirstRow;
+    @Override // android.widget.AbsListView, android.view.View, android.support.p011v4.view.ScrollingView
+    protected int computeVerticalScrollOffset() {
         if (this.mFirstPosition >= 0 && getChildCount() > 0) {
             View view = getChildAt(0);
             int top = view.getTop();
@@ -2051,59 +1680,62 @@ public class GridView extends AbsListView {
             if (height > 0) {
                 int numColumns = this.mNumColumns;
                 int rowCount = ((this.mItemCount + numColumns) - 1) / numColumns;
-                if (isStackFromBottom()) {
-                    oddItemsOnFirstRow = (rowCount * numColumns) - this.mItemCount;
-                } else {
-                    oddItemsOnFirstRow = 0;
-                }
-                return Math.max(((((this.mFirstPosition + oddItemsOnFirstRow) / numColumns) * 100) - ((top * 100) / height)) + ((int) ((((float) this.mScrollY) / ((float) getHeight())) * ((float) rowCount) * 100.0f)), 0);
+                int oddItemsOnFirstRow = isStackFromBottom() ? (rowCount * numColumns) - this.mItemCount : 0;
+                int whichRow = (this.mFirstPosition + oddItemsOnFirstRow) / numColumns;
+                return Math.max(((whichRow * 100) - ((top * 100) / height)) + ((int) ((this.mScrollY / getHeight()) * rowCount * 100.0f)), 0);
             }
         }
         return 0;
     }
 
-    /* access modifiers changed from: protected */
-    public int computeVerticalScrollRange() {
+    @Override // android.widget.AbsListView, android.view.View, android.support.p011v4.view.ScrollingView
+    protected int computeVerticalScrollRange() {
         int numColumns = this.mNumColumns;
         int rowCount = ((this.mItemCount + numColumns) - 1) / numColumns;
         int result = Math.max(rowCount * 100, 0);
         if (this.mScrollY != 0) {
-            return result + Math.abs((int) ((((float) this.mScrollY) / ((float) getHeight())) * ((float) rowCount) * 100.0f));
+            return result + Math.abs((int) ((this.mScrollY / getHeight()) * rowCount * 100.0f));
         }
         return result;
     }
 
+    @Override // android.widget.AbsListView, android.widget.AdapterView, android.view.ViewGroup, android.view.View
     public CharSequence getAccessibilityClassName() {
         return GridView.class.getName();
     }
 
+    @Override // android.widget.AbsListView, android.widget.AdapterView, android.view.ViewGroup, android.view.View
     public void onInitializeAccessibilityNodeInfoInternal(AccessibilityNodeInfo info) {
         super.onInitializeAccessibilityNodeInfoInternal(info);
         int columnsCount = getNumColumns();
         int rowsCount = getCount() / columnsCount;
-        info.setCollectionInfo(AccessibilityNodeInfo.CollectionInfo.obtain(rowsCount, columnsCount, false, getSelectionModeForAccessibility()));
+        int selectionMode = getSelectionModeForAccessibility();
+        AccessibilityNodeInfo.CollectionInfo collectionInfo = AccessibilityNodeInfo.CollectionInfo.obtain(rowsCount, columnsCount, false, selectionMode);
+        info.setCollectionInfo(collectionInfo);
         if (columnsCount > 0 || rowsCount > 0) {
             info.addAction(AccessibilityNodeInfo.AccessibilityAction.ACTION_SCROLL_TO_POSITION);
         }
     }
 
+    @Override // android.widget.AbsListView, android.view.View
     public boolean performAccessibilityActionInternal(int action, Bundle arguments) {
         if (super.performAccessibilityActionInternal(action, arguments)) {
             return true;
         }
-        if (action != 16908343) {
+        if (action == 16908343) {
+            int numColumns = getNumColumns();
+            int row = arguments.getInt("android.view.accessibility.action.ARGUMENT_ROW_INT", -1);
+            int position = Math.min(row * numColumns, getCount() - 1);
+            if (row >= 0) {
+                smoothScrollToPosition(position);
+                return true;
+            }
             return false;
         }
-        int numColumns = getNumColumns();
-        int row = arguments.getInt("android.view.accessibility.action.ARGUMENT_ROW_INT", -1);
-        int position = Math.min(row * numColumns, getCount() - 1);
-        if (row < 0) {
-            return false;
-        }
-        smoothScrollToPosition(position);
-        return true;
+        return false;
     }
 
+    @Override // android.widget.AbsListView
     public void onInitializeAccessibilityNodeInfoForItem(View view, int position, AccessibilityNodeInfo info) {
         int row;
         int invertedIndex;
@@ -2115,16 +1747,21 @@ public class GridView extends AbsListView {
             invertedIndex = position % columnsCount;
             row = position / columnsCount;
         } else {
-            int invertedIndex2 = (count - 1) - position;
+            int column = count - 1;
+            int invertedIndex2 = column - position;
+            int column2 = (columnsCount - 1) - (invertedIndex2 % columnsCount);
             row = (rowsCount - 1) - (invertedIndex2 / columnsCount);
-            invertedIndex = (columnsCount - 1) - (invertedIndex2 % columnsCount);
+            invertedIndex = column2;
         }
         AbsListView.LayoutParams lp = (AbsListView.LayoutParams) view.getLayoutParams();
-        info.setCollectionItemInfo(AccessibilityNodeInfo.CollectionItemInfo.obtain(row, 1, invertedIndex, 1, lp != null && lp.viewType == -2, isItemChecked(position)));
+        boolean isHeading = lp != null && lp.viewType == -2;
+        boolean isSelected = isItemChecked(position);
+        AccessibilityNodeInfo.CollectionItemInfo itemInfo = AccessibilityNodeInfo.CollectionItemInfo.obtain(row, 1, invertedIndex, 1, isHeading, isSelected);
+        info.setCollectionItemInfo(itemInfo);
     }
 
-    /* access modifiers changed from: protected */
-    public void encodeProperties(ViewHierarchyEncoder encoder) {
+    @Override // android.widget.AbsListView, android.widget.AdapterView, android.view.ViewGroup, android.view.View
+    protected void encodeProperties(ViewHierarchyEncoder encoder) {
         super.encodeProperties(encoder);
         encoder.addProperty("numColumns", getNumColumns());
     }

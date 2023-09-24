@@ -3,6 +3,7 @@ package android.security.keystore;
 import java.math.BigInteger;
 import java.security.interfaces.RSAPublicKey;
 
+/* loaded from: classes3.dex */
 public class AndroidKeyStoreRSAPublicKey extends AndroidKeyStorePublicKey implements RSAPublicKey {
     private final BigInteger mModulus;
     private final BigInteger mPublicExponent;
@@ -20,10 +21,12 @@ public class AndroidKeyStoreRSAPublicKey extends AndroidKeyStorePublicKey implem
         }
     }
 
+    @Override // java.security.interfaces.RSAKey
     public BigInteger getModulus() {
         return this.mModulus;
     }
 
+    @Override // java.security.interfaces.RSAPublicKey
     public BigInteger getPublicExponent() {
         return this.mPublicExponent;
     }

@@ -1,11 +1,14 @@
 package android.app.admin;
 
-import android.os.Parcel;
-import android.os.ParcelFormatException;
-import android.os.Parcelable;
+import android.p007os.Parcel;
+import android.p007os.ParcelFormatException;
+import android.p007os.Parcelable;
 
+/* loaded from: classes.dex */
 public abstract class NetworkEvent implements Parcelable {
-    public static final Parcelable.Creator<NetworkEvent> CREATOR = new Parcelable.Creator<NetworkEvent>() {
+    public static final Parcelable.Creator<NetworkEvent> CREATOR = new Parcelable.Creator<NetworkEvent>() { // from class: android.app.admin.NetworkEvent.1
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public NetworkEvent createFromParcel(Parcel in) {
             int initialPosition = in.dataPosition();
             int parcelToken = in.readInt();
@@ -20,6 +23,8 @@ public abstract class NetworkEvent implements Parcelable {
             }
         }
 
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public NetworkEvent[] newArray(int size) {
             return new NetworkEvent[size];
         }
@@ -30,6 +35,7 @@ public abstract class NetworkEvent implements Parcelable {
     String mPackageName;
     long mTimestamp;
 
+    @Override // android.p007os.Parcelable
     public abstract void writeToParcel(Parcel parcel, int i);
 
     NetworkEvent() {
@@ -56,6 +62,7 @@ public abstract class NetworkEvent implements Parcelable {
         return this.mId;
     }
 
+    @Override // android.p007os.Parcelable
     public int describeContents() {
         return 0;
     }

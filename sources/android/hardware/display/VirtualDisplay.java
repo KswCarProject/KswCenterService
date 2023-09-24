@@ -3,6 +3,7 @@ package android.hardware.display;
 import android.view.Display;
 import android.view.Surface;
 
+/* loaded from: classes.dex */
 public final class VirtualDisplay {
     private final Display mDisplay;
     private final DisplayManagerGlobal mGlobal;
@@ -52,6 +53,7 @@ public final class VirtualDisplay {
         return "VirtualDisplay{display=" + this.mDisplay + ", token=" + this.mToken + ", surface=" + this.mSurface + "}";
     }
 
+    /* loaded from: classes.dex */
     public static abstract class Callback {
         public void onPaused() {
         }

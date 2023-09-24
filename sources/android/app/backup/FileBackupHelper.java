@@ -2,9 +2,10 @@ package android.app.backup;
 
 import android.annotation.UnsupportedAppUsage;
 import android.content.Context;
-import android.os.ParcelFileDescriptor;
+import android.p007os.ParcelFileDescriptor;
 import java.io.File;
 
+/* loaded from: classes.dex */
 public class FileBackupHelper extends FileBackupHelperBase implements BackupHelper {
     private static final boolean DEBUG = false;
     private static final String TAG = "FileBackupHelper";
@@ -12,6 +13,7 @@ public class FileBackupHelper extends FileBackupHelperBase implements BackupHelp
     String[] mFiles;
     File mFilesDir;
 
+    @Override // android.app.backup.FileBackupHelperBase, android.app.backup.BackupHelper
     @UnsupportedAppUsage
     public /* bridge */ /* synthetic */ void writeNewStateDescription(ParcelFileDescriptor parcelFileDescriptor) {
         super.writeNewStateDescription(parcelFileDescriptor);
@@ -24,6 +26,7 @@ public class FileBackupHelper extends FileBackupHelperBase implements BackupHelp
         this.mFiles = files;
     }
 
+    @Override // android.app.backup.BackupHelper
     public void performBackup(ParcelFileDescriptor oldState, BackupDataOutput data, ParcelFileDescriptor newState) {
         String[] files = this.mFiles;
         File base = this.mContext.getFilesDir();
@@ -35,10 +38,12 @@ public class FileBackupHelper extends FileBackupHelperBase implements BackupHelp
         performBackup_checked(oldState, data, newState, fullPaths, files);
     }
 
+    @Override // android.app.backup.BackupHelper
     public void restoreEntity(BackupDataInputStream data) {
         String key = data.getKey();
         if (isKeyInList(key, this.mFiles)) {
-            writeFile(new File(this.mFilesDir, key), data);
+            File f = new File(this.mFilesDir, key);
+            writeFile(f, data);
         }
     }
 }

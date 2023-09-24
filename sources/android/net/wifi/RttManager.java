@@ -3,20 +3,21 @@ package android.net.wifi;
 import android.annotation.SuppressLint;
 import android.annotation.SystemApi;
 import android.content.Context;
-import android.content.pm.PackageManager;
+import android.content.p002pm.PackageManager;
 import android.net.wifi.rtt.RangingRequest;
 import android.net.wifi.rtt.RangingResult;
 import android.net.wifi.rtt.RangingResultCallback;
 import android.net.wifi.rtt.WifiRttManager;
-import android.os.Parcel;
-import android.os.Parcelable;
-import android.os.SystemClock;
+import android.p007os.Parcel;
+import android.p007os.Parcelable;
+import android.p007os.SystemClock;
 import android.util.Log;
 import com.android.internal.annotations.VisibleForTesting;
 import java.util.List;
 
 @SystemApi
 @Deprecated
+/* loaded from: classes3.dex */
 public class RttManager {
     public static final int BASE = 160256;
     public static final int CMD_OP_ABORTED = 160260;
@@ -96,9 +97,10 @@ public class RttManager {
     private static final String TAG = "RttManager";
     private final Context mContext;
     private final WifiRttManager mNewService;
-    private RttCapabilities mRttCapabilities = new RttCapabilities();
+    private RttCapabilities mRttCapabilities;
 
     @Deprecated
+    /* loaded from: classes3.dex */
     public static abstract class ResponderCallback {
         public abstract void onResponderEnableFailure(int i);
 
@@ -106,6 +108,7 @@ public class RttManager {
     }
 
     @Deprecated
+    /* loaded from: classes3.dex */
     public interface RttListener {
         void onAborted();
 
@@ -115,6 +118,7 @@ public class RttManager {
     }
 
     @Deprecated
+    /* loaded from: classes3.dex */
     public static class RttResult {
         public WifiInformationElement LCI;
         public WifiInformationElement LCR;
@@ -154,19 +158,25 @@ public class RttManager {
         public boolean secure;
         public int status;
         public int successMeasurementFrameNumber;
-        public long ts;
+
+        /* renamed from: ts */
+        public long f133ts;
         public int txRate;
         @Deprecated
         public int tx_rate;
     }
 
     @Deprecated
+    /* loaded from: classes3.dex */
     public static class WifiInformationElement {
         public byte[] data;
-        public byte id;
+
+        /* renamed from: id */
+        public byte f134id;
     }
 
     @Deprecated
+    /* loaded from: classes3.dex */
     public class Capabilities {
         public int supportedPeerType;
         public int supportedType;
@@ -182,11 +192,13 @@ public class RttManager {
     }
 
     @Deprecated
+    /* loaded from: classes3.dex */
     public static class RttCapabilities implements Parcelable {
-        public static final Parcelable.Creator<RttCapabilities> CREATOR = new Parcelable.Creator<RttCapabilities>() {
+        public static final Parcelable.Creator<RttCapabilities> CREATOR = new Parcelable.Creator<RttCapabilities>() { // from class: android.net.wifi.RttManager.RttCapabilities.1
+            /* JADX WARN: Can't rename method to resolve collision */
+            @Override // android.p007os.Parcelable.Creator
             public RttCapabilities createFromParcel(Parcel in) {
                 RttCapabilities capabilities = new RttCapabilities();
-                boolean z = false;
                 capabilities.oneSidedRttSupported = in.readInt() == 1;
                 capabilities.twoSided11McRttSupported = in.readInt() == 1;
                 capabilities.lciSupported = in.readInt() == 1;
@@ -194,14 +206,13 @@ public class RttManager {
                 capabilities.preambleSupported = in.readInt();
                 capabilities.bwSupported = in.readInt();
                 capabilities.responderSupported = in.readInt() == 1;
-                if (in.readInt() == 1) {
-                    z = true;
-                }
-                capabilities.secureRttSupported = z;
+                capabilities.secureRttSupported = in.readInt() == 1;
                 capabilities.mcVersion = in.readInt();
                 return capabilities;
             }
 
+            /* JADX WARN: Can't rename method to resolve collision */
+            @Override // android.p007os.Parcelable.Creator
             public RttCapabilities[] newArray(int size) {
                 return new RttCapabilities[size];
             }
@@ -267,10 +278,12 @@ public class RttManager {
             return sb.toString();
         }
 
+        @Override // android.p007os.Parcelable
         public int describeContents() {
             return 0;
         }
 
+        @Override // android.p007os.Parcelable
         public void writeToParcel(Parcel dest, int flags) {
             dest.writeInt(this.oneSidedRttSupported ? 1 : 0);
             dest.writeInt(this.twoSided11McRttSupported ? 1 : 0);
@@ -289,29 +302,30 @@ public class RttManager {
     }
 
     @Deprecated
+    /* loaded from: classes3.dex */
     public static class RttParams {
         public boolean LCIRequest;
         public boolean LCRRequest;
-        public int bandwidth = 4;
         public String bssid;
-        public int burstTimeout = 15;
         public int centerFreq0;
         public int centerFreq1;
         public int channelWidth;
-        public int deviceType = 1;
         public int frequency;
         public int interval;
-        public int numRetriesPerFTMR = 0;
-        public int numRetriesPerMeasurementFrame = 0;
-        public int numSamplesPerBurst = 8;
         @Deprecated
         public int num_retries;
         @Deprecated
         public int num_samples;
-        public int numberBurst = 0;
-        public int preamble = 2;
-        public int requestType = 1;
         public boolean secure;
+        public int deviceType = 1;
+        public int requestType = 1;
+        public int numberBurst = 0;
+        public int numSamplesPerBurst = 8;
+        public int numRetriesPerMeasurementFrame = 0;
+        public int numRetriesPerFTMR = 0;
+        public int burstTimeout = 15;
+        public int preamble = 2;
+        public int bandwidth = 4;
 
         public String toString() {
             StringBuilder sb = new StringBuilder();
@@ -340,8 +354,11 @@ public class RttManager {
     }
 
     @Deprecated
+    /* loaded from: classes3.dex */
     public static class ParcelableRttParams implements Parcelable {
-        public static final Parcelable.Creator<ParcelableRttParams> CREATOR = new Parcelable.Creator<ParcelableRttParams>() {
+        public static final Parcelable.Creator<ParcelableRttParams> CREATOR = new Parcelable.Creator<ParcelableRttParams>() { // from class: android.net.wifi.RttManager.ParcelableRttParams.1
+            /* JADX WARN: Can't rename method to resolve collision */
+            @Override // android.p007os.Parcelable.Creator
             public ParcelableRttParams createFromParcel(Parcel in) {
                 int num = in.readInt();
                 RttParams[] params = new RttParams[num];
@@ -371,9 +388,12 @@ public class RttManager {
                     params[i].preamble = in.readInt();
                     params[i].bandwidth = in.readInt();
                 }
-                return new ParcelableRttParams(params);
+                ParcelableRttParams parcelableParams = new ParcelableRttParams(params);
+                return parcelableParams;
             }
 
+            /* JADX WARN: Can't rename method to resolve collision */
+            @Override // android.p007os.Parcelable.Creator
             public ParcelableRttParams[] newArray(int size) {
                 return new ParcelableRttParams[size];
             }
@@ -385,16 +405,19 @@ public class RttManager {
             this.mParams = params == null ? new RttParams[0] : params;
         }
 
+        @Override // android.p007os.Parcelable
         public int describeContents() {
             return 0;
         }
 
+        @Override // android.p007os.Parcelable
         public void writeToParcel(Parcel dest, int flags) {
+            RttParams[] rttParamsArr;
             dest.writeInt(this.mParams.length);
             for (RttParams params : this.mParams) {
                 dest.writeInt(params.deviceType);
                 dest.writeInt(params.requestType);
-                dest.writeByte(params.secure ? (byte) 1 : 0);
+                dest.writeByte(params.secure ? (byte) 1 : (byte) 0);
                 dest.writeString(params.bssid);
                 dest.writeInt(params.channelWidth);
                 dest.writeInt(params.frequency);
@@ -415,12 +438,15 @@ public class RttManager {
     }
 
     @Deprecated
+    /* loaded from: classes3.dex */
     public static class ParcelableRttResults implements Parcelable {
-        public static final Parcelable.Creator<ParcelableRttResults> CREATOR = new Parcelable.Creator<ParcelableRttResults>() {
+        public static final Parcelable.Creator<ParcelableRttResults> CREATOR = new Parcelable.Creator<ParcelableRttResults>() { // from class: android.net.wifi.RttManager.ParcelableRttResults.1
+            /* JADX WARN: Can't rename method to resolve collision */
+            @Override // android.p007os.Parcelable.Creator
             public ParcelableRttResults createFromParcel(Parcel in) {
                 int num = in.readInt();
                 if (num == 0) {
-                    return new ParcelableRttResults((RttResult[]) null);
+                    return new ParcelableRttResults(null);
                 }
                 RttResult[] results = new RttResult[num];
                 for (int i = 0; i < num; i++) {
@@ -433,7 +459,7 @@ public class RttManager {
                     results[i].status = in.readInt();
                     results[i].measurementType = in.readInt();
                     results[i].retryAfterDuration = in.readInt();
-                    results[i].ts = in.readLong();
+                    results[i].f133ts = in.readLong();
                     results[i].rssi = in.readInt();
                     results[i].rssiSpread = in.readInt();
                     results[i].txRate = in.readInt();
@@ -446,22 +472,25 @@ public class RttManager {
                     results[i].burstDuration = in.readInt();
                     results[i].negotiatedBurstNum = in.readInt();
                     results[i].LCI = new WifiInformationElement();
-                    results[i].LCI.id = in.readByte();
-                    if (results[i].LCI.id != -1) {
+                    results[i].LCI.f134id = in.readByte();
+                    if (results[i].LCI.f134id != -1) {
                         results[i].LCI.data = new byte[in.readByte()];
                         in.readByteArray(results[i].LCI.data);
                     }
                     results[i].LCR = new WifiInformationElement();
-                    results[i].LCR.id = in.readByte();
-                    if (results[i].LCR.id != -1) {
+                    results[i].LCR.f134id = in.readByte();
+                    if (results[i].LCR.f134id != -1) {
                         results[i].LCR.data = new byte[in.readByte()];
                         in.readByteArray(results[i].LCR.data);
                     }
                     results[i].secure = in.readByte() != 0;
                 }
-                return new ParcelableRttResults(results);
+                ParcelableRttResults parcelableResults = new ParcelableRttResults(results);
+                return parcelableResults;
             }
 
+            /* JADX WARN: Can't rename method to resolve collision */
+            @Override // android.p007os.Parcelable.Creator
             public ParcelableRttResults[] newArray(int size) {
                 return new ParcelableRttResults[size];
             }
@@ -488,7 +517,7 @@ public class RttManager {
                 sb.append(", requestType=" + this.mResults[i].requestType);
                 sb.append(", measurementType=" + this.mResults[i].measurementType);
                 sb.append(", retryAfterDuration=" + this.mResults[i].retryAfterDuration);
-                sb.append(", ts=" + this.mResults[i].ts);
+                sb.append(", ts=" + this.mResults[i].f133ts);
                 sb.append(", rssi=" + this.mResults[i].rssi);
                 sb.append(", rssi_spread=" + this.mResults[i].rssi_spread);
                 sb.append(", rssiSpread=" + this.mResults[i].rssiSpread);
@@ -516,11 +545,14 @@ public class RttManager {
             return sb.toString();
         }
 
+        @Override // android.p007os.Parcelable
         public int describeContents() {
             return 0;
         }
 
+        @Override // android.p007os.Parcelable
         public void writeToParcel(Parcel dest, int flags) {
+            RttResult[] rttResultArr;
             if (this.mResults != null) {
                 dest.writeInt(this.mResults.length);
                 for (RttResult result : this.mResults) {
@@ -532,7 +564,7 @@ public class RttManager {
                     dest.writeInt(result.status);
                     dest.writeInt(result.measurementType);
                     dest.writeInt(result.retryAfterDuration);
-                    dest.writeLong(result.ts);
+                    dest.writeLong(result.f133ts);
                     dest.writeInt(result.rssi);
                     dest.writeInt(result.rssiSpread);
                     dest.writeInt(result.txRate);
@@ -544,17 +576,17 @@ public class RttManager {
                     dest.writeInt(result.distanceSpread);
                     dest.writeInt(result.burstDuration);
                     dest.writeInt(result.negotiatedBurstNum);
-                    dest.writeByte(result.LCI.id);
-                    if (result.LCI.id != -1) {
+                    dest.writeByte(result.LCI.f134id);
+                    if (result.LCI.f134id != -1) {
                         dest.writeByte((byte) result.LCI.data.length);
                         dest.writeByteArray(result.LCI.data);
                     }
-                    dest.writeByte(result.LCR.id);
-                    if (result.LCR.id != -1) {
+                    dest.writeByte(result.LCR.f134id);
+                    if (result.LCR.f134id != -1) {
                         dest.writeByte((byte) result.LCR.data.length);
                         dest.writeByteArray(result.LCR.data);
                     }
-                    dest.writeByte(result.secure ? (byte) 1 : 0);
+                    dest.writeByte(result.secure ? (byte) 1 : (byte) 0);
                 }
                 return;
             }
@@ -563,7 +595,7 @@ public class RttManager {
     }
 
     public void startRanging(RttParams[] params, final RttListener listener) {
-        Log.i(TAG, "Send RTT request to RTT Service");
+        Log.m68i(TAG, "Send RTT request to RTT Service");
         if (!this.mNewService.isAvailable()) {
             listener.onFailure(-2, "");
             return;
@@ -577,7 +609,7 @@ public class RttManager {
             ScanResult reconstructed = new ScanResult();
             reconstructed.BSSID = rttParams.bssid;
             if (rttParams.requestType == 2) {
-                reconstructed.setFlag(2);
+                reconstructed.setFlag(2L);
             }
             reconstructed.channelWidth = rttParams.channelWidth;
             reconstructed.frequency = rttParams.frequency;
@@ -586,7 +618,8 @@ public class RttManager {
             builder.addResponder(android.net.wifi.rtt.ResponderConfig.fromScanResult(reconstructed));
         }
         try {
-            this.mNewService.startRanging(builder.build(), this.mContext.getMainExecutor(), new RangingResultCallback() {
+            this.mNewService.startRanging(builder.build(), this.mContext.getMainExecutor(), new RangingResultCallback() { // from class: android.net.wifi.RttManager.1
+                @Override // android.net.wifi.rtt.RangingResultCallback
                 public void onRangingFailure(int code) {
                     int localCode = -1;
                     if (code == 2) {
@@ -595,6 +628,7 @@ public class RttManager {
                     listener.onFailure(localCode, "");
                 }
 
+                @Override // android.net.wifi.rtt.RangingResultCallback
                 public void onRangingResults(List<RangingResult> results) {
                     RttResult[] legacyResults = new RttResult[results.size()];
                     int i = 0;
@@ -605,12 +639,12 @@ public class RttManager {
                         if (result.getStatus() == 0) {
                             legacyResults[i].distance = result.getDistanceMm() / 10;
                             legacyResults[i].distanceStandardDeviation = result.getDistanceStdDevMm() / 10;
-                            legacyResults[i].rssi = result.getRssi() * -2;
-                            legacyResults[i].ts = result.getRangingTimestampMillis() * 1000;
+                            legacyResults[i].rssi = result.getRssi() * (-2);
+                            legacyResults[i].f133ts = result.getRangingTimestampMillis() * 1000;
                             legacyResults[i].measurementFrameNumber = result.getNumAttemptedMeasurements();
                             legacyResults[i].successMeasurementFrameNumber = result.getNumSuccessfulMeasurements();
                         } else {
-                            legacyResults[i].ts = SystemClock.elapsedRealtime() * 1000;
+                            legacyResults[i].f133ts = SystemClock.elapsedRealtime() * 1000;
                         }
                         i++;
                     }
@@ -618,16 +652,16 @@ public class RttManager {
                 }
             });
         } catch (IllegalArgumentException e) {
-            Log.e(TAG, "startRanging: invalid arguments - " + e);
+            Log.m70e(TAG, "startRanging: invalid arguments - " + e);
             listener.onFailure(-4, e.getMessage());
         } catch (SecurityException e2) {
-            Log.e(TAG, "startRanging: security exception - " + e2);
+            Log.m70e(TAG, "startRanging: security exception - " + e2);
             listener.onFailure(-5, e2.getMessage());
         }
     }
 
     public void stopRanging(RttListener listener) {
-        Log.e(TAG, "stopRanging: unsupported operation - nop");
+        Log.m70e(TAG, "stopRanging: unsupported operation - nop");
     }
 
     public void enableResponder(ResponderCallback callback) {
@@ -639,8 +673,11 @@ public class RttManager {
     }
 
     @Deprecated
+    /* loaded from: classes3.dex */
     public static class ResponderConfig implements Parcelable {
-        public static final Parcelable.Creator<ResponderConfig> CREATOR = new Parcelable.Creator<ResponderConfig>() {
+        public static final Parcelable.Creator<ResponderConfig> CREATOR = new Parcelable.Creator<ResponderConfig>() { // from class: android.net.wifi.RttManager.ResponderConfig.1
+            /* JADX WARN: Can't rename method to resolve collision */
+            @Override // android.p007os.Parcelable.Creator
             public ResponderConfig createFromParcel(Parcel in) {
                 ResponderConfig config = new ResponderConfig();
                 config.macAddress = in.readString();
@@ -652,6 +689,8 @@ public class RttManager {
                 return config;
             }
 
+            /* JADX WARN: Can't rename method to resolve collision */
+            @Override // android.p007os.Parcelable.Creator
             public ResponderConfig[] newArray(int size) {
                 return new ResponderConfig[size];
             }
@@ -667,10 +706,12 @@ public class RttManager {
             return "macAddress = " + this.macAddress + " frequency = " + this.frequency + " centerFreq0 = " + this.centerFreq0 + " centerFreq1 = " + this.centerFreq1 + " channelWidth = " + this.channelWidth + " preamble = " + this.preamble;
         }
 
+        @Override // android.p007os.Parcelable
         public int describeContents() {
             return 0;
         }
 
+        @Override // android.p007os.Parcelable
         public void writeToParcel(Parcel dest, int flags) {
             dest.writeString(this.macAddress);
             dest.writeInt(this.frequency);
@@ -685,6 +726,7 @@ public class RttManager {
         this.mNewService = service;
         this.mContext = context;
         boolean rttSupported = context.getPackageManager().hasSystemFeature(PackageManager.FEATURE_WIFI_RTT);
+        this.mRttCapabilities = new RttCapabilities();
         this.mRttCapabilities.oneSidedRttSupported = rttSupported;
         this.mRttCapabilities.twoSided11McRttSupported = rttSupported;
         this.mRttCapabilities.lciSupported = false;

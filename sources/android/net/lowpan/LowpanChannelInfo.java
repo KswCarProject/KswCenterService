@@ -1,23 +1,28 @@
 package android.net.lowpan;
 
 import android.net.wifi.WifiInfo;
-import android.os.Parcel;
-import android.os.Parcelable;
+import android.p007os.Parcel;
+import android.p007os.Parcelable;
 import java.util.Objects;
 
+/* loaded from: classes3.dex */
 public class LowpanChannelInfo implements Parcelable {
-    public static final Parcelable.Creator<LowpanChannelInfo> CREATOR = new Parcelable.Creator<LowpanChannelInfo>() {
+    public static final Parcelable.Creator<LowpanChannelInfo> CREATOR = new Parcelable.Creator<LowpanChannelInfo>() { // from class: android.net.lowpan.LowpanChannelInfo.1
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public LowpanChannelInfo createFromParcel(Parcel in) {
             LowpanChannelInfo info = new LowpanChannelInfo();
-            int unused = info.mIndex = in.readInt();
-            String unused2 = info.mName = in.readString();
-            float unused3 = info.mSpectrumCenterFrequency = in.readFloat();
-            float unused4 = info.mSpectrumBandwidth = in.readFloat();
-            int unused5 = info.mMaxTransmitPower = in.readInt();
-            boolean unused6 = info.mIsMaskedByRegulatoryDomain = in.readBoolean();
+            info.mIndex = in.readInt();
+            info.mName = in.readString();
+            info.mSpectrumCenterFrequency = in.readFloat();
+            info.mSpectrumBandwidth = in.readFloat();
+            info.mMaxTransmitPower = in.readInt();
+            info.mIsMaskedByRegulatoryDomain = in.readBoolean();
             return info;
         }
 
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public LowpanChannelInfo[] newArray(int size) {
             return new LowpanChannelInfo[size];
         }
@@ -25,31 +30,25 @@ public class LowpanChannelInfo implements Parcelable {
     public static final float UNKNOWN_BANDWIDTH = 0.0f;
     public static final float UNKNOWN_FREQUENCY = 0.0f;
     public static final int UNKNOWN_POWER = Integer.MAX_VALUE;
-    /* access modifiers changed from: private */
-    public int mIndex;
-    /* access modifiers changed from: private */
-    public boolean mIsMaskedByRegulatoryDomain;
-    /* access modifiers changed from: private */
-    public int mMaxTransmitPower;
-    /* access modifiers changed from: private */
-    public String mName;
-    /* access modifiers changed from: private */
-    public float mSpectrumBandwidth;
-    /* access modifiers changed from: private */
-    public float mSpectrumCenterFrequency;
+    private int mIndex;
+    private boolean mIsMaskedByRegulatoryDomain;
+    private int mMaxTransmitPower;
+    private String mName;
+    private float mSpectrumBandwidth;
+    private float mSpectrumCenterFrequency;
 
     public static LowpanChannelInfo getChannelInfoForIeee802154Page0(int index) {
         LowpanChannelInfo info = new LowpanChannelInfo();
         if (index < 0) {
             info = null;
         } else if (index == 0) {
-            info.mSpectrumCenterFrequency = 8.6830003E8f;
+            info.mSpectrumCenterFrequency = 8.683E8f;
             info.mSpectrumBandwidth = 600000.0f;
         } else if (index < 11) {
-            info.mSpectrumCenterFrequency = (((float) index) * 2000000.0f) + 9.04E8f;
+            info.mSpectrumCenterFrequency = (index * 2000000.0f) + 9.04E8f;
             info.mSpectrumBandwidth = 0.0f;
         } else if (index < 26) {
-            info.mSpectrumCenterFrequency = (((float) index) * 5000000.0f) + 2.34999987E9f;
+            info.mSpectrumCenterFrequency = (index * 5000000.0f) + 2.3499999E9f;
             info.mSpectrumBandwidth = 2000000.0f;
         } else {
             info = null;
@@ -152,24 +151,23 @@ public class LowpanChannelInfo implements Parcelable {
     }
 
     public boolean equals(Object obj) {
-        if (!(obj instanceof LowpanChannelInfo)) {
-            return false;
-        }
-        LowpanChannelInfo rhs = (LowpanChannelInfo) obj;
-        if (Objects.equals(this.mName, rhs.mName) && this.mIndex == rhs.mIndex && this.mIsMaskedByRegulatoryDomain == rhs.mIsMaskedByRegulatoryDomain && this.mSpectrumCenterFrequency == rhs.mSpectrumCenterFrequency && this.mSpectrumBandwidth == rhs.mSpectrumBandwidth && this.mMaxTransmitPower == rhs.mMaxTransmitPower) {
-            return true;
+        if (obj instanceof LowpanChannelInfo) {
+            LowpanChannelInfo rhs = (LowpanChannelInfo) obj;
+            return Objects.equals(this.mName, rhs.mName) && this.mIndex == rhs.mIndex && this.mIsMaskedByRegulatoryDomain == rhs.mIsMaskedByRegulatoryDomain && this.mSpectrumCenterFrequency == rhs.mSpectrumCenterFrequency && this.mSpectrumBandwidth == rhs.mSpectrumBandwidth && this.mMaxTransmitPower == rhs.mMaxTransmitPower;
         }
         return false;
     }
 
     public int hashCode() {
-        return Objects.hash(new Object[]{this.mName, Integer.valueOf(this.mIndex), Boolean.valueOf(this.mIsMaskedByRegulatoryDomain), Float.valueOf(this.mSpectrumCenterFrequency), Float.valueOf(this.mSpectrumBandwidth), Integer.valueOf(this.mMaxTransmitPower)});
+        return Objects.hash(this.mName, Integer.valueOf(this.mIndex), Boolean.valueOf(this.mIsMaskedByRegulatoryDomain), Float.valueOf(this.mSpectrumCenterFrequency), Float.valueOf(this.mSpectrumBandwidth), Integer.valueOf(this.mMaxTransmitPower));
     }
 
+    @Override // android.p007os.Parcelable
     public int describeContents() {
         return 0;
     }
 
+    @Override // android.p007os.Parcelable
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeInt(this.mIndex);
         dest.writeString(this.mName);

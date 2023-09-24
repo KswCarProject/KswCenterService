@@ -1,20 +1,11 @@
 package android.view.textservice;
 
-import android.os.Parcel;
-import android.os.Parcelable;
+import android.p007os.Parcel;
+import android.p007os.Parcelable;
 import com.android.internal.util.ArrayUtils;
 
+/* loaded from: classes4.dex */
 public final class SuggestionsInfo implements Parcelable {
-    public static final Parcelable.Creator<SuggestionsInfo> CREATOR = new Parcelable.Creator<SuggestionsInfo>() {
-        public SuggestionsInfo createFromParcel(Parcel source) {
-            return new SuggestionsInfo(source);
-        }
-
-        public SuggestionsInfo[] newArray(int size) {
-            return new SuggestionsInfo[size];
-        }
-    };
-    private static final String[] EMPTY = ((String[]) ArrayUtils.emptyArray(String.class));
     public static final int RESULT_ATTR_HAS_RECOMMENDED_SUGGESTIONS = 4;
     public static final int RESULT_ATTR_IN_THE_DICTIONARY = 1;
     public static final int RESULT_ATTR_LOOKS_LIKE_TYPO = 2;
@@ -23,6 +14,20 @@ public final class SuggestionsInfo implements Parcelable {
     private final String[] mSuggestions;
     private final int mSuggestionsAttributes;
     private final boolean mSuggestionsAvailable;
+    private static final String[] EMPTY = (String[]) ArrayUtils.emptyArray(String.class);
+    public static final Parcelable.Creator<SuggestionsInfo> CREATOR = new Parcelable.Creator<SuggestionsInfo>() { // from class: android.view.textservice.SuggestionsInfo.1
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
+        public SuggestionsInfo createFromParcel(Parcel source) {
+            return new SuggestionsInfo(source);
+        }
+
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
+        public SuggestionsInfo[] newArray(int size) {
+            return new SuggestionsInfo[size];
+        }
+    };
 
     public SuggestionsInfo(int suggestionsAttributes, String[] suggestions) {
         this(suggestionsAttributes, suggestions, 0, 0);
@@ -46,9 +51,10 @@ public final class SuggestionsInfo implements Parcelable {
         this.mSuggestions = source.readStringArray();
         this.mCookie = source.readInt();
         this.mSequence = source.readInt();
-        this.mSuggestionsAvailable = source.readInt() != 1 ? false : true;
+        this.mSuggestionsAvailable = source.readInt() == 1;
     }
 
+    @Override // android.p007os.Parcelable
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeInt(this.mSuggestionsAttributes);
         dest.writeStringArray(this.mSuggestions);
@@ -85,6 +91,7 @@ public final class SuggestionsInfo implements Parcelable {
         return this.mSuggestions[i];
     }
 
+    @Override // android.p007os.Parcelable
     public int describeContents() {
         return 0;
     }

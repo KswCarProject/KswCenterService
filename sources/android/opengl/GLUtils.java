@@ -2,6 +2,7 @@ package android.opengl;
 
 import android.graphics.Bitmap;
 
+/* loaded from: classes3.dex */
 public final class GLUtils {
     private static native int native_getInternalFormat(long j);
 
@@ -17,88 +18,89 @@ public final class GLUtils {
     public static int getInternalFormat(Bitmap bitmap) {
         if (bitmap == null) {
             throw new NullPointerException("getInternalFormat can't be used with a null Bitmap");
-        } else if (!bitmap.isRecycled()) {
-            int result = native_getInternalFormat(bitmap.getNativeInstance());
-            if (result >= 0) {
-                return result;
-            }
-            throw new IllegalArgumentException("Unknown internalformat");
-        } else {
+        }
+        if (bitmap.isRecycled()) {
             throw new IllegalArgumentException("bitmap is recycled");
         }
+        int result = native_getInternalFormat(bitmap.getNativeInstance());
+        if (result < 0) {
+            throw new IllegalArgumentException("Unknown internalformat");
+        }
+        return result;
     }
 
     public static int getType(Bitmap bitmap) {
         if (bitmap == null) {
             throw new NullPointerException("getType can't be used with a null Bitmap");
-        } else if (!bitmap.isRecycled()) {
-            int result = native_getType(bitmap.getNativeInstance());
-            if (result >= 0) {
-                return result;
-            }
-            throw new IllegalArgumentException("Unknown type");
-        } else {
+        }
+        if (bitmap.isRecycled()) {
             throw new IllegalArgumentException("bitmap is recycled");
         }
+        int result = native_getType(bitmap.getNativeInstance());
+        if (result < 0) {
+            throw new IllegalArgumentException("Unknown type");
+        }
+        return result;
     }
 
     public static void texImage2D(int target, int level, int internalformat, Bitmap bitmap, int border) {
         if (bitmap == null) {
             throw new NullPointerException("texImage2D can't be used with a null Bitmap");
-        } else if (!bitmap.isRecycled()) {
-            if (native_texImage2D(target, level, internalformat, bitmap.getNativeInstance(), -1, border) != 0) {
-                throw new IllegalArgumentException("invalid Bitmap format");
-            }
-        } else {
+        }
+        if (bitmap.isRecycled()) {
             throw new IllegalArgumentException("bitmap is recycled");
+        }
+        if (native_texImage2D(target, level, internalformat, bitmap.getNativeInstance(), -1, border) != 0) {
+            throw new IllegalArgumentException("invalid Bitmap format");
         }
     }
 
     public static void texImage2D(int target, int level, int internalformat, Bitmap bitmap, int type, int border) {
         if (bitmap == null) {
             throw new NullPointerException("texImage2D can't be used with a null Bitmap");
-        } else if (!bitmap.isRecycled()) {
-            if (native_texImage2D(target, level, internalformat, bitmap.getNativeInstance(), type, border) != 0) {
-                throw new IllegalArgumentException("invalid Bitmap format");
-            }
-        } else {
+        }
+        if (bitmap.isRecycled()) {
             throw new IllegalArgumentException("bitmap is recycled");
+        }
+        if (native_texImage2D(target, level, internalformat, bitmap.getNativeInstance(), type, border) != 0) {
+            throw new IllegalArgumentException("invalid Bitmap format");
         }
     }
 
     public static void texImage2D(int target, int level, Bitmap bitmap, int border) {
         if (bitmap == null) {
             throw new NullPointerException("texImage2D can't be used with a null Bitmap");
-        } else if (!bitmap.isRecycled()) {
-            if (native_texImage2D(target, level, -1, bitmap.getNativeInstance(), -1, border) != 0) {
-                throw new IllegalArgumentException("invalid Bitmap format");
-            }
-        } else {
+        }
+        if (bitmap.isRecycled()) {
             throw new IllegalArgumentException("bitmap is recycled");
+        }
+        if (native_texImage2D(target, level, -1, bitmap.getNativeInstance(), -1, border) != 0) {
+            throw new IllegalArgumentException("invalid Bitmap format");
         }
     }
 
     public static void texSubImage2D(int target, int level, int xoffset, int yoffset, Bitmap bitmap) {
         if (bitmap == null) {
             throw new NullPointerException("texSubImage2D can't be used with a null Bitmap");
-        } else if (!bitmap.isRecycled()) {
-            if (native_texSubImage2D(target, level, xoffset, yoffset, bitmap.getNativeInstance(), -1, getType(bitmap)) != 0) {
-                throw new IllegalArgumentException("invalid Bitmap format");
-            }
-        } else {
+        }
+        if (bitmap.isRecycled()) {
             throw new IllegalArgumentException("bitmap is recycled");
+        }
+        int type = getType(bitmap);
+        if (native_texSubImage2D(target, level, xoffset, yoffset, bitmap.getNativeInstance(), -1, type) != 0) {
+            throw new IllegalArgumentException("invalid Bitmap format");
         }
     }
 
     public static void texSubImage2D(int target, int level, int xoffset, int yoffset, Bitmap bitmap, int format, int type) {
         if (bitmap == null) {
             throw new NullPointerException("texSubImage2D can't be used with a null Bitmap");
-        } else if (!bitmap.isRecycled()) {
-            if (native_texSubImage2D(target, level, xoffset, yoffset, bitmap.getNativeInstance(), format, type) != 0) {
-                throw new IllegalArgumentException("invalid Bitmap format");
-            }
-        } else {
+        }
+        if (bitmap.isRecycled()) {
             throw new IllegalArgumentException("bitmap is recycled");
+        }
+        if (native_texSubImage2D(target, level, xoffset, yoffset, bitmap.getNativeInstance(), format, type) != 0) {
+            throw new IllegalArgumentException("invalid Bitmap format");
         }
     }
 

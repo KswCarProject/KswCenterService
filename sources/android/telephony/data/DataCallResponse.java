@@ -2,8 +2,8 @@ package android.telephony.data;
 
 import android.annotation.SystemApi;
 import android.net.LinkAddress;
-import android.os.Parcel;
-import android.os.Parcelable;
+import android.p007os.Parcel;
+import android.p007os.Parcelable;
 import com.android.internal.annotations.VisibleForTesting;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
@@ -13,12 +13,17 @@ import java.util.List;
 import java.util.Objects;
 
 @SystemApi
+/* loaded from: classes3.dex */
 public final class DataCallResponse implements Parcelable {
-    public static final Parcelable.Creator<DataCallResponse> CREATOR = new Parcelable.Creator<DataCallResponse>() {
+    public static final Parcelable.Creator<DataCallResponse> CREATOR = new Parcelable.Creator<DataCallResponse>() { // from class: android.telephony.data.DataCallResponse.1
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public DataCallResponse createFromParcel(Parcel source) {
             return new DataCallResponse(source);
         }
 
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public DataCallResponse[] newArray(int size) {
             return new DataCallResponse[size];
         }
@@ -40,6 +45,7 @@ public final class DataCallResponse implements Parcelable {
     private final int mSuggestedRetryTime;
 
     @Retention(RetentionPolicy.SOURCE)
+    /* loaded from: classes3.dex */
     public @interface LinkStatus {
     }
 
@@ -153,24 +159,23 @@ public final class DataCallResponse implements Parcelable {
         if (this == o) {
             return true;
         }
-        if (!(o instanceof DataCallResponse)) {
-            return false;
-        }
-        DataCallResponse other = (DataCallResponse) o;
-        if (this.mCause == other.mCause && this.mSuggestedRetryTime == other.mSuggestedRetryTime && this.mId == other.mId && this.mLinkStatus == other.mLinkStatus && this.mProtocolType == other.mProtocolType && this.mInterfaceName.equals(other.mInterfaceName) && this.mAddresses.size() == other.mAddresses.size() && this.mAddresses.containsAll(other.mAddresses) && this.mDnsAddresses.size() == other.mDnsAddresses.size() && this.mDnsAddresses.containsAll(other.mDnsAddresses) && this.mGatewayAddresses.size() == other.mGatewayAddresses.size() && this.mGatewayAddresses.containsAll(other.mGatewayAddresses) && this.mPcscfAddresses.size() == other.mPcscfAddresses.size() && this.mPcscfAddresses.containsAll(other.mPcscfAddresses) && this.mMtu == other.mMtu) {
-            return true;
+        if (o instanceof DataCallResponse) {
+            DataCallResponse other = (DataCallResponse) o;
+            return this.mCause == other.mCause && this.mSuggestedRetryTime == other.mSuggestedRetryTime && this.mId == other.mId && this.mLinkStatus == other.mLinkStatus && this.mProtocolType == other.mProtocolType && this.mInterfaceName.equals(other.mInterfaceName) && this.mAddresses.size() == other.mAddresses.size() && this.mAddresses.containsAll(other.mAddresses) && this.mDnsAddresses.size() == other.mDnsAddresses.size() && this.mDnsAddresses.containsAll(other.mDnsAddresses) && this.mGatewayAddresses.size() == other.mGatewayAddresses.size() && this.mGatewayAddresses.containsAll(other.mGatewayAddresses) && this.mPcscfAddresses.size() == other.mPcscfAddresses.size() && this.mPcscfAddresses.containsAll(other.mPcscfAddresses) && this.mMtu == other.mMtu;
         }
         return false;
     }
 
     public int hashCode() {
-        return Objects.hash(new Object[]{Integer.valueOf(this.mCause), Integer.valueOf(this.mSuggestedRetryTime), Integer.valueOf(this.mId), Integer.valueOf(this.mLinkStatus), Integer.valueOf(this.mProtocolType), this.mInterfaceName, this.mAddresses, this.mDnsAddresses, this.mGatewayAddresses, this.mPcscfAddresses, Integer.valueOf(this.mMtu)});
+        return Objects.hash(Integer.valueOf(this.mCause), Integer.valueOf(this.mSuggestedRetryTime), Integer.valueOf(this.mId), Integer.valueOf(this.mLinkStatus), Integer.valueOf(this.mProtocolType), this.mInterfaceName, this.mAddresses, this.mDnsAddresses, this.mGatewayAddresses, this.mPcscfAddresses, Integer.valueOf(this.mMtu));
     }
 
+    @Override // android.p007os.Parcelable
     public int describeContents() {
         return 0;
     }
 
+    @Override // android.p007os.Parcelable
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeInt(this.mCause);
         dest.writeInt(this.mSuggestedRetryTime);
@@ -185,6 +190,7 @@ public final class DataCallResponse implements Parcelable {
         dest.writeInt(this.mMtu);
     }
 
+    /* loaded from: classes3.dex */
     public static final class Builder {
         private List<LinkAddress> mAddresses;
         private int mCause;

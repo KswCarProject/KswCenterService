@@ -1,17 +1,22 @@
 package android.service.carrier;
 
-import android.os.Parcel;
-import android.os.Parcelable;
+import android.p007os.Parcel;
+import android.p007os.Parcelable;
 import android.telephony.Rlog;
 import com.android.internal.telephony.uicc.IccUtils;
 import java.util.Objects;
 
+/* loaded from: classes3.dex */
 public class CarrierIdentifier implements Parcelable {
-    public static final Parcelable.Creator<CarrierIdentifier> CREATOR = new Parcelable.Creator<CarrierIdentifier>() {
+    public static final Parcelable.Creator<CarrierIdentifier> CREATOR = new Parcelable.Creator<CarrierIdentifier>() { // from class: android.service.carrier.CarrierIdentifier.1
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public CarrierIdentifier createFromParcel(Parcel parcel) {
             return new CarrierIdentifier(parcel);
         }
 
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public CarrierIdentifier[] newArray(int i) {
             return new CarrierIdentifier[i];
         }
@@ -26,6 +31,7 @@ public class CarrierIdentifier implements Parcelable {
     private int mSpecificCarrierId;
     private String mSpn;
 
+    /* loaded from: classes3.dex */
     public interface MatchType {
         public static final int ALL = 0;
         public static final int GID1 = 3;
@@ -36,11 +42,11 @@ public class CarrierIdentifier implements Parcelable {
     }
 
     public CarrierIdentifier(String mcc, String mnc, String spn, String imsi, String gid1, String gid2) {
-        this(mcc, mnc, spn, imsi, gid1, gid2, (String) null, -1, -1);
+        this(mcc, mnc, spn, imsi, gid1, gid2, null, -1, -1);
     }
 
     public CarrierIdentifier(String mcc, String mnc, String spn, String imsi, String gid1, String gid2, int carrierid, int specificCarrierId) {
-        this(mcc, mnc, spn, imsi, gid1, gid2, (String) null, carrierid, specificCarrierId);
+        this(mcc, mnc, spn, imsi, gid1, gid2, null, carrierid, specificCarrierId);
     }
 
     public CarrierIdentifier(String mcc, String mnc, String spn, String imsi, String gid1, String gid2, String iccid, int carrierid, int specificCarrierId) {
@@ -65,22 +71,21 @@ public class CarrierIdentifier implements Parcelable {
     public CarrierIdentifier(byte[] mccMnc, String gid1, String gid2) {
         this.mCarrierId = -1;
         this.mSpecificCarrierId = -1;
-        if (mccMnc.length == 3) {
-            String hex = IccUtils.bytesToHexString(mccMnc);
-            this.mMcc = new String(new char[]{hex.charAt(1), hex.charAt(0), hex.charAt(3)});
-            if (hex.charAt(2) == 'F') {
-                this.mMnc = new String(new char[]{hex.charAt(5), hex.charAt(4)});
-            } else {
-                this.mMnc = new String(new char[]{hex.charAt(5), hex.charAt(4), hex.charAt(2)});
-            }
-            this.mGid1 = gid1;
-            this.mGid2 = gid2;
-            this.mSpn = null;
-            this.mImsi = null;
-            this.mIccid = null;
-            return;
+        if (mccMnc.length != 3) {
+            throw new IllegalArgumentException("MCC & MNC must be set by a 3-byte array: byte[" + mccMnc.length + "]");
         }
-        throw new IllegalArgumentException("MCC & MNC must be set by a 3-byte array: byte[" + mccMnc.length + "]");
+        String hex = IccUtils.bytesToHexString(mccMnc);
+        this.mMcc = new String(new char[]{hex.charAt(1), hex.charAt(0), hex.charAt(3)});
+        if (hex.charAt(2) == 'F') {
+            this.mMnc = new String(new char[]{hex.charAt(5), hex.charAt(4)});
+        } else {
+            this.mMnc = new String(new char[]{hex.charAt(5), hex.charAt(4), hex.charAt(2)});
+        }
+        this.mGid1 = gid1;
+        this.mGid2 = gid2;
+        this.mSpn = null;
+        this.mImsi = null;
+        this.mIccid = null;
     }
 
     public CarrierIdentifier(Parcel parcel) {
@@ -133,20 +138,22 @@ public class CarrierIdentifier implements Parcelable {
             return false;
         }
         CarrierIdentifier that = (CarrierIdentifier) obj;
-        if (!Objects.equals(this.mMcc, that.mMcc) || !Objects.equals(this.mMnc, that.mMnc) || !Objects.equals(this.mSpn, that.mSpn) || !Objects.equals(this.mImsi, that.mImsi) || !Objects.equals(this.mGid1, that.mGid1) || !Objects.equals(this.mGid2, that.mGid2) || !Objects.equals(this.mIccid, that.mIccid) || !Objects.equals(Integer.valueOf(this.mCarrierId), Integer.valueOf(that.mCarrierId)) || !Objects.equals(Integer.valueOf(this.mSpecificCarrierId), Integer.valueOf(that.mSpecificCarrierId))) {
-            return false;
+        if (Objects.equals(this.mMcc, that.mMcc) && Objects.equals(this.mMnc, that.mMnc) && Objects.equals(this.mSpn, that.mSpn) && Objects.equals(this.mImsi, that.mImsi) && Objects.equals(this.mGid1, that.mGid1) && Objects.equals(this.mGid2, that.mGid2) && Objects.equals(this.mIccid, that.mIccid) && Objects.equals(Integer.valueOf(this.mCarrierId), Integer.valueOf(that.mCarrierId)) && Objects.equals(Integer.valueOf(this.mSpecificCarrierId), Integer.valueOf(that.mSpecificCarrierId))) {
+            return true;
         }
-        return true;
+        return false;
     }
 
     public int hashCode() {
-        return Objects.hash(new Object[]{this.mMcc, this.mMnc, this.mSpn, this.mImsi, this.mGid1, this.mGid2, this.mIccid, Integer.valueOf(this.mCarrierId), Integer.valueOf(this.mSpecificCarrierId)});
+        return Objects.hash(this.mMcc, this.mMnc, this.mSpn, this.mImsi, this.mGid1, this.mGid2, this.mIccid, Integer.valueOf(this.mCarrierId), Integer.valueOf(this.mSpecificCarrierId));
     }
 
+    @Override // android.p007os.Parcelable
     public int describeContents() {
         return 0;
     }
 
+    @Override // android.p007os.Parcelable
     public void writeToParcel(Parcel out, int flags) {
         out.writeString(this.mMcc);
         out.writeString(this.mMnc);

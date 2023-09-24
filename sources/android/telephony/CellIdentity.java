@@ -1,15 +1,19 @@
 package android.telephony;
 
-import android.os.Parcel;
-import android.os.Parcelable;
+import android.p007os.Parcel;
+import android.p007os.Parcelable;
 import android.text.TextUtils;
 import java.util.Objects;
 import java.util.UUID;
 
+/* loaded from: classes.dex */
 public abstract class CellIdentity implements Parcelable {
-    public static final Parcelable.Creator<CellIdentity> CREATOR = new Parcelable.Creator<CellIdentity>() {
+    public static final Parcelable.Creator<CellIdentity> CREATOR = new Parcelable.Creator<CellIdentity>() { // from class: android.telephony.CellIdentity.1
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public CellIdentity createFromParcel(Parcel in) {
-            switch (in.readInt()) {
+            int type = in.readInt();
+            switch (type) {
                 case 1:
                     return CellIdentityGsm.createFromParcelBody(in);
                 case 2:
@@ -27,6 +31,8 @@ public abstract class CellIdentity implements Parcelable {
             }
         }
 
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public CellIdentity[] newArray(int size) {
             return new CellIdentity[size];
         }
@@ -67,6 +73,7 @@ public abstract class CellIdentity implements Parcelable {
         this.mAlphaShort = alphas;
     }
 
+    @Override // android.p007os.Parcelable
     public int describeContents() {
         return 0;
     }
@@ -104,20 +111,18 @@ public abstract class CellIdentity implements Parcelable {
     }
 
     public boolean equals(Object other) {
-        if (!(other instanceof CellIdentity)) {
-            return false;
+        if (other instanceof CellIdentity) {
+            CellIdentity o = (CellIdentity) other;
+            return this.mType == o.mType && TextUtils.equals(this.mMccStr, o.mMccStr) && TextUtils.equals(this.mMncStr, o.mMncStr) && TextUtils.equals(this.mAlphaLong, o.mAlphaLong) && TextUtils.equals(this.mAlphaShort, o.mAlphaShort);
         }
-        CellIdentity o = (CellIdentity) other;
-        if (this.mType != o.mType || !TextUtils.equals(this.mMccStr, o.mMccStr) || !TextUtils.equals(this.mMncStr, o.mMncStr) || !TextUtils.equals(this.mAlphaLong, o.mAlphaLong) || !TextUtils.equals(this.mAlphaShort, o.mAlphaShort)) {
-            return false;
-        }
-        return true;
+        return false;
     }
 
     public int hashCode() {
-        return Objects.hash(new Object[]{this.mAlphaLong, this.mAlphaShort, this.mMccStr, this.mMncStr, Integer.valueOf(this.mType)});
+        return Objects.hash(this.mAlphaLong, this.mAlphaShort, this.mMccStr, this.mMncStr, Integer.valueOf(this.mType));
     }
 
+    @Override // android.p007os.Parcelable
     public void writeToParcel(Parcel dest, int type) {
         dest.writeInt(type);
         dest.writeString(this.mMccStr);
@@ -130,9 +135,8 @@ public abstract class CellIdentity implements Parcelable {
         this(tag, type, source.readString(), source.readString(), source.readString(), source.readString());
     }
 
-    /* access modifiers changed from: protected */
-    public void log(String s) {
-        Rlog.w(this.mTag, s);
+    protected void log(String s) {
+        Rlog.m80w(this.mTag, s);
     }
 
     protected static final int inRangeOrUnavailable(int value, int rangeMin, int rangeMax) {

@@ -4,30 +4,36 @@ import android.bluetooth.BluetoothProfile;
 import android.bluetooth.IBluetoothStateChangeCallback;
 import android.content.ComponentName;
 import android.content.Context;
+import android.content.Intent;
 import android.content.ServiceConnection;
-import android.os.IBinder;
-import android.os.RemoteException;
+import android.p007os.IBinder;
+import android.p007os.RemoteException;
+import android.p007os.UserHandle;
 import android.util.Log;
 
+/* loaded from: classes.dex */
 public abstract class BluetoothProfileConnector<T> {
-    private final IBluetoothStateChangeCallback mBluetoothStateChangeCallback = new IBluetoothStateChangeCallback.Stub() {
+    private final IBluetoothStateChangeCallback mBluetoothStateChangeCallback = new IBluetoothStateChangeCallback.Stub() { // from class: android.bluetooth.BluetoothProfileConnector.1
+        @Override // android.bluetooth.IBluetoothStateChangeCallback
         public void onBluetoothStateChange(boolean up) {
             if (up) {
-                boolean unused = BluetoothProfileConnector.this.doBind();
+                BluetoothProfileConnector.this.doBind();
             } else {
                 BluetoothProfileConnector.this.doUnbind();
             }
         }
     };
-    private final ServiceConnection mConnection = new ServiceConnection() {
+    private final ServiceConnection mConnection = new ServiceConnection() { // from class: android.bluetooth.BluetoothProfileConnector.2
+        @Override // android.content.ServiceConnection
         public void onServiceConnected(ComponentName className, IBinder service) {
             BluetoothProfileConnector.this.logDebug("Proxy object connected");
-            Object unused = BluetoothProfileConnector.this.mService = BluetoothProfileConnector.this.getServiceInterface(service);
+            BluetoothProfileConnector.this.mService = BluetoothProfileConnector.this.getServiceInterface(service);
             if (BluetoothProfileConnector.this.mServiceListener != null) {
                 BluetoothProfileConnector.this.mServiceListener.onServiceConnected(BluetoothProfileConnector.this.mProfileId, BluetoothProfileConnector.this.mProfileProxy);
             }
         }
 
+        @Override // android.content.ServiceConnection
         public void onServiceDisconnected(ComponentName className) {
             BluetoothProfileConnector.this.logDebug("Proxy object disconnected");
             BluetoothProfileConnector.this.doUnbind();
@@ -37,15 +43,11 @@ public abstract class BluetoothProfileConnector<T> {
         }
     };
     private Context mContext;
-    /* access modifiers changed from: private */
-    public final int mProfileId;
+    private final int mProfileId;
     private final String mProfileName;
-    /* access modifiers changed from: private */
-    public final BluetoothProfile mProfileProxy;
-    /* access modifiers changed from: private */
-    public volatile T mService;
-    /* access modifiers changed from: private */
-    public BluetoothProfile.ServiceListener mServiceListener;
+    private final BluetoothProfile mProfileProxy;
+    private volatile T mService;
+    private BluetoothProfile.ServiceListener mServiceListener;
     private final String mServiceName;
 
     public abstract T getServiceInterface(IBinder iBinder);
@@ -57,71 +59,29 @@ public abstract class BluetoothProfileConnector<T> {
         this.mServiceName = serviceName;
     }
 
-    /* access modifiers changed from: private */
-    /* JADX WARNING: Code restructure failed: missing block: B:23:0x005f, code lost:
-        return true;
-     */
-    /* Code decompiled incorrectly, please refer to instructions dump. */
+    /* JADX INFO: Access modifiers changed from: private */
     public boolean doBind() {
-        /*
-            r7 = this;
-            android.content.ServiceConnection r0 = r7.mConnection
-            monitor-enter(r0)
-            T r1 = r7.mService     // Catch:{ all -> 0x0061 }
-            if (r1 != 0) goto L_0x005e
-            java.lang.String r1 = "Binding service..."
-            r7.logDebug(r1)     // Catch:{ all -> 0x0061 }
-            r1 = 0
-            android.content.Intent r2 = new android.content.Intent     // Catch:{ SecurityException -> 0x0047 }
-            java.lang.String r3 = r7.mServiceName     // Catch:{ SecurityException -> 0x0047 }
-            r2.<init>((java.lang.String) r3)     // Catch:{ SecurityException -> 0x0047 }
-            android.content.Context r3 = r7.mContext     // Catch:{ SecurityException -> 0x0047 }
-            android.content.pm.PackageManager r3 = r3.getPackageManager()     // Catch:{ SecurityException -> 0x0047 }
-            android.content.ComponentName r3 = r2.resolveSystemService(r3, r1)     // Catch:{ SecurityException -> 0x0047 }
-            r2.setComponent(r3)     // Catch:{ SecurityException -> 0x0047 }
-            if (r3 == 0) goto L_0x0031
-            android.content.Context r4 = r7.mContext     // Catch:{ SecurityException -> 0x0047 }
-            android.content.ServiceConnection r5 = r7.mConnection     // Catch:{ SecurityException -> 0x0047 }
-            android.os.UserHandle r6 = android.os.UserHandle.CURRENT_OR_SELF     // Catch:{ SecurityException -> 0x0047 }
-            boolean r4 = r4.bindServiceAsUser(r2, r5, r1, r6)     // Catch:{ SecurityException -> 0x0047 }
-            if (r4 != 0) goto L_0x0030
-            goto L_0x0031
-        L_0x0030:
-            goto L_0x005e
-        L_0x0031:
-            java.lang.StringBuilder r4 = new java.lang.StringBuilder     // Catch:{ SecurityException -> 0x0047 }
-            r4.<init>()     // Catch:{ SecurityException -> 0x0047 }
-            java.lang.String r5 = "Could not bind to Bluetooth Service with "
-            r4.append(r5)     // Catch:{ SecurityException -> 0x0047 }
-            r4.append(r2)     // Catch:{ SecurityException -> 0x0047 }
-            java.lang.String r4 = r4.toString()     // Catch:{ SecurityException -> 0x0047 }
-            r7.logError(r4)     // Catch:{ SecurityException -> 0x0047 }
-            monitor-exit(r0)     // Catch:{ all -> 0x0061 }
-            return r1
-        L_0x0047:
-            r2 = move-exception
-            java.lang.StringBuilder r3 = new java.lang.StringBuilder     // Catch:{ all -> 0x0061 }
-            r3.<init>()     // Catch:{ all -> 0x0061 }
-            java.lang.String r4 = "Failed to bind service. "
-            r3.append(r4)     // Catch:{ all -> 0x0061 }
-            r3.append(r2)     // Catch:{ all -> 0x0061 }
-            java.lang.String r3 = r3.toString()     // Catch:{ all -> 0x0061 }
-            r7.logError(r3)     // Catch:{ all -> 0x0061 }
-            monitor-exit(r0)     // Catch:{ all -> 0x0061 }
-            return r1
-        L_0x005e:
-            monitor-exit(r0)     // Catch:{ all -> 0x0061 }
-            r0 = 1
-            return r0
-        L_0x0061:
-            r1 = move-exception
-            monitor-exit(r0)     // Catch:{ all -> 0x0061 }
-            throw r1
-        */
-        throw new UnsupportedOperationException("Method not decompiled: android.bluetooth.BluetoothProfileConnector.doBind():boolean");
+        synchronized (this.mConnection) {
+            if (this.mService == null) {
+                logDebug("Binding service...");
+                try {
+                    Intent intent = new Intent(this.mServiceName);
+                    ComponentName comp = intent.resolveSystemService(this.mContext.getPackageManager(), 0);
+                    intent.setComponent(comp);
+                    if (comp != null && this.mContext.bindServiceAsUser(intent, this.mConnection, 0, UserHandle.CURRENT_OR_SELF)) {
+                    }
+                    logError("Could not bind to Bluetooth Service with " + intent);
+                    return false;
+                } catch (SecurityException se) {
+                    logError("Failed to bind service. " + se);
+                    return false;
+                }
+            }
+            return true;
+        }
     }
 
-    /* access modifiers changed from: private */
+    /* JADX INFO: Access modifiers changed from: private */
     public void doUnbind() {
         synchronized (this.mConnection) {
             if (this.mService != null) {
@@ -129,20 +89,14 @@ public abstract class BluetoothProfileConnector<T> {
                 try {
                     this.mContext.unbindService(this.mConnection);
                 } catch (IllegalArgumentException ie) {
-                    try {
-                        logError("Unable to unbind service: " + ie);
-                    } catch (Throwable th) {
-                        this.mService = null;
-                        throw th;
-                    }
+                    logError("Unable to unbind service: " + ie);
                 }
                 this.mService = null;
             }
         }
     }
 
-    /* access modifiers changed from: package-private */
-    public void connect(Context context, BluetoothProfile.ServiceListener listener) {
+    void connect(Context context, BluetoothProfile.ServiceListener listener) {
         this.mContext = context;
         this.mServiceListener = listener;
         IBluetoothManager mgr = BluetoothAdapter.getDefaultAdapter().getBluetoothManager();
@@ -156,8 +110,7 @@ public abstract class BluetoothProfileConnector<T> {
         doBind();
     }
 
-    /* access modifiers changed from: package-private */
-    public void disconnect() {
+    void disconnect() {
         this.mServiceListener = null;
         IBluetoothManager mgr = BluetoothAdapter.getDefaultAdapter().getBluetoothManager();
         if (mgr != null) {
@@ -170,17 +123,16 @@ public abstract class BluetoothProfileConnector<T> {
         doUnbind();
     }
 
-    /* access modifiers changed from: package-private */
-    public T getService() {
+    T getService() {
         return this.mService;
     }
 
-    /* access modifiers changed from: private */
+    /* JADX INFO: Access modifiers changed from: private */
     public void logDebug(String log) {
-        Log.d(this.mProfileName, log);
+        Log.m72d(this.mProfileName, log);
     }
 
     private void logError(String log) {
-        Log.e(this.mProfileName, log);
+        Log.m70e(this.mProfileName, log);
     }
 }

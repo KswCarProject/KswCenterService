@@ -3,10 +3,11 @@ package android.filterfw.core;
 import android.annotation.UnsupportedAppUsage;
 import android.graphics.SurfaceTexture;
 import android.media.MediaRecorder;
-import android.os.Looper;
+import android.p007os.Looper;
 import android.util.Log;
 import android.view.Surface;
 
+/* loaded from: classes.dex */
 public class GLEnvironment {
     private int glEnvId;
     private boolean mManageContext = true;
@@ -59,8 +60,7 @@ public class GLEnvironment {
         }
     }
 
-    /* access modifiers changed from: protected */
-    public void finalize() throws Throwable {
+    protected void finalize() throws Throwable {
         tearDown();
     }
 
@@ -94,7 +94,7 @@ public class GLEnvironment {
     @UnsupportedAppUsage
     public void activate() {
         if (Looper.myLooper() != null && Looper.myLooper().equals(Looper.getMainLooper())) {
-            Log.e("FilterFramework", "Activating GL context in UI thread!");
+            Log.m70e("FilterFramework", "Activating GL context in UI thread!");
         }
         if (this.mManageContext && !nativeActivate()) {
             throw new RuntimeException("Could not activate GLEnvironment!");
@@ -117,29 +117,29 @@ public class GLEnvironment {
 
     public int registerSurface(Surface surface) {
         int result = nativeAddSurface(surface);
-        if (result >= 0) {
-            return result;
+        if (result < 0) {
+            throw new RuntimeException("Error registering surface " + surface + "!");
         }
-        throw new RuntimeException("Error registering surface " + surface + "!");
+        return result;
     }
 
     public int registerSurfaceTexture(SurfaceTexture surfaceTexture, int width, int height) {
         Surface surface = new Surface(surfaceTexture);
         int result = nativeAddSurfaceWidthHeight(surface, width, height);
         surface.release();
-        if (result >= 0) {
-            return result;
+        if (result < 0) {
+            throw new RuntimeException("Error registering surfaceTexture " + surfaceTexture + "!");
         }
-        throw new RuntimeException("Error registering surfaceTexture " + surfaceTexture + "!");
+        return result;
     }
 
     @UnsupportedAppUsage
     public int registerSurfaceFromMediaRecorder(MediaRecorder mediaRecorder) {
         int result = nativeAddSurfaceFromMediaRecorder(mediaRecorder);
-        if (result >= 0) {
-            return result;
+        if (result < 0) {
+            throw new RuntimeException("Error registering surface from MediaRecorder" + mediaRecorder + "!");
         }
-        throw new RuntimeException("Error registering surface from MediaRecorder" + mediaRecorder + "!");
+        return result;
     }
 
     @UnsupportedAppUsage

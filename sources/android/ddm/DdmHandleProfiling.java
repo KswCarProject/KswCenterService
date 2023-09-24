@@ -1,21 +1,22 @@
 package android.ddm;
 
-import android.os.Debug;
+import android.p007os.Debug;
 import android.util.Log;
 import java.nio.ByteBuffer;
 import org.apache.harmony.dalvik.ddmc.Chunk;
 import org.apache.harmony.dalvik.ddmc.ChunkHandler;
 import org.apache.harmony.dalvik.ddmc.DdmServer;
 
+/* loaded from: classes.dex */
 public class DdmHandleProfiling extends ChunkHandler {
-    public static final int CHUNK_MPRE = type("MPRE");
-    public static final int CHUNK_MPRQ = type("MPRQ");
-    public static final int CHUNK_MPRS = type("MPRS");
-    public static final int CHUNK_MPSE = type("MPSE");
-    public static final int CHUNK_MPSS = type("MPSS");
-    public static final int CHUNK_SPSE = type("SPSE");
-    public static final int CHUNK_SPSS = type("SPSS");
     private static final boolean DEBUG = false;
+    public static final int CHUNK_MPRS = type("MPRS");
+    public static final int CHUNK_MPRE = type("MPRE");
+    public static final int CHUNK_MPSS = type("MPSS");
+    public static final int CHUNK_MPSE = type("MPSE");
+    public static final int CHUNK_MPRQ = type("MPRQ");
+    public static final int CHUNK_SPSS = type("SPSS");
+    public static final int CHUNK_SPSE = type("SPSE");
     private static DdmHandleProfiling mInstance = new DdmHandleProfiling();
 
     private DdmHandleProfiling() {
@@ -65,8 +66,12 @@ public class DdmHandleProfiling extends ChunkHandler {
 
     private Chunk handleMPRS(Chunk request) {
         ByteBuffer in = wrapChunk(request);
+        int bufferSize = in.getInt();
+        int flags = in.getInt();
+        int len = in.getInt();
+        String fileName = getString(in, len);
         try {
-            Debug.startMethodTracing(getString(in, in.getInt()), in.getInt(), in.getInt());
+            Debug.startMethodTracing(fileName, bufferSize, flags);
             return null;
         } catch (RuntimeException re) {
             return createFailChunk(1, re.getMessage());
@@ -79,8 +84,8 @@ public class DdmHandleProfiling extends ChunkHandler {
             Debug.stopMethodTracing();
             result = 0;
         } catch (RuntimeException re) {
-            Log.w("ddm-heap", "Method profiling end failed: " + re.getMessage());
-            result = 1;
+            Log.m64w("ddm-heap", "Method profiling end failed: " + re.getMessage());
+            result = (byte) 1;
         }
         byte[] reply = {result};
         return new Chunk(CHUNK_MPRE, reply, 0, reply.length);
@@ -88,8 +93,10 @@ public class DdmHandleProfiling extends ChunkHandler {
 
     private Chunk handleMPSS(Chunk request) {
         ByteBuffer in = wrapChunk(request);
+        int bufferSize = in.getInt();
+        int flags = in.getInt();
         try {
-            Debug.startMethodTracingDdms(in.getInt(), in.getInt(), false, 0);
+            Debug.startMethodTracingDdms(bufferSize, flags, false, 0);
             return null;
         } catch (RuntimeException re) {
             return createFailChunk(1, re.getMessage());
@@ -101,20 +108,24 @@ public class DdmHandleProfiling extends ChunkHandler {
             Debug.stopMethodTracing();
             return null;
         } catch (RuntimeException re) {
-            Log.w("ddm-heap", type + " prof stream end failed: " + re.getMessage());
+            Log.m64w("ddm-heap", type + " prof stream end failed: " + re.getMessage());
             return createFailChunk(1, re.getMessage());
         }
     }
 
     private Chunk handleMPRQ(Chunk request) {
-        byte[] reply = {(byte) Debug.getMethodTracingMode()};
+        int result = Debug.getMethodTracingMode();
+        byte[] reply = {(byte) result};
         return new Chunk(CHUNK_MPRQ, reply, 0, reply.length);
     }
 
     private Chunk handleSPSS(Chunk request) {
         ByteBuffer in = wrapChunk(request);
+        int bufferSize = in.getInt();
+        int flags = in.getInt();
+        int interval = in.getInt();
         try {
-            Debug.startMethodTracingDdms(in.getInt(), in.getInt(), true, in.getInt());
+            Debug.startMethodTracingDdms(bufferSize, flags, true, interval);
             return null;
         } catch (RuntimeException re) {
             return createFailChunk(1, re.getMessage());

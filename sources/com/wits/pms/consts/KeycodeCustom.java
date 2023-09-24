@@ -1,5 +1,6 @@
 package com.wits.pms.consts;
 
+/* loaded from: classes2.dex */
 public class KeycodeCustom {
     public static final int KEYCODE_CLOSE_SCREEN = 300;
     public static final int KEYCODE_DOWN = 311;

@@ -6,9 +6,10 @@ import android.util.AttributeSet;
 import android.view.View;
 import android.widget.ImageView;
 
+/* loaded from: classes4.dex */
 public class PreferenceImageView extends ImageView {
     public PreferenceImageView(Context context) {
-        this(context, (AttributeSet) null);
+        this(context, null);
     }
 
     @UnsupportedAppUsage
@@ -24,8 +25,8 @@ public class PreferenceImageView extends ImageView {
         super(context, attrs, defStyleAttr, defStyleRes);
     }
 
-    /* access modifiers changed from: protected */
-    public void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
+    @Override // android.widget.ImageView, android.view.View
+    protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
         int widthMode = View.MeasureSpec.getMode(widthMeasureSpec);
         if (widthMode == Integer.MIN_VALUE || widthMode == 0) {
             int widthSize = View.MeasureSpec.getSize(widthMeasureSpec);
@@ -34,11 +35,11 @@ public class PreferenceImageView extends ImageView {
                 widthMeasureSpec = View.MeasureSpec.makeMeasureSpec(maxWidth, Integer.MIN_VALUE);
             }
         }
-        int widthSize2 = View.MeasureSpec.getMode(heightMeasureSpec);
-        if (widthSize2 == Integer.MIN_VALUE || widthSize2 == 0) {
+        int heightMode = View.MeasureSpec.getMode(heightMeasureSpec);
+        if (heightMode == Integer.MIN_VALUE || heightMode == 0) {
             int heightSize = View.MeasureSpec.getSize(heightMeasureSpec);
             int maxHeight = getMaxHeight();
-            if (maxHeight != Integer.MAX_VALUE && (maxHeight < heightSize || widthSize2 == 0)) {
+            if (maxHeight != Integer.MAX_VALUE && (maxHeight < heightSize || heightMode == 0)) {
                 heightMeasureSpec = View.MeasureSpec.makeMeasureSpec(maxHeight, Integer.MIN_VALUE);
             }
         }

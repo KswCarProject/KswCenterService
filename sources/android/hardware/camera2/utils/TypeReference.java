@@ -9,18 +9,19 @@ import java.lang.reflect.Type;
 import java.lang.reflect.TypeVariable;
 import java.lang.reflect.WildcardType;
 
+/* loaded from: classes.dex */
 public abstract class TypeReference<T> {
     private final int mHash;
     private final Type mType;
 
     @UnsupportedAppUsage
     protected TypeReference() {
-        this.mType = ((ParameterizedType) getClass().getGenericSuperclass()).getActualTypeArguments()[0];
-        if (!containsTypeVariable(this.mType)) {
-            this.mHash = this.mType.hashCode();
-            return;
+        ParameterizedType thisType = (ParameterizedType) getClass().getGenericSuperclass();
+        this.mType = thisType.getActualTypeArguments()[0];
+        if (containsTypeVariable(this.mType)) {
+            throw new IllegalArgumentException("Including a type variable in a type reference is not allowed");
         }
-        throw new IllegalArgumentException("Including a type variable in a type reference is not allowed");
+        this.mHash = this.mType.hashCode();
     }
 
     public Type getType() {
@@ -29,19 +30,20 @@ public abstract class TypeReference<T> {
 
     private TypeReference(Type type) {
         this.mType = type;
-        if (!containsTypeVariable(this.mType)) {
-            this.mHash = this.mType.hashCode();
-            return;
+        if (containsTypeVariable(this.mType)) {
+            throw new IllegalArgumentException("Including a type variable in a type reference is not allowed");
         }
-        throw new IllegalArgumentException("Including a type variable in a type reference is not allowed");
+        this.mHash = this.mType.hashCode();
     }
 
+    /* loaded from: classes.dex */
     private static class SpecializedTypeReference<T> extends TypeReference<T> {
         public SpecializedTypeReference(Class<T> klass) {
             super(klass);
         }
     }
 
+    /* loaded from: classes.dex */
     private static class SpecializedBaseTypeReference extends TypeReference {
         public SpecializedBaseTypeReference(Type type) {
             super(type);
@@ -58,29 +60,29 @@ public abstract class TypeReference<T> {
     }
 
     public final Class<? super T> getRawType() {
-        return getRawType(this.mType);
+        return (Class<? super T>) getRawType(this.mType);
     }
 
     private static final Class<?> getRawType(Type type) {
         if (type == null) {
             throw new NullPointerException("type must not be null");
-        } else if (type instanceof Class) {
-            return (Class) type;
-        } else {
-            if (type instanceof ParameterizedType) {
-                return (Class) ((ParameterizedType) type).getRawType();
-            }
-            if (type instanceof GenericArrayType) {
-                return getArrayClass(getRawType(((GenericArrayType) type).getGenericComponentType()));
-            }
-            if (type instanceof WildcardType) {
-                return getRawType(((WildcardType) type).getUpperBounds());
-            }
-            if (type instanceof TypeVariable) {
-                throw new AssertionError("Type variables are not allowed in type references");
-            }
-            throw new AssertionError("Unhandled branch to get raw type for type " + type);
         }
+        if (type instanceof Class) {
+            return (Class) type;
+        }
+        if (type instanceof ParameterizedType) {
+            return (Class) ((ParameterizedType) type).getRawType();
+        }
+        if (type instanceof GenericArrayType) {
+            return getArrayClass(getRawType(((GenericArrayType) type).getGenericComponentType()));
+        }
+        if (type instanceof WildcardType) {
+            return getRawType(((WildcardType) type).getUpperBounds());
+        }
+        if (type instanceof TypeVariable) {
+            throw new AssertionError("Type variables are not allowed in type references");
+        }
+        throw new AssertionError("Unhandled branch to get raw type for type " + type);
     }
 
     private static final Class<?> getRawType(Type[] types) {
@@ -121,11 +123,11 @@ public abstract class TypeReference<T> {
         }
         if (type instanceof WildcardType) {
             throw new UnsupportedOperationException("TODO: support wild card components");
-        } else if (type instanceof TypeVariable) {
-            throw new AssertionError("Type variables are not allowed in type references");
-        } else {
-            throw new AssertionError("Unhandled branch to get component type for type " + type);
         }
+        if (type instanceof TypeVariable) {
+            throw new AssertionError("Type variables are not allowed in type references");
+        }
+        throw new AssertionError("Unhandled branch to get component type for type " + type);
     }
 
     public boolean equals(Object o) {
@@ -137,6 +139,7 @@ public abstract class TypeReference<T> {
     }
 
     public static boolean containsTypeVariable(Type type) {
+        Type[] actualTypeArguments;
         if (type == null) {
             return false;
         }
@@ -148,9 +151,10 @@ public abstract class TypeReference<T> {
             if (klass.getTypeParameters().length != 0) {
                 return true;
             }
-            return containsTypeVariable((Type) klass.getDeclaringClass());
+            return containsTypeVariable(klass.getDeclaringClass());
         } else if (type instanceof ParameterizedType) {
-            for (Type arg : ((ParameterizedType) type).getActualTypeArguments()) {
+            ParameterizedType p = (ParameterizedType) type;
+            for (Type arg : p.getActualTypeArguments()) {
                 if (containsTypeVariable(arg)) {
                     return true;
                 }
@@ -160,10 +164,7 @@ public abstract class TypeReference<T> {
             return false;
         } else {
             WildcardType wild = (WildcardType) type;
-            if (containsTypeVariable(wild.getLowerBounds()) || containsTypeVariable(wild.getUpperBounds())) {
-                return true;
-            }
-            return false;
+            return containsTypeVariable(wild.getLowerBounds()) || containsTypeVariable(wild.getUpperBounds());
         }
     }
 
@@ -176,37 +177,40 @@ public abstract class TypeReference<T> {
     }
 
     private static void toString(Type type, StringBuilder out) {
-        if (type != null) {
-            if (type instanceof TypeVariable) {
-                out.append(((TypeVariable) type).getName());
-            } else if (type instanceof Class) {
-                Class<?> klass = (Class) type;
-                out.append(klass.getName());
-                toString((Type[]) klass.getTypeParameters(), out);
-            } else if (type instanceof ParameterizedType) {
-                ParameterizedType p = (ParameterizedType) type;
-                out.append(((Class) p.getRawType()).getName());
-                toString(p.getActualTypeArguments(), out);
-            } else if (type instanceof GenericArrayType) {
-                toString(((GenericArrayType) type).getGenericComponentType(), out);
-                out.append("[]");
-            } else {
-                out.append(type.toString());
-            }
+        if (type == null) {
+            return;
+        }
+        if (type instanceof TypeVariable) {
+            out.append(((TypeVariable) type).getName());
+        } else if (type instanceof Class) {
+            Class<?> klass = (Class) type;
+            out.append(klass.getName());
+            toString(klass.getTypeParameters(), out);
+        } else if (type instanceof ParameterizedType) {
+            ParameterizedType p = (ParameterizedType) type;
+            out.append(((Class) p.getRawType()).getName());
+            toString(p.getActualTypeArguments(), out);
+        } else if (type instanceof GenericArrayType) {
+            GenericArrayType gat = (GenericArrayType) type;
+            toString(gat.getGenericComponentType(), out);
+            out.append("[]");
+        } else {
+            out.append(type.toString());
         }
     }
 
     private static void toString(Type[] types, StringBuilder out) {
-        if (types != null && types.length != 0) {
-            out.append("<");
-            for (int i = 0; i < types.length; i++) {
-                toString(types[i], out);
-                if (i != types.length - 1) {
-                    out.append(", ");
-                }
-            }
-            out.append(">");
+        if (types == null || types.length == 0) {
+            return;
         }
+        out.append("<");
+        for (int i = 0; i < types.length; i++) {
+            toString(types[i], out);
+            if (i != types.length - 1) {
+                out.append(", ");
+            }
+        }
+        out.append(">");
     }
 
     private static boolean containsTypeVariable(Type[] typeArray) {

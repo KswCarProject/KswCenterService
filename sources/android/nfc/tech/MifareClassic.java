@@ -2,13 +2,14 @@ package android.nfc.tech;
 
 import android.nfc.Tag;
 import android.nfc.TagLostException;
-import android.os.RemoteException;
+import android.p007os.RemoteException;
 import android.util.Log;
 import com.android.internal.midi.MidiConstants;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 
+/* loaded from: classes3.dex */
 public final class MifareClassic extends BasicTagTechnology {
     public static final int BLOCK_SIZE = 16;
     public static final byte[] KEY_DEFAULT = {-1, -1, -1, -1, -1, -1};
@@ -25,44 +26,50 @@ public final class MifareClassic extends BasicTagTechnology {
     public static final int TYPE_PLUS = 1;
     public static final int TYPE_PRO = 2;
     public static final int TYPE_UNKNOWN = -1;
-    private boolean mIsEmulated = false;
+    private boolean mIsEmulated;
     private int mSize;
     private int mType;
 
+    @Override // android.nfc.tech.BasicTagTechnology, android.nfc.tech.TagTechnology, java.io.Closeable, java.lang.AutoCloseable
     public /* bridge */ /* synthetic */ void close() throws IOException {
         super.close();
     }
 
+    @Override // android.nfc.tech.BasicTagTechnology, android.nfc.tech.TagTechnology
     public /* bridge */ /* synthetic */ void connect() throws IOException {
         super.connect();
     }
 
+    @Override // android.nfc.tech.BasicTagTechnology, android.nfc.tech.TagTechnology
     public /* bridge */ /* synthetic */ Tag getTag() {
         return super.getTag();
     }
 
+    @Override // android.nfc.tech.BasicTagTechnology, android.nfc.tech.TagTechnology
     public /* bridge */ /* synthetic */ boolean isConnected() {
         return super.isConnected();
     }
 
+    @Override // android.nfc.tech.BasicTagTechnology, android.nfc.tech.TagTechnology
     public /* bridge */ /* synthetic */ void reconnect() throws IOException {
         super.reconnect();
     }
 
     public static MifareClassic get(Tag tag) {
-        if (!tag.hasTech(8)) {
-            return null;
+        if (tag.hasTech(8)) {
+            try {
+                return new MifareClassic(tag);
+            } catch (RemoteException e) {
+                return null;
+            }
         }
-        try {
-            return new MifareClassic(tag);
-        } catch (RemoteException e) {
-            return null;
-        }
+        return null;
     }
 
     public MifareClassic(Tag tag) throws RemoteException {
         super(tag, 8);
         NfcA a = NfcA.get(tag);
+        this.mIsEmulated = false;
         switch (a.getSak()) {
             case 1:
             case 8:
@@ -109,7 +116,7 @@ public final class MifareClassic extends BasicTagTechnology {
                 this.mSize = 4096;
                 return;
             default:
-                throw new RuntimeException("Tag incorrectly enumerated as MIFARE Classic, SAK = " + a.getSak());
+                throw new RuntimeException("Tag incorrectly enumerated as MIFARE Classic, SAK = " + ((int) a.getSak()));
         }
     }
 
@@ -127,19 +134,19 @@ public final class MifareClassic extends BasicTagTechnology {
 
     public int getSectorCount() {
         int i = this.mSize;
-        if (i == 320) {
-            return 5;
-        }
-        if (i == 1024) {
+        if (i != 320) {
+            if (i != 1024) {
+                if (i != 2048) {
+                    if (i == 4096) {
+                        return 40;
+                    }
+                    return 0;
+                }
+                return 32;
+            }
             return 16;
         }
-        if (i == 2048) {
-            return 32;
-        }
-        if (i != 4096) {
-            return 0;
-        }
-        return 40;
+        return 5;
     }
 
     public int getBlockCount() {
@@ -191,34 +198,31 @@ public final class MifareClassic extends BasicTagTechnology {
         System.arraycopy(uid, uid.length - 4, cmd, 2, 4);
         System.arraycopy(key, 0, cmd, 6, 6);
         try {
-            if (transceive(cmd, false) != null) {
-                return true;
-            }
-            return false;
         } catch (TagLostException e) {
             throw e;
         } catch (IOException e2) {
         }
+        return transceive(cmd, false) != null;
     }
 
     public byte[] readBlock(int blockIndex) throws IOException {
         validateBlock(blockIndex);
         checkConnected();
-        return transceive(new byte[]{48, (byte) blockIndex}, false);
+        byte[] cmd = {48, (byte) blockIndex};
+        return transceive(cmd, false);
     }
 
     public void writeBlock(int blockIndex, byte[] data) throws IOException {
         validateBlock(blockIndex);
         checkConnected();
-        if (data.length == 16) {
-            byte[] cmd = new byte[(data.length + 2)];
-            cmd[0] = MidiConstants.STATUS_POLYPHONIC_AFTERTOUCH;
-            cmd[1] = (byte) blockIndex;
-            System.arraycopy(data, 0, cmd, 2, data.length);
-            transceive(cmd, false);
-            return;
+        if (data.length != 16) {
+            throw new IllegalArgumentException("must write 16-bytes");
         }
-        throw new IllegalArgumentException("must write 16-bytes");
+        byte[] cmd = new byte[data.length + 2];
+        cmd[0] = MidiConstants.STATUS_POLYPHONIC_AFTERTOUCH;
+        cmd[1] = (byte) blockIndex;
+        System.arraycopy(data, 0, cmd, 2, data.length);
+        transceive(cmd, false);
     }
 
     public void increment(int blockIndex, int value) throws IOException {
@@ -248,13 +252,15 @@ public final class MifareClassic extends BasicTagTechnology {
     public void transfer(int blockIndex) throws IOException {
         validateBlock(blockIndex);
         checkConnected();
-        transceive(new byte[]{MidiConstants.STATUS_CONTROL_CHANGE, (byte) blockIndex}, false);
+        byte[] cmd = {MidiConstants.STATUS_CONTROL_CHANGE, (byte) blockIndex};
+        transceive(cmd, false);
     }
 
     public void restore(int blockIndex) throws IOException {
         validateBlock(blockIndex);
         checkConnected();
-        transceive(new byte[]{-62, (byte) blockIndex}, false);
+        byte[] cmd = {-62, (byte) blockIndex};
+        transceive(cmd, false);
     }
 
     public byte[] transceive(byte[] data) throws IOException {
@@ -267,11 +273,12 @@ public final class MifareClassic extends BasicTagTechnology {
 
     public void setTimeout(int timeout) {
         try {
-            if (this.mTag.getTagService().setTimeout(8, timeout) != 0) {
+            int err = this.mTag.getTagService().setTimeout(8, timeout);
+            if (err != 0) {
                 throw new IllegalArgumentException("The supplied timeout is not valid");
             }
         } catch (RemoteException e) {
-            Log.e(TAG, "NFC service dead", e);
+            Log.m69e(TAG, "NFC service dead", e);
         }
     }
 
@@ -279,7 +286,7 @@ public final class MifareClassic extends BasicTagTechnology {
         try {
             return this.mTag.getTagService().getTimeout(8);
         } catch (RemoteException e) {
-            Log.e(TAG, "NFC service dead", e);
+            Log.m69e(TAG, "NFC service dead", e);
             return 0;
         }
     }

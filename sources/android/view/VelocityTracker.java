@@ -3,6 +3,7 @@ package android.view;
 import android.annotation.UnsupportedAppUsage;
 import android.util.Pools;
 
+/* loaded from: classes4.dex */
 public final class VelocityTracker {
     private static final int ACTIVE_POINTER_ID = -1;
     private static final Pools.SynchronizedPool<VelocityTracker> sPool = new Pools.SynchronizedPool<>(2);
@@ -27,7 +28,7 @@ public final class VelocityTracker {
 
     public static VelocityTracker obtain() {
         VelocityTracker instance = sPool.acquire();
-        return instance != null ? instance : new VelocityTracker((String) null);
+        return instance != null ? instance : new VelocityTracker(null);
     }
 
     @UnsupportedAppUsage
@@ -50,12 +51,11 @@ public final class VelocityTracker {
         this.mStrategy = strategy;
     }
 
-    /* access modifiers changed from: protected */
-    public void finalize() throws Throwable {
+    protected void finalize() throws Throwable {
         try {
             if (this.mPtr != 0) {
                 nativeDispose(this.mPtr);
-                this.mPtr = 0;
+                this.mPtr = 0L;
             }
         } finally {
             super.finalize();
@@ -67,11 +67,10 @@ public final class VelocityTracker {
     }
 
     public void addMovement(MotionEvent event) {
-        if (event != null) {
-            nativeAddMovement(this.mPtr, event);
-            return;
+        if (event == null) {
+            throw new IllegalArgumentException("event must not be null");
         }
-        throw new IllegalArgumentException("event must not be null");
+        nativeAddMovement(this.mPtr, event);
     }
 
     public void computeCurrentVelocity(int units) {
@@ -99,12 +98,13 @@ public final class VelocityTracker {
     }
 
     public boolean getEstimator(int id, Estimator outEstimator) {
-        if (outEstimator != null) {
-            return nativeGetEstimator(this.mPtr, id, outEstimator);
+        if (outEstimator == null) {
+            throw new IllegalArgumentException("outEstimator must not be null");
         }
-        throw new IllegalArgumentException("outEstimator must not be null");
+        return nativeGetEstimator(this.mPtr, id, outEstimator);
     }
 
+    /* loaded from: classes4.dex */
     public static final class Estimator {
         private static final int MAX_DEGREE = 4;
         @UnsupportedAppUsage

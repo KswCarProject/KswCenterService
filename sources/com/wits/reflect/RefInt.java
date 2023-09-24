@@ -3,12 +3,13 @@ package com.wits.reflect;
 import android.util.Log;
 import java.lang.reflect.Field;
 
+/* loaded from: classes5.dex */
 public class RefInt {
     private static final String TAG = "RefInt";
     private Field field;
 
-    public RefInt(Class cls, Field field2) throws NoSuchFieldException {
-        this.field = cls.getDeclaredField(field2.getName());
+    public RefInt(Class cls, Field field) throws NoSuchFieldException {
+        this.field = cls.getDeclaredField(field.getName());
         this.field.setAccessible(true);
     }
 
@@ -16,7 +17,7 @@ public class RefInt {
         try {
             return this.field.getInt(object);
         } catch (Exception e) {
-            Log.e(TAG, e.getMessage(), e);
+            Log.m69e(TAG, e.getMessage(), e);
             return 0;
         }
     }
@@ -25,7 +26,7 @@ public class RefInt {
         try {
             this.field.setInt(object, intValue);
         } catch (Exception e) {
-            Log.e(TAG, e.getMessage(), e);
+            Log.m69e(TAG, e.getMessage(), e);
         }
     }
 }

@@ -1,5 +1,6 @@
 package android.app;
 
+/* loaded from: classes.dex */
 public final class NotificationChannelProto {
     public static final long ALLOW_APP_OVERLAY = 1133871366163L;
     public static final long AUDIO_ATTRIBUTES = 1146756268048L;
@@ -7,7 +8,9 @@ public final class NotificationChannelProto {
     public static final long DESCRIPTION = 1138166333443L;
     public static final long FG_SERVICE_SHOWN = 1133871366162L;
     public static final long GROUP = 1138166333455L;
-    public static final long ID = 1138166333441L;
+
+    /* renamed from: ID */
+    public static final long f19ID = 1138166333441L;
     public static final long IMPORTANCE = 1120986464260L;
     public static final long IS_BLOCKABLE_SYSTEM = 1133871366161L;
     public static final long IS_DELETED = 1133871366158L;

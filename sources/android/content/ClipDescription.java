@@ -1,20 +1,25 @@
 package android.content;
 
-import android.os.Parcel;
-import android.os.Parcelable;
-import android.os.PersistableBundle;
+import android.p007os.Parcel;
+import android.p007os.Parcelable;
+import android.p007os.PersistableBundle;
 import android.text.TextUtils;
 import android.util.TimeUtils;
 import android.util.proto.ProtoOutputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 
+/* loaded from: classes.dex */
 public class ClipDescription implements Parcelable {
-    public static final Parcelable.Creator<ClipDescription> CREATOR = new Parcelable.Creator<ClipDescription>() {
+    public static final Parcelable.Creator<ClipDescription> CREATOR = new Parcelable.Creator<ClipDescription>() { // from class: android.content.ClipDescription.1
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public ClipDescription createFromParcel(Parcel source) {
             return new ClipDescription(source);
         }
 
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public ClipDescription[] newArray(int size) {
             return new ClipDescription[size];
         }
@@ -31,12 +36,11 @@ public class ClipDescription implements Parcelable {
     private long mTimeStamp;
 
     public ClipDescription(CharSequence label, String[] mimeTypes) {
-        if (mimeTypes != null) {
-            this.mLabel = label;
-            this.mMimeTypes = new ArrayList<>(Arrays.asList(mimeTypes));
-            return;
+        if (mimeTypes == null) {
+            throw new NullPointerException("mimeTypes is null");
         }
-        throw new NullPointerException("mimeTypes is null");
+        this.mLabel = label;
+        this.mMimeTypes = new ArrayList<>(Arrays.asList(mimeTypes));
     }
 
     public ClipDescription(ClipDescription o) {
@@ -112,8 +116,7 @@ public class ClipDescription implements Parcelable {
         return this.mMimeTypes.get(index);
     }
 
-    /* access modifiers changed from: package-private */
-    public void addMimeTypes(String[] mimeTypes) {
+    void addMimeTypes(String[] mimeTypes) {
         for (int i = 0; i != mimeTypes.length; i++) {
             String mimeType = mimeTypes[i];
             if (!this.mMimeTypes.contains(mimeType)) {
@@ -131,22 +134,18 @@ public class ClipDescription implements Parcelable {
     }
 
     public void validate() {
-        if (this.mMimeTypes != null) {
-            int size = this.mMimeTypes.size();
-            if (size > 0) {
-                int i = 0;
-                while (i < size) {
-                    if (this.mMimeTypes.get(i) != null) {
-                        i++;
-                    } else {
-                        throw new NullPointerException("mime type at " + i + " is null");
-                    }
-                }
-                return;
-            }
+        if (this.mMimeTypes == null) {
+            throw new NullPointerException("null mime types");
+        }
+        int size = this.mMimeTypes.size();
+        if (size <= 0) {
             throw new IllegalArgumentException("must have at least 1 mime type");
         }
-        throw new NullPointerException("null mime types");
+        for (int i = 0; i < size; i++) {
+            if (this.mMimeTypes.get(i) == null) {
+                throw new NullPointerException("mime type at " + i + " is null");
+            }
+        }
     }
 
     public String toString() {
@@ -184,10 +183,7 @@ public class ClipDescription implements Parcelable {
             b.append(TimeUtils.logTimeOfDay(this.mTimeStamp));
             b.append('>');
         }
-        if (!first) {
-            return true;
-        }
-        return false;
+        return !first;
     }
 
     public boolean toShortStringTypesOnly(StringBuilder b) {
@@ -200,10 +196,7 @@ public class ClipDescription implements Parcelable {
             first = false;
             b.append(this.mMimeTypes.get(i));
         }
-        if (!first) {
-            return true;
-        }
-        return false;
+        return !first;
     }
 
     public void writeToProto(ProtoOutputStream proto, long fieldId) {
@@ -224,10 +217,12 @@ public class ClipDescription implements Parcelable {
         proto.end(token);
     }
 
+    @Override // android.p007os.Parcelable
     public int describeContents() {
         return 0;
     }
 
+    @Override // android.p007os.Parcelable
     public void writeToParcel(Parcel dest, int flags) {
         TextUtils.writeToParcel(this.mLabel, dest, flags);
         dest.writeStringList(this.mMimeTypes);

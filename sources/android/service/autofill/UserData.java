@@ -2,9 +2,9 @@ package android.service.autofill;
 
 import android.app.ActivityThread;
 import android.content.ContentResolver;
-import android.os.Bundle;
-import android.os.Parcel;
-import android.os.Parcelable;
+import android.p007os.Bundle;
+import android.p007os.Parcel;
+import android.p007os.Parcelable;
 import android.provider.Settings;
 import android.provider.SettingsStringUtil;
 import android.text.TextUtils;
@@ -17,8 +17,11 @@ import com.ibm.icu.text.PluralRules;
 import java.io.PrintWriter;
 import java.util.ArrayList;
 
+/* loaded from: classes3.dex */
 public final class UserData implements FieldClassificationUserData, Parcelable {
-    public static final Parcelable.Creator<UserData> CREATOR = new Parcelable.Creator<UserData>() {
+    public static final Parcelable.Creator<UserData> CREATOR = new Parcelable.Creator<UserData>() { // from class: android.service.autofill.UserData.1
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public UserData createFromParcel(Parcel parcel) {
             String id = parcel.readString();
             String[] categoryIds = parcel.readStringArray();
@@ -43,6 +46,8 @@ public final class UserData implements FieldClassificationUserData, Parcelable {
             return builder.build();
         }
 
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public UserData[] newArray(int size) {
             return new UserData[size];
         }
@@ -74,14 +79,17 @@ public final class UserData implements FieldClassificationUserData, Parcelable {
         this.mCategoryArgs = builder.mCategoryArgs;
     }
 
+    @Override // android.service.autofill.FieldClassificationUserData
     public String getFieldClassificationAlgorithm() {
         return this.mDefaultAlgorithm;
     }
 
+    @Override // android.service.autofill.FieldClassificationUserData
     public Bundle getDefaultFieldClassificationArgs() {
         return this.mDefaultArgs;
     }
 
+    @Override // android.service.autofill.FieldClassificationUserData
     public String getFieldClassificationAlgorithmForCategory(String categoryId) {
         Preconditions.checkNotNull(categoryId);
         if (this.mCategoryAlgorithms == null || !this.mCategoryAlgorithms.containsKey(categoryId)) {
@@ -94,18 +102,22 @@ public final class UserData implements FieldClassificationUserData, Parcelable {
         return this.mId;
     }
 
+    @Override // android.service.autofill.FieldClassificationUserData
     public String[] getCategoryIds() {
         return this.mCategoryIds;
     }
 
+    @Override // android.service.autofill.FieldClassificationUserData
     public String[] getValues() {
         return this.mValues;
     }
 
+    @Override // android.service.autofill.FieldClassificationUserData
     public ArrayMap<String, String> getFieldClassificationAlgorithms() {
         return this.mCategoryAlgorithms;
     }
 
+    @Override // android.service.autofill.FieldClassificationUserData
     public ArrayMap<String, Bundle> getFieldClassificationArgs() {
         return this.mCategoryArgs;
     }
@@ -180,24 +192,18 @@ public final class UserData implements FieldClassificationUserData, Parcelable {
         pw.println(getMaxValueLength());
     }
 
+    /* loaded from: classes3.dex */
     public static final class Builder {
-        /* access modifiers changed from: private */
-        public ArrayMap<String, String> mCategoryAlgorithms;
-        /* access modifiers changed from: private */
-        public ArrayMap<String, Bundle> mCategoryArgs;
-        /* access modifiers changed from: private */
-        public final ArrayList<String> mCategoryIds;
-        /* access modifiers changed from: private */
-        public String mDefaultAlgorithm;
-        /* access modifiers changed from: private */
-        public Bundle mDefaultArgs;
+        private ArrayMap<String, String> mCategoryAlgorithms;
+        private ArrayMap<String, Bundle> mCategoryArgs;
+        private final ArrayList<String> mCategoryIds;
+        private String mDefaultAlgorithm;
+        private Bundle mDefaultArgs;
         private boolean mDestroyed;
-        /* access modifiers changed from: private */
-        public final String mId;
-        private final ArraySet<String> mUniqueCategoryIds = new ArraySet<>(UserData.getMaxCategoryCount());
+        private final String mId;
+        private final ArraySet<String> mUniqueCategoryIds;
         private final ArraySet<String> mUniqueValueCategoryPairs;
-        /* access modifiers changed from: private */
-        public final ArrayList<String> mValues;
+        private final ArrayList<String> mValues;
 
         public Builder(String id, String value, String categoryId) {
             this.mId = checkNotEmpty("id", id);
@@ -207,6 +213,7 @@ public final class UserData implements FieldClassificationUserData, Parcelable {
             this.mCategoryIds = new ArrayList<>(maxUserDataSize);
             this.mValues = new ArrayList<>(maxUserDataSize);
             this.mUniqueValueCategoryPairs = new ArraySet<>(maxUserDataSize);
+            this.mUniqueCategoryIds = new ArraySet<>(UserData.getMaxCategoryCount());
             addMapping(value, categoryId);
         }
 
@@ -235,14 +242,12 @@ public final class UserData implements FieldClassificationUserData, Parcelable {
             throwIfDestroyed();
             checkNotEmpty("categoryId", categoryId);
             checkValidValue(value);
-            boolean z = false;
             if (!this.mUniqueCategoryIds.contains(categoryId)) {
-                Preconditions.checkState(this.mUniqueCategoryIds.size() < UserData.getMaxCategoryCount(), "already added " + this.mUniqueCategoryIds.size() + " unique category ids");
+                boolean z = this.mUniqueCategoryIds.size() < UserData.getMaxCategoryCount();
+                Preconditions.checkState(z, "already added " + this.mUniqueCategoryIds.size() + " unique category ids");
             }
-            if (this.mValues.size() < UserData.getMaxUserDataSize()) {
-                z = true;
-            }
-            Preconditions.checkState(z, "already added " + this.mValues.size() + " elements");
+            boolean z2 = this.mValues.size() < UserData.getMaxUserDataSize();
+            Preconditions.checkState(z2, "already added " + this.mValues.size() + " elements");
             addMapping(value, categoryId);
             return this;
         }
@@ -250,7 +255,7 @@ public final class UserData implements FieldClassificationUserData, Parcelable {
         private void addMapping(String value, String categoryId) {
             String pair = value + SettingsStringUtil.DELIMITER + categoryId;
             if (this.mUniqueValueCategoryPairs.contains(pair)) {
-                Log.w(UserData.TAG, "Ignoring entry with same value / category");
+                Log.m64w(UserData.TAG, "Ignoring entry with same value / category");
                 return;
             }
             this.mCategoryIds.add(categoryId);
@@ -287,22 +292,24 @@ public final class UserData implements FieldClassificationUserData, Parcelable {
     }
 
     public String toString() {
-        if (!Helper.sDebug) {
-            return super.toString();
+        if (Helper.sDebug) {
+            StringBuilder builder = new StringBuilder("UserData: [id=").append(this.mId);
+            builder.append(", categoryIds=");
+            Helper.appendRedacted(builder, this.mCategoryIds);
+            builder.append(", values=");
+            Helper.appendRedacted(builder, this.mValues);
+            builder.append("]");
+            return builder.toString();
         }
-        StringBuilder builder = new StringBuilder("UserData: [id=").append(this.mId);
-        builder.append(", categoryIds=");
-        Helper.appendRedacted(builder, this.mCategoryIds);
-        builder.append(", values=");
-        Helper.appendRedacted(builder, this.mValues);
-        builder.append("]");
-        return builder.toString();
+        return super.toString();
     }
 
+    @Override // android.p007os.Parcelable
     public int describeContents() {
         return 0;
     }
 
+    @Override // android.p007os.Parcelable
     public void writeToParcel(Parcel parcel, int flags) {
         parcel.writeString(this.mId);
         parcel.writeStringArray(this.mCategoryIds);
@@ -339,10 +346,10 @@ public final class UserData implements FieldClassificationUserData, Parcelable {
         if (at != null) {
             cr = at.getApplication().getContentResolver();
         }
-        if (cr != null) {
-            return Settings.Secure.getInt(cr, settings, defaultValue);
+        if (cr == null) {
+            Log.m64w(TAG, "Could not read from " + settings + "; hardcoding " + defaultValue);
+            return defaultValue;
         }
-        Log.w(TAG, "Could not read from " + settings + "; hardcoding " + defaultValue);
-        return defaultValue;
+        return Settings.Secure.getInt(cr, settings, defaultValue);
     }
 }

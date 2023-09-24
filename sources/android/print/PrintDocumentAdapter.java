@@ -1,9 +1,10 @@
 package android.print;
 
-import android.os.Bundle;
-import android.os.CancellationSignal;
-import android.os.ParcelFileDescriptor;
+import android.p007os.Bundle;
+import android.p007os.CancellationSignal;
+import android.p007os.ParcelFileDescriptor;
 
+/* loaded from: classes3.dex */
 public abstract class PrintDocumentAdapter {
     public static final String EXTRA_PRINT_PREVIEW = "EXTRA_PRINT_PREVIEW";
 
@@ -17,6 +18,7 @@ public abstract class PrintDocumentAdapter {
     public void onFinish() {
     }
 
+    /* loaded from: classes3.dex */
     public static abstract class WriteResultCallback {
         public void onWriteFinished(PageRange[] pages) {
         }
@@ -28,6 +30,7 @@ public abstract class PrintDocumentAdapter {
         }
     }
 
+    /* loaded from: classes3.dex */
     public static abstract class LayoutResultCallback {
         public void onLayoutFinished(PrintDocumentInfo info, boolean changed) {
         }

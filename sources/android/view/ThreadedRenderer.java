@@ -8,15 +8,17 @@ import android.graphics.Point;
 import android.graphics.RecordingCanvas;
 import android.graphics.Rect;
 import android.graphics.RenderNode;
-import android.os.SystemProperties;
-import android.os.Trace;
-import android.util.AttributeSet;
+import android.p007os.SystemProperties;
+import android.p007os.Trace;
 import android.util.TimeUtils;
 import android.view.Surface;
 import android.view.View;
 import android.view.animation.AnimationUtils;
-import com.android.internal.R;
+import com.android.internal.C3132R;
+import java.io.FileDescriptor;
+import java.io.PrintWriter;
 
+/* loaded from: classes4.dex */
 public final class ThreadedRenderer extends HardwareRenderer {
     public static final String DEBUG_DIRTY_REGIONS_PROPERTY = "debug.hwui.show_dirty_regions";
     public static final String DEBUG_FORCE_DARK = "debug.hwui.force_dark";
@@ -24,35 +26,36 @@ public final class ThreadedRenderer extends HardwareRenderer {
     public static final String DEBUG_OVERDRAW_PROPERTY = "debug.hwui.overdraw";
     public static final String DEBUG_SHOW_LAYERS_UPDATES_PROPERTY = "debug.hwui.show_layers_updates";
     public static final String DEBUG_SHOW_NON_RECTANGULAR_CLIP_PROPERTY = "debug.hwui.show_non_rect_clip";
-    public static int EGL_CONTEXT_PRIORITY_HIGH_IMG = 12545;
-    public static int EGL_CONTEXT_PRIORITY_LOW_IMG = 12547;
-    public static int EGL_CONTEXT_PRIORITY_MEDIUM_IMG = 12546;
     public static final String OVERDRAW_PROPERTY_SHOW = "show";
     static final String PRINT_CONFIG_PROPERTY = "debug.hwui.print_config";
     static final String PROFILE_MAXFRAMES_PROPERTY = "debug.hwui.profile.maxframes";
     public static final String PROFILE_PROPERTY = "debug.hwui.profile";
     public static final String PROFILE_PROPERTY_VISUALIZE_BARS = "visual_bars";
-    private static final String[] VISUALIZERS = {PROFILE_PROPERTY_VISUALIZE_BARS};
-    public static boolean sRendererDisabled = false;
+    private static final String[] VISUALIZERS;
+    public static boolean sRendererDisabled;
     private static Boolean sSupportsOpenGL;
-    public static boolean sSystemRendererDisabled = false;
-    public static boolean sTrimForeground = false;
+    public static boolean sSystemRendererDisabled;
+    public static boolean sTrimForeground;
     private boolean mEnabled;
     private boolean mHasInsets;
     private int mHeight;
-    private boolean mInitialized = false;
     private int mInsetLeft;
     private int mInsetTop;
     private final float mLightRadius;
     private final float mLightY;
     private final float mLightZ;
     private HardwareRenderer.FrameDrawingCallback mNextRtFrameCallback;
-    private boolean mRequested = true;
     private boolean mRootNodeNeedsUpdate;
     private int mSurfaceHeight;
     private int mSurfaceWidth;
     private int mWidth;
+    public static int EGL_CONTEXT_PRIORITY_HIGH_IMG = 12545;
+    public static int EGL_CONTEXT_PRIORITY_MEDIUM_IMG = 12546;
+    public static int EGL_CONTEXT_PRIORITY_LOW_IMG = 12547;
+    private boolean mInitialized = false;
+    private boolean mRequested = true;
 
+    /* loaded from: classes4.dex */
     interface DrawCallbacks {
         void onPostDraw(RecordingCanvas recordingCanvas);
 
@@ -61,6 +64,10 @@ public final class ThreadedRenderer extends HardwareRenderer {
 
     static {
         isAvailable();
+        sRendererDisabled = false;
+        sSystemRendererDisabled = false;
+        sTrimForeground = false;
+        VISUALIZERS = new String[]{PROFILE_PROPERTY_VISUALIZE_BARS};
     }
 
     public static void disable(boolean system) {
@@ -78,7 +85,6 @@ public final class ThreadedRenderer extends HardwareRenderer {
         if (sSupportsOpenGL != null) {
             return sSupportsOpenGL.booleanValue();
         }
-        boolean z = false;
         if (SystemProperties.getInt("ro.kernel.qemu", 0) == 0) {
             sSupportsOpenGL = true;
             return true;
@@ -87,24 +93,22 @@ public final class ThreadedRenderer extends HardwareRenderer {
         if (qemu_gles == -1) {
             return false;
         }
-        if (qemu_gles > 0) {
-            z = true;
-        }
-        sSupportsOpenGL = Boolean.valueOf(z);
+        sSupportsOpenGL = Boolean.valueOf(qemu_gles > 0);
         return sSupportsOpenGL.booleanValue();
     }
 
     public static ThreadedRenderer create(Context context, boolean translucent, String name) {
-        if (isAvailable()) {
-            return new ThreadedRenderer(context, translucent, name);
+        if (!isAvailable()) {
+            return null;
         }
-        return null;
+        ThreadedRenderer renderer = new ThreadedRenderer(context, translucent, name);
+        return renderer;
     }
 
     ThreadedRenderer(Context context, boolean translucent, String name) {
         setName(name);
         setOpaque(!translucent);
-        TypedArray a = context.obtainStyledAttributes((AttributeSet) null, R.styleable.Lighting, 0, 0);
+        TypedArray a = context.obtainStyledAttributes(null, C3132R.styleable.Lighting, 0, 0);
         this.mLightY = a.getDimension(3, 0.0f);
         this.mLightZ = a.getDimension(4, 0.0f);
         this.mLightRadius = a.getDimension(2, 0.0f);
@@ -114,29 +118,26 @@ public final class ThreadedRenderer extends HardwareRenderer {
         setLightSourceAlpha(ambientShadowAlpha, spotShadowAlpha);
     }
 
+    @Override // android.graphics.HardwareRenderer
     public void destroy() {
         this.mInitialized = false;
-        updateEnabledState((Surface) null);
+        updateEnabledState(null);
         super.destroy();
     }
 
-    /* access modifiers changed from: package-private */
-    public boolean isEnabled() {
+    boolean isEnabled() {
         return this.mEnabled;
     }
 
-    /* access modifiers changed from: package-private */
-    public void setEnabled(boolean enabled) {
+    void setEnabled(boolean enabled) {
         this.mEnabled = enabled;
     }
 
-    /* access modifiers changed from: package-private */
-    public boolean isRequested() {
+    boolean isRequested() {
         return this.mRequested;
     }
 
-    /* access modifiers changed from: package-private */
-    public void setRequested(boolean requested) {
+    void setRequested(boolean requested) {
         this.mRequested = requested;
     }
 
@@ -148,8 +149,7 @@ public final class ThreadedRenderer extends HardwareRenderer {
         }
     }
 
-    /* access modifiers changed from: package-private */
-    public boolean initialize(Surface surface) throws Surface.OutOfResourcesException {
+    boolean initialize(Surface surface) throws Surface.OutOfResourcesException {
         boolean status = !this.mInitialized;
         this.mInitialized = true;
         updateEnabledState(surface);
@@ -157,36 +157,33 @@ public final class ThreadedRenderer extends HardwareRenderer {
         return status;
     }
 
-    /* access modifiers changed from: package-private */
-    public boolean initializeIfNeeded(int width, int height, View.AttachInfo attachInfo, Surface surface, Rect surfaceInsets) throws Surface.OutOfResourcesException {
-        if (!isRequested() || isEnabled() || !initialize(surface)) {
-            return false;
+    boolean initializeIfNeeded(int width, int height, View.AttachInfo attachInfo, Surface surface, Rect surfaceInsets) throws Surface.OutOfResourcesException {
+        if (isRequested() && !isEnabled() && initialize(surface)) {
+            setup(width, height, attachInfo, surfaceInsets);
+            return true;
         }
-        setup(width, height, attachInfo, surfaceInsets);
-        return true;
+        return false;
     }
 
-    /* access modifiers changed from: package-private */
-    public void updateSurface(Surface surface) throws Surface.OutOfResourcesException {
+    void updateSurface(Surface surface) throws Surface.OutOfResourcesException {
         updateEnabledState(surface);
         setSurface(surface);
     }
 
+    @Override // android.graphics.HardwareRenderer
     public void setSurface(Surface surface) {
-        if (surface == null || !surface.isValid()) {
-            super.setSurface((Surface) null);
-        } else {
+        if (surface != null && surface.isValid()) {
             super.setSurface(surface);
+        } else {
+            super.setSurface(null);
         }
     }
 
-    /* access modifiers changed from: package-private */
-    public void registerRtFrameCallback(HardwareRenderer.FrameDrawingCallback callback) {
+    void registerRtFrameCallback(HardwareRenderer.FrameDrawingCallback callback) {
         this.mNextRtFrameCallback = callback;
     }
 
-    /* access modifiers changed from: package-private */
-    public void destroyHardwareResources(View view) {
+    void destroyHardwareResources(View view) {
         destroyResources(view);
         clearContent();
     }
@@ -195,134 +192,86 @@ public final class ThreadedRenderer extends HardwareRenderer {
         view.destroyHardwareResources();
     }
 
-    /* access modifiers changed from: package-private */
-    public void setup(int width, int height, View.AttachInfo attachInfo, Rect surfaceInsets) {
+    void setup(int width, int height, View.AttachInfo attachInfo, Rect surfaceInsets) {
         this.mWidth = width;
         this.mHeight = height;
-        if (surfaceInsets == null || (surfaceInsets.left == 0 && surfaceInsets.right == 0 && surfaceInsets.top == 0 && surfaceInsets.bottom == 0)) {
-            this.mHasInsets = false;
-            this.mInsetLeft = 0;
-            this.mInsetTop = 0;
-            this.mSurfaceWidth = width;
-            this.mSurfaceHeight = height;
-        } else {
+        if (surfaceInsets != null && (surfaceInsets.left != 0 || surfaceInsets.right != 0 || surfaceInsets.top != 0 || surfaceInsets.bottom != 0)) {
             this.mHasInsets = true;
             this.mInsetLeft = surfaceInsets.left;
             this.mInsetTop = surfaceInsets.top;
             this.mSurfaceWidth = this.mInsetLeft + width + surfaceInsets.right;
             this.mSurfaceHeight = this.mInsetTop + height + surfaceInsets.bottom;
             setOpaque(false);
+        } else {
+            this.mHasInsets = false;
+            this.mInsetLeft = 0;
+            this.mInsetTop = 0;
+            this.mSurfaceWidth = width;
+            this.mSurfaceHeight = height;
         }
         this.mRootNode.setLeftTopRightBottom(-this.mInsetLeft, -this.mInsetTop, this.mSurfaceWidth, this.mSurfaceHeight);
         setLightCenter(attachInfo);
     }
 
-    /* access modifiers changed from: package-private */
-    public void setLightCenter(View.AttachInfo attachInfo) {
+    void setLightCenter(View.AttachInfo attachInfo) {
         Point displaySize = attachInfo.mPoint;
         attachInfo.mDisplay.getRealSize(displaySize);
-        setLightSourceGeometry((((float) displaySize.x) / 2.0f) - ((float) attachInfo.mWindowLeft), this.mLightY - ((float) attachInfo.mWindowTop), this.mLightZ, this.mLightRadius);
+        float lightX = (displaySize.f59x / 2.0f) - attachInfo.mWindowLeft;
+        float lightY = this.mLightY - attachInfo.mWindowTop;
+        setLightSourceGeometry(lightX, lightY, this.mLightZ, this.mLightRadius);
     }
 
-    /* access modifiers changed from: package-private */
-    public int getWidth() {
+    int getWidth() {
         return this.mWidth;
     }
 
-    /* access modifiers changed from: package-private */
-    public int getHeight() {
+    int getHeight() {
         return this.mHeight;
     }
 
-    /* access modifiers changed from: package-private */
-    /* JADX WARNING: Removed duplicated region for block: B:26:0x004d  */
-    /* JADX WARNING: Removed duplicated region for block: B:27:0x004f  */
-    /* JADX WARNING: Removed duplicated region for block: B:28:0x0052  */
-    /* JADX WARNING: Removed duplicated region for block: B:36:0x0055 A[SYNTHETIC] */
-    /* Code decompiled incorrectly, please refer to instructions dump. */
-    public void dumpGfxInfo(java.io.PrintWriter r9, java.io.FileDescriptor r10, java.lang.String[] r11) {
-        /*
-            r8 = this;
-            r9.flush()
-            r0 = 0
-            r1 = 1
-            if (r11 == 0) goto L_0x000d
-            int r2 = r11.length
-            if (r2 != 0) goto L_0x000b
-            goto L_0x000d
-        L_0x000b:
-            r2 = r0
-            goto L_0x000e
-        L_0x000d:
-            r2 = r1
-        L_0x000e:
-            r3 = r2
-            r2 = r0
-        L_0x0010:
-            int r4 = r11.length
-            if (r2 >= r4) goto L_0x0058
-            r4 = r11[r2]
-            r5 = -1
-            int r6 = r4.hashCode()
-            r7 = -252053678(0xfffffffff0f9f752, float:-6.1888607E29)
-            if (r6 == r7) goto L_0x003e
-            r7 = 1492(0x5d4, float:2.091E-42)
-            if (r6 == r7) goto L_0x0034
-            r7 = 108404047(0x6761d4f, float:4.628899E-35)
-            if (r6 == r7) goto L_0x0029
-            goto L_0x0048
-        L_0x0029:
-            java.lang.String r6 = "reset"
-            boolean r4 = r4.equals(r6)
-            if (r4 == 0) goto L_0x0048
-            r4 = r1
-            goto L_0x0049
-        L_0x0034:
-            java.lang.String r6 = "-a"
-            boolean r4 = r4.equals(r6)
-            if (r4 == 0) goto L_0x0048
-            r4 = 2
-            goto L_0x0049
-        L_0x003e:
-            java.lang.String r6 = "framestats"
-            boolean r4 = r4.equals(r6)
-            if (r4 == 0) goto L_0x0048
-            r4 = r0
-            goto L_0x0049
-        L_0x0048:
-            r4 = r5
-        L_0x0049:
-            switch(r4) {
-                case 0: goto L_0x0052;
-                case 1: goto L_0x004f;
-                case 2: goto L_0x004d;
-                default: goto L_0x004c;
+    void dumpGfxInfo(PrintWriter pw, FileDescriptor fd, String[] args) {
+        char c;
+        pw.flush();
+        int flags = (args == null || args.length == 0) ? 1 : 0;
+        int flags2 = flags;
+        for (String str : args) {
+            int hashCode = str.hashCode();
+            if (hashCode == -252053678) {
+                if (str.equals("framestats")) {
+                    c = 0;
+                }
+                c = '\uffff';
+            } else if (hashCode != 1492) {
+                if (hashCode == 108404047 && str.equals("reset")) {
+                    c = 1;
+                }
+                c = '\uffff';
+            } else {
+                if (str.equals("-a")) {
+                    c = 2;
+                }
+                c = '\uffff';
             }
-        L_0x004c:
-            goto L_0x0055
-        L_0x004d:
-            r3 = 1
-            goto L_0x0055
-        L_0x004f:
-            r3 = r3 | 2
-            goto L_0x0055
-        L_0x0052:
-            r3 = r3 | 1
-        L_0x0055:
-            int r2 = r2 + 1
-            goto L_0x0010
-        L_0x0058:
-            r8.dumpProfileInfo(r10, r3)
-            return
-        */
-        throw new UnsupportedOperationException("Method not decompiled: android.view.ThreadedRenderer.dumpGfxInfo(java.io.PrintWriter, java.io.FileDescriptor, java.lang.String[]):void");
+            switch (c) {
+                case 0:
+                    flags2 |= 1;
+                    break;
+                case 1:
+                    flags2 |= 2;
+                    break;
+                case 2:
+                    flags2 = 1;
+                    break;
+            }
+        }
+        dumpProfileInfo(fd, flags2);
     }
 
-    /* access modifiers changed from: package-private */
-    public Picture captureRenderingCommands() {
+    Picture captureRenderingCommands() {
         return null;
     }
 
+    @Override // android.graphics.HardwareRenderer
     public boolean loadSystemProperties() {
         boolean changed = super.loadSystemProperties();
         if (changed) {
@@ -340,7 +289,7 @@ public final class ThreadedRenderer extends HardwareRenderer {
     }
 
     private void updateRootDisplayList(View view, DrawCallbacks callbacks) {
-        Trace.traceBegin(8, "Record View#draw()");
+        Trace.traceBegin(8L, "Record View#draw()");
         updateViewTreeDisplayList(view);
         HardwareRenderer.FrameDrawingCallback callback = this.mNextRtFrameCallback;
         this.mNextRtFrameCallback = null;
@@ -351,7 +300,7 @@ public final class ThreadedRenderer extends HardwareRenderer {
             RecordingCanvas canvas = this.mRootNode.beginRecording(this.mSurfaceWidth, this.mSurfaceHeight);
             try {
                 int saveCount = canvas.save();
-                canvas.translate((float) this.mInsetLeft, (float) this.mInsetTop);
+                canvas.translate(this.mInsetLeft, this.mInsetTop);
                 callbacks.onPreDraw(canvas);
                 canvas.enableZ();
                 canvas.drawRenderNode(view.updateDisplayListIfDirty());
@@ -363,16 +312,14 @@ public final class ThreadedRenderer extends HardwareRenderer {
                 this.mRootNode.endRecording();
             }
         }
-        Trace.traceEnd(8);
+        Trace.traceEnd(8L);
     }
 
-    /* access modifiers changed from: package-private */
-    public void invalidateRoot() {
+    void invalidateRoot() {
         this.mRootNodeNeedsUpdate = true;
     }
 
-    /* access modifiers changed from: package-private */
-    public void draw(View view, View.AttachInfo attachInfo, DrawCallbacks callbacks) {
+    void draw(View view, View.AttachInfo attachInfo, DrawCallbacks callbacks) {
         Choreographer choreographer = attachInfo.mViewRootImpl.mChoreographer;
         choreographer.mFrameInfo.markDrawStart();
         updateRootDisplayList(view, callbacks);
@@ -399,6 +346,7 @@ public final class ThreadedRenderer extends HardwareRenderer {
         return this.mRootNode;
     }
 
+    /* loaded from: classes4.dex */
     public static class SimpleRenderer extends HardwareRenderer {
         private final float mLightRadius;
         private final float mLightY;
@@ -408,7 +356,7 @@ public final class ThreadedRenderer extends HardwareRenderer {
             setName(name);
             setOpaque(false);
             setSurface(surface);
-            TypedArray a = context.obtainStyledAttributes((AttributeSet) null, R.styleable.Lighting, 0, 0);
+            TypedArray a = context.obtainStyledAttributes(null, C3132R.styleable.Lighting, 0, 0);
             this.mLightY = a.getDimension(3, 0.0f);
             this.mLightZ = a.getDimension(4, 0.0f);
             this.mLightRadius = a.getDimension(2, 0.0f);
@@ -421,7 +369,9 @@ public final class ThreadedRenderer extends HardwareRenderer {
         public void setLightCenter(Display display, int windowLeft, int windowTop) {
             Point displaySize = new Point();
             display.getRealSize(displaySize);
-            setLightSourceGeometry((((float) displaySize.x) / 2.0f) - ((float) windowLeft), this.mLightY - ((float) windowTop), this.mLightZ, this.mLightRadius);
+            float lightX = (displaySize.f59x / 2.0f) - windowLeft;
+            float lightY = this.mLightY - windowTop;
+            setLightSourceGeometry(lightX, lightY, this.mLightZ, this.mLightRadius);
         }
 
         public RenderNode getRootNode() {

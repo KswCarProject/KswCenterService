@@ -1,15 +1,20 @@
 package com.android.ims.internal.uce.presence;
 
 import android.annotation.UnsupportedAppUsage;
-import android.os.Parcel;
-import android.os.Parcelable;
+import android.p007os.Parcel;
+import android.p007os.Parcelable;
 
+/* loaded from: classes4.dex */
 public class PresSipResponse implements Parcelable {
-    public static final Parcelable.Creator<PresSipResponse> CREATOR = new Parcelable.Creator<PresSipResponse>() {
+    public static final Parcelable.Creator<PresSipResponse> CREATOR = new Parcelable.Creator<PresSipResponse>() { // from class: com.android.ims.internal.uce.presence.PresSipResponse.1
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public PresSipResponse createFromParcel(Parcel source) {
             return new PresSipResponse(source);
         }
 
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public PresSipResponse[] newArray(int size) {
             return new PresSipResponse[size];
         }
@@ -79,10 +84,12 @@ public class PresSipResponse implements Parcelable {
         this.mReasonPhrase = "";
     }
 
+    @Override // android.p007os.Parcelable
     public int describeContents() {
         return 0;
     }
 
+    @Override // android.p007os.Parcelable
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeInt(this.mRequestId);
         dest.writeInt(this.mSipResponseCode);

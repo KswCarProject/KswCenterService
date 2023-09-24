@@ -1,15 +1,20 @@
 package android.security.keymaster;
 
-import android.content.pm.Signature;
-import android.os.Parcel;
-import android.os.Parcelable;
+import android.content.p002pm.Signature;
+import android.p007os.Parcel;
+import android.p007os.Parcelable;
 
+/* loaded from: classes3.dex */
 public class KeyAttestationPackageInfo implements Parcelable {
-    public static final Parcelable.Creator<KeyAttestationPackageInfo> CREATOR = new Parcelable.Creator<KeyAttestationPackageInfo>() {
+    public static final Parcelable.Creator<KeyAttestationPackageInfo> CREATOR = new Parcelable.Creator<KeyAttestationPackageInfo>() { // from class: android.security.keymaster.KeyAttestationPackageInfo.1
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public KeyAttestationPackageInfo createFromParcel(Parcel source) {
             return new KeyAttestationPackageInfo(source);
         }
 
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public KeyAttestationPackageInfo[] newArray(int size) {
             return new KeyAttestationPackageInfo[size];
         }
@@ -18,10 +23,10 @@ public class KeyAttestationPackageInfo implements Parcelable {
     private final Signature[] mPackageSignatures;
     private final long mPackageVersionCode;
 
-    public KeyAttestationPackageInfo(String mPackageName2, long mPackageVersionCode2, Signature[] mPackageSignatures2) {
-        this.mPackageName = mPackageName2;
-        this.mPackageVersionCode = mPackageVersionCode2;
-        this.mPackageSignatures = mPackageSignatures2;
+    public KeyAttestationPackageInfo(String mPackageName, long mPackageVersionCode, Signature[] mPackageSignatures) {
+        this.mPackageName = mPackageName;
+        this.mPackageVersionCode = mPackageVersionCode;
+        this.mPackageSignatures = mPackageSignatures;
     }
 
     public String getPackageName() {
@@ -36,10 +41,12 @@ public class KeyAttestationPackageInfo implements Parcelable {
         return this.mPackageSignatures;
     }
 
+    @Override // android.p007os.Parcelable
     public int describeContents() {
         return 0;
     }
 
+    @Override // android.p007os.Parcelable
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeString(this.mPackageName);
         dest.writeLong(this.mPackageVersionCode);

@@ -4,6 +4,7 @@ import android.annotation.UnsupportedAppUsage;
 import java.lang.reflect.Array;
 import java.util.Arrays;
 
+/* loaded from: classes4.dex */
 public class SpanSet<E> {
     private final Class<? extends E> classType;
     int numberOfSpans = 0;
@@ -17,28 +18,32 @@ public class SpanSet<E> {
         this.classType = type;
     }
 
+    /* JADX WARN: Multi-variable type inference failed */
     public void init(Spanned spanned, int start, int limit) {
+        Object[] spans = spanned.getSpans(start, limit, this.classType);
+        int length = spans.length;
         if (length > 0 && (this.spans == null || this.spans.length < length)) {
-            this.spans = (Object[]) Array.newInstance(this.classType, length);
+            this.spans = (E[]) ((Object[]) Array.newInstance(this.classType, length));
             this.spanStarts = new int[length];
             this.spanEnds = new int[length];
             this.spanFlags = new int[length];
         }
         int prevNumberOfSpans = this.numberOfSpans;
         this.numberOfSpans = 0;
-        for (E span : spanned.getSpans(start, limit, this.classType)) {
-            int spanStart = spanned.getSpanStart(span);
-            int spanEnd = spanned.getSpanEnd(span);
+        for (Object obj : spans) {
+            int spanStart = spanned.getSpanStart(obj);
+            int spanEnd = spanned.getSpanEnd(obj);
             if (spanStart != spanEnd) {
-                int spanFlag = spanned.getSpanFlags(span);
-                this.spans[this.numberOfSpans] = span;
+                int spanFlag = spanned.getSpanFlags(obj);
+                this.spans[this.numberOfSpans] = obj;
                 this.spanStarts[this.numberOfSpans] = spanStart;
                 this.spanEnds[this.numberOfSpans] = spanEnd;
                 this.spanFlags[this.numberOfSpans] = spanFlag;
                 this.numberOfSpans++;
             }
         }
-        if (this.numberOfSpans < prevNumberOfSpans) {
+        int i = this.numberOfSpans;
+        if (i < prevNumberOfSpans) {
             Arrays.fill(this.spans, this.numberOfSpans, prevNumberOfSpans, (Object) null);
         }
     }
@@ -52,8 +57,7 @@ public class SpanSet<E> {
         return false;
     }
 
-    /* access modifiers changed from: package-private */
-    public int getNextTransition(int start, int limit) {
+    int getNextTransition(int start, int limit) {
         for (int i = 0; i < this.numberOfSpans; i++) {
             int spanStart = this.spanStarts[i];
             int spanEnd = this.spanEnds[i];

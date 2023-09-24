@@ -2,6 +2,7 @@ package com.android.internal.telephony;
 
 import android.telephony.TelephonyManager;
 
+/* loaded from: classes4.dex */
 public interface RILConstants {
     public static final int ABORTED = 65;
     public static final int BAND_MODE_10_800M_2 = 15;

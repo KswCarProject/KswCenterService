@@ -1,13 +1,17 @@
 package android.net;
 
-import android.os.HandlerThread;
-import android.os.Looper;
+import android.p007os.HandlerThread;
+import android.p007os.Looper;
 
+/* loaded from: classes3.dex */
 public final class ConnectivityThread extends HandlerThread {
+    static /* synthetic */ ConnectivityThread access$000() {
+        return createInstance();
+    }
 
+    /* loaded from: classes3.dex */
     private static class Singleton {
-        /* access modifiers changed from: private */
-        public static final ConnectivityThread INSTANCE = ConnectivityThread.createInstance();
+        private static final ConnectivityThread INSTANCE = ConnectivityThread.access$000();
 
         private Singleton() {
         }
@@ -17,8 +21,7 @@ public final class ConnectivityThread extends HandlerThread {
         super("ConnectivityThread");
     }
 
-    /* access modifiers changed from: private */
-    public static ConnectivityThread createInstance() {
+    private static ConnectivityThread createInstance() {
         ConnectivityThread t = new ConnectivityThread();
         t.start();
         return t;

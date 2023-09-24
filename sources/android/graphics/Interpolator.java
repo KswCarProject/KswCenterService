@@ -1,12 +1,14 @@
 package android.graphics;
 
-import android.os.SystemClock;
+import android.p007os.SystemClock;
 
+/* loaded from: classes.dex */
 public class Interpolator {
     private int mFrameCount;
     private int mValueCount;
     private long native_instance;
 
+    /* loaded from: classes.dex */
     public enum Result {
         NORMAL,
         FREEZE_START,
@@ -56,19 +58,20 @@ public class Interpolator {
     }
 
     public void setKeyFrame(int index, int msec, float[] values) {
-        setKeyFrame(index, msec, values, (float[]) null);
+        setKeyFrame(index, msec, values, null);
     }
 
     public void setKeyFrame(int index, int msec, float[] values, float[] blend) {
         if (index < 0 || index >= this.mFrameCount) {
             throw new IndexOutOfBoundsException();
-        } else if (values.length < this.mValueCount) {
-            throw new ArrayStoreException();
-        } else if (blend == null || blend.length >= 4) {
-            nativeSetKeyFrame(this.native_instance, index, msec, values, blend);
-        } else {
+        }
+        if (values.length < this.mValueCount) {
             throw new ArrayStoreException();
         }
+        if (blend != null && blend.length < 4) {
+            throw new ArrayStoreException();
+        }
+        nativeSetKeyFrame(this.native_instance, index, msec, values, blend);
     }
 
     public void setRepeatMirror(float repeatCount, boolean mirror) {
@@ -82,23 +85,21 @@ public class Interpolator {
     }
 
     public Result timeToValues(int msec, float[] values) {
-        if (values == null || values.length >= this.mValueCount) {
-            switch (nativeTimeToValues(this.native_instance, msec, values)) {
-                case 0:
-                    return Result.NORMAL;
-                case 1:
-                    return Result.FREEZE_START;
-                default:
-                    return Result.FREEZE_END;
-            }
-        } else {
+        if (values != null && values.length < this.mValueCount) {
             throw new ArrayStoreException();
+        }
+        switch (nativeTimeToValues(this.native_instance, msec, values)) {
+            case 0:
+                return Result.NORMAL;
+            case 1:
+                return Result.FREEZE_START;
+            default:
+                return Result.FREEZE_END;
         }
     }
 
-    /* access modifiers changed from: protected */
-    public void finalize() throws Throwable {
+    protected void finalize() throws Throwable {
         nativeDestructor(this.native_instance);
-        this.native_instance = 0;
+        this.native_instance = 0L;
     }
 }

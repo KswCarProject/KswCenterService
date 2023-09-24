@@ -1,19 +1,20 @@
 package android.hardware.location;
 
 import android.annotation.SystemApi;
-import android.os.RemoteException;
+import android.p007os.RemoteException;
 import com.android.internal.util.Preconditions;
 import dalvik.system.CloseGuard;
 import java.io.Closeable;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 @SystemApi
+/* loaded from: classes.dex */
 public class ContextHubClient implements Closeable {
     private final ContextHubInfo mAttachedHub;
-    private IContextHubClient mClientProxy = null;
     private final CloseGuard mCloseGuard;
-    private final AtomicBoolean mIsClosed = new AtomicBoolean(false);
     private final boolean mPersistent;
+    private IContextHubClient mClientProxy = null;
+    private final AtomicBoolean mIsClosed = new AtomicBoolean(false);
 
     ContextHubClient(ContextHubInfo hubInfo, boolean persistent) {
         this.mAttachedHub = hubInfo;
@@ -26,20 +27,19 @@ public class ContextHubClient implements Closeable {
         this.mCloseGuard.open("close");
     }
 
-    /* access modifiers changed from: package-private */
-    public void setClientProxy(IContextHubClient clientProxy) {
+    void setClientProxy(IContextHubClient clientProxy) {
         Preconditions.checkNotNull(clientProxy, "IContextHubClient cannot be null");
-        if (this.mClientProxy == null) {
-            this.mClientProxy = clientProxy;
-            return;
+        if (this.mClientProxy != null) {
+            throw new IllegalStateException("Cannot change client proxy multiple times");
         }
-        throw new IllegalStateException("Cannot change client proxy multiple times");
+        this.mClientProxy = clientProxy;
     }
 
     public ContextHubInfo getAttachedHub() {
         return this.mAttachedHub;
     }
 
+    @Override // java.io.Closeable, java.lang.AutoCloseable
     public void close() {
         if (!this.mIsClosed.getAndSet(true)) {
             if (this.mCloseGuard != null) {
@@ -62,8 +62,7 @@ public class ContextHubClient implements Closeable {
         }
     }
 
-    /* access modifiers changed from: protected */
-    public void finalize() throws Throwable {
+    protected void finalize() throws Throwable {
         try {
             if (this.mCloseGuard != null) {
                 this.mCloseGuard.warnIfOpen();

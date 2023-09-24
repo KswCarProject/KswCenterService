@@ -1,5 +1,6 @@
 package android.util;
 
+/* loaded from: classes4.dex */
 class ContainerHelpers {
     ContainerHelpers() {
     }
@@ -12,10 +13,10 @@ class ContainerHelpers {
             int midVal = array[mid];
             if (midVal < value) {
                 lo = mid + 1;
-            } else if (midVal <= value) {
-                return mid;
-            } else {
+            } else if (midVal > value) {
                 hi = mid - 1;
+            } else {
+                return mid;
             }
         }
         return ~lo;
@@ -29,10 +30,10 @@ class ContainerHelpers {
             long midVal = array[mid];
             if (midVal < value) {
                 lo = mid + 1;
-            } else if (midVal <= value) {
-                return mid;
-            } else {
+            } else if (midVal > value) {
                 hi = mid - 1;
+            } else {
+                return mid;
             }
         }
         return ~lo;

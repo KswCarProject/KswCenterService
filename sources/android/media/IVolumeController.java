@@ -1,11 +1,12 @@
 package android.media;
 
-import android.os.Binder;
-import android.os.IBinder;
-import android.os.IInterface;
-import android.os.Parcel;
-import android.os.RemoteException;
+import android.p007os.Binder;
+import android.p007os.IBinder;
+import android.p007os.IInterface;
+import android.p007os.Parcel;
+import android.p007os.RemoteException;
 
+/* loaded from: classes3.dex */
 public interface IVolumeController extends IInterface {
     void dismiss() throws RemoteException;
 
@@ -19,30 +20,39 @@ public interface IVolumeController extends IInterface {
 
     void volumeChanged(int i, int i2) throws RemoteException;
 
+    /* loaded from: classes3.dex */
     public static class Default implements IVolumeController {
+        @Override // android.media.IVolumeController
         public void displaySafeVolumeWarning(int flags) throws RemoteException {
         }
 
+        @Override // android.media.IVolumeController
         public void volumeChanged(int streamType, int flags) throws RemoteException {
         }
 
+        @Override // android.media.IVolumeController
         public void masterMuteChanged(int flags) throws RemoteException {
         }
 
+        @Override // android.media.IVolumeController
         public void setLayoutDirection(int layoutDirection) throws RemoteException {
         }
 
+        @Override // android.media.IVolumeController
         public void dismiss() throws RemoteException {
         }
 
+        @Override // android.media.IVolumeController
         public void setA11yMode(int mode) throws RemoteException {
         }
 
+        @Override // android.p007os.IInterface
         public IBinder asBinder() {
             return null;
         }
     }
 
+    /* loaded from: classes3.dex */
     public static abstract class Stub extends Binder implements IVolumeController {
         private static final String DESCRIPTOR = "android.media.IVolumeController";
         static final int TRANSACTION_dismiss = 5;
@@ -61,12 +71,13 @@ public interface IVolumeController extends IInterface {
                 return null;
             }
             IInterface iin = obj.queryLocalInterface(DESCRIPTOR);
-            if (iin == null || !(iin instanceof IVolumeController)) {
-                return new Proxy(obj);
+            if (iin != null && (iin instanceof IVolumeController)) {
+                return (IVolumeController) iin;
             }
-            return (IVolumeController) iin;
+            return new Proxy(obj);
         }
 
+        @Override // android.p007os.IInterface
         public IBinder asBinder() {
             return this;
         }
@@ -90,46 +101,54 @@ public interface IVolumeController extends IInterface {
             }
         }
 
+        @Override // android.p007os.Binder
         public String getTransactionName(int transactionCode) {
             return getDefaultTransactionName(transactionCode);
         }
 
+        @Override // android.p007os.Binder
         public boolean onTransact(int code, Parcel data, Parcel reply, int flags) throws RemoteException {
-            if (code != 1598968902) {
-                switch (code) {
-                    case 1:
-                        data.enforceInterface(DESCRIPTOR);
-                        displaySafeVolumeWarning(data.readInt());
-                        return true;
-                    case 2:
-                        data.enforceInterface(DESCRIPTOR);
-                        volumeChanged(data.readInt(), data.readInt());
-                        return true;
-                    case 3:
-                        data.enforceInterface(DESCRIPTOR);
-                        masterMuteChanged(data.readInt());
-                        return true;
-                    case 4:
-                        data.enforceInterface(DESCRIPTOR);
-                        setLayoutDirection(data.readInt());
-                        return true;
-                    case 5:
-                        data.enforceInterface(DESCRIPTOR);
-                        dismiss();
-                        return true;
-                    case 6:
-                        data.enforceInterface(DESCRIPTOR);
-                        setA11yMode(data.readInt());
-                        return true;
-                    default:
-                        return super.onTransact(code, data, reply, flags);
-                }
-            } else {
+            if (code == 1598968902) {
                 reply.writeString(DESCRIPTOR);
                 return true;
             }
+            switch (code) {
+                case 1:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg0 = data.readInt();
+                    displaySafeVolumeWarning(_arg0);
+                    return true;
+                case 2:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg02 = data.readInt();
+                    int _arg1 = data.readInt();
+                    volumeChanged(_arg02, _arg1);
+                    return true;
+                case 3:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg03 = data.readInt();
+                    masterMuteChanged(_arg03);
+                    return true;
+                case 4:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg04 = data.readInt();
+                    setLayoutDirection(_arg04);
+                    return true;
+                case 5:
+                    data.enforceInterface(DESCRIPTOR);
+                    dismiss();
+                    return true;
+                case 6:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg05 = data.readInt();
+                    setA11yMode(_arg05);
+                    return true;
+                default:
+                    return super.onTransact(code, data, reply, flags);
+            }
         }
 
+        /* loaded from: classes3.dex */
         private static class Proxy implements IVolumeController {
             public static IVolumeController sDefaultImpl;
             private IBinder mRemote;
@@ -138,6 +157,7 @@ public interface IVolumeController extends IInterface {
                 this.mRemote = remote;
             }
 
+            @Override // android.p007os.IInterface
             public IBinder asBinder() {
                 return this.mRemote;
             }
@@ -146,14 +166,14 @@ public interface IVolumeController extends IInterface {
                 return Stub.DESCRIPTOR;
             }
 
+            @Override // android.media.IVolumeController
             public void displaySafeVolumeWarning(int flags) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeInt(flags);
-                    if (this.mRemote.transact(1, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    boolean _status = this.mRemote.transact(1, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().displaySafeVolumeWarning(flags);
                     }
                 } finally {
@@ -161,15 +181,15 @@ public interface IVolumeController extends IInterface {
                 }
             }
 
+            @Override // android.media.IVolumeController
             public void volumeChanged(int streamType, int flags) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeInt(streamType);
                     _data.writeInt(flags);
-                    if (this.mRemote.transact(2, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    boolean _status = this.mRemote.transact(2, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().volumeChanged(streamType, flags);
                     }
                 } finally {
@@ -177,14 +197,14 @@ public interface IVolumeController extends IInterface {
                 }
             }
 
+            @Override // android.media.IVolumeController
             public void masterMuteChanged(int flags) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeInt(flags);
-                    if (this.mRemote.transact(3, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    boolean _status = this.mRemote.transact(3, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().masterMuteChanged(flags);
                     }
                 } finally {
@@ -192,14 +212,14 @@ public interface IVolumeController extends IInterface {
                 }
             }
 
+            @Override // android.media.IVolumeController
             public void setLayoutDirection(int layoutDirection) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeInt(layoutDirection);
-                    if (this.mRemote.transact(4, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    boolean _status = this.mRemote.transact(4, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().setLayoutDirection(layoutDirection);
                     }
                 } finally {
@@ -207,13 +227,13 @@ public interface IVolumeController extends IInterface {
                 }
             }
 
+            @Override // android.media.IVolumeController
             public void dismiss() throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    if (this.mRemote.transact(5, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    boolean _status = this.mRemote.transact(5, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().dismiss();
                     }
                 } finally {
@@ -221,14 +241,14 @@ public interface IVolumeController extends IInterface {
                 }
             }
 
+            @Override // android.media.IVolumeController
             public void setA11yMode(int mode) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeInt(mode);
-                    if (this.mRemote.transact(6, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    boolean _status = this.mRemote.transact(6, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().setA11yMode(mode);
                     }
                 } finally {
@@ -238,11 +258,11 @@ public interface IVolumeController extends IInterface {
         }
 
         public static boolean setDefaultImpl(IVolumeController impl) {
-            if (Proxy.sDefaultImpl != null || impl == null) {
-                return false;
+            if (Proxy.sDefaultImpl == null && impl != null) {
+                Proxy.sDefaultImpl = impl;
+                return true;
             }
-            Proxy.sDefaultImpl = impl;
-            return true;
+            return false;
         }
 
         public static IVolumeController getDefaultImpl() {

@@ -4,10 +4,10 @@ import android.app.job.JobInfo;
 import android.content.Context;
 import android.graphics.Point;
 import android.hardware.input.InputManager;
-import android.os.Handler;
-import android.os.Looper;
-import android.os.Message;
-import android.os.SystemClock;
+import android.p007os.Handler;
+import android.p007os.Looper;
+import android.p007os.Message;
+import android.p007os.SystemClock;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
@@ -15,9 +15,10 @@ import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
-import com.wits.pms.R;
+import com.wits.pms.C3580R;
 import com.wits.pms.utils.TouchControl;
 
+/* loaded from: classes2.dex */
 public class TouchControl {
     private static final int MSG_ADD = 0;
     private static final int MSG_HIDE_POINT = 4;
@@ -25,38 +26,34 @@ public class TouchControl {
     private static final int MSG_SHOW_POINT = 3;
     private static final int MSG_UPDATE = 1;
     private static final String TAG = "TouchControl";
-    /* access modifiers changed from: private */
-    public static View mInterceptView;
-    /* access modifiers changed from: private */
-    public static boolean wasAdded;
-    private final long AUTO_HIDE_TIME = JobInfo.MIN_BACKOFF_MILLIS;
+    private static View mInterceptView;
+    private static boolean wasAdded;
     private final Context mContext;
     private long mDownTime;
     private final Handler mHandler;
-    private final InputManager mInputManager;
-    /* access modifiers changed from: private */
-    public WindowManager.LayoutParams mPointerLayoutParams;
-    /* access modifiers changed from: private */
-    public ImageView mPointerView;
+    private WindowManager.LayoutParams mPointerLayoutParams;
+    private ImageView mPointerView;
     private int mScreenHeight;
     private int mScreenWidth;
-    /* access modifiers changed from: private */
-    public final WindowManager mWindowManager;
+    private final WindowManager mWindowManager;
+    private final long AUTO_HIDE_TIME = JobInfo.MIN_BACKOFF_MILLIS;
+    private final InputManager mInputManager = InputManager.getInstance();
 
+    /* loaded from: classes2.dex */
     public interface OnScreenStatusListener {
         void openScreen();
     }
 
     public TouchControl(Context context) {
         this.mContext = context;
-        this.mInputManager = InputManager.getInstance();
         this.mWindowManager = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
         Point outSize = new Point();
         this.mWindowManager.getDefaultDisplay().getSize(outSize);
-        this.mScreenWidth = outSize.x;
-        this.mScreenHeight = outSize.y;
-        Log.i(TAG, "init width:" + outSize.x + " - height:" + outSize.y);
-        this.mHandler = new Handler(Looper.getMainLooper()) {
+        this.mScreenWidth = outSize.f59x;
+        this.mScreenHeight = outSize.f60y;
+        Log.m68i(TAG, "init width:" + outSize.f59x + " - height:" + outSize.f60y);
+        this.mHandler = new Handler(Looper.getMainLooper()) { // from class: com.wits.pms.utils.TouchControl.1
+            @Override // android.p007os.Handler
             public void handleMessage(Message msg) {
                 switch (msg.what) {
                     case 0:
@@ -65,13 +62,14 @@ public class TouchControl {
                     case 1:
                         TouchControl.this.mWindowManager.updateViewLayout(TouchControl.this.mPointerView, TouchControl.this.mPointerLayoutParams);
                         return;
+                    case 2:
+                    default:
+                        return;
                     case 3:
                         TouchControl.this.mPointerView.setVisibility(0);
                         return;
                     case 4:
                         TouchControl.this.mPointerView.setVisibility(8);
-                        return;
-                    default:
                         return;
                 }
             }
@@ -83,14 +81,12 @@ public class TouchControl {
             obtainPointerView(this.mContext);
         }
         WindowManager.LayoutParams layoutParams = this.mPointerLayoutParams;
-        int i = (this.mScreenWidth * x) / 255;
-        layoutParams.x = i;
-        int x2 = i;
+        int x2 = (this.mScreenWidth * x) / 255;
+        layoutParams.f2425x = x2;
         WindowManager.LayoutParams layoutParams2 = this.mPointerLayoutParams;
-        int i2 = (this.mScreenHeight * y) / 255;
-        layoutParams2.y = i2;
-        int y2 = i2;
-        Log.i(TAG, "mPointerLayoutParams x:" + this.mPointerLayoutParams.x + "-y:" + this.mPointerLayoutParams.y);
+        int y2 = (this.mScreenHeight * y) / 255;
+        layoutParams2.f2426y = y2;
+        Log.m68i(TAG, "mPointerLayoutParams x:" + this.mPointerLayoutParams.f2425x + "-y:" + this.mPointerLayoutParams.f2426y);
         this.mHandler.sendEmptyMessage(1);
         if (this.mHandler.hasMessages(4)) {
             this.mHandler.removeMessages(4);
@@ -122,10 +118,10 @@ public class TouchControl {
         this.mPointerLayoutParams.flags |= 776;
         this.mPointerLayoutParams.format = 1;
         this.mPointerLayoutParams.gravity = 51;
-        this.mPointerLayoutParams.x = 0;
-        this.mPointerLayoutParams.y = 0;
+        this.mPointerLayoutParams.f2425x = 0;
+        this.mPointerLayoutParams.f2426y = 0;
         this.mPointerView = new ImageView(context);
-        this.mPointerView.setImageResource(R.mipmap.pointer);
+        this.mPointerView.setImageResource(C3580R.mipmap.pointer);
         this.mPointerView.setLayoutParams(new FrameLayout.LayoutParams(38, 38));
         this.mPointerView.setVisibility(0);
         this.mHandler.sendEmptyMessage(0);
@@ -137,12 +133,14 @@ public class TouchControl {
 
     private boolean touchDown(int x, int y) {
         this.mDownTime = SystemClock.uptimeMillis();
-        return this.mInputManager.injectInputEvent(getMotionEvent(this.mDownTime, this.mDownTime, 0, (float) x, (float) y), 2);
+        MotionEvent event = getMotionEvent(this.mDownTime, this.mDownTime, 0, x, y);
+        return this.mInputManager.injectInputEvent(event, 2);
     }
 
     private boolean touchUp(int x, int y) {
-        MotionEvent event = getMotionEvent(this.mDownTime, SystemClock.uptimeMillis(), 1, (float) x, (float) y);
-        this.mDownTime = 0;
+        long eventTime = SystemClock.uptimeMillis();
+        MotionEvent event = getMotionEvent(this.mDownTime, eventTime, 1, x, y);
+        this.mDownTime = 0L;
         return this.mInputManager.injectInputEvent(event, 2);
     }
 
@@ -150,84 +148,60 @@ public class TouchControl {
         if (this.mDownTime == 0) {
             return false;
         }
-        return this.mInputManager.injectInputEvent(getMotionEvent(this.mDownTime, SystemClock.uptimeMillis(), 2, (float) x, (float) y), 0);
+        long eventTime = SystemClock.uptimeMillis();
+        MotionEvent event = getMotionEvent(this.mDownTime, eventTime, 2, x, y);
+        return this.mInputManager.injectInputEvent(event, 0);
     }
 
     private static MotionEvent getMotionEvent(long downTime, long eventTime, int action, float x, float y) {
         MotionEvent.PointerProperties properties = new MotionEvent.PointerProperties();
-        properties.id = 0;
+        properties.f2403id = 0;
         properties.toolType = 3;
         MotionEvent.PointerCoords coords = new MotionEvent.PointerCoords();
         coords.pressure = 1.0f;
         coords.size = 1.0f;
-        coords.x = x;
-        coords.y = y;
+        coords.f2401x = x;
+        coords.f2402y = y;
         return MotionEvent.obtain(downTime, eventTime, action, 1, new MotionEvent.PointerProperties[]{properties}, new MotionEvent.PointerCoords[]{coords}, 0, 0, 1.0f, 1.0f, 0, 0, 4098, 0);
     }
 
-    public static void opInterceptView(Context context, boolean intercept, final OnScreenStatusListener listener) {
+    public static void opInterceptView(Context context, boolean intercept, OnScreenStatusListener listener) {
         final WindowManager windowManager = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
-        if (intercept) {
-            WindowManager.LayoutParams lp = new WindowManager.LayoutParams();
-            lp.type = 2010;
-            lp.flags = lp.flags | 1024 | 262144 | 524288;
-            lp.height = -1;
-            lp.width = -1;
-            lp.format = 1;
-            lp.alpha = 1.0f;
-            lp.x = 0;
-            lp.y = 0;
-            if (mInterceptView == null) {
-                mInterceptView = new View(context);
-                mInterceptView.setClickable(true);
-                mInterceptView.setLayoutParams(new ViewGroup.LayoutParams(-1, -1));
-                if (listener != null) {
-                    mInterceptView.setOnTouchListener(new View.OnTouchListener() {
-                        public boolean onTouch(View v, MotionEvent event) {
-                            new Handler(Looper.getMainLooper()).post(new Runnable(windowManager) {
-                                private final /* synthetic */ WindowManager f$1;
-
-                                {
-                                    this.f$1 = r2;
-                                }
-
-                                public final void run() {
-                                    TouchControl.AnonymousClass2.lambda$onTouch$0(TouchControl.OnScreenStatusListener.this, this.f$1);
-                                }
-                            });
-                            return false;
-                        }
-
-                        static /* synthetic */ void lambda$onTouch$0(OnScreenStatusListener listener, WindowManager windowManager) {
-                            boolean unused = TouchControl.wasAdded = false;
-                            try {
-                                listener.openScreen();
-                                windowManager.removeViewImmediate(TouchControl.mInterceptView);
-                            } catch (Exception e) {
-                                Log.w(TouchControl.TAG, "removeObserverListener interceptView failed.", e);
-                            }
-                        }
-                    });
-                }
+        if (!intercept) {
+            if (mInterceptView != null && wasAdded) {
+                new Handler(Looper.getMainLooper()).post(new Runnable() { // from class: com.wits.pms.utils.-$$Lambda$TouchControl$Wx2GICbV97ZLC2IwPaYrdIdbVy8
+                    @Override // java.lang.Runnable
+                    public final void run() {
+                        TouchControl.lambda$opInterceptView$0(WindowManager.this);
+                    }
+                });
+                return;
             }
-            new Handler(Looper.getMainLooper()).post(new Runnable(lp) {
-                private final /* synthetic */ WindowManager.LayoutParams f$1;
-
-                {
-                    this.f$1 = r2;
-                }
-
-                public final void run() {
-                    TouchControl.lambda$opInterceptView$1(WindowManager.this, this.f$1);
-                }
-            });
-        } else if (mInterceptView != null && wasAdded) {
-            new Handler(Looper.getMainLooper()).post(new Runnable() {
-                public final void run() {
-                    TouchControl.lambda$opInterceptView$0(WindowManager.this);
-                }
-            });
+            return;
         }
+        final WindowManager.LayoutParams lp = new WindowManager.LayoutParams();
+        lp.type = 2010;
+        lp.flags = lp.flags | 1024 | 262144 | 524288;
+        lp.height = -1;
+        lp.width = -1;
+        lp.format = 1;
+        lp.alpha = 1.0f;
+        lp.f2425x = 0;
+        lp.f2426y = 0;
+        if (mInterceptView == null) {
+            mInterceptView = new View(context);
+            mInterceptView.setClickable(true);
+            mInterceptView.setLayoutParams(new ViewGroup.LayoutParams(-1, -1));
+            if (listener != null) {
+                mInterceptView.setOnTouchListener(new View$OnTouchListenerC36802(listener, windowManager));
+            }
+        }
+        new Handler(Looper.getMainLooper()).post(new Runnable() { // from class: com.wits.pms.utils.-$$Lambda$TouchControl$Yt2NWbUYe1lb_G4ERXvVcnI9vZ4
+            @Override // java.lang.Runnable
+            public final void run() {
+                TouchControl.lambda$opInterceptView$1(WindowManager.this, lp);
+            }
+        });
     }
 
     static /* synthetic */ void lambda$opInterceptView$0(WindowManager windowManager) {
@@ -235,7 +209,43 @@ public class TouchControl {
         try {
             windowManager.removeViewImmediate(mInterceptView);
         } catch (Exception e) {
-            Log.w(TAG, "removeObserverListener interceptView failed.", e);
+            Log.m63w(TAG, "removeObserverListener interceptView failed.", e);
+        }
+    }
+
+    /* renamed from: com.wits.pms.utils.TouchControl$2 */
+    /* loaded from: classes2.dex */
+    static class View$OnTouchListenerC36802 implements View.OnTouchListener {
+        final /* synthetic */ OnScreenStatusListener val$listener;
+        final /* synthetic */ WindowManager val$windowManager;
+
+        View$OnTouchListenerC36802(OnScreenStatusListener onScreenStatusListener, WindowManager windowManager) {
+            this.val$listener = onScreenStatusListener;
+            this.val$windowManager = windowManager;
+        }
+
+        @Override // android.view.View.OnTouchListener
+        public boolean onTouch(View v, MotionEvent event) {
+            Handler handler = new Handler(Looper.getMainLooper());
+            final OnScreenStatusListener onScreenStatusListener = this.val$listener;
+            final WindowManager windowManager = this.val$windowManager;
+            handler.post(new Runnable() { // from class: com.wits.pms.utils.-$$Lambda$TouchControl$2$YLyUrKOl3oxQyK8zL-Zf9MMAgMU
+                @Override // java.lang.Runnable
+                public final void run() {
+                    TouchControl.View$OnTouchListenerC36802.lambda$onTouch$0(TouchControl.OnScreenStatusListener.this, windowManager);
+                }
+            });
+            return false;
+        }
+
+        static /* synthetic */ void lambda$onTouch$0(OnScreenStatusListener listener, WindowManager windowManager) {
+            boolean unused = TouchControl.wasAdded = false;
+            try {
+                listener.openScreen();
+                windowManager.removeViewImmediate(TouchControl.mInterceptView);
+            } catch (Exception e) {
+                Log.m63w(TouchControl.TAG, "removeObserverListener interceptView failed.", e);
+            }
         }
     }
 
@@ -247,7 +257,7 @@ public class TouchControl {
             wasAdded = true;
             windowManager.addView(mInterceptView, lp);
         } catch (Exception e) {
-            Log.w(TAG, "addObserverListener interceptView failed.", e);
+            Log.m63w(TAG, "addObserverListener interceptView failed.", e);
         }
     }
 }

@@ -1,8 +1,8 @@
 package android.telephony;
 
 import android.annotation.SystemApi;
-import android.os.Parcel;
-import android.os.Parcelable;
+import android.p007os.Parcel;
+import android.p007os.Parcelable;
 import android.util.Range;
 import android.util.RecurrenceRule;
 import com.android.internal.util.Preconditions;
@@ -13,14 +13,19 @@ import java.time.ZonedDateTime;
 import java.util.Iterator;
 import java.util.Objects;
 
+/* loaded from: classes.dex */
 public final class SubscriptionPlan implements Parcelable {
     public static final long BYTES_UNKNOWN = -1;
     public static final long BYTES_UNLIMITED = Long.MAX_VALUE;
-    public static final Parcelable.Creator<SubscriptionPlan> CREATOR = new Parcelable.Creator<SubscriptionPlan>() {
+    public static final Parcelable.Creator<SubscriptionPlan> CREATOR = new Parcelable.Creator<SubscriptionPlan>() { // from class: android.telephony.SubscriptionPlan.1
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public SubscriptionPlan createFromParcel(Parcel source) {
             return new SubscriptionPlan(source);
         }
 
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public SubscriptionPlan[] newArray(int size) {
             return new SubscriptionPlan[size];
         }
@@ -31,37 +36,32 @@ public final class SubscriptionPlan implements Parcelable {
     public static final int LIMIT_BEHAVIOR_UNKNOWN = -1;
     public static final long TIME_UNKNOWN = -1;
     private final RecurrenceRule cycleRule;
-    /* access modifiers changed from: private */
-    public int dataLimitBehavior;
-    /* access modifiers changed from: private */
-    public long dataLimitBytes;
-    /* access modifiers changed from: private */
-    public long dataUsageBytes;
-    /* access modifiers changed from: private */
-    public long dataUsageTime;
-    /* access modifiers changed from: private */
-    public CharSequence summary;
-    /* access modifiers changed from: private */
-    public CharSequence title;
+    private int dataLimitBehavior;
+    private long dataLimitBytes;
+    private long dataUsageBytes;
+    private long dataUsageTime;
+    private CharSequence summary;
+    private CharSequence title;
 
     @Retention(RetentionPolicy.SOURCE)
+    /* loaded from: classes.dex */
     public @interface LimitBehavior {
     }
 
-    private SubscriptionPlan(RecurrenceRule cycleRule2) {
-        this.dataLimitBytes = -1;
+    private SubscriptionPlan(RecurrenceRule cycleRule) {
+        this.dataLimitBytes = -1L;
         this.dataLimitBehavior = -1;
-        this.dataUsageBytes = -1;
-        this.dataUsageTime = -1;
-        this.cycleRule = (RecurrenceRule) Preconditions.checkNotNull(cycleRule2);
+        this.dataUsageBytes = -1L;
+        this.dataUsageTime = -1L;
+        this.cycleRule = (RecurrenceRule) Preconditions.checkNotNull(cycleRule);
     }
 
     private SubscriptionPlan(Parcel source) {
-        this.dataLimitBytes = -1;
+        this.dataLimitBytes = -1L;
         this.dataLimitBehavior = -1;
-        this.dataUsageBytes = -1;
-        this.dataUsageTime = -1;
-        this.cycleRule = (RecurrenceRule) source.readParcelable((ClassLoader) null);
+        this.dataUsageBytes = -1L;
+        this.dataUsageTime = -1L;
+        this.cycleRule = (RecurrenceRule) source.readParcelable(null);
         this.title = source.readCharSequence();
         this.summary = source.readCharSequence();
         this.dataLimitBytes = source.readLong();
@@ -70,10 +70,12 @@ public final class SubscriptionPlan implements Parcelable {
         this.dataUsageTime = source.readLong();
     }
 
+    @Override // android.p007os.Parcelable
     public int describeContents() {
         return 0;
     }
 
+    @Override // android.p007os.Parcelable
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeParcelable(this.cycleRule, flags);
         dest.writeCharSequence(this.title);
@@ -85,20 +87,17 @@ public final class SubscriptionPlan implements Parcelable {
     }
 
     public String toString() {
-        return "SubscriptionPlan{" + "cycleRule=" + this.cycleRule + " title=" + this.title + " summary=" + this.summary + " dataLimitBytes=" + this.dataLimitBytes + " dataLimitBehavior=" + this.dataLimitBehavior + " dataUsageBytes=" + this.dataUsageBytes + " dataUsageTime=" + this.dataUsageTime + "}";
+        return "SubscriptionPlan{cycleRule=" + this.cycleRule + " title=" + this.title + " summary=" + this.summary + " dataLimitBytes=" + this.dataLimitBytes + " dataLimitBehavior=" + this.dataLimitBehavior + " dataUsageBytes=" + this.dataUsageBytes + " dataUsageTime=" + this.dataUsageTime + "}";
     }
 
     public int hashCode() {
-        return Objects.hash(new Object[]{this.cycleRule, this.title, this.summary, Long.valueOf(this.dataLimitBytes), Integer.valueOf(this.dataLimitBehavior), Long.valueOf(this.dataUsageBytes), Long.valueOf(this.dataUsageTime)});
+        return Objects.hash(this.cycleRule, this.title, this.summary, Long.valueOf(this.dataLimitBytes), Integer.valueOf(this.dataLimitBehavior), Long.valueOf(this.dataUsageBytes), Long.valueOf(this.dataUsageTime));
     }
 
     public boolean equals(Object obj) {
-        if (!(obj instanceof SubscriptionPlan)) {
-            return false;
-        }
-        SubscriptionPlan other = (SubscriptionPlan) obj;
-        if (Objects.equals(this.cycleRule, other.cycleRule) && Objects.equals(this.title, other.title) && Objects.equals(this.summary, other.summary) && this.dataLimitBytes == other.dataLimitBytes && this.dataLimitBehavior == other.dataLimitBehavior && this.dataUsageBytes == other.dataUsageBytes && this.dataUsageTime == other.dataUsageTime) {
-            return true;
+        if (obj instanceof SubscriptionPlan) {
+            SubscriptionPlan other = (SubscriptionPlan) obj;
+            return Objects.equals(this.cycleRule, other.cycleRule) && Objects.equals(this.title, other.title) && Objects.equals(this.summary, other.summary) && this.dataLimitBytes == other.dataLimitBytes && this.dataLimitBehavior == other.dataLimitBehavior && this.dataUsageBytes == other.dataUsageBytes && this.dataUsageTime == other.dataUsageTime;
         }
         return false;
     }
@@ -135,6 +134,7 @@ public final class SubscriptionPlan implements Parcelable {
         return this.cycleRule.cycleIterator();
     }
 
+    /* loaded from: classes.dex */
     public static class Builder {
         private final SubscriptionPlan plan;
 
@@ -143,35 +143,35 @@ public final class SubscriptionPlan implements Parcelable {
         }
 
         public static Builder createNonrecurring(ZonedDateTime start, ZonedDateTime end) {
-            if (end.isAfter(start)) {
-                return new Builder(start, end, (Period) null);
+            if (!end.isAfter(start)) {
+                throw new IllegalArgumentException("End " + end + " isn't after start " + start);
             }
-            throw new IllegalArgumentException("End " + end + " isn't after start " + start);
+            return new Builder(start, end, null);
         }
 
         public static Builder createRecurring(ZonedDateTime start, Period period) {
-            if (!period.isZero() && !period.isNegative()) {
-                return new Builder(start, (ZonedDateTime) null, period);
+            if (period.isZero() || period.isNegative()) {
+                throw new IllegalArgumentException("Period " + period + " must be positive");
             }
-            throw new IllegalArgumentException("Period " + period + " must be positive");
+            return new Builder(start, null, period);
         }
 
         @SystemApi
         @Deprecated
         public static Builder createRecurringMonthly(ZonedDateTime start) {
-            return new Builder(start, (ZonedDateTime) null, Period.ofMonths(1));
+            return new Builder(start, null, Period.ofMonths(1));
         }
 
         @SystemApi
         @Deprecated
         public static Builder createRecurringWeekly(ZonedDateTime start) {
-            return new Builder(start, (ZonedDateTime) null, Period.ofDays(7));
+            return new Builder(start, null, Period.ofDays(7));
         }
 
         @SystemApi
         @Deprecated
         public static Builder createRecurringDaily(ZonedDateTime start) {
-            return new Builder(start, (ZonedDateTime) null, Period.ofDays(1));
+            return new Builder(start, null, Period.ofDays(1));
         }
 
         public SubscriptionPlan build() {
@@ -179,37 +179,37 @@ public final class SubscriptionPlan implements Parcelable {
         }
 
         public Builder setTitle(CharSequence title) {
-            CharSequence unused = this.plan.title = title;
+            this.plan.title = title;
             return this;
         }
 
         public Builder setSummary(CharSequence summary) {
-            CharSequence unused = this.plan.summary = summary;
+            this.plan.summary = summary;
             return this;
         }
 
         public Builder setDataLimit(long dataLimitBytes, int dataLimitBehavior) {
             if (dataLimitBytes < 0) {
                 throw new IllegalArgumentException("Limit bytes must be positive");
-            } else if (dataLimitBehavior >= 0) {
-                long unused = this.plan.dataLimitBytes = dataLimitBytes;
-                int unused2 = this.plan.dataLimitBehavior = dataLimitBehavior;
-                return this;
-            } else {
-                throw new IllegalArgumentException("Limit behavior must be defined");
             }
+            if (dataLimitBehavior >= 0) {
+                this.plan.dataLimitBytes = dataLimitBytes;
+                this.plan.dataLimitBehavior = dataLimitBehavior;
+                return this;
+            }
+            throw new IllegalArgumentException("Limit behavior must be defined");
         }
 
         public Builder setDataUsage(long dataUsageBytes, long dataUsageTime) {
             if (dataUsageBytes < 0) {
                 throw new IllegalArgumentException("Usage bytes must be positive");
-            } else if (dataUsageTime >= 0) {
-                long unused = this.plan.dataUsageBytes = dataUsageBytes;
-                long unused2 = this.plan.dataUsageTime = dataUsageTime;
-                return this;
-            } else {
-                throw new IllegalArgumentException("Usage time must be positive");
             }
+            if (dataUsageTime >= 0) {
+                this.plan.dataUsageBytes = dataUsageBytes;
+                this.plan.dataUsageTime = dataUsageTime;
+                return this;
+            }
+            throw new IllegalArgumentException("Usage time must be positive");
         }
     }
 }

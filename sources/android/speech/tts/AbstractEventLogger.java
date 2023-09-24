@@ -1,29 +1,27 @@
 package android.speech.tts;
 
-import android.os.SystemClock;
+import android.p007os.SystemClock;
 
+/* loaded from: classes3.dex */
 abstract class AbstractEventLogger {
     protected final int mCallerPid;
     protected final int mCallerUid;
-    private volatile long mEngineCompleteTime = -1;
-    private volatile long mEngineStartTime = -1;
-    private boolean mLogWritten = false;
-    protected long mPlaybackStartTime = -1;
-    protected final long mReceivedTime;
-    private volatile long mRequestProcessingStartTime = -1;
     protected final String mServiceApp;
+    protected long mPlaybackStartTime = -1;
+    private volatile long mRequestProcessingStartTime = -1;
+    private volatile long mEngineStartTime = -1;
+    private volatile long mEngineCompleteTime = -1;
+    private boolean mLogWritten = false;
+    protected final long mReceivedTime = SystemClock.elapsedRealtime();
 
-    /* access modifiers changed from: protected */
-    public abstract void logFailure(int i);
+    protected abstract void logFailure(int i);
 
-    /* access modifiers changed from: protected */
-    public abstract void logSuccess(long j, long j2, long j3);
+    protected abstract void logSuccess(long j, long j2, long j3);
 
     AbstractEventLogger(int callerUid, int callerPid, String serviceApp) {
         this.mCallerUid = callerUid;
         this.mCallerPid = callerPid;
         this.mServiceApp = serviceApp;
-        this.mReceivedTime = SystemClock.elapsedRealtime();
     }
 
     public void onRequestProcessingStart() {
@@ -49,12 +47,15 @@ abstract class AbstractEventLogger {
     public void onCompleted(int statusCode) {
         if (!this.mLogWritten) {
             this.mLogWritten = true;
-            long elapsedRealtime = SystemClock.elapsedRealtime();
-            if (statusCode != 0 || this.mPlaybackStartTime == -1 || this.mEngineCompleteTime == -1) {
-                logFailure(statusCode);
+            SystemClock.elapsedRealtime();
+            if (statusCode == 0 && this.mPlaybackStartTime != -1 && this.mEngineCompleteTime != -1) {
+                long audioLatency = this.mPlaybackStartTime - this.mReceivedTime;
+                long engineLatency = this.mEngineStartTime - this.mRequestProcessingStartTime;
+                long engineTotal = this.mEngineCompleteTime - this.mRequestProcessingStartTime;
+                logSuccess(audioLatency, engineLatency, engineTotal);
                 return;
             }
-            logSuccess(this.mPlaybackStartTime - this.mReceivedTime, this.mEngineStartTime - this.mRequestProcessingStartTime, this.mEngineCompleteTime - this.mRequestProcessingStartTime);
+            logFailure(statusCode);
         }
     }
 }

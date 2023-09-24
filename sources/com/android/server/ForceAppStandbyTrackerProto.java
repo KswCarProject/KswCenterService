@@ -1,5 +1,6 @@
 package com.android.server;
 
+/* loaded from: classes4.dex */
 public final class ForceAppStandbyTrackerProto {
     public static final long ACTIVE_UIDS = 2220498092034L;
     public static final long EXEMPTED_PACKAGES = 2246267895818L;
@@ -14,6 +15,7 @@ public final class ForceAppStandbyTrackerProto {
     public static final long STATS = 1146756268041L;
     public static final long TEMP_POWER_SAVE_WHITELIST_APP_IDS = 2220498092036L;
 
+    /* loaded from: classes4.dex */
     public final class RunAnyInBackgroundRestrictedPackages {
         public static final long PACKAGE_NAME = 1138166333442L;
         public static final long UID = 1120986464257L;
@@ -22,6 +24,7 @@ public final class ForceAppStandbyTrackerProto {
         }
     }
 
+    /* loaded from: classes4.dex */
     public final class ExemptedPackage {
         public static final long PACKAGE_NAME = 1138166333442L;
         public static final long USER_ID = 1120986464257L;

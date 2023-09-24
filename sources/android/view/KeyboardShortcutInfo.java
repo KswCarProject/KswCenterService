@@ -1,16 +1,21 @@
 package android.view;
 
 import android.graphics.drawable.Icon;
-import android.os.Parcel;
-import android.os.Parcelable;
+import android.p007os.Parcel;
+import android.p007os.Parcelable;
 import com.android.internal.util.Preconditions;
 
+/* loaded from: classes4.dex */
 public final class KeyboardShortcutInfo implements Parcelable {
-    public static final Parcelable.Creator<KeyboardShortcutInfo> CREATOR = new Parcelable.Creator<KeyboardShortcutInfo>() {
+    public static final Parcelable.Creator<KeyboardShortcutInfo> CREATOR = new Parcelable.Creator<KeyboardShortcutInfo>() { // from class: android.view.KeyboardShortcutInfo.1
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public KeyboardShortcutInfo createFromParcel(Parcel source) {
             return new KeyboardShortcutInfo(source);
         }
 
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public KeyboardShortcutInfo[] newArray(int size) {
             return new KeyboardShortcutInfo[size];
         }
@@ -25,7 +30,7 @@ public final class KeyboardShortcutInfo implements Parcelable {
         this.mLabel = label;
         this.mIcon = icon;
         boolean z = false;
-        this.mBaseCharacter = 0;
+        this.mBaseCharacter = (char) 0;
         if (keycode >= 0 && keycode <= KeyEvent.getMaxKeyCode()) {
             z = true;
         }
@@ -35,7 +40,7 @@ public final class KeyboardShortcutInfo implements Parcelable {
     }
 
     public KeyboardShortcutInfo(CharSequence label, int keycode, int modifiers) {
-        this(label, (Icon) null, keycode, modifiers);
+        this(label, null, keycode, modifiers);
     }
 
     public KeyboardShortcutInfo(CharSequence label, char baseCharacter, int modifiers) {
@@ -49,7 +54,7 @@ public final class KeyboardShortcutInfo implements Parcelable {
 
     private KeyboardShortcutInfo(Parcel source) {
         this.mLabel = source.readCharSequence();
-        this.mIcon = (Icon) source.readParcelable((ClassLoader) null);
+        this.mIcon = (Icon) source.readParcelable(null);
         this.mBaseCharacter = (char) source.readInt();
         this.mKeycode = source.readInt();
         this.mModifiers = source.readInt();
@@ -75,10 +80,12 @@ public final class KeyboardShortcutInfo implements Parcelable {
         return this.mModifiers;
     }
 
+    @Override // android.p007os.Parcelable
     public int describeContents() {
         return 0;
     }
 
+    @Override // android.p007os.Parcelable
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeCharSequence(this.mLabel);
         dest.writeParcelable(this.mIcon, 0);

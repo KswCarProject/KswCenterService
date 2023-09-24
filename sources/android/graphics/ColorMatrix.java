@@ -2,18 +2,22 @@ package android.graphics;
 
 import java.util.Arrays;
 
+/* loaded from: classes.dex */
 public class ColorMatrix {
-    private final float[] mArray = new float[20];
+    private final float[] mArray;
 
     public ColorMatrix() {
+        this.mArray = new float[20];
         reset();
     }
 
     public ColorMatrix(float[] src) {
+        this.mArray = new float[20];
         System.arraycopy(src, 0, this.mArray, 0, 20);
     }
 
     public ColorMatrix(ColorMatrix src) {
+        this.mArray = new float[20];
         System.arraycopy(src.mArray, 0, this.mArray, 0, 20);
     }
 
@@ -51,7 +55,7 @@ public class ColorMatrix {
 
     public void setRotate(int axis, float degrees) {
         reset();
-        double radians = (((double) degrees) * 3.141592653589793d) / 180.0d;
+        double radians = (degrees * 3.141592653589793d) / 180.0d;
         float cosine = (float) Math.cos(radians);
         float sine = (float) Math.sin(radians);
         switch (axis) {
@@ -91,16 +95,16 @@ public class ColorMatrix {
         float[] a = matA.mArray;
         float[] b = matB.mArray;
         int i = 0;
-        for (int j = 0; j < 20; j += 5) {
-            int index = i;
-            int i2 = 0;
-            while (i2 < 4) {
-                tmp[index] = (a[j + 0] * b[i2 + 0]) + (a[j + 1] * b[i2 + 5]) + (a[j + 2] * b[i2 + 10]) + (a[j + 3] * b[i2 + 15]);
-                i2++;
-                index++;
+        for (int index = 0; index < 20; index += 5) {
+            int index2 = i;
+            int index3 = 0;
+            while (index3 < 4) {
+                tmp[index2] = (a[index + 0] * b[index3 + 0]) + (a[index + 1] * b[index3 + 5]) + (a[index + 2] * b[index3 + 10]) + (a[index + 3] * b[index3 + 15]);
+                index3++;
+                index2++;
             }
-            i = index + 1;
-            tmp[index] = (a[j + 0] * b[4]) + (a[j + 1] * b[9]) + (a[j + 2] * b[14]) + (a[j + 3] * b[19]) + a[j + 4];
+            i = index2 + 1;
+            tmp[index2] = (a[index + 0] * b[4]) + (a[index + 1] * b[9]) + (a[index + 2] * b[14]) + (a[index + 3] * b[19]) + a[index + 4];
         }
         if (tmp != this.mArray) {
             System.arraycopy(tmp, 0, this.mArray, 0, 20);
@@ -160,15 +164,15 @@ public class ColorMatrix {
     }
 
     public boolean equals(Object obj) {
-        if (!(obj instanceof ColorMatrix)) {
-            return false;
-        }
-        float[] other = ((ColorMatrix) obj).mArray;
-        for (int i = 0; i < 20; i++) {
-            if (other[i] != this.mArray[i]) {
-                return false;
+        if (obj instanceof ColorMatrix) {
+            float[] other = ((ColorMatrix) obj).mArray;
+            for (int i = 0; i < 20; i++) {
+                if (other[i] != this.mArray[i]) {
+                    return false;
+                }
             }
+            return true;
         }
-        return true;
+        return false;
     }
 }

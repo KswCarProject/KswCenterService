@@ -5,11 +5,13 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+/* loaded from: classes4.dex */
 class FieldData implements Cloneable {
     private Extension<?, ?> cachedExtension;
     private List<UnknownFieldData> unknownFieldData;
     private Object value;
 
+    /* JADX WARN: Multi-variable type inference failed */
     <T> FieldData(Extension<?, T> extension, T newValue) {
         this.cachedExtension = extension;
         this.value = newValue;
@@ -19,51 +21,50 @@ class FieldData implements Cloneable {
         this.unknownFieldData = new ArrayList();
     }
 
-    /* access modifiers changed from: package-private */
-    public void addUnknownField(UnknownFieldData unknownField) {
+    void addUnknownField(UnknownFieldData unknownField) {
         this.unknownFieldData.add(unknownField);
     }
 
-    /* access modifiers changed from: package-private */
-    public UnknownFieldData getUnknownField(int index) {
+    UnknownFieldData getUnknownField(int index) {
         if (this.unknownFieldData != null && index < this.unknownFieldData.size()) {
             return this.unknownFieldData.get(index);
         }
         return null;
     }
 
-    /* access modifiers changed from: package-private */
-    public int getUnknownFieldSize() {
+    int getUnknownFieldSize() {
         if (this.unknownFieldData == null) {
             return 0;
         }
         return this.unknownFieldData.size();
     }
 
-    /* access modifiers changed from: package-private */
-    public <T> T getValue(Extension<?, T> extension) {
-        if (this.value == null) {
+    /* JADX WARN: Multi-variable type inference failed */
+    <T> T getValue(Extension<?, T> extension) {
+        if (this.value != null) {
+            if (this.cachedExtension != extension) {
+                throw new IllegalStateException("Tried to getExtension with a differernt Extension.");
+            }
+        } else {
             this.cachedExtension = extension;
             this.value = extension.getValueFrom(this.unknownFieldData);
             this.unknownFieldData = null;
-        } else if (this.cachedExtension != extension) {
-            throw new IllegalStateException("Tried to getExtension with a differernt Extension.");
         }
-        return this.value;
+        return (T) this.value;
     }
 
-    /* access modifiers changed from: package-private */
-    public <T> void setValue(Extension<?, T> extension, T newValue) {
+    /* JADX WARN: Multi-variable type inference failed */
+    <T> void setValue(Extension<?, T> extension, T newValue) {
         this.cachedExtension = extension;
         this.value = newValue;
         this.unknownFieldData = null;
     }
 
-    /* access modifiers changed from: package-private */
-    public int computeSerializedSize() {
+    int computeSerializedSize() {
         int size = 0;
         if (this.value != null) {
-            return this.cachedExtension.computeSerializedSize(this.value);
+            int size2 = this.cachedExtension.computeSerializedSize(this.value);
+            return size2;
         }
         for (UnknownFieldData unknownField : this.unknownFieldData) {
             size += unknownField.computeSerializedSize();
@@ -71,8 +72,7 @@ class FieldData implements Cloneable {
         return size;
     }
 
-    /* access modifiers changed from: package-private */
-    public void writeTo(CodedOutputByteBufferNano output) throws IOException {
+    void writeTo(CodedOutputByteBufferNano output) throws IOException {
         if (this.value != null) {
             this.cachedExtension.writeTo(this.value, output);
             return;
@@ -86,50 +86,51 @@ class FieldData implements Cloneable {
         if (o == this) {
             return true;
         }
-        if (!(o instanceof FieldData)) {
-            return false;
-        }
-        FieldData other = (FieldData) o;
-        if (this.value == null || other.value == null) {
-            if (this.unknownFieldData != null && other.unknownFieldData != null) {
+        if (o instanceof FieldData) {
+            FieldData other = (FieldData) o;
+            if (this.value != null && other.value != null) {
+                if (this.cachedExtension != other.cachedExtension) {
+                    return false;
+                }
+                if (!this.cachedExtension.clazz.isArray()) {
+                    return this.value.equals(other.value);
+                }
+                if (this.value instanceof byte[]) {
+                    return Arrays.equals((byte[]) this.value, (byte[]) other.value);
+                }
+                if (this.value instanceof int[]) {
+                    return Arrays.equals((int[]) this.value, (int[]) other.value);
+                }
+                if (this.value instanceof long[]) {
+                    return Arrays.equals((long[]) this.value, (long[]) other.value);
+                }
+                if (this.value instanceof float[]) {
+                    return Arrays.equals((float[]) this.value, (float[]) other.value);
+                }
+                if (this.value instanceof double[]) {
+                    return Arrays.equals((double[]) this.value, (double[]) other.value);
+                }
+                if (this.value instanceof boolean[]) {
+                    return Arrays.equals((boolean[]) this.value, (boolean[]) other.value);
+                }
+                return Arrays.deepEquals((Object[]) this.value, (Object[]) other.value);
+            } else if (this.unknownFieldData != null && other.unknownFieldData != null) {
                 return this.unknownFieldData.equals(other.unknownFieldData);
+            } else {
+                try {
+                    return Arrays.equals(toByteArray(), other.toByteArray());
+                } catch (IOException e) {
+                    throw new IllegalStateException(e);
+                }
             }
-            try {
-                return Arrays.equals(toByteArray(), other.toByteArray());
-            } catch (IOException e) {
-                throw new IllegalStateException(e);
-            }
-        } else if (this.cachedExtension != other.cachedExtension) {
-            return false;
-        } else {
-            if (!this.cachedExtension.clazz.isArray()) {
-                return this.value.equals(other.value);
-            }
-            if (this.value instanceof byte[]) {
-                return Arrays.equals((byte[]) this.value, (byte[]) other.value);
-            }
-            if (this.value instanceof int[]) {
-                return Arrays.equals((int[]) this.value, (int[]) other.value);
-            }
-            if (this.value instanceof long[]) {
-                return Arrays.equals((long[]) this.value, (long[]) other.value);
-            }
-            if (this.value instanceof float[]) {
-                return Arrays.equals((float[]) this.value, (float[]) other.value);
-            }
-            if (this.value instanceof double[]) {
-                return Arrays.equals((double[]) this.value, (double[]) other.value);
-            }
-            if (this.value instanceof boolean[]) {
-                return Arrays.equals((boolean[]) this.value, (boolean[]) other.value);
-            }
-            return Arrays.deepEquals((Object[]) this.value, (Object[]) other.value);
         }
+        return false;
     }
 
     public int hashCode() {
         try {
-            return (17 * 31) + Arrays.hashCode(toByteArray());
+            int result = (17 * 31) + Arrays.hashCode(toByteArray());
+            return result;
         } catch (IOException e) {
             throw new IllegalStateException(e);
         }
@@ -137,11 +138,13 @@ class FieldData implements Cloneable {
 
     private byte[] toByteArray() throws IOException {
         byte[] result = new byte[computeSerializedSize()];
-        writeTo(CodedOutputByteBufferNano.newInstance(result));
+        CodedOutputByteBufferNano output = CodedOutputByteBufferNano.newInstance(result);
+        writeTo(output);
         return result;
     }
 
-    public final FieldData clone() {
+    /* renamed from: clone */
+    public final FieldData m191clone() {
         FieldData clone = new FieldData();
         try {
             clone.cachedExtension = this.cachedExtension;
@@ -152,14 +155,14 @@ class FieldData implements Cloneable {
             }
             if (this.value != null) {
                 if (this.value instanceof MessageNano) {
-                    clone.value = ((MessageNano) this.value).clone();
+                    clone.value = ((MessageNano) this.value).mo189clone();
                 } else if (this.value instanceof byte[]) {
                     clone.value = ((byte[]) this.value).clone();
                 } else {
                     int i = 0;
                     if (this.value instanceof byte[][]) {
                         byte[][] valueArray = (byte[][]) this.value;
-                        byte[][] cloneArray = new byte[valueArray.length][];
+                        byte[][] cloneArray = new byte[valueArray.length];
                         clone.value = cloneArray;
                         while (i < valueArray.length) {
                             cloneArray[i] = (byte[]) valueArray[i].clone();
@@ -180,7 +183,7 @@ class FieldData implements Cloneable {
                         MessageNano[] cloneArray2 = new MessageNano[valueArray2.length];
                         clone.value = cloneArray2;
                         while (i < valueArray2.length) {
-                            cloneArray2[i] = valueArray2[i].clone();
+                            cloneArray2[i] = valueArray2[i].mo189clone();
                             i++;
                         }
                     }

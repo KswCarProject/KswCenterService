@@ -3,6 +3,7 @@ package android.net.metrics;
 import android.net.MacAddress;
 import java.util.StringJoiner;
 
+/* loaded from: classes3.dex */
 public class WakeupEvent {
     public MacAddress dstHwAddr;
     public String dstIp;
@@ -17,7 +18,7 @@ public class WakeupEvent {
 
     public String toString() {
         StringJoiner j = new StringJoiner(", ", "WakeupEvent(", ")");
-        j.add(String.format("%tT.%tL", new Object[]{Long.valueOf(this.timestampMs), Long.valueOf(this.timestampMs)}));
+        j.add(String.format("%tT.%tL", Long.valueOf(this.timestampMs), Long.valueOf(this.timestampMs)));
         j.add(this.iface);
         j.add("uid: " + Integer.toString(this.uid));
         j.add("eth=0x" + Integer.toHexString(this.ethertype));

@@ -3,6 +3,7 @@ package android.media.audiofx;
 import android.media.audiofx.AudioEffect;
 import java.util.StringTokenizer;
 
+/* loaded from: classes3.dex */
 public class EnvironmentalReverb extends AudioEffect {
     public static final int PARAM_DECAY_HF_RATIO = 3;
     public static final int PARAM_DECAY_TIME = 2;
@@ -17,22 +18,25 @@ public class EnvironmentalReverb extends AudioEffect {
     public static final int PARAM_ROOM_LEVEL = 0;
     private static int PROPERTY_SIZE = 26;
     private static final String TAG = "EnvironmentalReverb";
-    private BaseParameterListener mBaseParamListener = null;
-    /* access modifiers changed from: private */
-    public OnParameterChangeListener mParamListener = null;
-    /* access modifiers changed from: private */
-    public final Object mParamListenerLock = new Object();
+    private BaseParameterListener mBaseParamListener;
+    private OnParameterChangeListener mParamListener;
+    private final Object mParamListenerLock;
 
+    /* loaded from: classes3.dex */
     public interface OnParameterChangeListener {
         void onParameterChange(EnvironmentalReverb environmentalReverb, int i, int i2, int i3);
     }
 
     public EnvironmentalReverb(int priority, int audioSession) throws IllegalArgumentException, UnsupportedOperationException, RuntimeException {
         super(EFFECT_TYPE_ENV_REVERB, EFFECT_TYPE_NULL, priority, audioSession);
+        this.mParamListener = null;
+        this.mBaseParamListener = null;
+        this.mParamListenerLock = new Object();
     }
 
     public void setRoomLevel(short room) throws IllegalStateException, IllegalArgumentException, UnsupportedOperationException {
-        checkStatus(setParameter(0, shortToByteArray(room)));
+        byte[] param = shortToByteArray(room);
+        checkStatus(setParameter(0, param));
     }
 
     public short getRoomLevel() throws IllegalStateException, IllegalArgumentException, UnsupportedOperationException {
@@ -42,7 +46,8 @@ public class EnvironmentalReverb extends AudioEffect {
     }
 
     public void setRoomHFLevel(short roomHF) throws IllegalStateException, IllegalArgumentException, UnsupportedOperationException {
-        checkStatus(setParameter(1, shortToByteArray(roomHF)));
+        byte[] param = shortToByteArray(roomHF);
+        checkStatus(setParameter(1, param));
     }
 
     public short getRoomHFLevel() throws IllegalStateException, IllegalArgumentException, UnsupportedOperationException {
@@ -52,7 +57,8 @@ public class EnvironmentalReverb extends AudioEffect {
     }
 
     public void setDecayTime(int decayTime) throws IllegalStateException, IllegalArgumentException, UnsupportedOperationException {
-        checkStatus(setParameter(2, intToByteArray(decayTime)));
+        byte[] param = intToByteArray(decayTime);
+        checkStatus(setParameter(2, param));
     }
 
     public int getDecayTime() throws IllegalStateException, IllegalArgumentException, UnsupportedOperationException {
@@ -62,7 +68,8 @@ public class EnvironmentalReverb extends AudioEffect {
     }
 
     public void setDecayHFRatio(short decayHFRatio) throws IllegalStateException, IllegalArgumentException, UnsupportedOperationException {
-        checkStatus(setParameter(3, shortToByteArray(decayHFRatio)));
+        byte[] param = shortToByteArray(decayHFRatio);
+        checkStatus(setParameter(3, param));
     }
 
     public short getDecayHFRatio() throws IllegalStateException, IllegalArgumentException, UnsupportedOperationException {
@@ -72,7 +79,8 @@ public class EnvironmentalReverb extends AudioEffect {
     }
 
     public void setReflectionsLevel(short reflectionsLevel) throws IllegalStateException, IllegalArgumentException, UnsupportedOperationException {
-        checkStatus(setParameter(4, shortToByteArray(reflectionsLevel)));
+        byte[] param = shortToByteArray(reflectionsLevel);
+        checkStatus(setParameter(4, param));
     }
 
     public short getReflectionsLevel() throws IllegalStateException, IllegalArgumentException, UnsupportedOperationException {
@@ -82,7 +90,8 @@ public class EnvironmentalReverb extends AudioEffect {
     }
 
     public void setReflectionsDelay(int reflectionsDelay) throws IllegalStateException, IllegalArgumentException, UnsupportedOperationException {
-        checkStatus(setParameter(5, intToByteArray(reflectionsDelay)));
+        byte[] param = intToByteArray(reflectionsDelay);
+        checkStatus(setParameter(5, param));
     }
 
     public int getReflectionsDelay() throws IllegalStateException, IllegalArgumentException, UnsupportedOperationException {
@@ -92,7 +101,8 @@ public class EnvironmentalReverb extends AudioEffect {
     }
 
     public void setReverbLevel(short reverbLevel) throws IllegalStateException, IllegalArgumentException, UnsupportedOperationException {
-        checkStatus(setParameter(6, shortToByteArray(reverbLevel)));
+        byte[] param = shortToByteArray(reverbLevel);
+        checkStatus(setParameter(6, param));
     }
 
     public short getReverbLevel() throws IllegalStateException, IllegalArgumentException, UnsupportedOperationException {
@@ -102,7 +112,8 @@ public class EnvironmentalReverb extends AudioEffect {
     }
 
     public void setReverbDelay(int reverbDelay) throws IllegalStateException, IllegalArgumentException, UnsupportedOperationException {
-        checkStatus(setParameter(7, intToByteArray(reverbDelay)));
+        byte[] param = intToByteArray(reverbDelay);
+        checkStatus(setParameter(7, param));
     }
 
     public int getReverbDelay() throws IllegalStateException, IllegalArgumentException, UnsupportedOperationException {
@@ -112,7 +123,8 @@ public class EnvironmentalReverb extends AudioEffect {
     }
 
     public void setDiffusion(short diffusion) throws IllegalStateException, IllegalArgumentException, UnsupportedOperationException {
-        checkStatus(setParameter(8, shortToByteArray(diffusion)));
+        byte[] param = shortToByteArray(diffusion);
+        checkStatus(setParameter(8, param));
     }
 
     public short getDiffusion() throws IllegalStateException, IllegalArgumentException, UnsupportedOperationException {
@@ -122,7 +134,8 @@ public class EnvironmentalReverb extends AudioEffect {
     }
 
     public void setDensity(short density) throws IllegalStateException, IllegalArgumentException, UnsupportedOperationException {
-        checkStatus(setParameter(9, shortToByteArray(density)));
+        byte[] param = shortToByteArray(density);
+        checkStatus(setParameter(9, param));
     }
 
     public short getDensity() throws IllegalStateException, IllegalArgumentException, UnsupportedOperationException {
@@ -131,10 +144,12 @@ public class EnvironmentalReverb extends AudioEffect {
         return byteArrayToShort(param);
     }
 
+    /* loaded from: classes3.dex */
     private class BaseParameterListener implements AudioEffect.OnParameterChangeListener {
         private BaseParameterListener() {
         }
 
+        @Override // android.media.audiofx.AudioEffect.OnParameterChangeListener
         public void onParameterChange(AudioEffect effect, int status, byte[] param, byte[] value) {
             OnParameterChangeListener l = null;
             synchronized (EnvironmentalReverb.this.mParamListenerLock) {
@@ -170,6 +185,7 @@ public class EnvironmentalReverb extends AudioEffect {
         }
     }
 
+    /* loaded from: classes3.dex */
     public static class Settings {
         public short decayHFRatio;
         public int decayTime;
@@ -187,70 +203,67 @@ public class EnvironmentalReverb extends AudioEffect {
 
         public Settings(String settings) {
             StringTokenizer st = new StringTokenizer(settings, "=;");
-            int countTokens = st.countTokens();
-            if (st.countTokens() == 21) {
-                String key = st.nextToken();
-                if (key.equals(EnvironmentalReverb.TAG)) {
-                    try {
-                        String key2 = st.nextToken();
-                        if (key2.equals("roomLevel")) {
-                            this.roomLevel = Short.parseShort(st.nextToken());
-                            String key3 = st.nextToken();
-                            if (key3.equals("roomHFLevel")) {
-                                this.roomHFLevel = Short.parseShort(st.nextToken());
-                                String key4 = st.nextToken();
-                                if (key4.equals("decayTime")) {
-                                    this.decayTime = Integer.parseInt(st.nextToken());
-                                    String key5 = st.nextToken();
-                                    if (key5.equals("decayHFRatio")) {
-                                        this.decayHFRatio = Short.parseShort(st.nextToken());
-                                        String key6 = st.nextToken();
-                                        if (key6.equals("reflectionsLevel")) {
-                                            this.reflectionsLevel = Short.parseShort(st.nextToken());
-                                            String key7 = st.nextToken();
-                                            if (key7.equals("reflectionsDelay")) {
-                                                this.reflectionsDelay = Integer.parseInt(st.nextToken());
-                                                String key8 = st.nextToken();
-                                                if (key8.equals("reverbLevel")) {
-                                                    this.reverbLevel = Short.parseShort(st.nextToken());
-                                                    String key9 = st.nextToken();
-                                                    if (key9.equals("reverbDelay")) {
-                                                        this.reverbDelay = Integer.parseInt(st.nextToken());
-                                                        String key10 = st.nextToken();
-                                                        if (key10.equals("diffusion")) {
-                                                            this.diffusion = Short.parseShort(st.nextToken());
-                                                            String key11 = st.nextToken();
-                                                            if (key11.equals("density")) {
-                                                                this.density = Short.parseShort(st.nextToken());
-                                                                return;
-                                                            }
-                                                            throw new IllegalArgumentException("invalid key name: " + key11);
-                                                        }
-                                                        throw new IllegalArgumentException("invalid key name: " + key10);
-                                                    }
-                                                    throw new IllegalArgumentException("invalid key name: " + key9);
-                                                }
-                                                throw new IllegalArgumentException("invalid key name: " + key8);
-                                            }
-                                            throw new IllegalArgumentException("invalid key name: " + key7);
-                                        }
-                                        throw new IllegalArgumentException("invalid key name: " + key6);
-                                    }
-                                    throw new IllegalArgumentException("invalid key name: " + key5);
-                                }
-                                throw new IllegalArgumentException("invalid key name: " + key4);
-                            }
-                            throw new IllegalArgumentException("invalid key name: " + key3);
-                        }
-                        throw new IllegalArgumentException("invalid key name: " + key2);
-                    } catch (NumberFormatException e) {
-                        throw new IllegalArgumentException("invalid value for key: " + key);
-                    }
-                } else {
-                    throw new IllegalArgumentException("invalid settings for EnvironmentalReverb: " + key);
-                }
-            } else {
+            st.countTokens();
+            if (st.countTokens() != 21) {
                 throw new IllegalArgumentException("settings: " + settings);
+            }
+            String key = st.nextToken();
+            if (!key.equals(EnvironmentalReverb.TAG)) {
+                throw new IllegalArgumentException("invalid settings for EnvironmentalReverb: " + key);
+            }
+            try {
+                String key2 = st.nextToken();
+                if (!key2.equals("roomLevel")) {
+                    throw new IllegalArgumentException("invalid key name: " + key2);
+                }
+                this.roomLevel = Short.parseShort(st.nextToken());
+                String key3 = st.nextToken();
+                if (!key3.equals("roomHFLevel")) {
+                    throw new IllegalArgumentException("invalid key name: " + key3);
+                }
+                this.roomHFLevel = Short.parseShort(st.nextToken());
+                String key4 = st.nextToken();
+                if (!key4.equals("decayTime")) {
+                    throw new IllegalArgumentException("invalid key name: " + key4);
+                }
+                this.decayTime = Integer.parseInt(st.nextToken());
+                String key5 = st.nextToken();
+                if (!key5.equals("decayHFRatio")) {
+                    throw new IllegalArgumentException("invalid key name: " + key5);
+                }
+                this.decayHFRatio = Short.parseShort(st.nextToken());
+                String key6 = st.nextToken();
+                if (!key6.equals("reflectionsLevel")) {
+                    throw new IllegalArgumentException("invalid key name: " + key6);
+                }
+                this.reflectionsLevel = Short.parseShort(st.nextToken());
+                String key7 = st.nextToken();
+                if (!key7.equals("reflectionsDelay")) {
+                    throw new IllegalArgumentException("invalid key name: " + key7);
+                }
+                this.reflectionsDelay = Integer.parseInt(st.nextToken());
+                String key8 = st.nextToken();
+                if (!key8.equals("reverbLevel")) {
+                    throw new IllegalArgumentException("invalid key name: " + key8);
+                }
+                this.reverbLevel = Short.parseShort(st.nextToken());
+                String key9 = st.nextToken();
+                if (!key9.equals("reverbDelay")) {
+                    throw new IllegalArgumentException("invalid key name: " + key9);
+                }
+                this.reverbDelay = Integer.parseInt(st.nextToken());
+                String key10 = st.nextToken();
+                if (!key10.equals("diffusion")) {
+                    throw new IllegalArgumentException("invalid key name: " + key10);
+                }
+                this.diffusion = Short.parseShort(st.nextToken());
+                String key11 = st.nextToken();
+                if (!key11.equals("density")) {
+                    throw new IllegalArgumentException("invalid key name: " + key11);
+                }
+                this.density = Short.parseShort(st.nextToken());
+            } catch (NumberFormatException e) {
+                throw new IllegalArgumentException("invalid value for key: " + key);
             }
         }
 
@@ -277,6 +290,7 @@ public class EnvironmentalReverb extends AudioEffect {
     }
 
     public void setProperties(Settings settings) throws IllegalStateException, IllegalArgumentException, UnsupportedOperationException {
-        checkStatus(setParameter(10, concatArrays(shortToByteArray(settings.roomLevel), shortToByteArray(settings.roomHFLevel), intToByteArray(settings.decayTime), shortToByteArray(settings.decayHFRatio), shortToByteArray(settings.reflectionsLevel), intToByteArray(settings.reflectionsDelay), shortToByteArray(settings.reverbLevel), intToByteArray(settings.reverbDelay), shortToByteArray(settings.diffusion), shortToByteArray(settings.density))));
+        byte[] param = concatArrays(shortToByteArray(settings.roomLevel), shortToByteArray(settings.roomHFLevel), intToByteArray(settings.decayTime), shortToByteArray(settings.decayHFRatio), shortToByteArray(settings.reflectionsLevel), intToByteArray(settings.reflectionsDelay), shortToByteArray(settings.reverbLevel), intToByteArray(settings.reverbDelay), shortToByteArray(settings.diffusion), shortToByteArray(settings.density));
+        checkStatus(setParameter(10, param));
     }
 }

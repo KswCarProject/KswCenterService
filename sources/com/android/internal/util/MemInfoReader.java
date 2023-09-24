@@ -1,9 +1,10 @@
 package com.android.internal.util;
 
 import android.annotation.UnsupportedAppUsage;
-import android.os.Debug;
-import android.os.StrictMode;
+import android.p007os.Debug;
+import android.p007os.StrictMode;
 
+/* loaded from: classes4.dex */
 public final class MemInfoReader {
     final long[] mInfos = new long[15];
 

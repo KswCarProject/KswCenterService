@@ -1,14 +1,28 @@
 package com.android.internal.location;
 
-import android.os.Parcel;
-import android.os.Parcelable;
+import android.p007os.Parcel;
+import android.p007os.Parcelable;
 
+/* loaded from: classes4.dex */
 public final class ProviderProperties implements Parcelable {
-    public static final Parcelable.Creator<ProviderProperties> CREATOR = new Parcelable.Creator<ProviderProperties>() {
+    public static final Parcelable.Creator<ProviderProperties> CREATOR = new Parcelable.Creator<ProviderProperties>() { // from class: com.android.internal.location.ProviderProperties.1
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public ProviderProperties createFromParcel(Parcel in) {
-            return new ProviderProperties(in.readInt() == 1, in.readInt() == 1, in.readInt() == 1, in.readInt() == 1, in.readInt() == 1, in.readInt() == 1, in.readInt() == 1, in.readInt(), in.readInt());
+            boolean requiresNetwork = in.readInt() == 1;
+            boolean requiresSatellite = in.readInt() == 1;
+            boolean requiresCell = in.readInt() == 1;
+            boolean hasMonetaryCost = in.readInt() == 1;
+            boolean supportsAltitude = in.readInt() == 1;
+            boolean supportsSpeed = in.readInt() == 1;
+            boolean supportsBearing = in.readInt() == 1;
+            int powerRequirement = in.readInt();
+            int accuracy = in.readInt();
+            return new ProviderProperties(requiresNetwork, requiresSatellite, requiresCell, hasMonetaryCost, supportsAltitude, supportsSpeed, supportsBearing, powerRequirement, accuracy);
         }
 
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public ProviderProperties[] newArray(int size) {
             return new ProviderProperties[size];
         }
@@ -23,22 +37,24 @@ public final class ProviderProperties implements Parcelable {
     public final boolean mSupportsBearing;
     public final boolean mSupportsSpeed;
 
-    public ProviderProperties(boolean mRequiresNetwork2, boolean mRequiresSatellite2, boolean mRequiresCell2, boolean mHasMonetaryCost2, boolean mSupportsAltitude2, boolean mSupportsSpeed2, boolean mSupportsBearing2, int mPowerRequirement2, int mAccuracy2) {
-        this.mRequiresNetwork = mRequiresNetwork2;
-        this.mRequiresSatellite = mRequiresSatellite2;
-        this.mRequiresCell = mRequiresCell2;
-        this.mHasMonetaryCost = mHasMonetaryCost2;
-        this.mSupportsAltitude = mSupportsAltitude2;
-        this.mSupportsSpeed = mSupportsSpeed2;
-        this.mSupportsBearing = mSupportsBearing2;
-        this.mPowerRequirement = mPowerRequirement2;
-        this.mAccuracy = mAccuracy2;
+    public ProviderProperties(boolean mRequiresNetwork, boolean mRequiresSatellite, boolean mRequiresCell, boolean mHasMonetaryCost, boolean mSupportsAltitude, boolean mSupportsSpeed, boolean mSupportsBearing, int mPowerRequirement, int mAccuracy) {
+        this.mRequiresNetwork = mRequiresNetwork;
+        this.mRequiresSatellite = mRequiresSatellite;
+        this.mRequiresCell = mRequiresCell;
+        this.mHasMonetaryCost = mHasMonetaryCost;
+        this.mSupportsAltitude = mSupportsAltitude;
+        this.mSupportsSpeed = mSupportsSpeed;
+        this.mSupportsBearing = mSupportsBearing;
+        this.mPowerRequirement = mPowerRequirement;
+        this.mAccuracy = mAccuracy;
     }
 
+    @Override // android.p007os.Parcelable
     public int describeContents() {
         return 0;
     }
 
+    @Override // android.p007os.Parcelable
     public void writeToParcel(Parcel parcel, int flags) {
         parcel.writeInt(this.mRequiresNetwork ? 1 : 0);
         parcel.writeInt(this.mRequiresSatellite ? 1 : 0);

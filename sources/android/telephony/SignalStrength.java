@@ -1,25 +1,16 @@
 package android.telephony;
 
 import android.annotation.UnsupportedAppUsage;
-import android.os.Bundle;
-import android.os.Parcel;
-import android.os.Parcelable;
-import android.os.PersistableBundle;
+import android.p007os.Bundle;
+import android.p007os.Parcel;
+import android.p007os.Parcelable;
+import android.p007os.PersistableBundle;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
+/* loaded from: classes.dex */
 public class SignalStrength implements Parcelable {
-    @UnsupportedAppUsage
-    public static final Parcelable.Creator<SignalStrength> CREATOR = new Parcelable.Creator() {
-        public SignalStrength createFromParcel(Parcel in) {
-            return new SignalStrength(in);
-        }
-
-        public SignalStrength[] newArray(int size) {
-            return new SignalStrength[size];
-        }
-    };
     private static final boolean DBG = false;
     public static final int INVALID = Integer.MAX_VALUE;
     private static final String LOG_TAG = "SignalStrength";
@@ -33,7 +24,6 @@ public class SignalStrength implements Parcelable {
     public static final int SIGNAL_STRENGTH_GREAT = 4;
     @UnsupportedAppUsage(maxTargetSdk = 28)
     public static final int SIGNAL_STRENGTH_MODERATE = 2;
-    public static final String[] SIGNAL_STRENGTH_NAMES = {"none", "poor", "moderate", "good", "great"};
     @UnsupportedAppUsage(maxTargetSdk = 28)
     public static final int SIGNAL_STRENGTH_NONE_OR_UNKNOWN = 0;
     @UnsupportedAppUsage(maxTargetSdk = 28)
@@ -45,6 +35,19 @@ public class SignalStrength implements Parcelable {
     CellSignalStrengthNr mNr;
     CellSignalStrengthTdscdma mTdscdma;
     CellSignalStrengthWcdma mWcdma;
+    public static final String[] SIGNAL_STRENGTH_NAMES = {"none", "poor", "moderate", "good", "great"};
+    @UnsupportedAppUsage
+    public static final Parcelable.Creator<SignalStrength> CREATOR = new Parcelable.Creator() { // from class: android.telephony.SignalStrength.1
+        @Override // android.p007os.Parcelable.Creator
+        public SignalStrength createFromParcel(Parcel in) {
+            return new SignalStrength(in);
+        }
+
+        @Override // android.p007os.Parcelable.Creator
+        public SignalStrength[] newArray(int size) {
+            return new SignalStrength[size];
+        }
+    };
 
     @UnsupportedAppUsage
     public static SignalStrength newFromBundle(Bundle m) {
@@ -68,7 +71,7 @@ public class SignalStrength implements Parcelable {
     }
 
     public SignalStrength(android.hardware.radio.V1_0.SignalStrength signalStrength) {
-        this(new CellSignalStrengthCdma(signalStrength.cdma, signalStrength.evdo), new CellSignalStrengthGsm(signalStrength.gw), new CellSignalStrengthWcdma(), new CellSignalStrengthTdscdma(signalStrength.tdScdma), new CellSignalStrengthLte(signalStrength.lte), new CellSignalStrengthNr());
+        this(new CellSignalStrengthCdma(signalStrength.cdma, signalStrength.evdo), new CellSignalStrengthGsm(signalStrength.f94gw), new CellSignalStrengthWcdma(), new CellSignalStrengthTdscdma(signalStrength.tdScdma), new CellSignalStrengthLte(signalStrength.lte), new CellSignalStrengthNr());
     }
 
     public SignalStrength(android.hardware.radio.V1_2.SignalStrength signalStrength) {
@@ -76,29 +79,11 @@ public class SignalStrength implements Parcelable {
     }
 
     public SignalStrength(android.hardware.radio.V1_4.SignalStrength signalStrength) {
-        this(new CellSignalStrengthCdma(signalStrength.cdma, signalStrength.evdo), new CellSignalStrengthGsm(signalStrength.gsm), new CellSignalStrengthWcdma(signalStrength.wcdma), new CellSignalStrengthTdscdma(signalStrength.tdscdma), new CellSignalStrengthLte(signalStrength.lte), new CellSignalStrengthNr(signalStrength.nr));
+        this(new CellSignalStrengthCdma(signalStrength.cdma, signalStrength.evdo), new CellSignalStrengthGsm(signalStrength.gsm), new CellSignalStrengthWcdma(signalStrength.wcdma), new CellSignalStrengthTdscdma(signalStrength.tdscdma), new CellSignalStrengthLte(signalStrength.lte), new CellSignalStrengthNr(signalStrength.f103nr));
     }
 
     private CellSignalStrength getPrimary() {
-        if (this.mLte.isValid()) {
-            return this.mLte;
-        }
-        if (this.mCdma.isValid()) {
-            return this.mCdma;
-        }
-        if (this.mTdscdma.isValid()) {
-            return this.mTdscdma;
-        }
-        if (this.mWcdma.isValid()) {
-            return this.mWcdma;
-        }
-        if (this.mGsm.isValid()) {
-            return this.mGsm;
-        }
-        if (this.mNr.isValid()) {
-            return this.mNr;
-        }
-        return this.mLte;
+        return this.mLte.isValid() ? this.mLte : this.mCdma.isValid() ? this.mCdma : this.mTdscdma.isValid() ? this.mTdscdma : this.mWcdma.isValid() ? this.mWcdma : this.mGsm.isValid() ? this.mGsm : this.mNr.isValid() ? this.mNr : this.mLte;
     }
 
     public List<CellSignalStrength> getCellSignalStrengths() {
@@ -142,9 +127,8 @@ public class SignalStrength implements Parcelable {
         copyFrom(s);
     }
 
-    /* access modifiers changed from: protected */
     @UnsupportedAppUsage
-    public void copyFrom(SignalStrength s) {
+    protected void copyFrom(SignalStrength s) {
         this.mCdma = new CellSignalStrengthCdma(s.mCdma);
         this.mGsm = new CellSignalStrengthGsm(s.mGsm);
         this.mWcdma = new CellSignalStrengthWcdma(s.mWcdma);
@@ -163,6 +147,7 @@ public class SignalStrength implements Parcelable {
         this.mNr = (CellSignalStrengthNr) in.readParcelable(CellSignalStrengthLte.class.getClassLoader());
     }
 
+    @Override // android.p007os.Parcelable
     public void writeToParcel(Parcel out, int flags) {
         out.writeParcelable(this.mCdma, flags);
         out.writeParcelable(this.mGsm, flags);
@@ -172,6 +157,7 @@ public class SignalStrength implements Parcelable {
         out.writeParcelable(this.mNr, flags);
     }
 
+    @Override // android.p007os.Parcelable
     public int describeContents() {
         return 0;
     }
@@ -211,113 +197,113 @@ public class SignalStrength implements Parcelable {
         return this.mCdma.getEvdoSnr();
     }
 
-    @Deprecated
     @UnsupportedAppUsage(maxTargetSdk = 28)
+    @Deprecated
     public int getLteSignalStrength() {
         return this.mLte.getRssi();
     }
 
-    @Deprecated
     @UnsupportedAppUsage(maxTargetSdk = 28)
+    @Deprecated
     public int getLteRsrp() {
         return this.mLte.getRsrp();
     }
 
-    @Deprecated
     @UnsupportedAppUsage(maxTargetSdk = 28)
+    @Deprecated
     public int getLteRsrq() {
         return this.mLte.getRsrq();
     }
 
-    @Deprecated
     @UnsupportedAppUsage(maxTargetSdk = 28)
+    @Deprecated
     public int getLteRssnr() {
         return this.mLte.getRssnr();
     }
 
-    @Deprecated
     @UnsupportedAppUsage(maxTargetSdk = 28)
+    @Deprecated
     public int getLteCqi() {
         return this.mLte.getCqi();
     }
 
     public int getLevel() {
         int level = getPrimary().getLevel();
-        if (level >= 0 && level <= 4) {
-            return getPrimary().getLevel();
+        if (level < 0 || level > 4) {
+            loge("Invalid Level " + level + ", this=" + this);
+            return 0;
         }
-        loge("Invalid Level " + level + ", this=" + this);
-        return 0;
+        return getPrimary().getLevel();
     }
 
-    @Deprecated
     @UnsupportedAppUsage(maxTargetSdk = 28)
+    @Deprecated
     public int getAsuLevel() {
         return getPrimary().getAsuLevel();
     }
 
-    @Deprecated
     @UnsupportedAppUsage(maxTargetSdk = 28)
+    @Deprecated
     public int getDbm() {
         return getPrimary().getDbm();
     }
 
-    @Deprecated
     @UnsupportedAppUsage(maxTargetSdk = 28)
+    @Deprecated
     public int getGsmDbm() {
         return this.mGsm.getDbm();
     }
 
-    @Deprecated
     @UnsupportedAppUsage(maxTargetSdk = 28)
+    @Deprecated
     public int getGsmLevel() {
         return this.mGsm.getLevel();
     }
 
-    @Deprecated
     @UnsupportedAppUsage(maxTargetSdk = 28)
+    @Deprecated
     public int getGsmAsuLevel() {
         return this.mGsm.getAsuLevel();
     }
 
-    @Deprecated
     @UnsupportedAppUsage(maxTargetSdk = 28)
+    @Deprecated
     public int getCdmaLevel() {
         return this.mCdma.getLevel();
     }
 
-    @Deprecated
     @UnsupportedAppUsage(maxTargetSdk = 28)
+    @Deprecated
     public int getCdmaAsuLevel() {
         return this.mCdma.getAsuLevel();
     }
 
-    @Deprecated
     @UnsupportedAppUsage(maxTargetSdk = 28)
+    @Deprecated
     public int getEvdoLevel() {
         return this.mCdma.getEvdoLevel();
     }
 
-    @Deprecated
     @UnsupportedAppUsage(maxTargetSdk = 28)
+    @Deprecated
     public int getEvdoAsuLevel() {
         return this.mCdma.getEvdoAsuLevel();
     }
 
-    @Deprecated
     @UnsupportedAppUsage(maxTargetSdk = 28)
+    @Deprecated
     public int getLteDbm() {
         return this.mLte.getRsrp();
     }
 
-    @Deprecated
     @UnsupportedAppUsage(maxTargetSdk = 28)
+    @Deprecated
     public int getLteLevel() {
         return this.mLte.getLevel();
     }
 
-    @Deprecated
     @UnsupportedAppUsage(maxTargetSdk = 28)
+    @Deprecated
     public int getLteAsuLevel() {
         return this.mLte.getAsuLevel();
     }
@@ -327,20 +313,20 @@ public class SignalStrength implements Parcelable {
         return !(getPrimary() instanceof CellSignalStrengthCdma);
     }
 
-    @Deprecated
     @UnsupportedAppUsage(maxTargetSdk = 28)
+    @Deprecated
     public int getTdScdmaDbm() {
         return this.mTdscdma.getRscp();
     }
 
-    @Deprecated
     @UnsupportedAppUsage(maxTargetSdk = 28)
+    @Deprecated
     public int getTdScdmaLevel() {
         return this.mTdscdma.getLevel();
     }
 
-    @Deprecated
     @UnsupportedAppUsage(maxTargetSdk = 28)
+    @Deprecated
     public int getTdScdmaAsuLevel() {
         return this.mTdscdma.getAsuLevel();
     }
@@ -366,26 +352,23 @@ public class SignalStrength implements Parcelable {
     }
 
     public int hashCode() {
-        return Objects.hash(new Object[]{this.mCdma, this.mGsm, this.mWcdma, this.mTdscdma, this.mLte, this.mNr});
+        return Objects.hash(this.mCdma, this.mGsm, this.mWcdma, this.mTdscdma, this.mLte, this.mNr);
     }
 
     public boolean equals(Object o) {
-        if (!(o instanceof SignalStrength)) {
-            return false;
+        if (o instanceof SignalStrength) {
+            SignalStrength s = (SignalStrength) o;
+            return this.mCdma.equals(s.mCdma) && this.mGsm.equals(s.mGsm) && this.mWcdma.equals(s.mWcdma) && this.mTdscdma.equals(s.mTdscdma) && this.mLte.equals(s.mLte) && this.mNr.equals(s.mNr);
         }
-        SignalStrength s = (SignalStrength) o;
-        if (!this.mCdma.equals(s.mCdma) || !this.mGsm.equals(s.mGsm) || !this.mWcdma.equals(s.mWcdma) || !this.mTdscdma.equals(s.mTdscdma) || !this.mLte.equals(s.mLte) || !this.mNr.equals(s.mNr)) {
-            return false;
-        }
-        return true;
+        return false;
     }
 
     public String toString() {
-        return "SignalStrength:{" + "mCdma=" + this.mCdma + ",mGsm=" + this.mGsm + ",mWcdma=" + this.mWcdma + ",mTdscdma=" + this.mTdscdma + ",mLte=" + this.mLte + ",mNr=" + this.mNr + ",primary=" + getPrimary().getClass().getSimpleName() + "}";
+        return "SignalStrength:{mCdma=" + this.mCdma + ",mGsm=" + this.mGsm + ",mWcdma=" + this.mWcdma + ",mTdscdma=" + this.mTdscdma + ",mLte=" + this.mLte + ",mNr=" + this.mNr + ",primary=" + getPrimary().getClass().getSimpleName() + "}";
     }
 
-    @Deprecated
     @UnsupportedAppUsage(maxTargetSdk = 28)
+    @Deprecated
     private void setFromNotifierBundle(Bundle m) {
         this.mCdma = (CellSignalStrengthCdma) m.getParcelable("Cdma");
         this.mGsm = (CellSignalStrengthGsm) m.getParcelable("Gsm");
@@ -395,8 +378,8 @@ public class SignalStrength implements Parcelable {
         this.mNr = (CellSignalStrengthNr) m.getParcelable("Nr");
     }
 
-    @Deprecated
     @UnsupportedAppUsage(maxTargetSdk = 28)
+    @Deprecated
     public void fillInNotifierBundle(Bundle m) {
         m.putParcelable("Cdma", this.mCdma);
         m.putParcelable("Gsm", this.mGsm);
@@ -407,10 +390,10 @@ public class SignalStrength implements Parcelable {
     }
 
     private static void log(String s) {
-        Rlog.w(LOG_TAG, s);
+        Rlog.m80w(LOG_TAG, s);
     }
 
     private static void loge(String s) {
-        Rlog.e(LOG_TAG, s);
+        Rlog.m86e(LOG_TAG, s);
     }
 }

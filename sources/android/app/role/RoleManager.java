@@ -5,22 +5,24 @@ import android.app.role.IOnRoleHoldersChangedListener;
 import android.app.role.IRoleManager;
 import android.content.Context;
 import android.content.Intent;
-import android.os.Binder;
-import android.os.Bundle;
-import android.os.Process;
-import android.os.RemoteCallback;
-import android.os.RemoteException;
-import android.os.ServiceManager;
-import android.os.UserHandle;
+import android.p007os.Binder;
+import android.p007os.Bundle;
+import android.p007os.Process;
+import android.p007os.RemoteCallback;
+import android.p007os.RemoteException;
+import android.p007os.ServiceManager;
+import android.p007os.UserHandle;
 import android.util.ArrayMap;
 import android.util.SparseArray;
 import com.android.internal.annotations.GuardedBy;
 import com.android.internal.util.Preconditions;
+import com.android.internal.util.function.TriConsumer;
 import com.android.internal.util.function.pooled.PooledLambda;
 import java.util.List;
 import java.util.concurrent.Executor;
 import java.util.function.Consumer;
 
+/* loaded from: classes.dex */
 public final class RoleManager {
     public static final String ACTION_REQUEST_ROLE = "android.app.role.action.REQUEST_ROLE";
     private static final String LOG_TAG = RoleManager.class.getSimpleName();
@@ -39,14 +41,14 @@ public final class RoleManager {
     @GuardedBy({"mListenersLock"})
     private final SparseArray<ArrayMap<OnRoleHoldersChangedListener, OnRoleHoldersChangedListenerDelegate>> mListeners = new SparseArray<>();
     private final Object mListenersLock = new Object();
-    private final IRoleManager mService;
+    private final IRoleManager mService = IRoleManager.Stub.asInterface(ServiceManager.getServiceOrThrow(Context.ROLE_SERVICE));
 
+    /* loaded from: classes.dex */
     public @interface ManageHoldersFlags {
     }
 
     public RoleManager(Context context) throws ServiceManager.ServiceNotFoundException {
         this.mContext = context;
-        this.mService = IRoleManager.Stub.asInterface(ServiceManager.getServiceOrThrow(Context.ROLE_SERVICE));
     }
 
     public Intent createRequestRoleIntent(String roleName) {
@@ -132,26 +134,14 @@ public final class RoleManager {
         }
     }
 
-    private static RemoteCallback createRemoteCallback(Executor executor, Consumer<Boolean> callback) {
-        return new RemoteCallback((RemoteCallback.OnResultListener) new RemoteCallback.OnResultListener(executor, callback) {
-            private final /* synthetic */ Executor f$0;
-            private final /* synthetic */ Consumer f$1;
-
-            {
-                this.f$0 = r1;
-                this.f$1 = r2;
-            }
-
+    private static RemoteCallback createRemoteCallback(final Executor executor, final Consumer<Boolean> callback) {
+        return new RemoteCallback(new RemoteCallback.OnResultListener() { // from class: android.app.role.-$$Lambda$RoleManager$m9y_ZqrQy4gHK3mGDXvG129sdjU
+            @Override // android.p007os.RemoteCallback.OnResultListener
             public final void onResult(Bundle bundle) {
-                this.f$0.execute(new Runnable(this.f$1) {
-                    private final /* synthetic */ Consumer f$1;
-
-                    {
-                        this.f$1 = r2;
-                    }
-
+                executor.execute(new Runnable() { // from class: android.app.role.-$$Lambda$RoleManager$DrSVQgbDoLZaqkfPdGzAK3BvOGQ
+                    @Override // java.lang.Runnable
                     public final void run() {
-                        RoleManager.lambda$createRemoteCallback$0(Bundle.this, this.f$1);
+                        RoleManager.lambda$createRemoteCallback$0(Bundle.this, r2);
                     }
                 });
             }
@@ -192,55 +182,30 @@ public final class RoleManager {
         }
     }
 
-    /* JADX WARNING: Code restructure failed: missing block: B:18:0x0041, code lost:
-        return;
-     */
-    @android.annotation.SystemApi
-    /* Code decompiled incorrectly, please refer to instructions dump. */
-    public void removeOnRoleHoldersChangedListenerAsUser(android.app.role.OnRoleHoldersChangedListener r7, android.os.UserHandle r8) {
-        /*
-            r6 = this;
-            java.lang.String r0 = "listener cannot be null"
-            com.android.internal.util.Preconditions.checkNotNull(r7, r0)
-            java.lang.String r0 = "user cannot be null"
-            com.android.internal.util.Preconditions.checkNotNull(r8, r0)
-            int r0 = r8.getIdentifier()
-            java.lang.Object r1 = r6.mListenersLock
-            monitor-enter(r1)
-            android.util.SparseArray<android.util.ArrayMap<android.app.role.OnRoleHoldersChangedListener, android.app.role.RoleManager$OnRoleHoldersChangedListenerDelegate>> r2 = r6.mListeners     // Catch:{ all -> 0x0048 }
-            java.lang.Object r2 = r2.get(r0)     // Catch:{ all -> 0x0048 }
-            android.util.ArrayMap r2 = (android.util.ArrayMap) r2     // Catch:{ all -> 0x0048 }
-            if (r2 != 0) goto L_0x001e
-            monitor-exit(r1)     // Catch:{ all -> 0x0048 }
-            return
-        L_0x001e:
-            java.lang.Object r3 = r2.get(r7)     // Catch:{ all -> 0x0048 }
-            android.app.role.RoleManager$OnRoleHoldersChangedListenerDelegate r3 = (android.app.role.RoleManager.OnRoleHoldersChangedListenerDelegate) r3     // Catch:{ all -> 0x0048 }
-            if (r3 != 0) goto L_0x0028
-            monitor-exit(r1)     // Catch:{ all -> 0x0048 }
-            return
-        L_0x0028:
-            android.app.role.IRoleManager r4 = r6.mService     // Catch:{ RemoteException -> 0x0042 }
-            int r5 = r8.getIdentifier()     // Catch:{ RemoteException -> 0x0042 }
-            r4.removeOnRoleHoldersChangedListenerAsUser(r3, r5)     // Catch:{ RemoteException -> 0x0042 }
-            r2.remove(r7)     // Catch:{ all -> 0x0048 }
-            boolean r4 = r2.isEmpty()     // Catch:{ all -> 0x0048 }
-            if (r4 == 0) goto L_0x0040
-            android.util.SparseArray<android.util.ArrayMap<android.app.role.OnRoleHoldersChangedListener, android.app.role.RoleManager$OnRoleHoldersChangedListenerDelegate>> r4 = r6.mListeners     // Catch:{ all -> 0x0048 }
-            r4.remove(r0)     // Catch:{ all -> 0x0048 }
-        L_0x0040:
-            monitor-exit(r1)     // Catch:{ all -> 0x0048 }
-            return
-        L_0x0042:
-            r4 = move-exception
-            java.lang.RuntimeException r5 = r4.rethrowFromSystemServer()     // Catch:{ all -> 0x0048 }
-            throw r5     // Catch:{ all -> 0x0048 }
-        L_0x0048:
-            r2 = move-exception
-            monitor-exit(r1)     // Catch:{ all -> 0x0048 }
-            throw r2
-        */
-        throw new UnsupportedOperationException("Method not decompiled: android.app.role.RoleManager.removeOnRoleHoldersChangedListenerAsUser(android.app.role.OnRoleHoldersChangedListener, android.os.UserHandle):void");
+    @SystemApi
+    public void removeOnRoleHoldersChangedListenerAsUser(OnRoleHoldersChangedListener listener, UserHandle user) {
+        Preconditions.checkNotNull(listener, "listener cannot be null");
+        Preconditions.checkNotNull(user, "user cannot be null");
+        int userId = user.getIdentifier();
+        synchronized (this.mListenersLock) {
+            ArrayMap<OnRoleHoldersChangedListener, OnRoleHoldersChangedListenerDelegate> listeners = this.mListeners.get(userId);
+            if (listeners == null) {
+                return;
+            }
+            OnRoleHoldersChangedListenerDelegate listenerDelegate = listeners.get(listener);
+            if (listenerDelegate == null) {
+                return;
+            }
+            try {
+                this.mService.removeOnRoleHoldersChangedListenerAsUser(listenerDelegate, user.getIdentifier());
+                listeners.remove(listener);
+                if (listeners.isEmpty()) {
+                    this.mListeners.remove(userId);
+                }
+            } catch (RemoteException e) {
+                throw e.rethrowFromSystemServer();
+            }
+        }
     }
 
     @SystemApi
@@ -293,6 +258,7 @@ public final class RoleManager {
         }
     }
 
+    /* loaded from: classes.dex */
     private static class OnRoleHoldersChangedListenerDelegate extends IOnRoleHoldersChangedListener.Stub {
         private final Executor mExecutor;
         private final OnRoleHoldersChangedListener mListener;
@@ -302,10 +268,16 @@ public final class RoleManager {
             this.mListener = listener;
         }
 
+        @Override // android.app.role.IOnRoleHoldersChangedListener
         public void onRoleHoldersChanged(String roleName, int userId) {
             long token = Binder.clearCallingIdentity();
             try {
-                this.mExecutor.execute(PooledLambda.obtainRunnable($$Lambda$o94o2jK_eiIVw3oY_QJ49zpAA.INSTANCE, this.mListener, roleName, UserHandle.of(userId)));
+                this.mExecutor.execute(PooledLambda.obtainRunnable(new TriConsumer() { // from class: android.app.role.-$$Lambda$o94o2jK_ei-IVw-3oY_QJ49zpAA
+                    @Override // com.android.internal.util.function.TriConsumer
+                    public final void accept(Object obj, Object obj2, Object obj3) {
+                        ((OnRoleHoldersChangedListener) obj).onRoleHoldersChanged((String) obj2, (UserHandle) obj3);
+                    }
+                }, this.mListener, roleName, UserHandle.m110of(userId)));
             } finally {
                 Binder.restoreCallingIdentity(token);
             }

@@ -2,13 +2,14 @@ package com.android.ims.internal;
 
 import android.annotation.UnsupportedAppUsage;
 import android.net.Uri;
-import android.os.Binder;
-import android.os.IBinder;
-import android.os.IInterface;
-import android.os.Parcel;
-import android.os.RemoteException;
+import android.p007os.Binder;
+import android.p007os.IBinder;
+import android.p007os.IInterface;
+import android.p007os.Parcel;
+import android.p007os.RemoteException;
 import android.telephony.ims.ImsReasonInfo;
 
+/* loaded from: classes4.dex */
 public interface IImsRegistrationListener extends IInterface {
     @UnsupportedAppUsage
     void registrationAssociatedUriChanged(Uri[] uriArr) throws RemoteException;
@@ -42,48 +43,63 @@ public interface IImsRegistrationListener extends IInterface {
     @UnsupportedAppUsage
     void voiceMessageCountUpdate(int i) throws RemoteException;
 
+    /* loaded from: classes4.dex */
     public static class Default implements IImsRegistrationListener {
+        @Override // com.android.ims.internal.IImsRegistrationListener
         public void registrationConnected() throws RemoteException {
         }
 
+        @Override // com.android.ims.internal.IImsRegistrationListener
         public void registrationProgressing() throws RemoteException {
         }
 
+        @Override // com.android.ims.internal.IImsRegistrationListener
         public void registrationConnectedWithRadioTech(int imsRadioTech) throws RemoteException {
         }
 
+        @Override // com.android.ims.internal.IImsRegistrationListener
         public void registrationProgressingWithRadioTech(int imsRadioTech) throws RemoteException {
         }
 
+        @Override // com.android.ims.internal.IImsRegistrationListener
         public void registrationDisconnected(ImsReasonInfo imsReasonInfo) throws RemoteException {
         }
 
+        @Override // com.android.ims.internal.IImsRegistrationListener
         public void registrationResumed() throws RemoteException {
         }
 
+        @Override // com.android.ims.internal.IImsRegistrationListener
         public void registrationSuspended() throws RemoteException {
         }
 
+        @Override // com.android.ims.internal.IImsRegistrationListener
         public void registrationServiceCapabilityChanged(int serviceClass, int event) throws RemoteException {
         }
 
+        @Override // com.android.ims.internal.IImsRegistrationListener
         public void registrationFeatureCapabilityChanged(int serviceClass, int[] enabledFeatures, int[] disabledFeatures) throws RemoteException {
         }
 
+        @Override // com.android.ims.internal.IImsRegistrationListener
         public void voiceMessageCountUpdate(int count) throws RemoteException {
         }
 
+        @Override // com.android.ims.internal.IImsRegistrationListener
         public void registrationAssociatedUriChanged(Uri[] uris) throws RemoteException {
         }
 
+        @Override // com.android.ims.internal.IImsRegistrationListener
         public void registrationChangeFailed(int targetAccessTech, ImsReasonInfo imsReasonInfo) throws RemoteException {
         }
 
+        @Override // android.p007os.IInterface
         public IBinder asBinder() {
             return null;
         }
     }
 
+    /* loaded from: classes4.dex */
     public static abstract class Stub extends Binder implements IImsRegistrationListener {
         private static final String DESCRIPTOR = "com.android.ims.internal.IImsRegistrationListener";
         static final int TRANSACTION_registrationAssociatedUriChanged = 11;
@@ -108,12 +124,13 @@ public interface IImsRegistrationListener extends IInterface {
                 return null;
             }
             IInterface iin = obj.queryLocalInterface(DESCRIPTOR);
-            if (iin == null || !(iin instanceof IImsRegistrationListener)) {
-                return new Proxy(obj);
+            if (iin != null && (iin instanceof IImsRegistrationListener)) {
+                return (IImsRegistrationListener) iin;
             }
-            return (IImsRegistrationListener) iin;
+            return new Proxy(obj);
         }
 
+        @Override // android.p007os.IInterface
         public IBinder asBinder() {
             return this;
         }
@@ -149,78 +166,84 @@ public interface IImsRegistrationListener extends IInterface {
             }
         }
 
+        @Override // android.p007os.Binder
         public String getTransactionName(int transactionCode) {
             return getDefaultTransactionName(transactionCode);
         }
 
+        @Override // android.p007os.Binder
         public boolean onTransact(int code, Parcel data, Parcel reply, int flags) throws RemoteException {
-            if (code != 1598968902) {
-                ImsReasonInfo _arg1 = null;
-                switch (code) {
-                    case 1:
-                        data.enforceInterface(DESCRIPTOR);
-                        registrationConnected();
-                        return true;
-                    case 2:
-                        data.enforceInterface(DESCRIPTOR);
-                        registrationProgressing();
-                        return true;
-                    case 3:
-                        data.enforceInterface(DESCRIPTOR);
-                        registrationConnectedWithRadioTech(data.readInt());
-                        return true;
-                    case 4:
-                        data.enforceInterface(DESCRIPTOR);
-                        registrationProgressingWithRadioTech(data.readInt());
-                        return true;
-                    case 5:
-                        data.enforceInterface(DESCRIPTOR);
-                        if (data.readInt() != 0) {
-                            _arg1 = ImsReasonInfo.CREATOR.createFromParcel(data);
-                        }
-                        registrationDisconnected(_arg1);
-                        return true;
-                    case 6:
-                        data.enforceInterface(DESCRIPTOR);
-                        registrationResumed();
-                        return true;
-                    case 7:
-                        data.enforceInterface(DESCRIPTOR);
-                        registrationSuspended();
-                        return true;
-                    case 8:
-                        data.enforceInterface(DESCRIPTOR);
-                        registrationServiceCapabilityChanged(data.readInt(), data.readInt());
-                        return true;
-                    case 9:
-                        data.enforceInterface(DESCRIPTOR);
-                        registrationFeatureCapabilityChanged(data.readInt(), data.createIntArray(), data.createIntArray());
-                        return true;
-                    case 10:
-                        data.enforceInterface(DESCRIPTOR);
-                        voiceMessageCountUpdate(data.readInt());
-                        return true;
-                    case 11:
-                        data.enforceInterface(DESCRIPTOR);
-                        registrationAssociatedUriChanged((Uri[]) data.createTypedArray(Uri.CREATOR));
-                        return true;
-                    case 12:
-                        data.enforceInterface(DESCRIPTOR);
-                        int _arg0 = data.readInt();
-                        if (data.readInt() != 0) {
-                            _arg1 = ImsReasonInfo.CREATOR.createFromParcel(data);
-                        }
-                        registrationChangeFailed(_arg0, _arg1);
-                        return true;
-                    default:
-                        return super.onTransact(code, data, reply, flags);
-                }
-            } else {
+            ImsReasonInfo _arg1;
+            if (code == 1598968902) {
                 reply.writeString(DESCRIPTOR);
                 return true;
             }
+            switch (code) {
+                case 1:
+                    data.enforceInterface(DESCRIPTOR);
+                    registrationConnected();
+                    return true;
+                case 2:
+                    data.enforceInterface(DESCRIPTOR);
+                    registrationProgressing();
+                    return true;
+                case 3:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg0 = data.readInt();
+                    registrationConnectedWithRadioTech(_arg0);
+                    return true;
+                case 4:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg02 = data.readInt();
+                    registrationProgressingWithRadioTech(_arg02);
+                    return true;
+                case 5:
+                    data.enforceInterface(DESCRIPTOR);
+                    _arg1 = data.readInt() != 0 ? ImsReasonInfo.CREATOR.createFromParcel(data) : null;
+                    registrationDisconnected(_arg1);
+                    return true;
+                case 6:
+                    data.enforceInterface(DESCRIPTOR);
+                    registrationResumed();
+                    return true;
+                case 7:
+                    data.enforceInterface(DESCRIPTOR);
+                    registrationSuspended();
+                    return true;
+                case 8:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg03 = data.readInt();
+                    registrationServiceCapabilityChanged(_arg03, data.readInt());
+                    return true;
+                case 9:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg04 = data.readInt();
+                    int[] _arg12 = data.createIntArray();
+                    int[] _arg2 = data.createIntArray();
+                    registrationFeatureCapabilityChanged(_arg04, _arg12, _arg2);
+                    return true;
+                case 10:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg05 = data.readInt();
+                    voiceMessageCountUpdate(_arg05);
+                    return true;
+                case 11:
+                    data.enforceInterface(DESCRIPTOR);
+                    Uri[] _arg06 = (Uri[]) data.createTypedArray(Uri.CREATOR);
+                    registrationAssociatedUriChanged(_arg06);
+                    return true;
+                case 12:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg07 = data.readInt();
+                    _arg1 = data.readInt() != 0 ? ImsReasonInfo.CREATOR.createFromParcel(data) : null;
+                    registrationChangeFailed(_arg07, _arg1);
+                    return true;
+                default:
+                    return super.onTransact(code, data, reply, flags);
+            }
         }
 
+        /* loaded from: classes4.dex */
         private static class Proxy implements IImsRegistrationListener {
             public static IImsRegistrationListener sDefaultImpl;
             private IBinder mRemote;
@@ -229,6 +252,7 @@ public interface IImsRegistrationListener extends IInterface {
                 this.mRemote = remote;
             }
 
+            @Override // android.p007os.IInterface
             public IBinder asBinder() {
                 return this.mRemote;
             }
@@ -237,13 +261,13 @@ public interface IImsRegistrationListener extends IInterface {
                 return Stub.DESCRIPTOR;
             }
 
+            @Override // com.android.ims.internal.IImsRegistrationListener
             public void registrationConnected() throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    if (this.mRemote.transact(1, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    boolean _status = this.mRemote.transact(1, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().registrationConnected();
                     }
                 } finally {
@@ -251,13 +275,13 @@ public interface IImsRegistrationListener extends IInterface {
                 }
             }
 
+            @Override // com.android.ims.internal.IImsRegistrationListener
             public void registrationProgressing() throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    if (this.mRemote.transact(2, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    boolean _status = this.mRemote.transact(2, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().registrationProgressing();
                     }
                 } finally {
@@ -265,14 +289,14 @@ public interface IImsRegistrationListener extends IInterface {
                 }
             }
 
+            @Override // com.android.ims.internal.IImsRegistrationListener
             public void registrationConnectedWithRadioTech(int imsRadioTech) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeInt(imsRadioTech);
-                    if (this.mRemote.transact(3, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    boolean _status = this.mRemote.transact(3, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().registrationConnectedWithRadioTech(imsRadioTech);
                     }
                 } finally {
@@ -280,14 +304,14 @@ public interface IImsRegistrationListener extends IInterface {
                 }
             }
 
+            @Override // com.android.ims.internal.IImsRegistrationListener
             public void registrationProgressingWithRadioTech(int imsRadioTech) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeInt(imsRadioTech);
-                    if (this.mRemote.transact(4, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    boolean _status = this.mRemote.transact(4, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().registrationProgressingWithRadioTech(imsRadioTech);
                     }
                 } finally {
@@ -295,6 +319,7 @@ public interface IImsRegistrationListener extends IInterface {
                 }
             }
 
+            @Override // com.android.ims.internal.IImsRegistrationListener
             public void registrationDisconnected(ImsReasonInfo imsReasonInfo) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
@@ -305,9 +330,8 @@ public interface IImsRegistrationListener extends IInterface {
                     } else {
                         _data.writeInt(0);
                     }
-                    if (this.mRemote.transact(5, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    boolean _status = this.mRemote.transact(5, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().registrationDisconnected(imsReasonInfo);
                     }
                 } finally {
@@ -315,13 +339,13 @@ public interface IImsRegistrationListener extends IInterface {
                 }
             }
 
+            @Override // com.android.ims.internal.IImsRegistrationListener
             public void registrationResumed() throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    if (this.mRemote.transact(6, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    boolean _status = this.mRemote.transact(6, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().registrationResumed();
                     }
                 } finally {
@@ -329,13 +353,13 @@ public interface IImsRegistrationListener extends IInterface {
                 }
             }
 
+            @Override // com.android.ims.internal.IImsRegistrationListener
             public void registrationSuspended() throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    if (this.mRemote.transact(7, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    boolean _status = this.mRemote.transact(7, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().registrationSuspended();
                     }
                 } finally {
@@ -343,15 +367,15 @@ public interface IImsRegistrationListener extends IInterface {
                 }
             }
 
+            @Override // com.android.ims.internal.IImsRegistrationListener
             public void registrationServiceCapabilityChanged(int serviceClass, int event) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeInt(serviceClass);
                     _data.writeInt(event);
-                    if (this.mRemote.transact(8, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    boolean _status = this.mRemote.transact(8, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().registrationServiceCapabilityChanged(serviceClass, event);
                     }
                 } finally {
@@ -359,6 +383,7 @@ public interface IImsRegistrationListener extends IInterface {
                 }
             }
 
+            @Override // com.android.ims.internal.IImsRegistrationListener
             public void registrationFeatureCapabilityChanged(int serviceClass, int[] enabledFeatures, int[] disabledFeatures) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
@@ -366,9 +391,8 @@ public interface IImsRegistrationListener extends IInterface {
                     _data.writeInt(serviceClass);
                     _data.writeIntArray(enabledFeatures);
                     _data.writeIntArray(disabledFeatures);
-                    if (this.mRemote.transact(9, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    boolean _status = this.mRemote.transact(9, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().registrationFeatureCapabilityChanged(serviceClass, enabledFeatures, disabledFeatures);
                     }
                 } finally {
@@ -376,14 +400,14 @@ public interface IImsRegistrationListener extends IInterface {
                 }
             }
 
+            @Override // com.android.ims.internal.IImsRegistrationListener
             public void voiceMessageCountUpdate(int count) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeInt(count);
-                    if (this.mRemote.transact(10, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    boolean _status = this.mRemote.transact(10, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().voiceMessageCountUpdate(count);
                     }
                 } finally {
@@ -391,14 +415,14 @@ public interface IImsRegistrationListener extends IInterface {
                 }
             }
 
+            @Override // com.android.ims.internal.IImsRegistrationListener
             public void registrationAssociatedUriChanged(Uri[] uris) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeTypedArray(uris, 0);
-                    if (this.mRemote.transact(11, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    boolean _status = this.mRemote.transact(11, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().registrationAssociatedUriChanged(uris);
                     }
                 } finally {
@@ -406,6 +430,7 @@ public interface IImsRegistrationListener extends IInterface {
                 }
             }
 
+            @Override // com.android.ims.internal.IImsRegistrationListener
             public void registrationChangeFailed(int targetAccessTech, ImsReasonInfo imsReasonInfo) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
@@ -417,9 +442,8 @@ public interface IImsRegistrationListener extends IInterface {
                     } else {
                         _data.writeInt(0);
                     }
-                    if (this.mRemote.transact(12, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    boolean _status = this.mRemote.transact(12, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().registrationChangeFailed(targetAccessTech, imsReasonInfo);
                     }
                 } finally {
@@ -429,11 +453,11 @@ public interface IImsRegistrationListener extends IInterface {
         }
 
         public static boolean setDefaultImpl(IImsRegistrationListener impl) {
-            if (Proxy.sDefaultImpl != null || impl == null) {
-                return false;
+            if (Proxy.sDefaultImpl == null && impl != null) {
+                Proxy.sDefaultImpl = impl;
+                return true;
             }
-            Proxy.sDefaultImpl = impl;
-            return true;
+            return false;
         }
 
         public static IImsRegistrationListener getDefaultImpl() {

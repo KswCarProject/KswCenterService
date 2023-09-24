@@ -2,11 +2,12 @@ package com.wits.pms.bean;
 
 import android.content.Context;
 import android.content.Intent;
-import android.os.Bundle;
-import android.os.UserHandle;
+import android.p007os.Bundle;
+import android.p007os.UserHandle;
 import android.util.Log;
 import com.android.internal.content.NativeLibraryHelper;
 
+/* loaded from: classes2.dex */
 public class ZlinkMessage {
     public static final String DEVICE_ZLINK_MODE_SPEC = "com.zjinnova.zlink.mode.spec";
     public static final String DEVICE_ZLINK_MODE_SUPPORT = "com.zjinnova.zlink.mode.support";
@@ -41,16 +42,16 @@ public class ZlinkMessage {
     public String command;
     public String status;
 
-    public ZlinkMessage(String action2) {
-        this.action = action2;
+    public ZlinkMessage(String action) {
+        this.action = action;
     }
 
-    public ZlinkMessage(String action2, String command2, Bundle bundle2) {
-        bundle2 = bundle2 == null ? new Bundle() : bundle2;
-        this.action = action2;
-        this.command = command2;
-        bundle2.putString("command", command2);
-        this.bundle = bundle2;
+    public ZlinkMessage(String action, String command, Bundle bundle) {
+        bundle = bundle == null ? new Bundle() : bundle;
+        this.action = action;
+        this.command = command;
+        bundle.putString("command", command);
+        this.bundle = bundle;
     }
 
     public ZlinkMessage(Intent intent) {
@@ -67,7 +68,7 @@ public class ZlinkMessage {
         }
         txzIntent.addFlags(16777216);
         txzIntent.setPackage(ZLINK_NORMAL_ACTION);
-        Log.v("ZlinkMessage", "action: " + txzIntent.getAction() + " command = " + txzIntent.getStringExtra("command"));
+        Log.m66v("ZlinkMessage", "action: " + txzIntent.getAction() + " command = " + txzIntent.getStringExtra("command"));
         context.sendBroadcastAsUser(txzIntent, UserHandle.getUserHandleForUid(context.getApplicationInfo().uid));
     }
 

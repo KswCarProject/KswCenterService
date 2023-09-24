@@ -1,5 +1,6 @@
 package org.mozilla.universalchardet.prober.statemachine;
 
+/* loaded from: classes5.dex */
 public abstract class SMModel {
     public static final int ERROR = 1;
     public static final int ITSME = 2;

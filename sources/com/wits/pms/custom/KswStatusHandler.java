@@ -3,9 +3,9 @@ package com.wits.pms.custom;
 import android.content.Context;
 import android.content.Intent;
 import android.net.wifi.WifiManager;
-import android.os.Handler;
-import android.os.RemoteException;
-import android.os.UserHandle;
+import android.p007os.Handler;
+import android.p007os.RemoteException;
+import android.p007os.UserHandle;
 import android.provider.Settings;
 import android.util.Log;
 import com.android.internal.logging.nano.MetricsProto;
@@ -21,28 +21,28 @@ import com.wits.pms.mirror.WifiManagerMirror;
 import com.wits.pms.statuscontrol.BtPhoneStatus;
 import com.wits.pms.statuscontrol.PowerManagerApp;
 
+/* loaded from: classes2.dex */
 public class KswStatusHandler extends LogicSystem {
     private static final String TAG = "KswStatusHandler";
     private static final int TEST = 10000;
+    private boolean statusChange;
+    private final int POWER = 603;
+    private final int TRIPE = 602;
     private final int ACC = 500;
     private final int CCD = 600;
-    private final int EPB = MetricsProto.MetricsEvent.ACTION_PERMISSION_GRANT_RECEIVE_SMS;
     private final int ILL = 700;
-    private final int POWER = 603;
+    private final int EPB = MetricsProto.MetricsEvent.ACTION_PERMISSION_GRANT_RECEIVE_SMS;
     private final int RLIGHT = 601;
-    private final int TRIPE = 602;
-    /* access modifiers changed from: private */
-    public final Context mContext = PowerManagerAppService.serviceContext;
-    /* access modifiers changed from: private */
-    public final Handler mHandler = new Handler();
-    private boolean statusChange;
+    private final Handler mHandler = new Handler();
+    private final Context mContext = PowerManagerAppService.serviceContext;
 
     public KswStatusHandler() {
         initCustomObs();
     }
 
     private void initCustomObs() {
-        PowerManagerApp.registerIContentObserver("ccd", new IContentObserver.Stub() {
+        PowerManagerApp.registerIContentObserver("ccd", new IContentObserver.Stub() { // from class: com.wits.pms.custom.KswStatusHandler.1
+            @Override // com.wits.pms.IContentObserver
             public void onChange() throws RemoteException {
                 boolean usingCall = false;
                 boolean revers = PowerManagerApp.getStatusInt("ccd") == 1;
@@ -58,13 +58,15 @@ public class KswStatusHandler extends LogicSystem {
                 CenterControlImpl.getImpl().setTxzQuickQuit(revers);
             }
         });
-        PowerManagerApp.registerIContentObserver("callStatus", new IContentObserver.Stub() {
+        PowerManagerApp.registerIContentObserver("callStatus", new IContentObserver.Stub() { // from class: com.wits.pms.custom.KswStatusHandler.2
+            @Override // com.wits.pms.IContentObserver
             public void onChange() throws RemoteException {
                 if (KswStatusHandler.this.mBtPhoneStatus != null) {
                     int callStatus = PowerManagerApp.getStatusInt("callStatus");
                     switch (callStatus) {
                         case 4:
-                            KswStatusHandler.this.mHandler.postDelayed(new Runnable() {
+                            KswStatusHandler.this.mHandler.postDelayed(new Runnable() { // from class: com.wits.pms.custom.KswStatusHandler.2.1
+                                @Override // java.lang.Runnable
                                 public void run() {
                                     try {
                                         if (PowerManagerApp.getStatusInt("callStatus") == 4) {
@@ -74,7 +76,7 @@ public class KswStatusHandler extends LogicSystem {
                                         e.printStackTrace();
                                     }
                                 }
-                            }, 550);
+                            }, 550L);
                             CenterControlImpl.getImpl().handupEcarPhone();
                             break;
                         case 5:
@@ -94,26 +96,30 @@ public class KswStatusHandler extends LogicSystem {
                 }
             }
         });
-        PowerManagerApp.registerIContentObserver("systemMode", new IContentObserver.Stub() {
+        PowerManagerApp.registerIContentObserver("systemMode", new IContentObserver.Stub() { // from class: com.wits.pms.custom.KswStatusHandler.3
+            @Override // com.wits.pms.IContentObserver
             public void onChange() throws RemoteException {
                 if (PowerManagerApp.getStatusInt("systemMode") == 2) {
-                    if (PowerManagerApp.getSettingsInt("Support_TXZ") != 0) {
+                    int oldStatus = PowerManagerApp.getSettingsInt("Support_TXZ");
+                    if (oldStatus != 0) {
                         CenterControlImpl.getImpl().setTxzSleep(true);
                     }
                 } else if (PowerManagerApp.getStatusInt("systemMode") == 1) {
-                    int oldStatus = PowerManagerApp.getSettingsInt("Support_TXZ");
+                    int oldStatus2 = PowerManagerApp.getSettingsInt("Support_TXZ");
                     String zlink = SystemProperties.get(ZlinkMessage.ZLINK_CONNECT);
                     String autoKit = SystemProperties.get(AutoKitMessage.AUTOBOX_CONNECT);
-                    if (oldStatus != 0 && !BtPhoneStatus.isCalling(PowerManagerApp.getStatusInt("callStatus")) && !zlink.equals("1") && !autoKit.equals("1")) {
+                    String zlinkAndroidAuto = SystemProperties.get(ZlinkMessage.ZLINK_ANDROID_AUTO_CONNECT);
+                    if (oldStatus2 != 0 && !BtPhoneStatus.isCalling(PowerManagerApp.getStatusInt("callStatus")) && !zlink.equals("1") && !autoKit.equals("1") && !zlinkAndroidAuto.equals("1")) {
                         CenterControlImpl.getImpl().setTxzSleep(false);
                     }
                 }
             }
         });
-        PowerManagerApp.registerIContentObserver("acc", new IContentObserver.Stub() {
+        PowerManagerApp.registerIContentObserver("acc", new IContentObserver.Stub() { // from class: com.wits.pms.custom.KswStatusHandler.4
+            @Override // com.wits.pms.IContentObserver
             public void onChange() throws RemoteException {
                 int acc = PowerManagerApp.getStatusInt("acc");
-                Log.d(KswStatusHandler.TAG, "onChange   acc = " + acc);
+                Log.m72d(KswStatusHandler.TAG, "onChange   acc = " + acc);
                 if (acc == 1) {
                     Intent accIntent = new Intent("com.wits.ksw.ACC_ON");
                     accIntent.addFlags(16777216);
@@ -123,8 +129,9 @@ public class KswStatusHandler extends LogicSystem {
                     Intent accIntent2 = new Intent("com.wits.ksw.ACC_OFF");
                     accIntent2.addFlags(16777216);
                     KswStatusHandler.this.mContext.sendBroadcastAsUser(accIntent2, UserHandle.getUserHandleForUid(KswStatusHandler.this.mContext.getApplicationInfo().uid));
-                    int apState = new WifiManagerMirror((WifiManager) KswStatusHandler.this.mContext.getSystemService("wifi")).getWifiApState();
-                    Log.d(KswStatusHandler.TAG, "onChange  apState  = " + apState);
+                    WifiManager wifiManager = (WifiManager) KswStatusHandler.this.mContext.getSystemService("wifi");
+                    int apState = new WifiManagerMirror(wifiManager).getWifiApState();
+                    Log.m72d(KswStatusHandler.TAG, "onChange  apState  = " + apState);
                     if (apState == 12 || apState == 13) {
                         Settings.System.putInt(KswStatusHandler.this.mContext.getContentResolver(), "hotspot_open", 1);
                     } else {
@@ -136,6 +143,7 @@ public class KswStatusHandler extends LogicSystem {
         });
     }
 
+    @Override // com.wits.pms.interfaces.LogicSystem
     public void handle() {
     }
 }

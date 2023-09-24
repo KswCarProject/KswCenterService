@@ -2,15 +2,20 @@ package android.app.job;
 
 import android.annotation.UnsupportedAppUsage;
 import android.content.Intent;
-import android.os.Parcel;
-import android.os.Parcelable;
+import android.p007os.Parcel;
+import android.p007os.Parcelable;
 
+/* loaded from: classes.dex */
 public final class JobWorkItem implements Parcelable {
-    public static final Parcelable.Creator<JobWorkItem> CREATOR = new Parcelable.Creator<JobWorkItem>() {
+    public static final Parcelable.Creator<JobWorkItem> CREATOR = new Parcelable.Creator<JobWorkItem>() { // from class: android.app.job.JobWorkItem.1
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public JobWorkItem createFromParcel(Parcel in) {
             return new JobWorkItem(in);
         }
 
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public JobWorkItem[] newArray(int size) {
             return new JobWorkItem[size];
         }
@@ -28,13 +33,13 @@ public final class JobWorkItem implements Parcelable {
 
     public JobWorkItem(Intent intent) {
         this.mIntent = intent;
-        this.mNetworkDownloadBytes = -1;
-        this.mNetworkUploadBytes = -1;
+        this.mNetworkDownloadBytes = -1L;
+        this.mNetworkUploadBytes = -1L;
     }
 
     @Deprecated
     public JobWorkItem(Intent intent, long networkBytes) {
-        this(intent, networkBytes, -1);
+        this(intent, networkBytes, -1L);
     }
 
     public JobWorkItem(Intent intent, long downloadBytes, long uploadBytes) {
@@ -50,7 +55,7 @@ public final class JobWorkItem implements Parcelable {
     @Deprecated
     public long getEstimatedNetworkBytes() {
         if (this.mNetworkDownloadBytes == -1 && this.mNetworkUploadBytes == -1) {
-            return -1;
+            return -1L;
         }
         if (this.mNetworkDownloadBytes == -1) {
             return this.mNetworkUploadBytes;
@@ -115,10 +120,12 @@ public final class JobWorkItem implements Parcelable {
         return sb.toString();
     }
 
+    @Override // android.p007os.Parcelable
     public int describeContents() {
         return 0;
     }
 
+    @Override // android.p007os.Parcelable
     public void writeToParcel(Parcel out, int flags) {
         if (this.mIntent != null) {
             out.writeInt(1);

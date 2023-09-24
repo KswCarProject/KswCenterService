@@ -1,5 +1,6 @@
 package android.text.util;
 
+/* loaded from: classes4.dex */
 public class Rfc822Token {
     private String mAddress;
     private String mComment;
@@ -37,16 +38,16 @@ public class Rfc822Token {
 
     public String toString() {
         StringBuilder sb = new StringBuilder();
-        if (!(this.mName == null || this.mName.length() == 0)) {
+        if (this.mName != null && this.mName.length() != 0) {
             sb.append(quoteNameIfNecessary(this.mName));
             sb.append(' ');
         }
-        if (!(this.mComment == null || this.mComment.length() == 0)) {
+        if (this.mComment != null && this.mComment.length() != 0) {
             sb.append('(');
             sb.append(quoteComment(this.mComment));
             sb.append(") ");
         }
-        if (!(this.mAddress == null || this.mAddress.length() == 0)) {
+        if (this.mAddress != null && this.mAddress.length() != 0) {
             sb.append('<');
             sb.append(this.mAddress);
             sb.append('>');
@@ -92,17 +93,11 @@ public class Rfc822Token {
     }
 
     public int hashCode() {
-        int result = 17;
-        if (this.mName != null) {
-            result = (17 * 31) + this.mName.hashCode();
-        }
+        int result = this.mName != null ? (17 * 31) + this.mName.hashCode() : 17;
         if (this.mAddress != null) {
             result = (result * 31) + this.mAddress.hashCode();
         }
-        if (this.mComment != null) {
-            return (result * 31) + this.mComment.hashCode();
-        }
-        return result;
+        return this.mComment != null ? (result * 31) + this.mComment.hashCode() : result;
     }
 
     private static boolean stringEquals(String a, String b) {
@@ -113,13 +108,10 @@ public class Rfc822Token {
     }
 
     public boolean equals(Object o) {
-        if (!(o instanceof Rfc822Token)) {
-            return false;
+        if (o instanceof Rfc822Token) {
+            Rfc822Token other = (Rfc822Token) o;
+            return stringEquals(this.mName, other.mName) && stringEquals(this.mAddress, other.mAddress) && stringEquals(this.mComment, other.mComment);
         }
-        Rfc822Token other = (Rfc822Token) o;
-        if (!stringEquals(this.mName, other.mName) || !stringEquals(this.mAddress, other.mAddress) || !stringEquals(this.mComment, other.mComment)) {
-            return false;
-        }
-        return true;
+        return false;
     }
 }

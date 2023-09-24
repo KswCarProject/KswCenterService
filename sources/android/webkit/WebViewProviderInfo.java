@@ -2,18 +2,23 @@ package android.webkit;
 
 import android.annotation.SystemApi;
 import android.annotation.UnsupportedAppUsage;
-import android.content.pm.Signature;
-import android.os.Parcel;
-import android.os.Parcelable;
+import android.content.p002pm.Signature;
+import android.p007os.Parcel;
+import android.p007os.Parcelable;
 import android.util.Base64;
 
 @SystemApi
+/* loaded from: classes4.dex */
 public final class WebViewProviderInfo implements Parcelable {
-    public static final Parcelable.Creator<WebViewProviderInfo> CREATOR = new Parcelable.Creator<WebViewProviderInfo>() {
+    public static final Parcelable.Creator<WebViewProviderInfo> CREATOR = new Parcelable.Creator<WebViewProviderInfo>() { // from class: android.webkit.WebViewProviderInfo.1
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public WebViewProviderInfo createFromParcel(Parcel in) {
             return new WebViewProviderInfo(in);
         }
 
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public WebViewProviderInfo[] newArray(int size) {
             return new WebViewProviderInfo[size];
         }
@@ -24,18 +29,18 @@ public final class WebViewProviderInfo implements Parcelable {
     public final String packageName;
     public final Signature[] signatures;
 
-    public WebViewProviderInfo(String packageName2, String description2, boolean availableByDefault2, boolean isFallback2, String[] signatures2) {
-        this.packageName = packageName2;
-        this.description = description2;
-        this.availableByDefault = availableByDefault2;
-        this.isFallback = isFallback2;
-        if (signatures2 == null) {
+    public WebViewProviderInfo(String packageName, String description, boolean availableByDefault, boolean isFallback, String[] signatures) {
+        this.packageName = packageName;
+        this.description = description;
+        this.availableByDefault = availableByDefault;
+        this.isFallback = isFallback;
+        if (signatures == null) {
             this.signatures = new Signature[0];
             return;
         }
-        this.signatures = new Signature[signatures2.length];
-        for (int n = 0; n < signatures2.length; n++) {
-            this.signatures[n] = new Signature(Base64.decode(signatures2[n], 0));
+        this.signatures = new Signature[signatures.length];
+        for (int n = 0; n < signatures.length; n++) {
+            this.signatures[n] = new Signature(Base64.decode(signatures[n], 0));
         }
     }
 
@@ -43,16 +48,17 @@ public final class WebViewProviderInfo implements Parcelable {
     private WebViewProviderInfo(Parcel in) {
         this.packageName = in.readString();
         this.description = in.readString();
-        boolean z = false;
         this.availableByDefault = in.readInt() > 0;
-        this.isFallback = in.readInt() > 0 ? true : z;
+        this.isFallback = in.readInt() > 0;
         this.signatures = (Signature[]) in.createTypedArray(Signature.CREATOR);
     }
 
+    @Override // android.p007os.Parcelable
     public int describeContents() {
         return 0;
     }
 
+    @Override // android.p007os.Parcelable
     public void writeToParcel(Parcel out, int flags) {
         out.writeString(this.packageName);
         out.writeString(this.description);

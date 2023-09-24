@@ -2,8 +2,8 @@ package android.telephony.ims.compat.feature;
 
 import android.annotation.UnsupportedAppUsage;
 import android.content.Context;
-import android.os.IInterface;
-import android.os.RemoteException;
+import android.p007os.IInterface;
+import android.p007os.RemoteException;
 import android.util.Log;
 import com.android.ims.internal.IImsFeatureStatusCallback;
 import java.lang.annotation.Retention;
@@ -13,6 +13,7 @@ import java.util.Iterator;
 import java.util.Set;
 import java.util.WeakHashMap;
 
+/* loaded from: classes4.dex */
 public abstract class ImsFeature {
     public static final int EMERGENCY_MMTEL = 0;
     public static final int INVALID = -1;
@@ -24,11 +25,12 @@ public abstract class ImsFeature {
     public static final int STATE_NOT_AVAILABLE = 0;
     public static final int STATE_READY = 2;
     protected Context mContext;
-    private int mSlotId = -1;
-    private int mState = 0;
     private final Set<IImsFeatureStatusCallback> mStatusCallbacks = Collections.newSetFromMap(new WeakHashMap());
+    private int mState = 0;
+    private int mSlotId = -1;
 
     @Retention(RetentionPolicy.SOURCE)
+    /* loaded from: classes4.dex */
     public @interface ImsState {
     }
 
@@ -51,9 +53,8 @@ public abstract class ImsFeature {
         return this.mState;
     }
 
-    /* access modifiers changed from: protected */
     @UnsupportedAppUsage
-    public final void setFeatureState(int state) {
+    protected final void setFeatureState(int state) {
         if (this.mState != state) {
             this.mState = state;
             notifyFeatureState(state);
@@ -61,23 +62,25 @@ public abstract class ImsFeature {
     }
 
     public void addImsFeatureStatusCallback(IImsFeatureStatusCallback c) {
-        if (c != null) {
-            try {
-                c.notifyImsFeatureStatus(this.mState);
-                synchronized (this.mStatusCallbacks) {
-                    this.mStatusCallbacks.add(c);
-                }
-            } catch (RemoteException e) {
-                Log.w(LOG_TAG, "Couldn't notify feature state: " + e.getMessage());
+        if (c == null) {
+            return;
+        }
+        try {
+            c.notifyImsFeatureStatus(this.mState);
+            synchronized (this.mStatusCallbacks) {
+                this.mStatusCallbacks.add(c);
             }
+        } catch (RemoteException e) {
+            Log.m64w(LOG_TAG, "Couldn't notify feature state: " + e.getMessage());
         }
     }
 
     public void removeImsFeatureStatusCallback(IImsFeatureStatusCallback c) {
-        if (c != null) {
-            synchronized (this.mStatusCallbacks) {
-                this.mStatusCallbacks.remove(c);
-            }
+        if (c == null) {
+            return;
+        }
+        synchronized (this.mStatusCallbacks) {
+            this.mStatusCallbacks.remove(c);
         }
     }
 
@@ -87,11 +90,11 @@ public abstract class ImsFeature {
             while (iter.hasNext()) {
                 IImsFeatureStatusCallback callback = iter.next();
                 try {
-                    Log.i(LOG_TAG, "notifying ImsFeatureState=" + state);
+                    Log.m68i(LOG_TAG, "notifying ImsFeatureState=" + state);
                     callback.notifyImsFeatureStatus(state);
                 } catch (RemoteException e) {
                     iter.remove();
-                    Log.w(LOG_TAG, "Couldn't notify feature state: " + e.getMessage());
+                    Log.m64w(LOG_TAG, "Couldn't notify feature state: " + e.getMessage());
                 }
             }
         }

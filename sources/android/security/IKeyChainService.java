@@ -1,16 +1,17 @@
 package android.security;
 
 import android.annotation.UnsupportedAppUsage;
-import android.content.pm.StringParceledListSlice;
-import android.os.Binder;
-import android.os.IBinder;
-import android.os.IInterface;
-import android.os.Parcel;
-import android.os.RemoteException;
+import android.content.p002pm.StringParceledListSlice;
+import android.p007os.Binder;
+import android.p007os.IBinder;
+import android.p007os.IInterface;
+import android.p007os.Parcel;
+import android.p007os.RemoteException;
 import android.security.keymaster.KeymasterCertificateChain;
 import android.security.keystore.ParcelableKeyGenParameterSpec;
 import java.util.List;
 
+/* loaded from: classes3.dex */
 public interface IKeyChainService extends IInterface {
     int attestKey(String str, byte[] bArr, int[] iArr, KeymasterCertificateChain keymasterCertificateChain) throws RemoteException;
 
@@ -53,90 +54,113 @@ public interface IKeyChainService extends IInterface {
 
     void setUserSelectable(String str, boolean z) throws RemoteException;
 
+    /* loaded from: classes3.dex */
     public static class Default implements IKeyChainService {
+        @Override // android.security.IKeyChainService
         public String requestPrivateKey(String alias) throws RemoteException {
             return null;
         }
 
+        @Override // android.security.IKeyChainService
         public byte[] getCertificate(String alias) throws RemoteException {
             return null;
         }
 
+        @Override // android.security.IKeyChainService
         public byte[] getCaCertificates(String alias) throws RemoteException {
             return null;
         }
 
+        @Override // android.security.IKeyChainService
         public boolean isUserSelectable(String alias) throws RemoteException {
             return false;
         }
 
+        @Override // android.security.IKeyChainService
         public void setUserSelectable(String alias, boolean isUserSelectable) throws RemoteException {
         }
 
+        @Override // android.security.IKeyChainService
         public int generateKeyPair(String algorithm, ParcelableKeyGenParameterSpec spec) throws RemoteException {
             return 0;
         }
 
+        @Override // android.security.IKeyChainService
         public int attestKey(String alias, byte[] challenge, int[] idAttestationFlags, KeymasterCertificateChain chain) throws RemoteException {
             return 0;
         }
 
+        @Override // android.security.IKeyChainService
         public boolean setKeyPairCertificate(String alias, byte[] userCert, byte[] certChain) throws RemoteException {
             return false;
         }
 
+        @Override // android.security.IKeyChainService
         public String installCaCertificate(byte[] caCertificate) throws RemoteException {
             return null;
         }
 
+        @Override // android.security.IKeyChainService
         public boolean installKeyPair(byte[] privateKey, byte[] userCert, byte[] certChain, String alias) throws RemoteException {
             return false;
         }
 
+        @Override // android.security.IKeyChainService
         public boolean removeKeyPair(String alias) throws RemoteException {
             return false;
         }
 
+        @Override // android.security.IKeyChainService
         public boolean deleteCaCertificate(String alias) throws RemoteException {
             return false;
         }
 
+        @Override // android.security.IKeyChainService
         public boolean reset() throws RemoteException {
             return false;
         }
 
+        @Override // android.security.IKeyChainService
         public StringParceledListSlice getUserCaAliases() throws RemoteException {
             return null;
         }
 
+        @Override // android.security.IKeyChainService
         public StringParceledListSlice getSystemCaAliases() throws RemoteException {
             return null;
         }
 
+        @Override // android.security.IKeyChainService
         public boolean containsCaAlias(String alias) throws RemoteException {
             return false;
         }
 
+        @Override // android.security.IKeyChainService
         public byte[] getEncodedCaCertificate(String alias, boolean includeDeletedSystem) throws RemoteException {
             return null;
         }
 
+        @Override // android.security.IKeyChainService
         public List<String> getCaCertificateChainAliases(String rootAlias, boolean includeDeletedSystem) throws RemoteException {
             return null;
         }
 
+        @Override // android.security.IKeyChainService
         public void setGrant(int uid, String alias, boolean value) throws RemoteException {
         }
 
+        @Override // android.security.IKeyChainService
         public boolean hasGrant(int uid, String alias) throws RemoteException {
             return false;
         }
 
+        @Override // android.p007os.IInterface
         public IBinder asBinder() {
             return null;
         }
     }
 
+    /* loaded from: classes3.dex */
     public static abstract class Stub extends Binder implements IKeyChainService {
         private static final String DESCRIPTOR = "android.security.IKeyChainService";
         static final int TRANSACTION_attestKey = 7;
@@ -169,12 +193,13 @@ public interface IKeyChainService extends IInterface {
                 return null;
             }
             IInterface iin = obj.queryLocalInterface(DESCRIPTOR);
-            if (iin == null || !(iin instanceof IKeyChainService)) {
-                return new Proxy(obj);
+            if (iin != null && (iin instanceof IKeyChainService)) {
+                return (IKeyChainService) iin;
             }
-            return (IKeyChainService) iin;
+            return new Proxy(obj);
         }
 
+        @Override // android.p007os.IInterface
         public IBinder asBinder() {
             return this;
         }
@@ -226,181 +251,189 @@ public interface IKeyChainService extends IInterface {
             }
         }
 
+        @Override // android.p007os.Binder
         public String getTransactionName(int transactionCode) {
             return getDefaultTransactionName(transactionCode);
         }
 
+        @Override // android.p007os.Binder
         public boolean onTransact(int code, Parcel data, Parcel reply, int flags) throws RemoteException {
+            boolean _arg2;
             ParcelableKeyGenParameterSpec _arg1;
-            if (code != 1598968902) {
-                boolean _arg2 = false;
-                switch (code) {
-                    case 1:
-                        data.enforceInterface(DESCRIPTOR);
-                        String _result = requestPrivateKey(data.readString());
-                        reply.writeNoException();
-                        reply.writeString(_result);
-                        return true;
-                    case 2:
-                        data.enforceInterface(DESCRIPTOR);
-                        byte[] _result2 = getCertificate(data.readString());
-                        reply.writeNoException();
-                        reply.writeByteArray(_result2);
-                        return true;
-                    case 3:
-                        data.enforceInterface(DESCRIPTOR);
-                        byte[] _result3 = getCaCertificates(data.readString());
-                        reply.writeNoException();
-                        reply.writeByteArray(_result3);
-                        return true;
-                    case 4:
-                        data.enforceInterface(DESCRIPTOR);
-                        boolean _result4 = isUserSelectable(data.readString());
-                        reply.writeNoException();
-                        reply.writeInt(_result4);
-                        return true;
-                    case 5:
-                        data.enforceInterface(DESCRIPTOR);
-                        String _arg0 = data.readString();
-                        if (data.readInt() != 0) {
-                            _arg2 = true;
-                        }
-                        setUserSelectable(_arg0, _arg2);
-                        reply.writeNoException();
-                        return true;
-                    case 6:
-                        data.enforceInterface(DESCRIPTOR);
-                        String _arg02 = data.readString();
-                        if (data.readInt() != 0) {
-                            _arg1 = ParcelableKeyGenParameterSpec.CREATOR.createFromParcel(data);
-                        } else {
-                            _arg1 = null;
-                        }
-                        int _result5 = generateKeyPair(_arg02, _arg1);
-                        reply.writeNoException();
-                        reply.writeInt(_result5);
-                        return true;
-                    case 7:
-                        data.enforceInterface(DESCRIPTOR);
-                        String _arg03 = data.readString();
-                        byte[] _arg12 = data.createByteArray();
-                        int[] _arg22 = data.createIntArray();
-                        KeymasterCertificateChain _arg3 = new KeymasterCertificateChain();
-                        int _result6 = attestKey(_arg03, _arg12, _arg22, _arg3);
-                        reply.writeNoException();
-                        reply.writeInt(_result6);
-                        reply.writeInt(1);
-                        _arg3.writeToParcel(reply, 1);
-                        return true;
-                    case 8:
-                        data.enforceInterface(DESCRIPTOR);
-                        boolean _result7 = setKeyPairCertificate(data.readString(), data.createByteArray(), data.createByteArray());
-                        reply.writeNoException();
-                        reply.writeInt(_result7);
-                        return true;
-                    case 9:
-                        data.enforceInterface(DESCRIPTOR);
-                        String _result8 = installCaCertificate(data.createByteArray());
-                        reply.writeNoException();
-                        reply.writeString(_result8);
-                        return true;
-                    case 10:
-                        data.enforceInterface(DESCRIPTOR);
-                        boolean _result9 = installKeyPair(data.createByteArray(), data.createByteArray(), data.createByteArray(), data.readString());
-                        reply.writeNoException();
-                        reply.writeInt(_result9);
-                        return true;
-                    case 11:
-                        data.enforceInterface(DESCRIPTOR);
-                        boolean _result10 = removeKeyPair(data.readString());
-                        reply.writeNoException();
-                        reply.writeInt(_result10);
-                        return true;
-                    case 12:
-                        data.enforceInterface(DESCRIPTOR);
-                        boolean _result11 = deleteCaCertificate(data.readString());
-                        reply.writeNoException();
-                        reply.writeInt(_result11);
-                        return true;
-                    case 13:
-                        data.enforceInterface(DESCRIPTOR);
-                        boolean _result12 = reset();
-                        reply.writeNoException();
-                        reply.writeInt(_result12);
-                        return true;
-                    case 14:
-                        data.enforceInterface(DESCRIPTOR);
-                        StringParceledListSlice _result13 = getUserCaAliases();
-                        reply.writeNoException();
-                        if (_result13 != null) {
-                            reply.writeInt(1);
-                            _result13.writeToParcel(reply, 1);
-                        } else {
-                            reply.writeInt(0);
-                        }
-                        return true;
-                    case 15:
-                        data.enforceInterface(DESCRIPTOR);
-                        StringParceledListSlice _result14 = getSystemCaAliases();
-                        reply.writeNoException();
-                        if (_result14 != null) {
-                            reply.writeInt(1);
-                            _result14.writeToParcel(reply, 1);
-                        } else {
-                            reply.writeInt(0);
-                        }
-                        return true;
-                    case 16:
-                        data.enforceInterface(DESCRIPTOR);
-                        boolean _result15 = containsCaAlias(data.readString());
-                        reply.writeNoException();
-                        reply.writeInt(_result15);
-                        return true;
-                    case 17:
-                        data.enforceInterface(DESCRIPTOR);
-                        String _arg04 = data.readString();
-                        if (data.readInt() != 0) {
-                            _arg2 = true;
-                        }
-                        byte[] _result16 = getEncodedCaCertificate(_arg04, _arg2);
-                        reply.writeNoException();
-                        reply.writeByteArray(_result16);
-                        return true;
-                    case 18:
-                        data.enforceInterface(DESCRIPTOR);
-                        String _arg05 = data.readString();
-                        if (data.readInt() != 0) {
-                            _arg2 = true;
-                        }
-                        List<String> _result17 = getCaCertificateChainAliases(_arg05, _arg2);
-                        reply.writeNoException();
-                        reply.writeStringList(_result17);
-                        return true;
-                    case 19:
-                        data.enforceInterface(DESCRIPTOR);
-                        int _arg06 = data.readInt();
-                        String _arg13 = data.readString();
-                        if (data.readInt() != 0) {
-                            _arg2 = true;
-                        }
-                        setGrant(_arg06, _arg13, _arg2);
-                        reply.writeNoException();
-                        return true;
-                    case 20:
-                        data.enforceInterface(DESCRIPTOR);
-                        boolean _result18 = hasGrant(data.readInt(), data.readString());
-                        reply.writeNoException();
-                        reply.writeInt(_result18);
-                        return true;
-                    default:
-                        return super.onTransact(code, data, reply, flags);
-                }
-            } else {
+            if (code == 1598968902) {
                 reply.writeString(DESCRIPTOR);
                 return true;
             }
+            switch (code) {
+                case 1:
+                    data.enforceInterface(DESCRIPTOR);
+                    String _arg0 = data.readString();
+                    String _result = requestPrivateKey(_arg0);
+                    reply.writeNoException();
+                    reply.writeString(_result);
+                    return true;
+                case 2:
+                    data.enforceInterface(DESCRIPTOR);
+                    String _arg02 = data.readString();
+                    byte[] _result2 = getCertificate(_arg02);
+                    reply.writeNoException();
+                    reply.writeByteArray(_result2);
+                    return true;
+                case 3:
+                    data.enforceInterface(DESCRIPTOR);
+                    String _arg03 = data.readString();
+                    byte[] _result3 = getCaCertificates(_arg03);
+                    reply.writeNoException();
+                    reply.writeByteArray(_result3);
+                    return true;
+                case 4:
+                    data.enforceInterface(DESCRIPTOR);
+                    String _arg04 = data.readString();
+                    boolean isUserSelectable = isUserSelectable(_arg04);
+                    reply.writeNoException();
+                    reply.writeInt(isUserSelectable ? 1 : 0);
+                    return true;
+                case 5:
+                    data.enforceInterface(DESCRIPTOR);
+                    String _arg05 = data.readString();
+                    _arg2 = data.readInt() != 0;
+                    setUserSelectable(_arg05, _arg2);
+                    reply.writeNoException();
+                    return true;
+                case 6:
+                    data.enforceInterface(DESCRIPTOR);
+                    String _arg06 = data.readString();
+                    if (data.readInt() != 0) {
+                        _arg1 = ParcelableKeyGenParameterSpec.CREATOR.createFromParcel(data);
+                    } else {
+                        _arg1 = null;
+                    }
+                    int _result4 = generateKeyPair(_arg06, _arg1);
+                    reply.writeNoException();
+                    reply.writeInt(_result4);
+                    return true;
+                case 7:
+                    data.enforceInterface(DESCRIPTOR);
+                    String _arg07 = data.readString();
+                    byte[] _arg12 = data.createByteArray();
+                    int[] _arg22 = data.createIntArray();
+                    KeymasterCertificateChain _arg3 = new KeymasterCertificateChain();
+                    int _result5 = attestKey(_arg07, _arg12, _arg22, _arg3);
+                    reply.writeNoException();
+                    reply.writeInt(_result5);
+                    reply.writeInt(1);
+                    _arg3.writeToParcel(reply, 1);
+                    return true;
+                case 8:
+                    data.enforceInterface(DESCRIPTOR);
+                    String _arg08 = data.readString();
+                    byte[] _arg13 = data.createByteArray();
+                    boolean keyPairCertificate = setKeyPairCertificate(_arg08, _arg13, data.createByteArray());
+                    reply.writeNoException();
+                    reply.writeInt(keyPairCertificate ? 1 : 0);
+                    return true;
+                case 9:
+                    data.enforceInterface(DESCRIPTOR);
+                    byte[] _arg09 = data.createByteArray();
+                    String _result6 = installCaCertificate(_arg09);
+                    reply.writeNoException();
+                    reply.writeString(_result6);
+                    return true;
+                case 10:
+                    data.enforceInterface(DESCRIPTOR);
+                    byte[] _arg010 = data.createByteArray();
+                    byte[] _arg14 = data.createByteArray();
+                    boolean installKeyPair = installKeyPair(_arg010, _arg14, data.createByteArray(), data.readString());
+                    reply.writeNoException();
+                    reply.writeInt(installKeyPair ? 1 : 0);
+                    return true;
+                case 11:
+                    data.enforceInterface(DESCRIPTOR);
+                    String _arg011 = data.readString();
+                    boolean removeKeyPair = removeKeyPair(_arg011);
+                    reply.writeNoException();
+                    reply.writeInt(removeKeyPair ? 1 : 0);
+                    return true;
+                case 12:
+                    data.enforceInterface(DESCRIPTOR);
+                    String _arg012 = data.readString();
+                    boolean deleteCaCertificate = deleteCaCertificate(_arg012);
+                    reply.writeNoException();
+                    reply.writeInt(deleteCaCertificate ? 1 : 0);
+                    return true;
+                case 13:
+                    data.enforceInterface(DESCRIPTOR);
+                    boolean reset = reset();
+                    reply.writeNoException();
+                    reply.writeInt(reset ? 1 : 0);
+                    return true;
+                case 14:
+                    data.enforceInterface(DESCRIPTOR);
+                    StringParceledListSlice _result7 = getUserCaAliases();
+                    reply.writeNoException();
+                    if (_result7 != null) {
+                        reply.writeInt(1);
+                        _result7.writeToParcel(reply, 1);
+                    } else {
+                        reply.writeInt(0);
+                    }
+                    return true;
+                case 15:
+                    data.enforceInterface(DESCRIPTOR);
+                    StringParceledListSlice _result8 = getSystemCaAliases();
+                    reply.writeNoException();
+                    if (_result8 != null) {
+                        reply.writeInt(1);
+                        _result8.writeToParcel(reply, 1);
+                    } else {
+                        reply.writeInt(0);
+                    }
+                    return true;
+                case 16:
+                    data.enforceInterface(DESCRIPTOR);
+                    String _arg013 = data.readString();
+                    boolean containsCaAlias = containsCaAlias(_arg013);
+                    reply.writeNoException();
+                    reply.writeInt(containsCaAlias ? 1 : 0);
+                    return true;
+                case 17:
+                    data.enforceInterface(DESCRIPTOR);
+                    String _arg014 = data.readString();
+                    _arg2 = data.readInt() != 0;
+                    byte[] _result9 = getEncodedCaCertificate(_arg014, _arg2);
+                    reply.writeNoException();
+                    reply.writeByteArray(_result9);
+                    return true;
+                case 18:
+                    data.enforceInterface(DESCRIPTOR);
+                    String _arg015 = data.readString();
+                    _arg2 = data.readInt() != 0;
+                    List<String> _result10 = getCaCertificateChainAliases(_arg015, _arg2);
+                    reply.writeNoException();
+                    reply.writeStringList(_result10);
+                    return true;
+                case 19:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg016 = data.readInt();
+                    String _arg15 = data.readString();
+                    _arg2 = data.readInt() != 0;
+                    setGrant(_arg016, _arg15, _arg2);
+                    reply.writeNoException();
+                    return true;
+                case 20:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg017 = data.readInt();
+                    String _arg16 = data.readString();
+                    boolean hasGrant = hasGrant(_arg017, _arg16);
+                    reply.writeNoException();
+                    reply.writeInt(hasGrant ? 1 : 0);
+                    return true;
+                default:
+                    return super.onTransact(code, data, reply, flags);
+            }
         }
 
+        /* loaded from: classes3.dex */
         private static class Proxy implements IKeyChainService {
             public static IKeyChainService sDefaultImpl;
             private IBinder mRemote;
@@ -409,6 +442,7 @@ public interface IKeyChainService extends IInterface {
                 this.mRemote = remote;
             }
 
+            @Override // android.p007os.IInterface
             public IBinder asBinder() {
                 return this.mRemote;
             }
@@ -417,19 +451,19 @@ public interface IKeyChainService extends IInterface {
                 return Stub.DESCRIPTOR;
             }
 
+            @Override // android.security.IKeyChainService
             public String requestPrivateKey(String alias) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeString(alias);
-                    if (!this.mRemote.transact(1, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(1, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().requestPrivateKey(alias);
                     }
                     _reply.readException();
                     String _result = _reply.readString();
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -437,19 +471,19 @@ public interface IKeyChainService extends IInterface {
                 }
             }
 
+            @Override // android.security.IKeyChainService
             public byte[] getCertificate(String alias) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeString(alias);
-                    if (!this.mRemote.transact(2, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(2, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().getCertificate(alias);
                     }
                     _reply.readException();
                     byte[] _result = _reply.createByteArray();
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -457,19 +491,19 @@ public interface IKeyChainService extends IInterface {
                 }
             }
 
+            @Override // android.security.IKeyChainService
             public byte[] getCaCertificates(String alias) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeString(alias);
-                    if (!this.mRemote.transact(3, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(3, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().getCaCertificates(alias);
                     }
                     _reply.readException();
                     byte[] _result = _reply.createByteArray();
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -477,50 +511,47 @@ public interface IKeyChainService extends IInterface {
                 }
             }
 
+            @Override // android.security.IKeyChainService
             public boolean isUserSelectable(String alias) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeString(alias);
-                    boolean z = false;
-                    if (!this.mRemote.transact(4, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(4, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().isUserSelectable(alias);
                     }
                     _reply.readException();
-                    if (_reply.readInt() != 0) {
-                        z = true;
-                    }
-                    boolean _status = z;
-                    _reply.recycle();
-                    _data.recycle();
-                    return _status;
+                    boolean _status2 = _reply.readInt() != 0;
+                    return _status2;
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.security.IKeyChainService
             public void setUserSelectable(String alias, boolean isUserSelectable) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeString(alias);
-                    _data.writeInt(isUserSelectable);
-                    if (this.mRemote.transact(5, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    _data.writeInt(isUserSelectable ? 1 : 0);
+                    boolean _status = this.mRemote.transact(5, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().setUserSelectable(alias, isUserSelectable);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().setUserSelectable(alias, isUserSelectable);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.security.IKeyChainService
             public int generateKeyPair(String algorithm, ParcelableKeyGenParameterSpec spec) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -533,13 +564,12 @@ public interface IKeyChainService extends IInterface {
                     } else {
                         _data.writeInt(0);
                     }
-                    if (!this.mRemote.transact(6, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(6, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().generateKeyPair(algorithm, spec);
                     }
                     _reply.readException();
                     int _result = _reply.readInt();
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -547,6 +577,7 @@ public interface IKeyChainService extends IInterface {
                 }
             }
 
+            @Override // android.security.IKeyChainService
             public int attestKey(String alias, byte[] challenge, int[] idAttestationFlags, KeymasterCertificateChain chain) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -555,7 +586,8 @@ public interface IKeyChainService extends IInterface {
                     _data.writeString(alias);
                     _data.writeByteArray(challenge);
                     _data.writeIntArray(idAttestationFlags);
-                    if (!this.mRemote.transact(7, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(7, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().attestKey(alias, challenge, idAttestationFlags, chain);
                     }
                     _reply.readException();
@@ -563,8 +595,6 @@ public interface IKeyChainService extends IInterface {
                     if (_reply.readInt() != 0) {
                         chain.readFromParcel(_reply);
                     }
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -572,6 +602,7 @@ public interface IKeyChainService extends IInterface {
                 }
             }
 
+            @Override // android.security.IKeyChainService
             public boolean setKeyPairCertificate(String alias, byte[] userCert, byte[] certChain) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -580,37 +611,32 @@ public interface IKeyChainService extends IInterface {
                     _data.writeString(alias);
                     _data.writeByteArray(userCert);
                     _data.writeByteArray(certChain);
-                    boolean z = false;
-                    if (!this.mRemote.transact(8, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(8, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().setKeyPairCertificate(alias, userCert, certChain);
                     }
                     _reply.readException();
-                    if (_reply.readInt() != 0) {
-                        z = true;
-                    }
-                    boolean _status = z;
-                    _reply.recycle();
-                    _data.recycle();
-                    return _status;
+                    boolean _status2 = _reply.readInt() != 0;
+                    return _status2;
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.security.IKeyChainService
             public String installCaCertificate(byte[] caCertificate) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeByteArray(caCertificate);
-                    if (!this.mRemote.transact(9, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(9, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().installCaCertificate(caCertificate);
                     }
                     _reply.readException();
                     String _result = _reply.readString();
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -618,6 +644,7 @@ public interface IKeyChainService extends IInterface {
                 }
             }
 
+            @Override // android.security.IKeyChainService
             public boolean installKeyPair(byte[] privateKey, byte[] userCert, byte[] certChain, String alias) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -627,102 +654,87 @@ public interface IKeyChainService extends IInterface {
                     _data.writeByteArray(userCert);
                     _data.writeByteArray(certChain);
                     _data.writeString(alias);
-                    boolean z = false;
-                    if (!this.mRemote.transact(10, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(10, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().installKeyPair(privateKey, userCert, certChain, alias);
                     }
                     _reply.readException();
-                    if (_reply.readInt() != 0) {
-                        z = true;
-                    }
-                    boolean _status = z;
-                    _reply.recycle();
-                    _data.recycle();
-                    return _status;
+                    boolean _status2 = _reply.readInt() != 0;
+                    return _status2;
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.security.IKeyChainService
             public boolean removeKeyPair(String alias) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeString(alias);
-                    boolean z = false;
-                    if (!this.mRemote.transact(11, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(11, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().removeKeyPair(alias);
                     }
                     _reply.readException();
-                    if (_reply.readInt() != 0) {
-                        z = true;
-                    }
-                    boolean _status = z;
-                    _reply.recycle();
-                    _data.recycle();
-                    return _status;
+                    boolean _status2 = _reply.readInt() != 0;
+                    return _status2;
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.security.IKeyChainService
             public boolean deleteCaCertificate(String alias) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeString(alias);
-                    boolean z = false;
-                    if (!this.mRemote.transact(12, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(12, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().deleteCaCertificate(alias);
                     }
                     _reply.readException();
-                    if (_reply.readInt() != 0) {
-                        z = true;
-                    }
-                    boolean _status = z;
-                    _reply.recycle();
-                    _data.recycle();
-                    return _status;
+                    boolean _status2 = _reply.readInt() != 0;
+                    return _status2;
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.security.IKeyChainService
             public boolean reset() throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    boolean z = false;
-                    if (!this.mRemote.transact(13, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(13, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().reset();
                     }
                     _reply.readException();
-                    if (_reply.readInt() != 0) {
-                        z = true;
-                    }
-                    boolean _status = z;
-                    _reply.recycle();
-                    _data.recycle();
-                    return _status;
+                    boolean _status2 = _reply.readInt() != 0;
+                    return _status2;
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.security.IKeyChainService
             public StringParceledListSlice getUserCaAliases() throws RemoteException {
                 StringParceledListSlice _result;
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    if (!this.mRemote.transact(14, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(14, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().getUserCaAliases();
                     }
                     _reply.readException();
@@ -731,23 +743,22 @@ public interface IKeyChainService extends IInterface {
                     } else {
                         _result = null;
                     }
-                    StringParceledListSlice _result2 = _result;
-                    _reply.recycle();
-                    _data.recycle();
-                    return _result2;
+                    return _result;
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.security.IKeyChainService
             public StringParceledListSlice getSystemCaAliases() throws RemoteException {
                 StringParceledListSlice _result;
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    if (!this.mRemote.transact(15, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(15, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().getSystemCaAliases();
                     }
                     _reply.readException();
@@ -756,54 +767,47 @@ public interface IKeyChainService extends IInterface {
                     } else {
                         _result = null;
                     }
-                    StringParceledListSlice _result2 = _result;
-                    _reply.recycle();
-                    _data.recycle();
-                    return _result2;
+                    return _result;
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.security.IKeyChainService
             public boolean containsCaAlias(String alias) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeString(alias);
-                    boolean z = false;
-                    if (!this.mRemote.transact(16, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(16, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().containsCaAlias(alias);
                     }
                     _reply.readException();
-                    if (_reply.readInt() != 0) {
-                        z = true;
-                    }
-                    boolean _status = z;
-                    _reply.recycle();
-                    _data.recycle();
-                    return _status;
+                    boolean _status2 = _reply.readInt() != 0;
+                    return _status2;
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.security.IKeyChainService
             public byte[] getEncodedCaCertificate(String alias, boolean includeDeletedSystem) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeString(alias);
-                    _data.writeInt(includeDeletedSystem);
-                    if (!this.mRemote.transact(17, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    _data.writeInt(includeDeletedSystem ? 1 : 0);
+                    boolean _status = this.mRemote.transact(17, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().getEncodedCaCertificate(alias, includeDeletedSystem);
                     }
                     _reply.readException();
                     byte[] _result = _reply.createByteArray();
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -811,20 +815,20 @@ public interface IKeyChainService extends IInterface {
                 }
             }
 
+            @Override // android.security.IKeyChainService
             public List<String> getCaCertificateChainAliases(String rootAlias, boolean includeDeletedSystem) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeString(rootAlias);
-                    _data.writeInt(includeDeletedSystem);
-                    if (!this.mRemote.transact(18, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    _data.writeInt(includeDeletedSystem ? 1 : 0);
+                    boolean _status = this.mRemote.transact(18, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().getCaCertificateChainAliases(rootAlias, includeDeletedSystem);
                     }
                     _reply.readException();
                     List<String> _result = _reply.createStringArrayList();
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -832,6 +836,7 @@ public interface IKeyChainService extends IInterface {
                 }
             }
 
+            @Override // android.security.IKeyChainService
             public void setGrant(int uid, String alias, boolean value) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -839,20 +844,20 @@ public interface IKeyChainService extends IInterface {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeInt(uid);
                     _data.writeString(alias);
-                    _data.writeInt(value);
-                    if (this.mRemote.transact(19, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    _data.writeInt(value ? 1 : 0);
+                    boolean _status = this.mRemote.transact(19, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().setGrant(uid, alias, value);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().setGrant(uid, alias, value);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.security.IKeyChainService
             public boolean hasGrant(int uid, String alias) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -860,18 +865,13 @@ public interface IKeyChainService extends IInterface {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeInt(uid);
                     _data.writeString(alias);
-                    boolean z = false;
-                    if (!this.mRemote.transact(20, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(20, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().hasGrant(uid, alias);
                     }
                     _reply.readException();
-                    if (_reply.readInt() != 0) {
-                        z = true;
-                    }
-                    boolean _status = z;
-                    _reply.recycle();
-                    _data.recycle();
-                    return _status;
+                    boolean _status2 = _reply.readInt() != 0;
+                    return _status2;
                 } finally {
                     _reply.recycle();
                     _data.recycle();
@@ -880,11 +880,11 @@ public interface IKeyChainService extends IInterface {
         }
 
         public static boolean setDefaultImpl(IKeyChainService impl) {
-            if (Proxy.sDefaultImpl != null || impl == null) {
-                return false;
+            if (Proxy.sDefaultImpl == null && impl != null) {
+                Proxy.sDefaultImpl = impl;
+                return true;
             }
-            Proxy.sDefaultImpl = impl;
-            return true;
+            return false;
         }
 
         public static IKeyChainService getDefaultImpl() {

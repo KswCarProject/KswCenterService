@@ -1,8 +1,8 @@
 package android.net.wifi.hotspot2.pps;
 
 import android.net.wifi.ParcelUtil;
-import android.os.Parcel;
-import android.os.Parcelable;
+import android.p007os.Parcel;
+import android.p007os.Parcelable;
 import android.text.TextUtils;
 import android.util.Base64;
 import android.util.Log;
@@ -11,9 +11,12 @@ import java.security.cert.X509Certificate;
 import java.util.Arrays;
 import java.util.Objects;
 
+/* loaded from: classes3.dex */
 public final class UpdateParameter implements Parcelable {
     private static final int CERTIFICATE_SHA256_BYTES = 32;
-    public static final Parcelable.Creator<UpdateParameter> CREATOR = new Parcelable.Creator<UpdateParameter>() {
+    public static final Parcelable.Creator<UpdateParameter> CREATOR = new Parcelable.Creator<UpdateParameter>() { // from class: android.net.wifi.hotspot2.pps.UpdateParameter.1
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public UpdateParameter createFromParcel(Parcel in) {
             UpdateParameter updateParam = new UpdateParameter();
             updateParam.setUpdateIntervalInMinutes(in.readLong());
@@ -28,6 +31,8 @@ public final class UpdateParameter implements Parcelable {
             return updateParam;
         }
 
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public UpdateParameter[] newArray(int size) {
             return new UpdateParameter[size];
         }
@@ -43,15 +48,15 @@ public final class UpdateParameter implements Parcelable {
     public static final String UPDATE_RESTRICTION_HOMESP = "HomeSP";
     public static final String UPDATE_RESTRICTION_ROAMING_PARTNER = "RoamingPartner";
     public static final String UPDATE_RESTRICTION_UNRESTRICTED = "Unrestricted";
-    private String mBase64EncodedPassword = null;
+    private String mBase64EncodedPassword;
     private X509Certificate mCaCertificate;
-    private String mRestriction = null;
-    private String mServerUri = null;
-    private byte[] mTrustRootCertSha256Fingerprint = null;
-    private String mTrustRootCertUrl = null;
-    private long mUpdateIntervalInMinutes = Long.MIN_VALUE;
-    private String mUpdateMethod = null;
-    private String mUsername = null;
+    private String mRestriction;
+    private String mServerUri;
+    private byte[] mTrustRootCertSha256Fingerprint;
+    private String mTrustRootCertUrl;
+    private long mUpdateIntervalInMinutes;
+    private String mUpdateMethod;
+    private String mUsername;
 
     public void setUpdateIntervalInMinutes(long updateIntervalInMinutes) {
         this.mUpdateIntervalInMinutes = updateIntervalInMinutes;
@@ -126,28 +131,47 @@ public final class UpdateParameter implements Parcelable {
     }
 
     public UpdateParameter() {
+        this.mUpdateIntervalInMinutes = Long.MIN_VALUE;
+        this.mUpdateMethod = null;
+        this.mRestriction = null;
+        this.mServerUri = null;
+        this.mUsername = null;
+        this.mBase64EncodedPassword = null;
+        this.mTrustRootCertUrl = null;
+        this.mTrustRootCertSha256Fingerprint = null;
     }
 
     public UpdateParameter(UpdateParameter source) {
-        if (source != null) {
-            this.mUpdateIntervalInMinutes = source.mUpdateIntervalInMinutes;
-            this.mUpdateMethod = source.mUpdateMethod;
-            this.mRestriction = source.mRestriction;
-            this.mServerUri = source.mServerUri;
-            this.mUsername = source.mUsername;
-            this.mBase64EncodedPassword = source.mBase64EncodedPassword;
-            this.mTrustRootCertUrl = source.mTrustRootCertUrl;
-            if (source.mTrustRootCertSha256Fingerprint != null) {
-                this.mTrustRootCertSha256Fingerprint = Arrays.copyOf(source.mTrustRootCertSha256Fingerprint, source.mTrustRootCertSha256Fingerprint.length);
-            }
-            this.mCaCertificate = source.mCaCertificate;
+        this.mUpdateIntervalInMinutes = Long.MIN_VALUE;
+        this.mUpdateMethod = null;
+        this.mRestriction = null;
+        this.mServerUri = null;
+        this.mUsername = null;
+        this.mBase64EncodedPassword = null;
+        this.mTrustRootCertUrl = null;
+        this.mTrustRootCertSha256Fingerprint = null;
+        if (source == null) {
+            return;
         }
+        this.mUpdateIntervalInMinutes = source.mUpdateIntervalInMinutes;
+        this.mUpdateMethod = source.mUpdateMethod;
+        this.mRestriction = source.mRestriction;
+        this.mServerUri = source.mServerUri;
+        this.mUsername = source.mUsername;
+        this.mBase64EncodedPassword = source.mBase64EncodedPassword;
+        this.mTrustRootCertUrl = source.mTrustRootCertUrl;
+        if (source.mTrustRootCertSha256Fingerprint != null) {
+            this.mTrustRootCertSha256Fingerprint = Arrays.copyOf(source.mTrustRootCertSha256Fingerprint, source.mTrustRootCertSha256Fingerprint.length);
+        }
+        this.mCaCertificate = source.mCaCertificate;
     }
 
+    @Override // android.p007os.Parcelable
     public int describeContents() {
         return 0;
     }
 
+    @Override // android.p007os.Parcelable
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeLong(this.mUpdateIntervalInMinutes);
         dest.writeString(this.mUpdateMethod);
@@ -164,75 +188,72 @@ public final class UpdateParameter implements Parcelable {
         if (this == thatObject) {
             return true;
         }
-        if (!(thatObject instanceof UpdateParameter)) {
-            return false;
+        if (thatObject instanceof UpdateParameter) {
+            UpdateParameter that = (UpdateParameter) thatObject;
+            return this.mUpdateIntervalInMinutes == that.mUpdateIntervalInMinutes && TextUtils.equals(this.mUpdateMethod, that.mUpdateMethod) && TextUtils.equals(this.mRestriction, that.mRestriction) && TextUtils.equals(this.mServerUri, that.mServerUri) && TextUtils.equals(this.mUsername, that.mUsername) && TextUtils.equals(this.mBase64EncodedPassword, that.mBase64EncodedPassword) && TextUtils.equals(this.mTrustRootCertUrl, that.mTrustRootCertUrl) && Arrays.equals(this.mTrustRootCertSha256Fingerprint, that.mTrustRootCertSha256Fingerprint) && Credential.isX509CertificateEquals(this.mCaCertificate, that.mCaCertificate);
         }
-        UpdateParameter that = (UpdateParameter) thatObject;
-        if (this.mUpdateIntervalInMinutes != that.mUpdateIntervalInMinutes || !TextUtils.equals(this.mUpdateMethod, that.mUpdateMethod) || !TextUtils.equals(this.mRestriction, that.mRestriction) || !TextUtils.equals(this.mServerUri, that.mServerUri) || !TextUtils.equals(this.mUsername, that.mUsername) || !TextUtils.equals(this.mBase64EncodedPassword, that.mBase64EncodedPassword) || !TextUtils.equals(this.mTrustRootCertUrl, that.mTrustRootCertUrl) || !Arrays.equals(this.mTrustRootCertSha256Fingerprint, that.mTrustRootCertSha256Fingerprint) || !Credential.isX509CertificateEquals(this.mCaCertificate, that.mCaCertificate)) {
-            return false;
-        }
-        return true;
+        return false;
     }
 
     public int hashCode() {
-        return Objects.hash(new Object[]{Long.valueOf(this.mUpdateIntervalInMinutes), this.mUpdateMethod, this.mRestriction, this.mServerUri, this.mUsername, this.mBase64EncodedPassword, this.mTrustRootCertUrl, Integer.valueOf(Arrays.hashCode(this.mTrustRootCertSha256Fingerprint)), this.mCaCertificate});
+        return Objects.hash(Long.valueOf(this.mUpdateIntervalInMinutes), this.mUpdateMethod, this.mRestriction, this.mServerUri, this.mUsername, this.mBase64EncodedPassword, this.mTrustRootCertUrl, Integer.valueOf(Arrays.hashCode(this.mTrustRootCertSha256Fingerprint)), this.mCaCertificate);
     }
 
     public String toString() {
-        return "UpdateInterval: " + this.mUpdateIntervalInMinutes + "\n" + "UpdateMethod: " + this.mUpdateMethod + "\n" + "Restriction: " + this.mRestriction + "\n" + "ServerURI: " + this.mServerUri + "\n" + "Username: " + this.mUsername + "\n" + "TrustRootCertURL: " + this.mTrustRootCertUrl + "\n";
+        return "UpdateInterval: " + this.mUpdateIntervalInMinutes + "\nUpdateMethod: " + this.mUpdateMethod + "\nRestriction: " + this.mRestriction + "\nServerURI: " + this.mServerUri + "\nUsername: " + this.mUsername + "\nTrustRootCertURL: " + this.mTrustRootCertUrl + "\n";
     }
 
     public boolean validate() {
         if (this.mUpdateIntervalInMinutes == Long.MIN_VALUE) {
-            Log.d(TAG, "Update interval not specified");
+            Log.m72d(TAG, "Update interval not specified");
             return false;
         } else if (this.mUpdateIntervalInMinutes == 4294967295L) {
             return true;
         } else {
             if (!TextUtils.equals(this.mUpdateMethod, UPDATE_METHOD_OMADM) && !TextUtils.equals(this.mUpdateMethod, UPDATE_METHOD_SSP)) {
-                Log.d(TAG, "Unknown update method: " + this.mUpdateMethod);
+                Log.m72d(TAG, "Unknown update method: " + this.mUpdateMethod);
                 return false;
             } else if (!TextUtils.equals(this.mRestriction, UPDATE_RESTRICTION_HOMESP) && !TextUtils.equals(this.mRestriction, UPDATE_RESTRICTION_ROAMING_PARTNER) && !TextUtils.equals(this.mRestriction, UPDATE_RESTRICTION_UNRESTRICTED)) {
-                Log.d(TAG, "Unknown restriction: " + this.mRestriction);
+                Log.m72d(TAG, "Unknown restriction: " + this.mRestriction);
                 return false;
             } else if (TextUtils.isEmpty(this.mServerUri)) {
-                Log.d(TAG, "Missing update server URI");
+                Log.m72d(TAG, "Missing update server URI");
                 return false;
             } else if (this.mServerUri.getBytes(StandardCharsets.UTF_8).length > 1023) {
-                Log.d(TAG, "URI bytes exceeded the max: " + this.mServerUri.getBytes(StandardCharsets.UTF_8).length);
+                Log.m72d(TAG, "URI bytes exceeded the max: " + this.mServerUri.getBytes(StandardCharsets.UTF_8).length);
                 return false;
             } else if (TextUtils.isEmpty(this.mUsername)) {
-                Log.d(TAG, "Missing username");
+                Log.m72d(TAG, "Missing username");
                 return false;
             } else if (this.mUsername.getBytes(StandardCharsets.UTF_8).length > 63) {
-                Log.d(TAG, "Username bytes exceeded the max: " + this.mUsername.getBytes(StandardCharsets.UTF_8).length);
+                Log.m72d(TAG, "Username bytes exceeded the max: " + this.mUsername.getBytes(StandardCharsets.UTF_8).length);
                 return false;
             } else if (TextUtils.isEmpty(this.mBase64EncodedPassword)) {
-                Log.d(TAG, "Missing username");
+                Log.m72d(TAG, "Missing username");
                 return false;
             } else if (this.mBase64EncodedPassword.getBytes(StandardCharsets.UTF_8).length > 255) {
-                Log.d(TAG, "Password bytes exceeded the max: " + this.mBase64EncodedPassword.getBytes(StandardCharsets.UTF_8).length);
+                Log.m72d(TAG, "Password bytes exceeded the max: " + this.mBase64EncodedPassword.getBytes(StandardCharsets.UTF_8).length);
                 return false;
             } else {
                 try {
                     Base64.decode(this.mBase64EncodedPassword, 0);
                     if (TextUtils.isEmpty(this.mTrustRootCertUrl)) {
-                        Log.d(TAG, "Missing trust root certificate URL");
+                        Log.m72d(TAG, "Missing trust root certificate URL");
                         return false;
                     } else if (this.mTrustRootCertUrl.getBytes(StandardCharsets.UTF_8).length > 1023) {
-                        Log.d(TAG, "Trust root cert URL bytes exceeded the max: " + this.mTrustRootCertUrl.getBytes(StandardCharsets.UTF_8).length);
+                        Log.m72d(TAG, "Trust root cert URL bytes exceeded the max: " + this.mTrustRootCertUrl.getBytes(StandardCharsets.UTF_8).length);
                         return false;
                     } else if (this.mTrustRootCertSha256Fingerprint == null) {
-                        Log.d(TAG, "Missing trust root certificate SHA-256 fingerprint");
+                        Log.m72d(TAG, "Missing trust root certificate SHA-256 fingerprint");
                         return false;
-                    } else if (this.mTrustRootCertSha256Fingerprint.length == 32) {
-                        return true;
+                    } else if (this.mTrustRootCertSha256Fingerprint.length != 32) {
+                        Log.m72d(TAG, "Incorrect size of trust root certificate SHA-256 fingerprint: " + this.mTrustRootCertSha256Fingerprint.length);
+                        return false;
                     } else {
-                        Log.d(TAG, "Incorrect size of trust root certificate SHA-256 fingerprint: " + this.mTrustRootCertSha256Fingerprint.length);
-                        return false;
+                        return true;
                     }
                 } catch (IllegalArgumentException e) {
-                    Log.d(TAG, "Invalid encoding for password: " + this.mBase64EncodedPassword);
+                    Log.m72d(TAG, "Invalid encoding for password: " + this.mBase64EncodedPassword);
                     return false;
                 }
             }

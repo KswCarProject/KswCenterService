@@ -3,8 +3,7 @@ package com.android.internal.colorextraction;
 import android.app.WallpaperColors;
 import android.app.WallpaperManager;
 import android.content.Context;
-import android.os.AsyncTask;
-import android.os.Handler;
+import android.p007os.AsyncTask;
 import android.util.Log;
 import android.util.SparseArray;
 import com.android.internal.annotations.VisibleForTesting;
@@ -13,6 +12,7 @@ import com.android.internal.colorextraction.types.Tonal;
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 
+/* loaded from: classes4.dex */
 public class ColorExtractor implements WallpaperManager.OnColorsChangedListener {
     private static final boolean DEBUG = false;
     private static final String TAG = "ColorExtractor";
@@ -27,6 +27,7 @@ public class ColorExtractor implements WallpaperManager.OnColorsChangedListener 
     private final ArrayList<WeakReference<OnColorsChangedListener>> mOnColorsChangedListeners;
     protected WallpaperColors mSystemColors;
 
+    /* loaded from: classes4.dex */
     public interface OnColorsChangedListener {
         void onColorsChanged(ColorExtractor colorExtractor, int i);
     }
@@ -37,6 +38,8 @@ public class ColorExtractor implements WallpaperManager.OnColorsChangedListener 
 
     @VisibleForTesting
     public ColorExtractor(Context context, ExtractionType extractionType, boolean immediately, WallpaperManager wallpaperManager) {
+        int[] iArr;
+        int[] iArr2;
         this.mContext = context;
         this.mExtractionType = extractionType;
         this.mGradientColors = new SparseArray<>();
@@ -49,10 +52,10 @@ public class ColorExtractor implements WallpaperManager.OnColorsChangedListener 
         }
         this.mOnColorsChangedListeners = new ArrayList<>();
         if (wallpaperManager == null) {
-            Log.w(TAG, "Can't listen to color changes!");
+            Log.m64w(TAG, "Can't listen to color changes!");
             return;
         }
-        wallpaperManager.addOnColorsChangedListener(this, (Handler) null);
+        wallpaperManager.addOnColorsChangedListener(this, null);
         initExtractColors(wallpaperManager, immediately);
     }
 
@@ -66,6 +69,7 @@ public class ColorExtractor implements WallpaperManager.OnColorsChangedListener 
         new LoadWallpaperColors().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, wallpaperManager);
     }
 
+    /* loaded from: classes4.dex */
     private class LoadWallpaperColors extends AsyncTask<WallpaperManager, Void, Void> {
         private WallpaperColors mLockColors;
         private WallpaperColors mSystemColors;
@@ -73,14 +77,16 @@ public class ColorExtractor implements WallpaperManager.OnColorsChangedListener 
         private LoadWallpaperColors() {
         }
 
-        /* access modifiers changed from: protected */
+        /* JADX INFO: Access modifiers changed from: protected */
+        @Override // android.p007os.AsyncTask
         public Void doInBackground(WallpaperManager... params) {
             this.mSystemColors = params[0].getWallpaperColors(1);
             this.mLockColors = params[0].getWallpaperColors(2);
             return null;
         }
 
-        /* access modifiers changed from: protected */
+        /* JADX INFO: Access modifiers changed from: protected */
+        @Override // android.p007os.AsyncTask
         public void onPostExecute(Void b) {
             ColorExtractor.this.mSystemColors = this.mSystemColors;
             ColorExtractor.this.mLockColors = this.mLockColors;
@@ -89,8 +95,7 @@ public class ColorExtractor implements WallpaperManager.OnColorsChangedListener 
         }
     }
 
-    /* access modifiers changed from: protected */
-    public void extractWallpaperColors() {
+    protected void extractWallpaperColors() {
         GradientColors[] systemColors = this.mGradientColors.get(1);
         GradientColors[] lockColors = this.mGradientColors.get(2);
         extractInto(this.mSystemColors, systemColors[0], systemColors[1], systemColors[2]);
@@ -104,11 +109,11 @@ public class ColorExtractor implements WallpaperManager.OnColorsChangedListener 
     public GradientColors getColors(int which, int type) {
         if (type != 0 && type != 1 && type != 2) {
             throw new IllegalArgumentException("type should be TYPE_NORMAL, TYPE_DARK or TYPE_EXTRA_DARK");
-        } else if (which == 2 || which == 1) {
-            return this.mGradientColors.get(which)[type];
-        } else {
+        }
+        if (which != 2 && which != 1) {
             throw new IllegalArgumentException("which should be FLAG_SYSTEM or FLAG_NORMAL");
         }
+        return this.mGradientColors.get(which)[type];
     }
 
     public WallpaperColors getWallpaperColors(int which) {
@@ -121,6 +126,7 @@ public class ColorExtractor implements WallpaperManager.OnColorsChangedListener 
         throw new IllegalArgumentException("Invalid value for which: " + which);
     }
 
+    @Override // android.app.WallpaperManager.OnColorsChangedListener
     public void onColorsChanged(WallpaperColors colors, int which) {
         boolean changed = false;
         if ((which & 2) != 0) {
@@ -140,13 +146,12 @@ public class ColorExtractor implements WallpaperManager.OnColorsChangedListener 
         }
     }
 
-    /* access modifiers changed from: protected */
-    public void triggerColorsChanged(int which) {
+    protected void triggerColorsChanged(int which) {
         ArrayList<WeakReference<OnColorsChangedListener>> references = new ArrayList<>(this.mOnColorsChangedListeners);
         int size = references.size();
         for (int i = 0; i < size; i++) {
             WeakReference<OnColorsChangedListener> weakReference = references.get(i);
-            OnColorsChangedListener listener = (OnColorsChangedListener) weakReference.get();
+            OnColorsChangedListener listener = weakReference.get();
             if (listener == null) {
                 this.mOnColorsChangedListeners.remove(weakReference);
             } else {
@@ -167,7 +172,7 @@ public class ColorExtractor implements WallpaperManager.OnColorsChangedListener 
     }
 
     public void addOnColorsChangedListener(OnColorsChangedListener listener) {
-        this.mOnColorsChangedListeners.add(new WeakReference(listener));
+        this.mOnColorsChangedListeners.add(new WeakReference<>(listener));
     }
 
     public void removeOnColorsChangedListener(OnColorsChangedListener listener) {
@@ -182,6 +187,7 @@ public class ColorExtractor implements WallpaperManager.OnColorsChangedListener 
         }
     }
 
+    /* loaded from: classes4.dex */
     public static class GradientColors {
         private int[] mColorPalette;
         private int mMainColor;
@@ -232,14 +238,12 @@ public class ColorExtractor implements WallpaperManager.OnColorsChangedListener 
                 return false;
             }
             GradientColors other = (GradientColors) o;
-            if (other.mMainColor == this.mMainColor && other.mSecondaryColor == this.mSecondaryColor && other.mSupportsDarkText == this.mSupportsDarkText) {
-                return true;
-            }
-            return false;
+            return other.mMainColor == this.mMainColor && other.mSecondaryColor == this.mSecondaryColor && other.mSupportsDarkText == this.mSupportsDarkText;
         }
 
         public int hashCode() {
-            return (((this.mMainColor * 31) + this.mSecondaryColor) * 31) + (this.mSupportsDarkText ^ true ? 1 : 0);
+            int code = this.mMainColor;
+            return (((code * 31) + this.mSecondaryColor) * 31) + (!this.mSupportsDarkText ? 1 : 0);
         }
 
         public String toString() {

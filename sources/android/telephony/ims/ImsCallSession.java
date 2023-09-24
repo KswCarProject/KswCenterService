@@ -1,7 +1,7 @@
 package android.telephony.ims;
 
-import android.os.Message;
-import android.os.RemoteException;
+import android.p007os.Message;
+import android.p007os.RemoteException;
 import android.telephony.CallQuality;
 import android.telephony.ims.aidl.IImsCallSessionListener;
 import android.util.Log;
@@ -10,14 +10,14 @@ import com.android.ims.internal.IImsVideoCallProvider;
 import com.android.internal.telephony.IccCardConstants;
 import java.util.Objects;
 
+/* loaded from: classes4.dex */
 public class ImsCallSession {
     private static final String TAG = "ImsCallSession";
     private boolean mClosed;
-    /* access modifiers changed from: private */
-    public Listener mListener;
-    /* access modifiers changed from: private */
-    public final IImsCallSession miSession;
+    private Listener mListener;
+    private final IImsCallSession miSession;
 
+    /* loaded from: classes4.dex */
     public static class State {
         public static final int ESTABLISHED = 4;
         public static final int ESTABLISHING = 3;
@@ -59,6 +59,7 @@ public class ImsCallSession {
         }
     }
 
+    /* loaded from: classes4.dex */
     public static class Listener {
         public void callSessionProgressing(ImsCallSession session, ImsStreamMediaProfile profile) {
         }
@@ -175,11 +176,12 @@ public class ImsCallSession {
         if (iSession != null) {
             try {
                 iSession.setListener(new IImsCallSessionListenerProxy());
+                return;
             } catch (RemoteException e) {
+                return;
             }
-        } else {
-            this.mClosed = true;
         }
+        this.mClosed = true;
     }
 
     public ImsCallSession(IImsCallSession iSession, Listener listener) {
@@ -189,12 +191,13 @@ public class ImsCallSession {
 
     public void close() {
         synchronized (this) {
-            if (!this.mClosed) {
-                try {
-                    this.miSession.close();
-                    this.mClosed = true;
-                } catch (RemoteException e) {
-                }
+            if (this.mClosed) {
+                return;
+            }
+            try {
+                this.miSession.close();
+                this.mClosed = true;
+            } catch (RemoteException e) {
             }
         }
     }
@@ -280,7 +283,8 @@ public class ImsCallSession {
         if (this.mClosed) {
             return false;
         }
-        switch (getState()) {
+        int state = getState();
+        switch (state) {
             case 0:
             case 1:
             case 2:
@@ -314,164 +318,182 @@ public class ImsCallSession {
     }
 
     public void setMute(boolean muted) {
-        if (!this.mClosed) {
-            try {
-                this.miSession.setMute(muted);
-            } catch (RemoteException e) {
-            }
+        if (this.mClosed) {
+            return;
+        }
+        try {
+            this.miSession.setMute(muted);
+        } catch (RemoteException e) {
         }
     }
 
     public void start(String callee, ImsCallProfile profile) {
-        if (!this.mClosed) {
-            try {
-                this.miSession.start(callee, profile);
-            } catch (RemoteException e) {
-            }
+        if (this.mClosed) {
+            return;
+        }
+        try {
+            this.miSession.start(callee, profile);
+        } catch (RemoteException e) {
         }
     }
 
     public void start(String[] participants, ImsCallProfile profile) {
-        if (!this.mClosed) {
-            try {
-                this.miSession.startConference(participants, profile);
-            } catch (RemoteException e) {
-            }
+        if (this.mClosed) {
+            return;
+        }
+        try {
+            this.miSession.startConference(participants, profile);
+        } catch (RemoteException e) {
         }
     }
 
     public void accept(int callType, ImsStreamMediaProfile profile) {
-        if (!this.mClosed) {
-            try {
-                this.miSession.accept(callType, profile);
-            } catch (RemoteException e) {
-            }
+        if (this.mClosed) {
+            return;
+        }
+        try {
+            this.miSession.accept(callType, profile);
+        } catch (RemoteException e) {
         }
     }
 
     public void deflect(String number) {
-        if (!this.mClosed) {
-            try {
-                this.miSession.deflect(number);
-            } catch (RemoteException e) {
-            }
+        if (this.mClosed) {
+            return;
+        }
+        try {
+            this.miSession.deflect(number);
+        } catch (RemoteException e) {
         }
     }
 
     public void reject(int reason) {
-        if (!this.mClosed) {
-            try {
-                this.miSession.reject(reason);
-            } catch (RemoteException e) {
-            }
+        if (this.mClosed) {
+            return;
+        }
+        try {
+            this.miSession.reject(reason);
+        } catch (RemoteException e) {
         }
     }
 
     public void terminate(int reason) {
-        if (!this.mClosed) {
-            try {
-                this.miSession.terminate(reason);
-            } catch (RemoteException e) {
-            }
+        if (this.mClosed) {
+            return;
+        }
+        try {
+            this.miSession.terminate(reason);
+        } catch (RemoteException e) {
         }
     }
 
     public void hold(ImsStreamMediaProfile profile) {
-        if (!this.mClosed) {
-            try {
-                this.miSession.hold(profile);
-            } catch (RemoteException e) {
-            }
+        if (this.mClosed) {
+            return;
+        }
+        try {
+            this.miSession.hold(profile);
+        } catch (RemoteException e) {
         }
     }
 
     public void resume(ImsStreamMediaProfile profile) {
-        if (!this.mClosed) {
-            try {
-                this.miSession.resume(profile);
-            } catch (RemoteException e) {
-            }
+        if (this.mClosed) {
+            return;
+        }
+        try {
+            this.miSession.resume(profile);
+        } catch (RemoteException e) {
         }
     }
 
     public void merge() {
-        if (!this.mClosed) {
-            try {
-                this.miSession.merge();
-            } catch (RemoteException e) {
-            }
+        if (this.mClosed) {
+            return;
+        }
+        try {
+            this.miSession.merge();
+        } catch (RemoteException e) {
         }
     }
 
     public void update(int callType, ImsStreamMediaProfile profile) {
-        if (!this.mClosed) {
-            try {
-                this.miSession.update(callType, profile);
-            } catch (RemoteException e) {
-            }
+        if (this.mClosed) {
+            return;
+        }
+        try {
+            this.miSession.update(callType, profile);
+        } catch (RemoteException e) {
         }
     }
 
     public void extendToConference(String[] participants) {
-        if (!this.mClosed) {
-            try {
-                this.miSession.extendToConference(participants);
-            } catch (RemoteException e) {
-            }
+        if (this.mClosed) {
+            return;
+        }
+        try {
+            this.miSession.extendToConference(participants);
+        } catch (RemoteException e) {
         }
     }
 
     public void inviteParticipants(String[] participants) {
-        if (!this.mClosed) {
-            try {
-                this.miSession.inviteParticipants(participants);
-            } catch (RemoteException e) {
-            }
+        if (this.mClosed) {
+            return;
+        }
+        try {
+            this.miSession.inviteParticipants(participants);
+        } catch (RemoteException e) {
         }
     }
 
     public void removeParticipants(String[] participants) {
-        if (!this.mClosed) {
-            try {
-                this.miSession.removeParticipants(participants);
-            } catch (RemoteException e) {
-            }
+        if (this.mClosed) {
+            return;
+        }
+        try {
+            this.miSession.removeParticipants(participants);
+        } catch (RemoteException e) {
         }
     }
 
     public void sendDtmf(char c, Message result) {
-        if (!this.mClosed) {
-            try {
-                this.miSession.sendDtmf(c, result);
-            } catch (RemoteException e) {
-            }
+        if (this.mClosed) {
+            return;
+        }
+        try {
+            this.miSession.sendDtmf(c, result);
+        } catch (RemoteException e) {
         }
     }
 
     public void startDtmf(char c) {
-        if (!this.mClosed) {
-            try {
-                this.miSession.startDtmf(c);
-            } catch (RemoteException e) {
-            }
+        if (this.mClosed) {
+            return;
+        }
+        try {
+            this.miSession.startDtmf(c);
+        } catch (RemoteException e) {
         }
     }
 
     public void stopDtmf() {
-        if (!this.mClosed) {
-            try {
-                this.miSession.stopDtmf();
-            } catch (RemoteException e) {
-            }
+        if (this.mClosed) {
+            return;
+        }
+        try {
+            this.miSession.stopDtmf();
+        } catch (RemoteException e) {
         }
     }
 
     public void sendUssd(String ussdMessage) {
-        if (!this.mClosed) {
-            try {
-                this.miSession.sendUssd(ussdMessage);
-            } catch (RemoteException e) {
-            }
+        if (this.mClosed) {
+            return;
+        }
+        try {
+            this.miSession.sendUssd(ussdMessage);
+        } catch (RemoteException e) {
         }
     }
 
@@ -487,257 +509,296 @@ public class ImsCallSession {
     }
 
     public void sendRttMessage(String rttMessage) {
-        if (!this.mClosed) {
-            try {
-                this.miSession.sendRttMessage(rttMessage);
-            } catch (RemoteException e) {
-            }
+        if (this.mClosed) {
+            return;
+        }
+        try {
+            this.miSession.sendRttMessage(rttMessage);
+        } catch (RemoteException e) {
         }
     }
 
     public void sendRttModifyRequest(ImsCallProfile to) {
-        if (!this.mClosed) {
-            try {
-                this.miSession.sendRttModifyRequest(to);
-            } catch (RemoteException e) {
-            }
+        if (this.mClosed) {
+            return;
+        }
+        try {
+            this.miSession.sendRttModifyRequest(to);
+        } catch (RemoteException e) {
         }
     }
 
     public void sendRttModifyResponse(boolean response) {
-        if (!this.mClosed) {
-            try {
-                this.miSession.sendRttModifyResponse(response);
-            } catch (RemoteException e) {
-            }
+        if (this.mClosed) {
+            return;
+        }
+        try {
+            this.miSession.sendRttModifyResponse(response);
+        } catch (RemoteException e) {
         }
     }
 
+    /* loaded from: classes4.dex */
     private class IImsCallSessionListenerProxy extends IImsCallSessionListener.Stub {
         private IImsCallSessionListenerProxy() {
         }
 
+        @Override // android.telephony.ims.aidl.IImsCallSessionListener
         public void callSessionProgressing(ImsStreamMediaProfile profile) {
             if (ImsCallSession.this.mListener != null) {
                 ImsCallSession.this.mListener.callSessionProgressing(ImsCallSession.this, profile);
             }
         }
 
+        @Override // android.telephony.ims.aidl.IImsCallSessionListener
         public void callSessionInitiated(ImsCallProfile profile) {
             if (ImsCallSession.this.mListener != null) {
                 ImsCallSession.this.mListener.callSessionStarted(ImsCallSession.this, profile);
             }
         }
 
+        @Override // android.telephony.ims.aidl.IImsCallSessionListener
         public void callSessionInitiatedFailed(ImsReasonInfo reasonInfo) {
             if (ImsCallSession.this.mListener != null) {
                 ImsCallSession.this.mListener.callSessionStartFailed(ImsCallSession.this, reasonInfo);
             }
         }
 
+        @Override // android.telephony.ims.aidl.IImsCallSessionListener
         public void callSessionTerminated(ImsReasonInfo reasonInfo) {
             if (ImsCallSession.this.mListener != null) {
                 ImsCallSession.this.mListener.callSessionTerminated(ImsCallSession.this, reasonInfo);
             }
         }
 
+        @Override // android.telephony.ims.aidl.IImsCallSessionListener
         public void callSessionHeld(ImsCallProfile profile) {
             if (ImsCallSession.this.mListener != null) {
                 ImsCallSession.this.mListener.callSessionHeld(ImsCallSession.this, profile);
             }
         }
 
+        @Override // android.telephony.ims.aidl.IImsCallSessionListener
         public void callSessionHoldFailed(ImsReasonInfo reasonInfo) {
             if (ImsCallSession.this.mListener != null) {
                 ImsCallSession.this.mListener.callSessionHoldFailed(ImsCallSession.this, reasonInfo);
             }
         }
 
+        @Override // android.telephony.ims.aidl.IImsCallSessionListener
         public void callSessionHoldReceived(ImsCallProfile profile) {
             if (ImsCallSession.this.mListener != null) {
                 ImsCallSession.this.mListener.callSessionHoldReceived(ImsCallSession.this, profile);
             }
         }
 
+        @Override // android.telephony.ims.aidl.IImsCallSessionListener
         public void callSessionResumed(ImsCallProfile profile) {
             if (ImsCallSession.this.mListener != null) {
                 ImsCallSession.this.mListener.callSessionResumed(ImsCallSession.this, profile);
             }
         }
 
+        @Override // android.telephony.ims.aidl.IImsCallSessionListener
         public void callSessionResumeFailed(ImsReasonInfo reasonInfo) {
             if (ImsCallSession.this.mListener != null) {
                 ImsCallSession.this.mListener.callSessionResumeFailed(ImsCallSession.this, reasonInfo);
             }
         }
 
+        @Override // android.telephony.ims.aidl.IImsCallSessionListener
         public void callSessionResumeReceived(ImsCallProfile profile) {
             if (ImsCallSession.this.mListener != null) {
                 ImsCallSession.this.mListener.callSessionResumeReceived(ImsCallSession.this, profile);
             }
         }
 
+        @Override // android.telephony.ims.aidl.IImsCallSessionListener
         public void callSessionMergeStarted(IImsCallSession newSession, ImsCallProfile profile) {
-            Log.d(ImsCallSession.TAG, "callSessionMergeStarted");
+            Log.m72d(ImsCallSession.TAG, "callSessionMergeStarted");
         }
 
+        @Override // android.telephony.ims.aidl.IImsCallSessionListener
         public void callSessionMergeComplete(IImsCallSession newSession) {
-            if (ImsCallSession.this.mListener == null) {
-                return;
-            }
-            if (newSession != null) {
+            if (ImsCallSession.this.mListener != null) {
+                if (newSession == null) {
+                    ImsCallSession.this.mListener.callSessionMergeComplete(null);
+                    return;
+                }
                 ImsCallSession validActiveSession = ImsCallSession.this;
                 try {
                     if (!Objects.equals(ImsCallSession.this.miSession.getCallId(), newSession.getCallId())) {
                         validActiveSession = new ImsCallSession(newSession);
                     }
                 } catch (RemoteException e) {
-                    Log.e(ImsCallSession.TAG, "callSessionMergeComplete: exception for getCallId!");
+                    Log.m70e(ImsCallSession.TAG, "callSessionMergeComplete: exception for getCallId!");
                 }
                 ImsCallSession.this.mListener.callSessionMergeComplete(validActiveSession);
-                return;
             }
-            ImsCallSession.this.mListener.callSessionMergeComplete((ImsCallSession) null);
         }
 
+        @Override // android.telephony.ims.aidl.IImsCallSessionListener
         public void callSessionMergeFailed(ImsReasonInfo reasonInfo) {
             if (ImsCallSession.this.mListener != null) {
                 ImsCallSession.this.mListener.callSessionMergeFailed(ImsCallSession.this, reasonInfo);
             }
         }
 
+        @Override // android.telephony.ims.aidl.IImsCallSessionListener
         public void callSessionUpdated(ImsCallProfile profile) {
             if (ImsCallSession.this.mListener != null) {
                 ImsCallSession.this.mListener.callSessionUpdated(ImsCallSession.this, profile);
             }
         }
 
+        @Override // android.telephony.ims.aidl.IImsCallSessionListener
         public void callSessionUpdateFailed(ImsReasonInfo reasonInfo) {
             if (ImsCallSession.this.mListener != null) {
                 ImsCallSession.this.mListener.callSessionUpdateFailed(ImsCallSession.this, reasonInfo);
             }
         }
 
+        @Override // android.telephony.ims.aidl.IImsCallSessionListener
         public void callSessionUpdateReceived(ImsCallProfile profile) {
             if (ImsCallSession.this.mListener != null) {
                 ImsCallSession.this.mListener.callSessionUpdateReceived(ImsCallSession.this, profile);
             }
         }
 
+        @Override // android.telephony.ims.aidl.IImsCallSessionListener
         public void callSessionConferenceExtended(IImsCallSession newSession, ImsCallProfile profile) {
             if (ImsCallSession.this.mListener != null) {
                 ImsCallSession.this.mListener.callSessionConferenceExtended(ImsCallSession.this, new ImsCallSession(newSession), profile);
             }
         }
 
+        @Override // android.telephony.ims.aidl.IImsCallSessionListener
         public void callSessionConferenceExtendFailed(ImsReasonInfo reasonInfo) {
             if (ImsCallSession.this.mListener != null) {
                 ImsCallSession.this.mListener.callSessionConferenceExtendFailed(ImsCallSession.this, reasonInfo);
             }
         }
 
+        @Override // android.telephony.ims.aidl.IImsCallSessionListener
         public void callSessionConferenceExtendReceived(IImsCallSession newSession, ImsCallProfile profile) {
             if (ImsCallSession.this.mListener != null) {
                 ImsCallSession.this.mListener.callSessionConferenceExtendReceived(ImsCallSession.this, new ImsCallSession(newSession), profile);
             }
         }
 
+        @Override // android.telephony.ims.aidl.IImsCallSessionListener
         public void callSessionInviteParticipantsRequestDelivered() {
             if (ImsCallSession.this.mListener != null) {
                 ImsCallSession.this.mListener.callSessionInviteParticipantsRequestDelivered(ImsCallSession.this);
             }
         }
 
+        @Override // android.telephony.ims.aidl.IImsCallSessionListener
         public void callSessionInviteParticipantsRequestFailed(ImsReasonInfo reasonInfo) {
             if (ImsCallSession.this.mListener != null) {
                 ImsCallSession.this.mListener.callSessionInviteParticipantsRequestFailed(ImsCallSession.this, reasonInfo);
             }
         }
 
+        @Override // android.telephony.ims.aidl.IImsCallSessionListener
         public void callSessionRemoveParticipantsRequestDelivered() {
             if (ImsCallSession.this.mListener != null) {
                 ImsCallSession.this.mListener.callSessionRemoveParticipantsRequestDelivered(ImsCallSession.this);
             }
         }
 
+        @Override // android.telephony.ims.aidl.IImsCallSessionListener
         public void callSessionRemoveParticipantsRequestFailed(ImsReasonInfo reasonInfo) {
             if (ImsCallSession.this.mListener != null) {
                 ImsCallSession.this.mListener.callSessionRemoveParticipantsRequestFailed(ImsCallSession.this, reasonInfo);
             }
         }
 
+        @Override // android.telephony.ims.aidl.IImsCallSessionListener
         public void callSessionConferenceStateUpdated(ImsConferenceState state) {
             if (ImsCallSession.this.mListener != null) {
                 ImsCallSession.this.mListener.callSessionConferenceStateUpdated(ImsCallSession.this, state);
             }
         }
 
+        @Override // android.telephony.ims.aidl.IImsCallSessionListener
         public void callSessionUssdMessageReceived(int mode, String ussdMessage) {
             if (ImsCallSession.this.mListener != null) {
                 ImsCallSession.this.mListener.callSessionUssdMessageReceived(ImsCallSession.this, mode, ussdMessage);
             }
         }
 
+        @Override // android.telephony.ims.aidl.IImsCallSessionListener
         public void callSessionMayHandover(int srcAccessTech, int targetAccessTech) {
             if (ImsCallSession.this.mListener != null) {
                 ImsCallSession.this.mListener.callSessionMayHandover(ImsCallSession.this, srcAccessTech, targetAccessTech);
             }
         }
 
+        @Override // android.telephony.ims.aidl.IImsCallSessionListener
         public void callSessionHandover(int srcAccessTech, int targetAccessTech, ImsReasonInfo reasonInfo) {
             if (ImsCallSession.this.mListener != null) {
                 ImsCallSession.this.mListener.callSessionHandover(ImsCallSession.this, srcAccessTech, targetAccessTech, reasonInfo);
             }
         }
 
+        @Override // android.telephony.ims.aidl.IImsCallSessionListener
         public void callSessionHandoverFailed(int srcAccessTech, int targetAccessTech, ImsReasonInfo reasonInfo) {
             if (ImsCallSession.this.mListener != null) {
                 ImsCallSession.this.mListener.callSessionHandoverFailed(ImsCallSession.this, srcAccessTech, targetAccessTech, reasonInfo);
             }
         }
 
+        @Override // android.telephony.ims.aidl.IImsCallSessionListener
         public void callSessionTtyModeReceived(int mode) {
             if (ImsCallSession.this.mListener != null) {
                 ImsCallSession.this.mListener.callSessionTtyModeReceived(ImsCallSession.this, mode);
             }
         }
 
+        @Override // android.telephony.ims.aidl.IImsCallSessionListener
         public void callSessionMultipartyStateChanged(boolean isMultiParty) {
             if (ImsCallSession.this.mListener != null) {
                 ImsCallSession.this.mListener.callSessionMultipartyStateChanged(ImsCallSession.this, isMultiParty);
             }
         }
 
+        @Override // android.telephony.ims.aidl.IImsCallSessionListener
         public void callSessionSuppServiceReceived(ImsSuppServiceNotification suppServiceInfo) {
             if (ImsCallSession.this.mListener != null) {
                 ImsCallSession.this.mListener.callSessionSuppServiceReceived(ImsCallSession.this, suppServiceInfo);
             }
         }
 
+        @Override // android.telephony.ims.aidl.IImsCallSessionListener
         public void callSessionRttModifyRequestReceived(ImsCallProfile callProfile) {
             if (ImsCallSession.this.mListener != null) {
                 ImsCallSession.this.mListener.callSessionRttModifyRequestReceived(ImsCallSession.this, callProfile);
             }
         }
 
+        @Override // android.telephony.ims.aidl.IImsCallSessionListener
         public void callSessionRttModifyResponseReceived(int status) {
             if (ImsCallSession.this.mListener != null) {
                 ImsCallSession.this.mListener.callSessionRttModifyResponseReceived(status);
             }
         }
 
+        @Override // android.telephony.ims.aidl.IImsCallSessionListener
         public void callSessionRttMessageReceived(String rttMessage) {
             if (ImsCallSession.this.mListener != null) {
                 ImsCallSession.this.mListener.callSessionRttMessageReceived(rttMessage);
             }
         }
 
+        @Override // android.telephony.ims.aidl.IImsCallSessionListener
         public void callSessionRttAudioIndicatorChanged(ImsStreamMediaProfile profile) {
             if (ImsCallSession.this.mListener != null) {
                 ImsCallSession.this.mListener.callSessionRttAudioIndicatorChanged(profile);
             }
         }
 
+        @Override // android.telephony.ims.aidl.IImsCallSessionListener
         public void callQualityChanged(CallQuality callQuality) {
             if (ImsCallSession.this.mListener != null) {
                 ImsCallSession.this.mListener.callQualityChanged(callQuality);

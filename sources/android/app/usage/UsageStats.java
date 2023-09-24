@@ -2,14 +2,17 @@ package android.app.usage;
 
 import android.annotation.SystemApi;
 import android.annotation.UnsupportedAppUsage;
-import android.os.Bundle;
-import android.os.Parcel;
-import android.os.Parcelable;
+import android.p007os.Bundle;
+import android.p007os.Parcel;
+import android.p007os.Parcelable;
 import android.util.ArrayMap;
 import android.util.SparseIntArray;
 
+/* loaded from: classes.dex */
 public final class UsageStats implements Parcelable {
-    public static final Parcelable.Creator<UsageStats> CREATOR = new Parcelable.Creator<UsageStats>() {
+    public static final Parcelable.Creator<UsageStats> CREATOR = new Parcelable.Creator<UsageStats>() { // from class: android.app.usage.UsageStats.1
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public UsageStats createFromParcel(Parcel in) {
             UsageStats stats = new UsageStats();
             stats.mPackageName = in.readString();
@@ -29,7 +32,8 @@ public final class UsageStats implements Parcelable {
                 stats.mChooserCounts = new ArrayMap<>();
                 for (String action : allCounts.keySet()) {
                     if (!stats.mChooserCounts.containsKey(action)) {
-                        stats.mChooserCounts.put(action, new ArrayMap<>());
+                        ArrayMap<String, Integer> newCounts = new ArrayMap<>();
+                        stats.mChooserCounts.put(action, newCounts);
                     }
                     Bundle currentCounts = allCounts.getBundle(action);
                     if (currentCounts != null) {
@@ -50,32 +54,37 @@ public final class UsageStats implements Parcelable {
         private void readSparseIntArray(Parcel in, SparseIntArray arr) {
             int size = in.readInt();
             for (int i = 0; i < size; i++) {
-                arr.put(in.readInt(), in.readInt());
+                int key = in.readInt();
+                int value = in.readInt();
+                arr.put(key, value);
             }
         }
 
         private void readBundleToEventMap(Bundle bundle, ArrayMap<String, Integer> eventMap) {
             if (bundle != null) {
                 for (String className : bundle.keySet()) {
-                    eventMap.put(className, Integer.valueOf(bundle.getInt(className)));
+                    int event = bundle.getInt(className);
+                    eventMap.put(className, Integer.valueOf(event));
                 }
             }
         }
 
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public UsageStats[] newArray(int size) {
             return new UsageStats[size];
         }
     };
-    public SparseIntArray mActivities = new SparseIntArray();
+    public SparseIntArray mActivities;
     public int mAppLaunchCount;
     @UnsupportedAppUsage(maxTargetSdk = 28, trackingBug = 115609023)
     public long mBeginTimeStamp;
-    public ArrayMap<String, ArrayMap<String, Integer>> mChooserCounts = new ArrayMap<>();
+    public ArrayMap<String, ArrayMap<String, Integer>> mChooserCounts;
     @UnsupportedAppUsage(maxTargetSdk = 28, trackingBug = 115609023)
     public long mEndTimeStamp;
-    public ArrayMap<String, Integer> mForegroundServices = new ArrayMap<>();
-    @Deprecated
+    public ArrayMap<String, Integer> mForegroundServices;
     @UnsupportedAppUsage
+    @Deprecated
     public int mLastEvent;
     public long mLastTimeForegroundServiceUsed;
     @UnsupportedAppUsage(maxTargetSdk = 28, trackingBug = 115609023)
@@ -91,9 +100,15 @@ public final class UsageStats implements Parcelable {
     public long mTotalTimeVisible;
 
     public UsageStats() {
+        this.mActivities = new SparseIntArray();
+        this.mForegroundServices = new ArrayMap<>();
+        this.mChooserCounts = new ArrayMap<>();
     }
 
     public UsageStats(UsageStats stats) {
+        this.mActivities = new SparseIntArray();
+        this.mForegroundServices = new ArrayMap<>();
+        this.mChooserCounts = new ArrayMap<>();
         this.mPackageName = stats.mPackageName;
         this.mBeginTimeStamp = stats.mBeginTimeStamp;
         this.mEndTimeStamp = stats.mEndTimeStamp;
@@ -186,41 +201,42 @@ public final class UsageStats implements Parcelable {
     }
 
     public void add(UsageStats right) {
-        if (this.mPackageName.equals(right.mPackageName)) {
-            if (right.mBeginTimeStamp > this.mBeginTimeStamp) {
-                mergeEventMap(this.mActivities, right.mActivities);
-                mergeEventMap(this.mForegroundServices, right.mForegroundServices);
-                this.mLastTimeUsed = Math.max(this.mLastTimeUsed, right.mLastTimeUsed);
-                this.mLastTimeVisible = Math.max(this.mLastTimeVisible, right.mLastTimeVisible);
-                this.mLastTimeForegroundServiceUsed = Math.max(this.mLastTimeForegroundServiceUsed, right.mLastTimeForegroundServiceUsed);
-            }
-            this.mBeginTimeStamp = Math.min(this.mBeginTimeStamp, right.mBeginTimeStamp);
-            this.mEndTimeStamp = Math.max(this.mEndTimeStamp, right.mEndTimeStamp);
-            this.mTotalTimeInForeground += right.mTotalTimeInForeground;
-            this.mTotalTimeVisible += right.mTotalTimeVisible;
-            this.mTotalTimeForegroundServiceUsed += right.mTotalTimeForegroundServiceUsed;
-            this.mLaunchCount += right.mLaunchCount;
-            this.mAppLaunchCount += right.mAppLaunchCount;
-            if (this.mChooserCounts == null) {
-                this.mChooserCounts = right.mChooserCounts;
-            } else if (right.mChooserCounts != null) {
-                int chooserCountsSize = right.mChooserCounts.size();
-                for (int i = 0; i < chooserCountsSize; i++) {
-                    String action = right.mChooserCounts.keyAt(i);
-                    ArrayMap<String, Integer> counts = right.mChooserCounts.valueAt(i);
-                    if (!this.mChooserCounts.containsKey(action) || this.mChooserCounts.get(action) == null) {
-                        this.mChooserCounts.put(action, counts);
-                    } else {
-                        int annotationSize = counts.size();
-                        for (int j = 0; j < annotationSize; j++) {
-                            String key = counts.keyAt(j);
-                            this.mChooserCounts.get(action).put(key, Integer.valueOf(((Integer) this.mChooserCounts.get(action).getOrDefault(key, 0)).intValue() + counts.valueAt(j).intValue()));
-                        }
+        if (!this.mPackageName.equals(right.mPackageName)) {
+            throw new IllegalArgumentException("Can't merge UsageStats for package '" + this.mPackageName + "' with UsageStats for package '" + right.mPackageName + "'.");
+        }
+        if (right.mBeginTimeStamp > this.mBeginTimeStamp) {
+            mergeEventMap(this.mActivities, right.mActivities);
+            mergeEventMap(this.mForegroundServices, right.mForegroundServices);
+            this.mLastTimeUsed = Math.max(this.mLastTimeUsed, right.mLastTimeUsed);
+            this.mLastTimeVisible = Math.max(this.mLastTimeVisible, right.mLastTimeVisible);
+            this.mLastTimeForegroundServiceUsed = Math.max(this.mLastTimeForegroundServiceUsed, right.mLastTimeForegroundServiceUsed);
+        }
+        this.mBeginTimeStamp = Math.min(this.mBeginTimeStamp, right.mBeginTimeStamp);
+        this.mEndTimeStamp = Math.max(this.mEndTimeStamp, right.mEndTimeStamp);
+        this.mTotalTimeInForeground += right.mTotalTimeInForeground;
+        this.mTotalTimeVisible += right.mTotalTimeVisible;
+        this.mTotalTimeForegroundServiceUsed += right.mTotalTimeForegroundServiceUsed;
+        this.mLaunchCount += right.mLaunchCount;
+        this.mAppLaunchCount += right.mAppLaunchCount;
+        if (this.mChooserCounts == null) {
+            this.mChooserCounts = right.mChooserCounts;
+        } else if (right.mChooserCounts != null) {
+            int chooserCountsSize = right.mChooserCounts.size();
+            for (int i = 0; i < chooserCountsSize; i++) {
+                String action = right.mChooserCounts.keyAt(i);
+                ArrayMap<String, Integer> counts = right.mChooserCounts.valueAt(i);
+                if (!this.mChooserCounts.containsKey(action) || this.mChooserCounts.get(action) == null) {
+                    this.mChooserCounts.put(action, counts);
+                } else {
+                    int annotationSize = counts.size();
+                    for (int j = 0; j < annotationSize; j++) {
+                        String key = counts.keyAt(j);
+                        int rightValue = counts.valueAt(j).intValue();
+                        int leftValue = this.mChooserCounts.get(action).getOrDefault(key, 0).intValue();
+                        this.mChooserCounts.get(action).put(key, Integer.valueOf(leftValue + rightValue));
                     }
                 }
             }
-        } else {
-            throw new IllegalArgumentException("Can't merge UsageStats for package '" + this.mPackageName + "' with UsageStats for package '" + right.mPackageName + "'.");
         }
     }
 
@@ -271,68 +287,76 @@ public final class UsageStats implements Parcelable {
     }
 
     private void updateActivity(String className, long timeStamp, int eventType, int instanceId) {
-        if (eventType == 1 || eventType == 2 || eventType == 23 || eventType == 24) {
-            int index = this.mActivities.indexOfKey(instanceId);
-            if (index >= 0) {
-                switch (this.mActivities.valueAt(index)) {
-                    case 1:
-                        incrementTimeUsed(timeStamp);
-                        incrementTimeVisible(timeStamp);
-                        break;
-                    case 2:
-                        incrementTimeVisible(timeStamp);
-                        break;
-                }
-            }
-            switch (eventType) {
+        if (eventType != 1 && eventType != 2 && eventType != 23 && eventType != 24) {
+            return;
+        }
+        int index = this.mActivities.indexOfKey(instanceId);
+        if (index >= 0) {
+            int lastEvent = this.mActivities.valueAt(index);
+            switch (lastEvent) {
                 case 1:
-                    if (!hasVisibleActivity()) {
-                        this.mLastTimeUsed = timeStamp;
-                        this.mLastTimeVisible = timeStamp;
-                    } else if (!hasForegroundActivity()) {
-                        this.mLastTimeUsed = timeStamp;
-                    }
-                    this.mActivities.put(instanceId, eventType);
-                    return;
+                    incrementTimeUsed(timeStamp);
+                    incrementTimeVisible(timeStamp);
+                    break;
                 case 2:
-                    if (!hasVisibleActivity()) {
-                        this.mLastTimeVisible = timeStamp;
-                    }
-                    this.mActivities.put(instanceId, eventType);
-                    return;
-                case 23:
-                case 24:
-                    this.mActivities.delete(instanceId);
-                    return;
-                default:
-                    return;
+                    incrementTimeVisible(timeStamp);
+                    break;
             }
+        }
+        switch (eventType) {
+            case 1:
+                if (!hasVisibleActivity()) {
+                    this.mLastTimeUsed = timeStamp;
+                    this.mLastTimeVisible = timeStamp;
+                } else if (!hasForegroundActivity()) {
+                    this.mLastTimeUsed = timeStamp;
+                }
+                this.mActivities.put(instanceId, eventType);
+                return;
+            case 2:
+                if (!hasVisibleActivity()) {
+                    this.mLastTimeVisible = timeStamp;
+                }
+                this.mActivities.put(instanceId, eventType);
+                return;
+            case 23:
+            case 24:
+                this.mActivities.delete(instanceId);
+                return;
+            default:
+                return;
         }
     }
 
     private void updateForegroundService(String className, long timeStamp, int eventType) {
         int intValue;
-        if (eventType == 20 || eventType == 19) {
-            Integer lastEvent = this.mForegroundServices.get(className);
-            if (lastEvent != null && ((intValue = lastEvent.intValue()) == 19 || intValue == 21)) {
-                incrementServiceTimeUsed(timeStamp);
-            }
-            switch (eventType) {
-                case 19:
-                    if (!anyForegroundServiceStarted()) {
-                        this.mLastTimeForegroundServiceUsed = timeStamp;
-                    }
-                    this.mForegroundServices.put(className, Integer.valueOf(eventType));
-                    return;
-                case 20:
-                    this.mForegroundServices.remove(className);
-                    return;
-                default:
-                    return;
-            }
+        if (eventType != 20 && eventType != 19) {
+            return;
+        }
+        Integer lastEvent = this.mForegroundServices.get(className);
+        if (lastEvent != null && ((intValue = lastEvent.intValue()) == 19 || intValue == 21)) {
+            incrementServiceTimeUsed(timeStamp);
+        }
+        switch (eventType) {
+            case 19:
+                if (!anyForegroundServiceStarted()) {
+                    this.mLastTimeForegroundServiceUsed = timeStamp;
+                }
+                this.mForegroundServices.put(className, Integer.valueOf(eventType));
+                return;
+            case 20:
+                this.mForegroundServices.remove(className);
+                return;
+            default:
+                return;
         }
     }
 
+    /* JADX WARN: Can't fix incorrect switch cases order, some code will duplicate */
+    /* JADX WARN: Removed duplicated region for block: B:25:0x0050  */
+    /*
+        Code decompiled incorrectly, please refer to instructions dump.
+    */
     public void update(String className, long timeStamp, int eventType, int instanceId) {
         switch (eventType) {
             case 1:
@@ -364,9 +388,6 @@ public final class UsageStats implements Parcelable {
                             break;
                         }
                         break;
-                    case 23:
-                    case 24:
-                        break;
                     case 25:
                     case 26:
                         if (hasForegroundActivity()) {
@@ -381,8 +402,6 @@ public final class UsageStats implements Parcelable {
                         }
                         break;
                 }
-                updateActivity(className, timeStamp, eventType, instanceId);
-                break;
         }
         this.mEndTimeStamp = timeStamp;
         if (eventType == 1) {
@@ -390,10 +409,12 @@ public final class UsageStats implements Parcelable {
         }
     }
 
+    @Override // android.p007os.Parcelable
     public int describeContents() {
         return 0;
     }
 
+    @Override // android.p007os.Parcelable
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeString(this.mPackageName);
         dest.writeLong(this.mBeginTimeStamp);

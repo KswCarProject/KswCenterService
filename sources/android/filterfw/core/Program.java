@@ -2,6 +2,7 @@ package android.filterfw.core;
 
 import android.annotation.UnsupportedAppUsage;
 
+/* loaded from: classes.dex */
 public abstract class Program {
     public abstract Object getHostValue(String str);
 
@@ -13,7 +14,8 @@ public abstract class Program {
 
     @UnsupportedAppUsage
     public void process(Frame input, Frame output) {
-        process(new Frame[]{input}, output);
+        Frame[] inputs = {input};
+        process(inputs, output);
     }
 
     public void reset() {

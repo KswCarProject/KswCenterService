@@ -8,6 +8,7 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
+/* loaded from: classes4.dex */
 public abstract class WebSettings {
     public static final int FORCE_DARK_AUTO = 1;
     public static final int FORCE_DARK_OFF = 0;
@@ -27,13 +28,16 @@ public abstract class WebSettings {
     public static final int MIXED_CONTENT_NEVER_ALLOW = 1;
 
     @Retention(RetentionPolicy.SOURCE)
+    /* loaded from: classes4.dex */
     public @interface CacheMode {
     }
 
     @Retention(RetentionPolicy.SOURCE)
+    /* loaded from: classes4.dex */
     public @interface ForceDark {
     }
 
+    /* loaded from: classes4.dex */
     public enum LayoutAlgorithm {
         NORMAL,
         SINGLE_COLUMN,
@@ -43,15 +47,18 @@ public abstract class WebSettings {
 
     @Target({ElementType.PARAMETER, ElementType.METHOD})
     @Retention(RetentionPolicy.SOURCE)
+    /* loaded from: classes4.dex */
     private @interface MenuItemFlags {
     }
 
+    /* loaded from: classes4.dex */
     public enum PluginState {
         ON,
         ON_DEMAND,
         OFF
     }
 
+    /* loaded from: classes4.dex */
     public enum RenderPriority {
         NORMAL,
         HIGH,
@@ -310,6 +317,7 @@ public abstract class WebSettings {
     public abstract boolean supportZoom();
 
     @Deprecated
+    /* loaded from: classes4.dex */
     public enum TextSize {
         SMALLEST(50),
         SMALLER(75),
@@ -320,11 +328,12 @@ public abstract class WebSettings {
         @UnsupportedAppUsage
         int value;
 
-        private TextSize(int size) {
+        TextSize(int size) {
             this.value = size;
         }
     }
 
+    /* loaded from: classes4.dex */
     public enum ZoomDensity {
         FAR(150),
         MEDIUM(100),
@@ -332,7 +341,7 @@ public abstract class WebSettings {
         
         int value;
 
-        private ZoomDensity(int size) {
+        ZoomDensity(int size) {
             this.value = size;
         }
 
@@ -346,72 +355,43 @@ public abstract class WebSettings {
         setTextZoom(t.value);
     }
 
-    /* JADX WARNING: Code restructure failed: missing block: B:17:0x002d, code lost:
-        return r0 != null ? r0 : android.webkit.WebSettings.TextSize.NORMAL;
-     */
-    @java.lang.Deprecated
-    /* Code decompiled incorrectly, please refer to instructions dump. */
-    public synchronized android.webkit.WebSettings.TextSize getTextSize() {
-        /*
-            r8 = this;
-            monitor-enter(r8)
-            r0 = 0
-            r1 = 2147483647(0x7fffffff, float:NaN)
-            int r2 = r8.getTextZoom()     // Catch:{ all -> 0x002e }
-            android.webkit.WebSettings$TextSize[] r3 = android.webkit.WebSettings.TextSize.values()     // Catch:{ all -> 0x002e }
-            int r4 = r3.length     // Catch:{ all -> 0x002e }
-            r5 = 0
-        L_0x000f:
-            if (r5 >= r4) goto L_0x0026
-            r6 = r3[r5]     // Catch:{ all -> 0x002e }
-            int r7 = r6.value     // Catch:{ all -> 0x002e }
-            int r7 = r2 - r7
-            int r7 = java.lang.Math.abs(r7)     // Catch:{ all -> 0x002e }
-            if (r7 != 0) goto L_0x001f
-            monitor-exit(r8)
-            return r6
-        L_0x001f:
-            if (r7 >= r1) goto L_0x0023
-            r1 = r7
-            r0 = r6
-        L_0x0023:
-            int r5 = r5 + 1
-            goto L_0x000f
-        L_0x0026:
-            if (r0 == 0) goto L_0x002a
-            r3 = r0
-            goto L_0x002c
-        L_0x002a:
-            android.webkit.WebSettings$TextSize r3 = android.webkit.WebSettings.TextSize.NORMAL     // Catch:{ all -> 0x002e }
-        L_0x002c:
-            monitor-exit(r8)
-            return r3
-        L_0x002e:
-            r0 = move-exception
-            monitor-exit(r8)
-            throw r0
-        */
-        throw new UnsupportedOperationException("Method not decompiled: android.webkit.WebSettings.getTextSize():android.webkit.WebSettings$TextSize");
+    @Deprecated
+    public synchronized TextSize getTextSize() {
+        TextSize[] values;
+        TextSize closestSize = null;
+        int smallestDelta = Integer.MAX_VALUE;
+        int textSize = getTextZoom();
+        for (TextSize size : TextSize.values()) {
+            int delta = Math.abs(textSize - size.value);
+            if (delta == 0) {
+                return size;
+            }
+            if (delta < smallestDelta) {
+                smallestDelta = delta;
+                closestSize = size;
+            }
+        }
+        return closestSize != null ? closestSize : TextSize.NORMAL;
     }
 
-    @Deprecated
     @UnsupportedAppUsage
+    @Deprecated
     public void setUseDoubleTree(boolean use) {
     }
 
-    @Deprecated
     @UnsupportedAppUsage
+    @Deprecated
     public boolean getUseDoubleTree() {
         return false;
     }
 
-    @Deprecated
     @UnsupportedAppUsage
+    @Deprecated
     public void setPluginsPath(String pluginsPath) {
     }
 
-    @Deprecated
     @UnsupportedAppUsage
+    @Deprecated
     public String getPluginsPath() {
         return "";
     }

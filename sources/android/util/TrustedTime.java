@@ -2,6 +2,7 @@ package android.util;
 
 import android.annotation.UnsupportedAppUsage;
 
+/* loaded from: classes4.dex */
 public interface TrustedTime {
     @UnsupportedAppUsage
     long currentTimeMillis();

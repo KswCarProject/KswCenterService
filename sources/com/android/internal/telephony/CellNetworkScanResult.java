@@ -1,16 +1,21 @@
 package com.android.internal.telephony;
 
-import android.os.Parcel;
-import android.os.Parcelable;
+import android.p007os.Parcel;
+import android.p007os.Parcelable;
 import java.util.ArrayList;
 import java.util.List;
 
+/* loaded from: classes4.dex */
 public class CellNetworkScanResult implements Parcelable {
-    public static final Parcelable.Creator<CellNetworkScanResult> CREATOR = new Parcelable.Creator<CellNetworkScanResult>() {
+    public static final Parcelable.Creator<CellNetworkScanResult> CREATOR = new Parcelable.Creator<CellNetworkScanResult>() { // from class: com.android.internal.telephony.CellNetworkScanResult.1
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public CellNetworkScanResult createFromParcel(Parcel in) {
             return new CellNetworkScanResult(in);
         }
 
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public CellNetworkScanResult[] newArray(int size) {
             return new CellNetworkScanResult[size];
         }
@@ -48,20 +53,22 @@ public class CellNetworkScanResult implements Parcelable {
         return this.mOperators;
     }
 
+    @Override // android.p007os.Parcelable
     public int describeContents() {
         return 0;
     }
 
+    @Override // android.p007os.Parcelable
     public void writeToParcel(Parcel out, int flags) {
         out.writeInt(this.mStatus);
-        if (this.mOperators == null || this.mOperators.size() <= 0) {
-            out.writeInt(0);
+        if (this.mOperators != null && this.mOperators.size() > 0) {
+            out.writeInt(this.mOperators.size());
+            for (OperatorInfo network : this.mOperators) {
+                network.writeToParcel(out, flags);
+            }
             return;
         }
-        out.writeInt(this.mOperators.size());
-        for (OperatorInfo network : this.mOperators) {
-            network.writeToParcel(out, flags);
-        }
+        out.writeInt(0);
     }
 
     public String toString() {

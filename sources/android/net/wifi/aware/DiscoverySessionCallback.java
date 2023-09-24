@@ -2,6 +2,7 @@ package android.net.wifi.aware;
 
 import java.util.List;
 
+/* loaded from: classes3.dex */
 public class DiscoverySessionCallback {
     public void onPublishStarted(PublishDiscoverySession session) {
     }
@@ -18,10 +19,10 @@ public class DiscoverySessionCallback {
     public void onSessionTerminated() {
     }
 
-    public void onServiceDiscovered(PeerHandle peerHandle, byte[] serviceSpecificInfo, List<byte[]> list) {
+    public void onServiceDiscovered(PeerHandle peerHandle, byte[] serviceSpecificInfo, List<byte[]> matchFilter) {
     }
 
-    public void onServiceDiscoveredWithinRange(PeerHandle peerHandle, byte[] serviceSpecificInfo, List<byte[]> list, int distanceMm) {
+    public void onServiceDiscoveredWithinRange(PeerHandle peerHandle, byte[] serviceSpecificInfo, List<byte[]> matchFilter, int distanceMm) {
     }
 
     public void onMessageSendSucceeded(int messageId) {

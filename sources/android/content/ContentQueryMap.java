@@ -2,23 +2,24 @@ package android.content;
 
 import android.database.ContentObserver;
 import android.database.Cursor;
-import android.os.Handler;
+import android.p007os.Handler;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Observable;
 
+/* loaded from: classes.dex */
 public class ContentQueryMap extends Observable {
     private String[] mColumnNames;
     private ContentObserver mContentObserver;
     private volatile Cursor mCursor;
-    /* access modifiers changed from: private */
-    public boolean mDirty = false;
-    private Handler mHandlerForUpdateNotifications = null;
-    private boolean mKeepUpdated = false;
+    private Handler mHandlerForUpdateNotifications;
     private int mKeyColumn;
+    private boolean mKeepUpdated = false;
     private Map<String, ContentValues> mValues = null;
+    private boolean mDirty = false;
 
     public ContentQueryMap(Cursor cursor, String columnNameOfKey, boolean keepUpdated, Handler handlerForUpdateNotifications) {
+        this.mHandlerForUpdateNotifications = null;
         this.mCursor = cursor;
         this.mColumnNames = this.mCursor.getColumnNames();
         this.mKeyColumn = this.mCursor.getColumnIndexOrThrow(columnNameOfKey);
@@ -30,30 +31,32 @@ public class ContentQueryMap extends Observable {
     }
 
     public void setKeepUpdated(boolean keepUpdated) {
-        if (keepUpdated != this.mKeepUpdated) {
-            this.mKeepUpdated = keepUpdated;
-            if (!this.mKeepUpdated) {
-                this.mCursor.unregisterContentObserver(this.mContentObserver);
-                this.mContentObserver = null;
-                return;
-            }
-            if (this.mHandlerForUpdateNotifications == null) {
-                this.mHandlerForUpdateNotifications = new Handler();
-            }
-            if (this.mContentObserver == null) {
-                this.mContentObserver = new ContentObserver(this.mHandlerForUpdateNotifications) {
-                    public void onChange(boolean selfChange) {
-                        if (ContentQueryMap.this.countObservers() != 0) {
-                            ContentQueryMap.this.requery();
-                        } else {
-                            boolean unused = ContentQueryMap.this.mDirty = true;
-                        }
-                    }
-                };
-            }
-            this.mCursor.registerContentObserver(this.mContentObserver);
-            this.mDirty = true;
+        if (keepUpdated == this.mKeepUpdated) {
+            return;
         }
+        this.mKeepUpdated = keepUpdated;
+        if (!this.mKeepUpdated) {
+            this.mCursor.unregisterContentObserver(this.mContentObserver);
+            this.mContentObserver = null;
+            return;
+        }
+        if (this.mHandlerForUpdateNotifications == null) {
+            this.mHandlerForUpdateNotifications = new Handler();
+        }
+        if (this.mContentObserver == null) {
+            this.mContentObserver = new ContentObserver(this.mHandlerForUpdateNotifications) { // from class: android.content.ContentQueryMap.1
+                @Override // android.database.ContentObserver
+                public void onChange(boolean selfChange) {
+                    if (ContentQueryMap.this.countObservers() == 0) {
+                        ContentQueryMap.this.mDirty = true;
+                    } else {
+                        ContentQueryMap.this.requery();
+                    }
+                }
+            };
+        }
+        this.mCursor.registerContentObserver(this.mContentObserver);
+        this.mDirty = true;
     }
 
     public synchronized ContentValues getValues(String rowName) {
@@ -65,18 +68,21 @@ public class ContentQueryMap extends Observable {
 
     public void requery() {
         Cursor cursor = this.mCursor;
-        if (cursor != null) {
-            this.mDirty = false;
-            if (cursor.requery()) {
-                readCursorIntoCache(cursor);
-                setChanged();
-                notifyObservers();
-            }
+        if (cursor == null) {
+            return;
         }
+        this.mDirty = false;
+        if (!cursor.requery()) {
+            return;
+        }
+        readCursorIntoCache(cursor);
+        setChanged();
+        notifyObservers();
     }
 
     private synchronized void readCursorIntoCache(Cursor cursor) {
-        this.mValues = new HashMap(this.mValues != null ? this.mValues.size() : 0);
+        int capacity = this.mValues != null ? this.mValues.size() : 0;
+        this.mValues = new HashMap(capacity);
         while (cursor.moveToNext()) {
             ContentValues values = new ContentValues();
             for (int i = 0; i < this.mColumnNames.length; i++) {
@@ -104,8 +110,7 @@ public class ContentQueryMap extends Observable {
         this.mCursor = null;
     }
 
-    /* access modifiers changed from: protected */
-    public void finalize() throws Throwable {
+    protected void finalize() throws Throwable {
         if (this.mCursor != null) {
             close();
         }

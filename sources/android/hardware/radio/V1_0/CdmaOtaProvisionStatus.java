@@ -2,6 +2,7 @@ package android.hardware.radio.V1_0;
 
 import java.util.ArrayList;
 
+/* loaded from: classes.dex */
 public final class CdmaOtaProvisionStatus {
     public static final int A_KEY_EXCHANGED = 2;
     public static final int COMMITTED = 8;

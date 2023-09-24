@@ -2,17 +2,20 @@ package android.drm;
 
 import java.util.HashMap;
 
+/* loaded from: classes.dex */
 public class DrmEvent {
     public static final String DRM_INFO_OBJECT = "drm_info_object";
     public static final String DRM_INFO_STATUS_OBJECT = "drm_info_status_object";
     public static final int TYPE_ALL_RIGHTS_REMOVED = 1001;
     public static final int TYPE_DRM_INFO_PROCESSED = 1002;
-    private HashMap<String, Object> mAttributes = new HashMap<>();
-    private String mMessage = "";
+    private HashMap<String, Object> mAttributes;
+    private String mMessage;
     private final int mType;
     private final int mUniqueId;
 
     protected DrmEvent(int uniqueId, int type, String message, HashMap<String, Object> attributes) {
+        this.mMessage = "";
+        this.mAttributes = new HashMap<>();
         this.mUniqueId = uniqueId;
         this.mType = type;
         if (message != null) {
@@ -24,6 +27,8 @@ public class DrmEvent {
     }
 
     protected DrmEvent(int uniqueId, int type, String message) {
+        this.mMessage = "";
+        this.mAttributes = new HashMap<>();
         this.mUniqueId = uniqueId;
         this.mType = type;
         if (message != null) {

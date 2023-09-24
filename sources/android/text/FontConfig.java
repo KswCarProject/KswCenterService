@@ -6,6 +6,7 @@ import android.net.Uri;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 
+/* loaded from: classes4.dex */
 public final class FontConfig {
     private final Alias[] mAliases;
     private final Family[] mFamilies;
@@ -24,6 +25,7 @@ public final class FontConfig {
         return this.mAliases;
     }
 
+    /* loaded from: classes4.dex */
     public static final class Font {
         private final FontVariationAxis[] mAxes;
         private final String mFallbackFor;
@@ -79,6 +81,7 @@ public final class FontConfig {
         }
     }
 
+    /* loaded from: classes4.dex */
     public static final class Alias {
         private final String mName;
         private final String mToName;
@@ -103,6 +106,7 @@ public final class FontConfig {
         }
     }
 
+    /* loaded from: classes4.dex */
     public static final class Family {
         public static final int VARIANT_COMPACT = 1;
         public static final int VARIANT_DEFAULT = 0;
@@ -113,6 +117,7 @@ public final class FontConfig {
         private final int mVariant;
 
         @Retention(RetentionPolicy.SOURCE)
+        /* loaded from: classes4.dex */
         public @interface Variant {
         }
 

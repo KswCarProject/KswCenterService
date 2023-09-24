@@ -1,17 +1,21 @@
 package com.android.internal.view;
 
-import android.os.Binder;
-import android.os.IBinder;
-import android.os.IInterface;
-import android.os.Parcel;
-import android.os.RemoteException;
-import android.os.ResultReceiver;
+import android.p007os.Binder;
+import android.p007os.IBinder;
+import android.p007os.IInterface;
+import android.p007os.Parcel;
+import android.p007os.RemoteException;
+import android.p007os.ResultReceiver;
 import android.view.InputChannel;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputBinding;
 import android.view.inputmethod.InputMethodSubtype;
 import com.android.internal.inputmethod.IInputMethodPrivilegedOperations;
+import com.android.internal.view.IInputContext;
+import com.android.internal.view.IInputMethodSession;
+import com.android.internal.view.IInputSessionCallback;
 
+/* loaded from: classes4.dex */
 public interface IInputMethod extends IInterface {
     void bindInput(InputBinding inputBinding) throws RemoteException;
 
@@ -33,42 +37,55 @@ public interface IInputMethod extends IInterface {
 
     void unbindInput() throws RemoteException;
 
+    /* loaded from: classes4.dex */
     public static class Default implements IInputMethod {
+        @Override // com.android.internal.view.IInputMethod
         public void initializeInternal(IBinder token, int displayId, IInputMethodPrivilegedOperations privOps) throws RemoteException {
         }
 
+        @Override // com.android.internal.view.IInputMethod
         public void bindInput(InputBinding binding) throws RemoteException {
         }
 
+        @Override // com.android.internal.view.IInputMethod
         public void unbindInput() throws RemoteException {
         }
 
+        @Override // com.android.internal.view.IInputMethod
         public void startInput(IBinder startInputToken, IInputContext inputContext, int missingMethods, EditorInfo attribute, boolean restarting, boolean preRenderImeViews) throws RemoteException {
         }
 
+        @Override // com.android.internal.view.IInputMethod
         public void createSession(InputChannel channel, IInputSessionCallback callback) throws RemoteException {
         }
 
+        @Override // com.android.internal.view.IInputMethod
         public void setSessionEnabled(IInputMethodSession session, boolean enabled) throws RemoteException {
         }
 
+        @Override // com.android.internal.view.IInputMethod
         public void revokeSession(IInputMethodSession session) throws RemoteException {
         }
 
+        @Override // com.android.internal.view.IInputMethod
         public void showSoftInput(int flags, ResultReceiver resultReceiver) throws RemoteException {
         }
 
+        @Override // com.android.internal.view.IInputMethod
         public void hideSoftInput(int flags, ResultReceiver resultReceiver) throws RemoteException {
         }
 
+        @Override // com.android.internal.view.IInputMethod
         public void changeInputMethodSubtype(InputMethodSubtype subtype) throws RemoteException {
         }
 
+        @Override // android.p007os.IInterface
         public IBinder asBinder() {
             return null;
         }
     }
 
+    /* loaded from: classes4.dex */
     public static abstract class Stub extends Binder implements IInputMethod {
         private static final String DESCRIPTOR = "com.android.internal.view.IInputMethod";
         static final int TRANSACTION_bindInput = 2;
@@ -91,12 +108,13 @@ public interface IInputMethod extends IInterface {
                 return null;
             }
             IInterface iin = obj.queryLocalInterface(DESCRIPTOR);
-            if (iin == null || !(iin instanceof IInputMethod)) {
-                return new Proxy(obj);
+            if (iin != null && (iin instanceof IInputMethod)) {
+                return (IInputMethod) iin;
             }
-            return (IInputMethod) iin;
+            return new Proxy(obj);
         }
 
+        @Override // android.p007os.IInterface
         public IBinder asBinder() {
             return this;
         }
@@ -128,204 +146,85 @@ public interface IInputMethod extends IInterface {
             }
         }
 
+        @Override // android.p007os.Binder
         public String getTransactionName(int transactionCode) {
             return getDefaultTransactionName(transactionCode);
         }
 
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r1v0, resolved type: android.os.ResultReceiver} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r1v2, resolved type: android.os.ResultReceiver} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r0v5, resolved type: android.view.inputmethod.InputBinding} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r1v5, resolved type: android.os.ResultReceiver} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r4v0, resolved type: android.view.inputmethod.EditorInfo} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r1v12, resolved type: android.os.ResultReceiver} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r0v10, resolved type: android.view.InputChannel} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r1v19, resolved type: android.os.ResultReceiver} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r1v23, resolved type: android.os.ResultReceiver} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r1v27, resolved type: android.os.ResultReceiver} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r0v20, resolved type: android.view.inputmethod.InputMethodSubtype} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r1v30, resolved type: android.os.ResultReceiver} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r1v31, resolved type: android.os.ResultReceiver} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r1v32, resolved type: android.os.ResultReceiver} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r1v33, resolved type: android.os.ResultReceiver} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r1v34, resolved type: android.os.ResultReceiver} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r1v35, resolved type: android.os.ResultReceiver} */
-        /* JADX WARNING: type inference failed for: r1v4, types: [android.view.inputmethod.InputBinding] */
-        /* JADX WARNING: type inference failed for: r1v11, types: [android.view.inputmethod.EditorInfo] */
-        /* JADX WARNING: type inference failed for: r1v16, types: [android.view.InputChannel] */
-        /* JADX WARNING: type inference failed for: r1v29, types: [android.view.inputmethod.InputMethodSubtype] */
-        /* JADX WARNING: Multi-variable type inference failed */
-        /* Code decompiled incorrectly, please refer to instructions dump. */
-        public boolean onTransact(int r16, android.os.Parcel r17, android.os.Parcel r18, int r19) throws android.os.RemoteException {
-            /*
-                r15 = this;
-                r7 = r15
-                r8 = r16
-                r9 = r17
-                java.lang.String r10 = "com.android.internal.view.IInputMethod"
-                r0 = 1598968902(0x5f4e5446, float:1.4867585E19)
-                r11 = 1
-                if (r8 == r0) goto L_0x0122
-                r0 = 0
-                r1 = 0
-                switch(r8) {
-                    case 1: goto L_0x010b;
-                    case 2: goto L_0x00f2;
-                    case 3: goto L_0x00eb;
-                    case 4: goto L_0x00ad;
-                    case 5: goto L_0x008c;
-                    case 6: goto L_0x0075;
-                    case 7: goto L_0x0066;
-                    case 8: goto L_0x004b;
-                    case 9: goto L_0x0030;
-                    case 10: goto L_0x0017;
-                    default: goto L_0x0012;
-                }
-            L_0x0012:
-                boolean r0 = super.onTransact(r16, r17, r18, r19)
-                return r0
-            L_0x0017:
-                r9.enforceInterface(r10)
-                int r0 = r17.readInt()
-                if (r0 == 0) goto L_0x002a
-                android.os.Parcelable$Creator<android.view.inputmethod.InputMethodSubtype> r0 = android.view.inputmethod.InputMethodSubtype.CREATOR
-                java.lang.Object r0 = r0.createFromParcel(r9)
-                r1 = r0
-                android.view.inputmethod.InputMethodSubtype r1 = (android.view.inputmethod.InputMethodSubtype) r1
-                goto L_0x002b
-            L_0x002a:
-            L_0x002b:
-                r0 = r1
-                r15.changeInputMethodSubtype(r0)
-                return r11
-            L_0x0030:
-                r9.enforceInterface(r10)
-                int r0 = r17.readInt()
-                int r2 = r17.readInt()
-                if (r2 == 0) goto L_0x0046
-                android.os.Parcelable$Creator<android.os.ResultReceiver> r1 = android.os.ResultReceiver.CREATOR
-                java.lang.Object r1 = r1.createFromParcel(r9)
-                android.os.ResultReceiver r1 = (android.os.ResultReceiver) r1
-                goto L_0x0047
-            L_0x0046:
-            L_0x0047:
-                r15.hideSoftInput(r0, r1)
-                return r11
-            L_0x004b:
-                r9.enforceInterface(r10)
-                int r0 = r17.readInt()
-                int r2 = r17.readInt()
-                if (r2 == 0) goto L_0x0061
-                android.os.Parcelable$Creator<android.os.ResultReceiver> r1 = android.os.ResultReceiver.CREATOR
-                java.lang.Object r1 = r1.createFromParcel(r9)
-                android.os.ResultReceiver r1 = (android.os.ResultReceiver) r1
-                goto L_0x0062
-            L_0x0061:
-            L_0x0062:
-                r15.showSoftInput(r0, r1)
-                return r11
-            L_0x0066:
-                r9.enforceInterface(r10)
-                android.os.IBinder r0 = r17.readStrongBinder()
-                com.android.internal.view.IInputMethodSession r0 = com.android.internal.view.IInputMethodSession.Stub.asInterface(r0)
-                r15.revokeSession(r0)
-                return r11
-            L_0x0075:
-                r9.enforceInterface(r10)
-                android.os.IBinder r1 = r17.readStrongBinder()
-                com.android.internal.view.IInputMethodSession r1 = com.android.internal.view.IInputMethodSession.Stub.asInterface(r1)
-                int r2 = r17.readInt()
-                if (r2 == 0) goto L_0x0088
-                r0 = r11
-            L_0x0088:
-                r15.setSessionEnabled(r1, r0)
-                return r11
-            L_0x008c:
-                r9.enforceInterface(r10)
-                int r0 = r17.readInt()
-                if (r0 == 0) goto L_0x009f
-                android.os.Parcelable$Creator<android.view.InputChannel> r0 = android.view.InputChannel.CREATOR
-                java.lang.Object r0 = r0.createFromParcel(r9)
-                r1 = r0
-                android.view.InputChannel r1 = (android.view.InputChannel) r1
-                goto L_0x00a0
-            L_0x009f:
-            L_0x00a0:
-                r0 = r1
-                android.os.IBinder r1 = r17.readStrongBinder()
-                com.android.internal.view.IInputSessionCallback r1 = com.android.internal.view.IInputSessionCallback.Stub.asInterface(r1)
-                r15.createSession(r0, r1)
-                return r11
-            L_0x00ad:
-                r9.enforceInterface(r10)
-                android.os.IBinder r12 = r17.readStrongBinder()
-                android.os.IBinder r2 = r17.readStrongBinder()
-                com.android.internal.view.IInputContext r13 = com.android.internal.view.IInputContext.Stub.asInterface(r2)
-                int r14 = r17.readInt()
-                int r2 = r17.readInt()
-                if (r2 == 0) goto L_0x00d0
-                android.os.Parcelable$Creator<android.view.inputmethod.EditorInfo> r1 = android.view.inputmethod.EditorInfo.CREATOR
-                java.lang.Object r1 = r1.createFromParcel(r9)
-                android.view.inputmethod.EditorInfo r1 = (android.view.inputmethod.EditorInfo) r1
-            L_0x00ce:
-                r4 = r1
-                goto L_0x00d1
-            L_0x00d0:
-                goto L_0x00ce
-            L_0x00d1:
-                int r1 = r17.readInt()
-                if (r1 == 0) goto L_0x00d9
-                r5 = r11
-                goto L_0x00da
-            L_0x00d9:
-                r5 = r0
-            L_0x00da:
-                int r1 = r17.readInt()
-                if (r1 == 0) goto L_0x00e2
-                r6 = r11
-                goto L_0x00e3
-            L_0x00e2:
-                r6 = r0
-            L_0x00e3:
-                r0 = r15
-                r1 = r12
-                r2 = r13
-                r3 = r14
-                r0.startInput(r1, r2, r3, r4, r5, r6)
-                return r11
-            L_0x00eb:
-                r9.enforceInterface(r10)
-                r15.unbindInput()
-                return r11
-            L_0x00f2:
-                r9.enforceInterface(r10)
-                int r0 = r17.readInt()
-                if (r0 == 0) goto L_0x0105
-                android.os.Parcelable$Creator<android.view.inputmethod.InputBinding> r0 = android.view.inputmethod.InputBinding.CREATOR
-                java.lang.Object r0 = r0.createFromParcel(r9)
-                r1 = r0
-                android.view.inputmethod.InputBinding r1 = (android.view.inputmethod.InputBinding) r1
-                goto L_0x0106
-            L_0x0105:
-            L_0x0106:
-                r0 = r1
-                r15.bindInput(r0)
-                return r11
-            L_0x010b:
-                r9.enforceInterface(r10)
-                android.os.IBinder r0 = r17.readStrongBinder()
-                int r1 = r17.readInt()
-                android.os.IBinder r2 = r17.readStrongBinder()
-                com.android.internal.inputmethod.IInputMethodPrivilegedOperations r2 = com.android.internal.inputmethod.IInputMethodPrivilegedOperations.Stub.asInterface(r2)
-                r15.initializeInternal(r0, r1, r2)
-                return r11
-            L_0x0122:
-                r0 = r18
-                r0.writeString(r10)
-                return r11
-            */
-            throw new UnsupportedOperationException("Method not decompiled: com.android.internal.view.IInputMethod.Stub.onTransact(int, android.os.Parcel, android.os.Parcel, int):boolean");
+        @Override // android.p007os.Binder
+        public boolean onTransact(int code, Parcel data, Parcel reply, int flags) throws RemoteException {
+            if (code == 1598968902) {
+                reply.writeString(DESCRIPTOR);
+                return true;
+            }
+            switch (code) {
+                case 1:
+                    data.enforceInterface(DESCRIPTOR);
+                    IBinder _arg0 = data.readStrongBinder();
+                    int _arg1 = data.readInt();
+                    IInputMethodPrivilegedOperations _arg2 = IInputMethodPrivilegedOperations.Stub.asInterface(data.readStrongBinder());
+                    initializeInternal(_arg0, _arg1, _arg2);
+                    return true;
+                case 2:
+                    data.enforceInterface(DESCRIPTOR);
+                    InputBinding _arg02 = data.readInt() != 0 ? InputBinding.CREATOR.createFromParcel(data) : null;
+                    bindInput(_arg02);
+                    return true;
+                case 3:
+                    data.enforceInterface(DESCRIPTOR);
+                    unbindInput();
+                    return true;
+                case 4:
+                    data.enforceInterface(DESCRIPTOR);
+                    IBinder _arg03 = data.readStrongBinder();
+                    IInputContext _arg12 = IInputContext.Stub.asInterface(data.readStrongBinder());
+                    int _arg22 = data.readInt();
+                    EditorInfo _arg3 = data.readInt() != 0 ? EditorInfo.CREATOR.createFromParcel(data) : null;
+                    boolean _arg4 = data.readInt() != 0;
+                    boolean _arg5 = data.readInt() != 0;
+                    startInput(_arg03, _arg12, _arg22, _arg3, _arg4, _arg5);
+                    return true;
+                case 5:
+                    data.enforceInterface(DESCRIPTOR);
+                    InputChannel _arg04 = data.readInt() != 0 ? InputChannel.CREATOR.createFromParcel(data) : null;
+                    InputChannel _arg05 = _arg04;
+                    IInputSessionCallback _arg13 = IInputSessionCallback.Stub.asInterface(data.readStrongBinder());
+                    createSession(_arg05, _arg13);
+                    return true;
+                case 6:
+                    data.enforceInterface(DESCRIPTOR);
+                    IInputMethodSession _arg06 = IInputMethodSession.Stub.asInterface(data.readStrongBinder());
+                    boolean _arg14 = data.readInt() != 0;
+                    setSessionEnabled(_arg06, _arg14);
+                    return true;
+                case 7:
+                    data.enforceInterface(DESCRIPTOR);
+                    IInputMethodSession _arg07 = IInputMethodSession.Stub.asInterface(data.readStrongBinder());
+                    revokeSession(_arg07);
+                    return true;
+                case 8:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg08 = data.readInt();
+                    ResultReceiver _arg15 = data.readInt() != 0 ? ResultReceiver.CREATOR.createFromParcel(data) : null;
+                    showSoftInput(_arg08, _arg15);
+                    return true;
+                case 9:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg09 = data.readInt();
+                    ResultReceiver _arg16 = data.readInt() != 0 ? ResultReceiver.CREATOR.createFromParcel(data) : null;
+                    hideSoftInput(_arg09, _arg16);
+                    return true;
+                case 10:
+                    data.enforceInterface(DESCRIPTOR);
+                    InputMethodSubtype _arg010 = data.readInt() != 0 ? InputMethodSubtype.CREATOR.createFromParcel(data) : null;
+                    changeInputMethodSubtype(_arg010);
+                    return true;
+                default:
+                    return super.onTransact(code, data, reply, flags);
+            }
         }
 
+        /* loaded from: classes4.dex */
         private static class Proxy implements IInputMethod {
             public static IInputMethod sDefaultImpl;
             private IBinder mRemote;
@@ -334,6 +233,7 @@ public interface IInputMethod extends IInterface {
                 this.mRemote = remote;
             }
 
+            @Override // android.p007os.IInterface
             public IBinder asBinder() {
                 return this.mRemote;
             }
@@ -342,6 +242,7 @@ public interface IInputMethod extends IInterface {
                 return Stub.DESCRIPTOR;
             }
 
+            @Override // com.android.internal.view.IInputMethod
             public void initializeInternal(IBinder token, int displayId, IInputMethodPrivilegedOperations privOps) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
@@ -349,9 +250,8 @@ public interface IInputMethod extends IInterface {
                     _data.writeStrongBinder(token);
                     _data.writeInt(displayId);
                     _data.writeStrongBinder(privOps != null ? privOps.asBinder() : null);
-                    if (this.mRemote.transact(1, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    boolean _status = this.mRemote.transact(1, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().initializeInternal(token, displayId, privOps);
                     }
                 } finally {
@@ -359,6 +259,7 @@ public interface IInputMethod extends IInterface {
                 }
             }
 
+            @Override // com.android.internal.view.IInputMethod
             public void bindInput(InputBinding binding) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
@@ -369,9 +270,8 @@ public interface IInputMethod extends IInterface {
                     } else {
                         _data.writeInt(0);
                     }
-                    if (this.mRemote.transact(2, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    boolean _status = this.mRemote.transact(2, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().bindInput(binding);
                     }
                 } finally {
@@ -379,13 +279,13 @@ public interface IInputMethod extends IInterface {
                 }
             }
 
+            @Override // com.android.internal.view.IInputMethod
             public void unbindInput() throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    if (this.mRemote.transact(3, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    boolean _status = this.mRemote.transact(3, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().unbindInput();
                     }
                 } finally {
@@ -393,34 +293,27 @@ public interface IInputMethod extends IInterface {
                 }
             }
 
+            @Override // com.android.internal.view.IInputMethod
             public void startInput(IBinder startInputToken, IInputContext inputContext, int missingMethods, EditorInfo attribute, boolean restarting, boolean preRenderImeViews) throws RemoteException {
-                EditorInfo editorInfo = attribute;
                 Parcel _data = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
+                } catch (Throwable th) {
+                    th = th;
+                }
+                try {
+                    _data.writeStrongBinder(startInputToken);
+                    _data.writeStrongBinder(inputContext != null ? inputContext.asBinder() : null);
                     try {
-                        _data.writeStrongBinder(startInputToken);
-                        _data.writeStrongBinder(inputContext != null ? inputContext.asBinder() : null);
-                        try {
-                            _data.writeInt(missingMethods);
-                            if (editorInfo != null) {
-                                _data.writeInt(1);
-                                editorInfo.writeToParcel(_data, 0);
-                            } else {
-                                _data.writeInt(0);
-                            }
-                        } catch (Throwable th) {
-                            th = th;
-                            boolean z = restarting;
-                            boolean z2 = preRenderImeViews;
-                            _data.recycle();
-                            throw th;
+                        _data.writeInt(missingMethods);
+                        if (attribute != null) {
+                            _data.writeInt(1);
+                            attribute.writeToParcel(_data, 0);
+                        } else {
+                            _data.writeInt(0);
                         }
                     } catch (Throwable th2) {
                         th = th2;
-                        int i = missingMethods;
-                        boolean z3 = restarting;
-                        boolean z22 = preRenderImeViews;
                         _data.recycle();
                         throw th;
                     }
@@ -430,38 +323,33 @@ public interface IInputMethod extends IInterface {
                             _data.writeInt(preRenderImeViews ? 1 : 0);
                         } catch (Throwable th3) {
                             th = th3;
-                            _data.recycle();
-                            throw th;
                         }
-                        try {
-                            if (this.mRemote.transact(4, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                                _data.recycle();
-                                return;
-                            }
+                    } catch (Throwable th4) {
+                        th = th4;
+                        _data.recycle();
+                        throw th;
+                    }
+                    try {
+                        boolean _status = this.mRemote.transact(4, _data, null, 1);
+                        if (!_status && Stub.getDefaultImpl() != null) {
                             Stub.getDefaultImpl().startInput(startInputToken, inputContext, missingMethods, attribute, restarting, preRenderImeViews);
                             _data.recycle();
-                        } catch (Throwable th4) {
-                            th = th4;
-                            _data.recycle();
-                            throw th;
+                            return;
                         }
+                        _data.recycle();
                     } catch (Throwable th5) {
                         th = th5;
-                        boolean z222 = preRenderImeViews;
                         _data.recycle();
                         throw th;
                     }
                 } catch (Throwable th6) {
                     th = th6;
-                    IBinder iBinder = startInputToken;
-                    int i2 = missingMethods;
-                    boolean z32 = restarting;
-                    boolean z2222 = preRenderImeViews;
                     _data.recycle();
                     throw th;
                 }
             }
 
+            @Override // com.android.internal.view.IInputMethod
             public void createSession(InputChannel channel, IInputSessionCallback callback) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
@@ -473,9 +361,8 @@ public interface IInputMethod extends IInterface {
                         _data.writeInt(0);
                     }
                     _data.writeStrongBinder(callback != null ? callback.asBinder() : null);
-                    if (this.mRemote.transact(5, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    boolean _status = this.mRemote.transact(5, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().createSession(channel, callback);
                     }
                 } finally {
@@ -483,15 +370,15 @@ public interface IInputMethod extends IInterface {
                 }
             }
 
+            @Override // com.android.internal.view.IInputMethod
             public void setSessionEnabled(IInputMethodSession session, boolean enabled) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeStrongBinder(session != null ? session.asBinder() : null);
-                    _data.writeInt(enabled);
-                    if (this.mRemote.transact(6, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    _data.writeInt(enabled ? 1 : 0);
+                    boolean _status = this.mRemote.transact(6, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().setSessionEnabled(session, enabled);
                     }
                 } finally {
@@ -499,14 +386,14 @@ public interface IInputMethod extends IInterface {
                 }
             }
 
+            @Override // com.android.internal.view.IInputMethod
             public void revokeSession(IInputMethodSession session) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeStrongBinder(session != null ? session.asBinder() : null);
-                    if (this.mRemote.transact(7, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    boolean _status = this.mRemote.transact(7, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().revokeSession(session);
                     }
                 } finally {
@@ -514,6 +401,7 @@ public interface IInputMethod extends IInterface {
                 }
             }
 
+            @Override // com.android.internal.view.IInputMethod
             public void showSoftInput(int flags, ResultReceiver resultReceiver) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
@@ -525,9 +413,8 @@ public interface IInputMethod extends IInterface {
                     } else {
                         _data.writeInt(0);
                     }
-                    if (this.mRemote.transact(8, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    boolean _status = this.mRemote.transact(8, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().showSoftInput(flags, resultReceiver);
                     }
                 } finally {
@@ -535,6 +422,7 @@ public interface IInputMethod extends IInterface {
                 }
             }
 
+            @Override // com.android.internal.view.IInputMethod
             public void hideSoftInput(int flags, ResultReceiver resultReceiver) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
@@ -546,9 +434,8 @@ public interface IInputMethod extends IInterface {
                     } else {
                         _data.writeInt(0);
                     }
-                    if (this.mRemote.transact(9, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    boolean _status = this.mRemote.transact(9, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().hideSoftInput(flags, resultReceiver);
                     }
                 } finally {
@@ -556,6 +443,7 @@ public interface IInputMethod extends IInterface {
                 }
             }
 
+            @Override // com.android.internal.view.IInputMethod
             public void changeInputMethodSubtype(InputMethodSubtype subtype) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
@@ -566,9 +454,8 @@ public interface IInputMethod extends IInterface {
                     } else {
                         _data.writeInt(0);
                     }
-                    if (this.mRemote.transact(10, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    boolean _status = this.mRemote.transact(10, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().changeInputMethodSubtype(subtype);
                     }
                 } finally {
@@ -578,11 +465,11 @@ public interface IInputMethod extends IInterface {
         }
 
         public static boolean setDefaultImpl(IInputMethod impl) {
-            if (Proxy.sDefaultImpl != null || impl == null) {
-                return false;
+            if (Proxy.sDefaultImpl == null && impl != null) {
+                Proxy.sDefaultImpl = impl;
+                return true;
             }
-            Proxy.sDefaultImpl = impl;
-            return true;
+            return false;
         }
 
         public static IInputMethod getDefaultImpl() {

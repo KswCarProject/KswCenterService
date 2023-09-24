@@ -3,9 +3,10 @@ package android.database;
 import android.annotation.UnsupportedAppUsage;
 import android.database.IContentObserver;
 import android.net.Uri;
-import android.os.Handler;
-import android.os.UserHandle;
+import android.p007os.Handler;
+import android.p007os.UserHandle;
 
+/* loaded from: classes.dex */
 public abstract class ContentObserver {
     Handler mHandler;
     private final Object mLock = new Object();
@@ -56,14 +57,14 @@ public abstract class ContentObserver {
 
     @Deprecated
     public final void dispatchChange(boolean selfChange) {
-        dispatchChange(selfChange, (Uri) null);
+        dispatchChange(selfChange, null);
     }
 
     public final void dispatchChange(boolean selfChange, Uri uri) {
         dispatchChange(selfChange, uri, UserHandle.getCallingUserId());
     }
 
-    /* access modifiers changed from: private */
+    /* JADX INFO: Access modifiers changed from: private */
     public void dispatchChange(boolean selfChange, Uri uri, int userId) {
         if (this.mHandler == null) {
             onChange(selfChange, uri, userId);
@@ -72,6 +73,7 @@ public abstract class ContentObserver {
         }
     }
 
+    /* loaded from: classes.dex */
     private final class NotificationRunnable implements Runnable {
         private final boolean mSelfChange;
         private final Uri mUri;
@@ -83,11 +85,13 @@ public abstract class ContentObserver {
             this.mUserId = userId;
         }
 
+        @Override // java.lang.Runnable
         public void run() {
             ContentObserver.this.onChange(this.mSelfChange, this.mUri, this.mUserId);
         }
     }
 
+    /* loaded from: classes.dex */
     private static final class Transport extends IContentObserver.Stub {
         private ContentObserver mContentObserver;
 
@@ -95,6 +99,7 @@ public abstract class ContentObserver {
             this.mContentObserver = contentObserver;
         }
 
+        @Override // android.database.IContentObserver
         public void onChange(boolean selfChange, Uri uri, int userId) {
             ContentObserver contentObserver = this.mContentObserver;
             if (contentObserver != null) {

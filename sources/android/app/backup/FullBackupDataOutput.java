@@ -1,8 +1,9 @@
 package android.app.backup;
 
 import android.annotation.UnsupportedAppUsage;
-import android.os.ParcelFileDescriptor;
+import android.p007os.ParcelFileDescriptor;
 
+/* loaded from: classes.dex */
 public class FullBackupDataOutput {
     @UnsupportedAppUsage
     private final BackupDataOutput mData;
@@ -21,14 +22,14 @@ public class FullBackupDataOutput {
     public FullBackupDataOutput(long quota) {
         this.mData = null;
         this.mQuota = quota;
-        this.mSize = 0;
+        this.mSize = 0L;
         this.mTransportFlags = 0;
     }
 
     public FullBackupDataOutput(long quota, int transportFlags) {
         this.mData = null;
         this.mQuota = quota;
-        this.mSize = 0;
+        this.mSize = 0L;
         this.mTransportFlags = transportFlags;
     }
 
@@ -46,7 +47,7 @@ public class FullBackupDataOutput {
 
     @UnsupportedAppUsage
     public FullBackupDataOutput(ParcelFileDescriptor fd) {
-        this(fd, -1, 0);
+        this(fd, -1L, 0);
     }
 
     @UnsupportedAppUsage

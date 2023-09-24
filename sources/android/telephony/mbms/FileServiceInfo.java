@@ -1,20 +1,25 @@
 package android.telephony.mbms;
 
 import android.annotation.SystemApi;
-import android.os.Parcel;
-import android.os.Parcelable;
+import android.p007os.Parcel;
+import android.p007os.Parcelable;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
+/* loaded from: classes4.dex */
 public final class FileServiceInfo extends ServiceInfo implements Parcelable {
-    public static final Parcelable.Creator<FileServiceInfo> CREATOR = new Parcelable.Creator<FileServiceInfo>() {
+    public static final Parcelable.Creator<FileServiceInfo> CREATOR = new Parcelable.Creator<FileServiceInfo>() { // from class: android.telephony.mbms.FileServiceInfo.1
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public FileServiceInfo createFromParcel(Parcel source) {
             return new FileServiceInfo(source);
         }
 
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public FileServiceInfo[] newArray(int size) {
             return new FileServiceInfo[size];
         }
@@ -33,11 +38,13 @@ public final class FileServiceInfo extends ServiceInfo implements Parcelable {
         in.readList(this.files, FileInfo.class.getClassLoader());
     }
 
+    @Override // android.telephony.mbms.ServiceInfo, android.p007os.Parcelable
     public void writeToParcel(Parcel dest, int flags) {
         super.writeToParcel(dest, flags);
         dest.writeList(this.files);
     }
 
+    @Override // android.p007os.Parcelable
     public int describeContents() {
         return 0;
     }

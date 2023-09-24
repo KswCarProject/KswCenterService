@@ -2,6 +2,7 @@ package android.hardware.radio.V1_0;
 
 import java.util.ArrayList;
 
+/* loaded from: classes.dex */
 public final class RadioResponseType {
     public static final int SOLICITED = 0;
     public static final int SOLICITED_ACK = 1;

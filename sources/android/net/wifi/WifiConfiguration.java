@@ -7,10 +7,10 @@ import android.net.MacAddress;
 import android.net.ProxyInfo;
 import android.net.StaticIpConfiguration;
 import android.net.Uri;
-import android.os.Parcel;
-import android.os.Parcelable;
-import android.os.SystemClock;
-import android.os.UserHandle;
+import android.p007os.Parcel;
+import android.p007os.Parcelable;
+import android.p007os.SystemClock;
+import android.p007os.UserHandle;
 import android.provider.Telephony;
 import android.security.keystore.KeyProperties;
 import android.telecom.Logging.Session;
@@ -30,100 +30,15 @@ import java.util.BitSet;
 import java.util.HashMap;
 
 @Deprecated
+/* loaded from: classes3.dex */
 public class WifiConfiguration implements Parcelable {
     public static final int AP_BAND_2GHZ = 0;
     public static final int AP_BAND_5GHZ = 1;
     public static final int AP_BAND_ANY = -1;
     public static final int AP_BAND_DUAL = 2;
     private static final int BACKUP_VERSION = 3;
-    @UnsupportedAppUsage
-    public static final Parcelable.Creator<WifiConfiguration> CREATOR = new Parcelable.Creator<WifiConfiguration>() {
-        public WifiConfiguration createFromParcel(Parcel in) {
-            WifiConfiguration config = new WifiConfiguration();
-            config.networkId = in.readInt();
-            config.status = in.readInt();
-            config.mNetworkSelectionStatus.readFromParcel(in);
-            config.SSID = in.readString();
-            config.BSSID = in.readString();
-            boolean z = false;
-            config.shareThisAp = in.readInt() != 0;
-            config.apBand = in.readInt();
-            config.apChannel = in.readInt();
-            config.FQDN = in.readString();
-            config.providerFriendlyName = in.readString();
-            config.isHomeProviderNetwork = in.readInt() != 0;
-            int numRoamingConsortiumIds = in.readInt();
-            config.roamingConsortiumIds = new long[numRoamingConsortiumIds];
-            for (int i = 0; i < numRoamingConsortiumIds; i++) {
-                config.roamingConsortiumIds[i] = in.readLong();
-            }
-            config.preSharedKey = in.readString();
-            for (int i2 = 0; i2 < config.wepKeys.length; i2++) {
-                config.wepKeys[i2] = in.readString();
-            }
-            config.wepTxKeyIndex = in.readInt();
-            config.priority = in.readInt();
-            config.hiddenSSID = in.readInt() != 0;
-            config.requirePMF = in.readInt() != 0;
-            config.updateIdentifier = in.readString();
-            config.allowedKeyManagement = WifiConfiguration.readBitSet(in);
-            config.allowedProtocols = WifiConfiguration.readBitSet(in);
-            config.allowedAuthAlgorithms = WifiConfiguration.readBitSet(in);
-            config.allowedPairwiseCiphers = WifiConfiguration.readBitSet(in);
-            config.allowedGroupCiphers = WifiConfiguration.readBitSet(in);
-            config.allowedGroupManagementCiphers = WifiConfiguration.readBitSet(in);
-            config.allowedSuiteBCiphers = WifiConfiguration.readBitSet(in);
-            config.enterpriseConfig = (WifiEnterpriseConfig) in.readParcelable((ClassLoader) null);
-            config.setIpConfiguration((IpConfiguration) in.readParcelable((ClassLoader) null));
-            config.dhcpServer = in.readString();
-            config.defaultGwMacAddress = in.readString();
-            config.selfAdded = in.readInt() != 0;
-            config.didSelfAdd = in.readInt() != 0;
-            config.validatedInternetAccess = in.readInt() != 0;
-            config.isLegacyPasspointConfig = in.readInt() != 0;
-            config.ephemeral = in.readInt() != 0;
-            config.trusted = in.readInt() != 0;
-            config.fromWifiNetworkSuggestion = in.readInt() != 0;
-            config.fromWifiNetworkSpecifier = in.readInt() != 0;
-            config.meteredHint = in.readInt() != 0;
-            config.meteredOverride = in.readInt();
-            config.useExternalScores = in.readInt() != 0;
-            config.creatorUid = in.readInt();
-            config.lastConnectUid = in.readInt();
-            config.lastUpdateUid = in.readInt();
-            config.creatorName = in.readString();
-            config.lastUpdateName = in.readString();
-            config.numScorerOverride = in.readInt();
-            config.numScorerOverrideAndSwitchedNetwork = in.readInt();
-            config.numAssociation = in.readInt();
-            config.userApproved = in.readInt();
-            config.numNoInternetAccessReports = in.readInt();
-            config.noInternetAccessExpected = in.readInt() != 0;
-            config.shared = in.readInt() != 0;
-            String unused = config.mPasspointManagementObjectTree = in.readString();
-            config.recentFailure.setAssociationStatus(in.readInt());
-            MacAddress unused2 = config.mRandomizedMacAddress = (MacAddress) in.readParcelable((ClassLoader) null);
-            config.dppConnector = in.readString();
-            config.dppNetAccessKey = in.readString();
-            config.dppNetAccessKeyExpiry = in.readInt();
-            config.dppCsign = in.readString();
-            config.macRandomizationSetting = in.readInt();
-            if (in.readInt() != 0) {
-                z = true;
-            }
-            config.osu = z;
-            config.oweTransIfaceName = in.readString();
-            return config;
-        }
-
-        public WifiConfiguration[] newArray(int size) {
-            return new WifiConfiguration[size];
-        }
-    };
     public static final int HOME_NETWORK_RSSI_BOOST = 5;
     public static final int INVALID_NETWORK_ID = -1;
-    @UnsupportedAppUsage(maxTargetSdk = 28, trackingBug = 115609023)
-    public static int INVALID_RSSI = -127;
     public static final int LOCAL_ONLY_NETWORK_ID = -2;
     private static final int MAXIMUM_RANDOM_MAC_GENERATION_RETRY = 3;
     public static final int METERED_OVERRIDE_METERED = 1;
@@ -154,9 +69,6 @@ public class WifiConfiguration implements Parcelable {
     public static final String shareThisApVarName = "share_this_ap";
     public static final String ssidVarName = "ssid";
     public static final String updateIdentiferVarName = "update_identifier";
-    @Deprecated
-    @UnsupportedAppUsage
-    public static final String[] wepKeyVarNames = {"wep_key0", "wep_key1", "wep_key2", "wep_key3"};
     @Deprecated
     public static final String wepTxKeyIdxVarName = "wep_tx_keyidx";
     public String BSSID;
@@ -206,12 +118,9 @@ public class WifiConfiguration implements Parcelable {
     String mCachedConfigKey;
     @UnsupportedAppUsage
     private IpConfiguration mIpConfiguration;
-    /* access modifiers changed from: private */
-    public NetworkSelectionStatus mNetworkSelectionStatus;
-    /* access modifiers changed from: private */
-    public String mPasspointManagementObjectTree;
-    /* access modifiers changed from: private */
-    public MacAddress mRandomizedMacAddress;
+    private NetworkSelectionStatus mNetworkSelectionStatus;
+    private String mPasspointManagementObjectTree;
+    private MacAddress mRandomizedMacAddress;
     public int macRandomizationSetting;
     @SystemApi
     public boolean meteredHint;
@@ -255,11 +164,103 @@ public class WifiConfiguration implements Parcelable {
     public String[] wepKeys;
     @Deprecated
     public int wepTxKeyIndex;
+    @UnsupportedAppUsage
+    @Deprecated
+    public static final String[] wepKeyVarNames = {"wep_key0", "wep_key1", "wep_key2", "wep_key3"};
+    @UnsupportedAppUsage(maxTargetSdk = 28, trackingBug = 115609023)
+    public static int INVALID_RSSI = -127;
+    @UnsupportedAppUsage
+    public static final Parcelable.Creator<WifiConfiguration> CREATOR = new Parcelable.Creator<WifiConfiguration>() { // from class: android.net.wifi.WifiConfiguration.1
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
+        public WifiConfiguration createFromParcel(Parcel in) {
+            WifiConfiguration config = new WifiConfiguration();
+            config.networkId = in.readInt();
+            config.status = in.readInt();
+            config.mNetworkSelectionStatus.readFromParcel(in);
+            config.SSID = in.readString();
+            config.BSSID = in.readString();
+            config.shareThisAp = in.readInt() != 0;
+            config.apBand = in.readInt();
+            config.apChannel = in.readInt();
+            config.FQDN = in.readString();
+            config.providerFriendlyName = in.readString();
+            config.isHomeProviderNetwork = in.readInt() != 0;
+            int numRoamingConsortiumIds = in.readInt();
+            config.roamingConsortiumIds = new long[numRoamingConsortiumIds];
+            for (int i = 0; i < numRoamingConsortiumIds; i++) {
+                config.roamingConsortiumIds[i] = in.readLong();
+            }
+            config.preSharedKey = in.readString();
+            for (int i2 = 0; i2 < config.wepKeys.length; i2++) {
+                config.wepKeys[i2] = in.readString();
+            }
+            int i3 = in.readInt();
+            config.wepTxKeyIndex = i3;
+            config.priority = in.readInt();
+            config.hiddenSSID = in.readInt() != 0;
+            config.requirePMF = in.readInt() != 0;
+            config.updateIdentifier = in.readString();
+            config.allowedKeyManagement = WifiConfiguration.readBitSet(in);
+            config.allowedProtocols = WifiConfiguration.readBitSet(in);
+            config.allowedAuthAlgorithms = WifiConfiguration.readBitSet(in);
+            config.allowedPairwiseCiphers = WifiConfiguration.readBitSet(in);
+            config.allowedGroupCiphers = WifiConfiguration.readBitSet(in);
+            config.allowedGroupManagementCiphers = WifiConfiguration.readBitSet(in);
+            config.allowedSuiteBCiphers = WifiConfiguration.readBitSet(in);
+            config.enterpriseConfig = (WifiEnterpriseConfig) in.readParcelable(null);
+            config.setIpConfiguration((IpConfiguration) in.readParcelable(null));
+            config.dhcpServer = in.readString();
+            config.defaultGwMacAddress = in.readString();
+            config.selfAdded = in.readInt() != 0;
+            config.didSelfAdd = in.readInt() != 0;
+            config.validatedInternetAccess = in.readInt() != 0;
+            config.isLegacyPasspointConfig = in.readInt() != 0;
+            config.ephemeral = in.readInt() != 0;
+            config.trusted = in.readInt() != 0;
+            config.fromWifiNetworkSuggestion = in.readInt() != 0;
+            config.fromWifiNetworkSpecifier = in.readInt() != 0;
+            config.meteredHint = in.readInt() != 0;
+            config.meteredOverride = in.readInt();
+            config.useExternalScores = in.readInt() != 0;
+            config.creatorUid = in.readInt();
+            config.lastConnectUid = in.readInt();
+            config.lastUpdateUid = in.readInt();
+            config.creatorName = in.readString();
+            config.lastUpdateName = in.readString();
+            config.numScorerOverride = in.readInt();
+            config.numScorerOverrideAndSwitchedNetwork = in.readInt();
+            config.numAssociation = in.readInt();
+            config.userApproved = in.readInt();
+            config.numNoInternetAccessReports = in.readInt();
+            config.noInternetAccessExpected = in.readInt() != 0;
+            config.shared = in.readInt() != 0;
+            config.mPasspointManagementObjectTree = in.readString();
+            config.recentFailure.setAssociationStatus(in.readInt());
+            config.mRandomizedMacAddress = (MacAddress) in.readParcelable(null);
+            config.dppConnector = in.readString();
+            config.dppNetAccessKey = in.readString();
+            config.dppNetAccessKeyExpiry = in.readInt();
+            config.dppCsign = in.readString();
+            config.macRandomizationSetting = in.readInt();
+            config.osu = in.readInt() != 0;
+            config.oweTransIfaceName = in.readString();
+            return config;
+        }
+
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
+        public WifiConfiguration[] newArray(int size) {
+            return new WifiConfiguration[size];
+        }
+    };
 
     @Retention(RetentionPolicy.SOURCE)
+    /* loaded from: classes3.dex */
     public @interface SecurityType {
     }
 
+    /* loaded from: classes3.dex */
     public static class KeyMgmt {
         public static final int DPP = 15;
         public static final int FILS_SHA256 = 13;
@@ -285,6 +286,7 @@ public class WifiConfiguration implements Parcelable {
         }
     }
 
+    /* loaded from: classes3.dex */
     public static class Protocol {
         public static final int OSEN = 2;
         public static final int RSN = 1;
@@ -297,6 +299,7 @@ public class WifiConfiguration implements Parcelable {
         }
     }
 
+    /* loaded from: classes3.dex */
     public static class AuthAlgorithm {
         public static final int LEAP = 2;
         public static final int OPEN = 0;
@@ -309,6 +312,7 @@ public class WifiConfiguration implements Parcelable {
         }
     }
 
+    /* loaded from: classes3.dex */
     public static class PairwiseCipher {
         public static final int CCMP = 2;
         public static final int GCMP_256 = 3;
@@ -322,6 +326,7 @@ public class WifiConfiguration implements Parcelable {
         }
     }
 
+    /* loaded from: classes3.dex */
     public static class GroupCipher {
         public static final int CCMP = 3;
         public static final int GCMP_256 = 5;
@@ -338,29 +343,30 @@ public class WifiConfiguration implements Parcelable {
         }
     }
 
+    /* loaded from: classes3.dex */
     public static class GroupMgmtCipher {
         public static final int BIP_CMAC_256 = 0;
         public static final int BIP_GMAC_128 = 1;
         public static final int BIP_GMAC_256 = 2;
-        /* access modifiers changed from: private */
-        public static final String[] strings = {"BIP_CMAC_256", "BIP_GMAC_128", "BIP_GMAC_256"};
+        private static final String[] strings = {"BIP_CMAC_256", "BIP_GMAC_128", "BIP_GMAC_256"};
         private static final String varName = "groupMgmt";
 
         private GroupMgmtCipher() {
         }
     }
 
+    /* loaded from: classes3.dex */
     public static class SuiteBCipher {
         public static final int ECDHE_ECDSA = 0;
         public static final int ECDHE_RSA = 1;
-        /* access modifiers changed from: private */
-        public static final String[] strings = {"ECDHE_ECDSA", "ECDHE_RSA"};
+        private static final String[] strings = {"ECDHE_ECDSA", "ECDHE_RSA"};
         private static final String varName = "SuiteB";
 
         private SuiteBCipher() {
         }
     }
 
+    /* loaded from: classes3.dex */
     public static class Status {
         public static final int CURRENT = 0;
         public static final int DISABLED = 1;
@@ -446,10 +452,10 @@ public class WifiConfiguration implements Parcelable {
         if (config != null && config.meteredOverride == 1) {
             metered = true;
         }
-        if (config == null || config.meteredOverride != 2) {
-            return metered;
+        if (config != null && config.meteredOverride == 2) {
+            return false;
         }
-        return false;
+        return metered;
     }
 
     public boolean isOpenNetwork() {
@@ -461,29 +467,24 @@ public class WifiConfiguration implements Parcelable {
             while (true) {
                 if (i >= this.wepKeys.length) {
                     break;
-                } else if (this.wepKeys[i] != null) {
+                } else if (this.wepKeys[i] == null) {
+                    i++;
+                } else {
                     hasNoWepKeys = false;
                     break;
-                } else {
-                    i++;
                 }
             }
         }
-        if (!hasNoKeyMgmt || !hasNoWepKeys) {
-            return false;
-        }
-        return true;
+        return hasNoKeyMgmt && hasNoWepKeys;
     }
 
     public static boolean isValidMacAddressForRandomization(MacAddress mac) {
-        return mac != null && !mac.isMulticastAddress() && mac.isLocallyAssigned() && !MacAddress.fromString("02:00:00:00:00:00").equals(mac);
+        return (mac == null || mac.isMulticastAddress() || !mac.isLocallyAssigned() || MacAddress.fromString("02:00:00:00:00:00").equals(mac)) ? false : true;
     }
 
     public MacAddress getOrCreateRandomizedMacAddress() {
-        int randomMacGenerationCount = 0;
-        while (!isValidMacAddressForRandomization(this.mRandomizedMacAddress) && randomMacGenerationCount < 3) {
+        for (int randomMacGenerationCount = 0; !isValidMacAddressForRandomization(this.mRandomizedMacAddress) && randomMacGenerationCount < 3; randomMacGenerationCount++) {
             this.mRandomizedMacAddress = MacAddress.createRandomUnicastAddress();
-            randomMacGenerationCount++;
         }
         if (!isValidMacAddressForRandomization(this.mRandomizedMacAddress)) {
             this.mRandomizedMacAddress = MacAddress.fromString("02:00:00:00:00:00");
@@ -497,12 +498,13 @@ public class WifiConfiguration implements Parcelable {
 
     public void setRandomizedMacAddress(MacAddress mac) {
         if (mac == null) {
-            Log.e(TAG, "setRandomizedMacAddress received null MacAddress.");
+            Log.m70e(TAG, "setRandomizedMacAddress received null MacAddress.");
         } else {
             this.mRandomizedMacAddress = mac;
         }
     }
 
+    /* loaded from: classes3.dex */
     public static class NetworkSelectionStatus {
         private static final int CONNECT_CHOICE_EXISTS = 1;
         private static final int CONNECT_CHOICE_NOT_EXISTS = -1;
@@ -528,20 +530,20 @@ public class WifiConfiguration implements Parcelable {
         public static final int NETWORK_SELECTION_PERMANENTLY_DISABLED = 2;
         public static final int NETWORK_SELECTION_STATUS_MAX = 3;
         public static final int NETWORK_SELECTION_TEMPORARY_DISABLED = 1;
-        public static final String[] QUALITY_NETWORK_SELECTION_DISABLE_REASON = {"NETWORK_SELECTION_ENABLE", "NETWORK_SELECTION_DISABLED_BAD_LINK", "NETWORK_SELECTION_DISABLED_ASSOCIATION_REJECTION ", "NETWORK_SELECTION_DISABLED_AUTHENTICATION_FAILURE", "NETWORK_SELECTION_DISABLED_DHCP_FAILURE", "NETWORK_SELECTION_DISABLED_DNS_FAILURE", "NETWORK_SELECTION_DISABLED_NO_INTERNET_TEMPORARY", "NETWORK_SELECTION_DISABLED_WPS_START", "NETWORK_SELECTION_DISABLED_TLS_VERSION", "NETWORK_SELECTION_DISABLED_AUTHENTICATION_NO_CREDENTIALS", "NETWORK_SELECTION_DISABLED_NO_INTERNET_PERMANENT", "NETWORK_SELECTION_DISABLED_BY_WIFI_MANAGER", "NETWORK_SELECTION_DISABLED_BY_USER_SWITCH", "NETWORK_SELECTION_DISABLED_BY_WRONG_PASSWORD", "NETWORK_SELECTION_DISABLED_AUTHENTICATION_NO_SUBSCRIPTION"};
-        public static final String[] QUALITY_NETWORK_SELECTION_STATUS = {"NETWORK_SELECTION_ENABLED", "NETWORK_SELECTION_TEMPORARY_DISABLED", "NETWORK_SELECTION_PERMANENTLY_DISABLED"};
         private ScanResult mCandidate;
         private int mCandidateScore;
         private String mConnectChoice;
-        private long mConnectChoiceTimestamp = -1;
-        private boolean mHasEverConnected = false;
-        private int[] mNetworkSeclectionDisableCounter = new int[15];
         private String mNetworkSelectionBSSID;
         private int mNetworkSelectionDisableReason;
         private boolean mNotRecommended;
         private boolean mSeenInLastQualifiedNetworkSelection;
         private int mStatus;
+        public static final String[] QUALITY_NETWORK_SELECTION_STATUS = {"NETWORK_SELECTION_ENABLED", "NETWORK_SELECTION_TEMPORARY_DISABLED", "NETWORK_SELECTION_PERMANENTLY_DISABLED"};
+        public static final String[] QUALITY_NETWORK_SELECTION_DISABLE_REASON = {"NETWORK_SELECTION_ENABLE", "NETWORK_SELECTION_DISABLED_BAD_LINK", "NETWORK_SELECTION_DISABLED_ASSOCIATION_REJECTION ", "NETWORK_SELECTION_DISABLED_AUTHENTICATION_FAILURE", "NETWORK_SELECTION_DISABLED_DHCP_FAILURE", "NETWORK_SELECTION_DISABLED_DNS_FAILURE", "NETWORK_SELECTION_DISABLED_NO_INTERNET_TEMPORARY", "NETWORK_SELECTION_DISABLED_WPS_START", "NETWORK_SELECTION_DISABLED_TLS_VERSION", "NETWORK_SELECTION_DISABLED_AUTHENTICATION_NO_CREDENTIALS", "NETWORK_SELECTION_DISABLED_NO_INTERNET_PERMANENT", "NETWORK_SELECTION_DISABLED_BY_WIFI_MANAGER", "NETWORK_SELECTION_DISABLED_BY_USER_SWITCH", "NETWORK_SELECTION_DISABLED_BY_WRONG_PASSWORD", "NETWORK_SELECTION_DISABLED_AUTHENTICATION_NO_SUBSCRIPTION"};
         private long mTemporarilyDisabledTimestamp = -1;
+        private int[] mNetworkSeclectionDisableCounter = new int[15];
+        private long mConnectChoiceTimestamp = -1;
+        private boolean mHasEverConnected = false;
 
         public void setNotRecommended(boolean notRecommended) {
             this.mNotRecommended = notRecommended;
@@ -604,10 +606,10 @@ public class WifiConfiguration implements Parcelable {
         }
 
         public static String getNetworkDisableReasonString(int reason) {
-            if (reason < 0 || reason >= 15) {
-                return null;
+            if (reason >= 0 && reason < 15) {
+                return QUALITY_NETWORK_SELECTION_DISABLE_REASON[reason];
             }
-            return QUALITY_NETWORK_SELECTION_DISABLE_REASON[reason];
+            return null;
         }
 
         public String getNetworkDisableReasonString() {
@@ -641,10 +643,11 @@ public class WifiConfiguration implements Parcelable {
         }
 
         public void setNetworkSelectionDisableReason(int reason) {
-            if (reason < 0 || reason >= 15) {
-                throw new IllegalArgumentException("Illegal reason value: " + reason);
+            if (reason >= 0 && reason < 15) {
+                this.mNetworkSelectionDisableReason = reason;
+                return;
             }
-            this.mNetworkSelectionDisableReason = reason;
+            throw new IllegalArgumentException("Illegal reason value: " + reason);
         }
 
         public boolean isDisabledByReason(int reason) {
@@ -667,25 +670,28 @@ public class WifiConfiguration implements Parcelable {
         }
 
         public void setDisableReasonCounter(int reason, int value) {
-            if (reason < 0 || reason >= 15) {
-                throw new IllegalArgumentException("Illegal reason value: " + reason);
+            if (reason >= 0 && reason < 15) {
+                this.mNetworkSeclectionDisableCounter[reason] = value;
+                return;
             }
-            this.mNetworkSeclectionDisableCounter[reason] = value;
+            throw new IllegalArgumentException("Illegal reason value: " + reason);
         }
 
         public void incrementDisableReasonCounter(int reason) {
-            if (reason < 0 || reason >= 15) {
-                throw new IllegalArgumentException("Illegal reason value: " + reason);
+            if (reason >= 0 && reason < 15) {
+                int[] iArr = this.mNetworkSeclectionDisableCounter;
+                iArr[reason] = iArr[reason] + 1;
+                return;
             }
-            int[] iArr = this.mNetworkSeclectionDisableCounter;
-            iArr[reason] = iArr[reason] + 1;
+            throw new IllegalArgumentException("Illegal reason value: " + reason);
         }
 
         public void clearDisableReasonCounter(int reason) {
-            if (reason < 0 || reason >= 15) {
-                throw new IllegalArgumentException("Illegal reason value: " + reason);
+            if (reason >= 0 && reason < 15) {
+                this.mNetworkSeclectionDisableCounter[reason] = 0;
+                return;
             }
-            this.mNetworkSeclectionDisableCounter[reason] = 0;
+            throw new IllegalArgumentException("Illegal reason value: " + reason);
         }
 
         public void clearDisableReasonCounter() {
@@ -739,7 +745,6 @@ public class WifiConfiguration implements Parcelable {
         public void readFromParcel(Parcel in) {
             setNetworkSelectionStatus(in.readInt());
             setNetworkSelectionDisableReason(in.readInt());
-            boolean z = false;
             for (int index = 0; index < 15; index++) {
                 setDisableReasonCounter(index, in.readInt());
             }
@@ -749,17 +754,15 @@ public class WifiConfiguration implements Parcelable {
                 setConnectChoice(in.readString());
                 setConnectChoiceTimestamp(in.readLong());
             } else {
-                setConnectChoice((String) null);
-                setConnectChoiceTimestamp(-1);
+                setConnectChoice(null);
+                setConnectChoiceTimestamp(-1L);
             }
             setHasEverConnected(in.readInt() != 0);
-            if (in.readInt() != 0) {
-                z = true;
-            }
-            setNotRecommended(z);
+            setNotRecommended(in.readInt() != 0);
         }
     }
 
+    /* loaded from: classes3.dex */
     public static class RecentFailure {
         public static final int NONE = 0;
         public static final int STATUS_AP_UNABLE_TO_HANDLE_NEW_STA = 17;
@@ -782,8 +785,8 @@ public class WifiConfiguration implements Parcelable {
         return this.mNetworkSelectionStatus;
     }
 
-    public void setNetworkSelectionStatus(NetworkSelectionStatus status2) {
-        this.mNetworkSelectionStatus = status2;
+    public void setNetworkSelectionStatus(NetworkSelectionStatus status) {
+        this.mNetworkSelectionStatus = status;
     }
 
     public WifiConfiguration() {
@@ -841,14 +844,14 @@ public class WifiConfiguration implements Parcelable {
     }
 
     public boolean isPasspoint() {
-        return !TextUtils.isEmpty(this.FQDN) && !TextUtils.isEmpty(this.providerFriendlyName) && this.enterpriseConfig != null && this.enterpriseConfig.getEapMethod() != -1;
+        return (TextUtils.isEmpty(this.FQDN) || TextUtils.isEmpty(this.providerFriendlyName) || this.enterpriseConfig == null || this.enterpriseConfig.getEapMethod() == -1) ? false : true;
     }
 
     public boolean isLinked(WifiConfiguration config) {
-        if (config == null || config.linkedConfigurations == null || this.linkedConfigurations == null || config.linkedConfigurations.get(configKey()) == null || this.linkedConfigurations.get(config.configKey()) == null) {
-            return false;
+        if (config != null && config.linkedConfigurations != null && this.linkedConfigurations != null && config.linkedConfigurations.get(configKey()) != null && this.linkedConfigurations.get(config.configKey()) != null) {
+            return true;
         }
-        return true;
+        return false;
     }
 
     @UnsupportedAppUsage
@@ -881,7 +884,7 @@ public class WifiConfiguration implements Parcelable {
         sbuf.append(this.requirePMF);
         sbuf.append(" OWE Transition mode Iface: ");
         sbuf.append(this.oweTransIfaceName);
-        sbuf.append(10);
+        sbuf.append('\n');
         sbuf.append(" NetworkSelectionStatus ");
         sbuf.append(this.mNetworkSelectionStatus.getNetworkStatusString() + "\n");
         int sbc = 0;
@@ -996,7 +999,7 @@ public class WifiConfiguration implements Parcelable {
                 }
             }
         }
-        sbuf.append(10);
+        sbuf.append('\n');
         sbuf.append(" AuthAlgorithms:");
         for (int a = 0; a < this.allowedAuthAlgorithms.size(); a++) {
             if (this.allowedAuthAlgorithms.get(a)) {
@@ -1008,7 +1011,7 @@ public class WifiConfiguration implements Parcelable {
                 }
             }
         }
-        sbuf.append(10);
+        sbuf.append('\n');
         sbuf.append(" PairwiseCiphers:");
         for (int pc = 0; pc < this.allowedPairwiseCiphers.size(); pc++) {
             if (this.allowedPairwiseCiphers.get(pc)) {
@@ -1020,7 +1023,7 @@ public class WifiConfiguration implements Parcelable {
                 }
             }
         }
-        sbuf.append(10);
+        sbuf.append('\n');
         sbuf.append(" GroupCiphers:");
         for (int gc = 0; gc < this.allowedGroupCiphers.size(); gc++) {
             if (this.allowedGroupCiphers.get(gc)) {
@@ -1032,7 +1035,7 @@ public class WifiConfiguration implements Parcelable {
                 }
             }
         }
-        sbuf.append(10);
+        sbuf.append('\n');
         sbuf.append(" GroupMgmtCiphers:");
         for (int gmc = 0; gmc < this.allowedGroupManagementCiphers.size(); gmc++) {
             if (this.allowedGroupManagementCiphers.get(gmc)) {
@@ -1044,7 +1047,7 @@ public class WifiConfiguration implements Parcelable {
                 }
             }
         }
-        sbuf.append(10);
+        sbuf.append('\n');
         sbuf.append(" SuiteBCiphers:");
         while (true) {
             int sbc2 = sbc;
@@ -1061,7 +1064,7 @@ public class WifiConfiguration implements Parcelable {
             }
             sbc = sbc2 + 1;
         }
-        sbuf.append(10);
+        sbuf.append('\n');
         sbuf.append(" PSK/SAE: ");
         if (this.preSharedKey != null) {
             sbuf.append('*');
@@ -1085,7 +1088,7 @@ public class WifiConfiguration implements Parcelable {
         }
         long now_ms = SystemClock.elapsedRealtime();
         if (this.mNetworkSelectionStatus.getDisableTime() != -1) {
-            sbuf.append(10);
+            sbuf.append('\n');
             long diff = now_ms - this.mNetworkSelectionStatus.getDisableTime();
             if (diff <= 0) {
                 sbuf.append(" blackListed since <incorrect>");
@@ -1115,17 +1118,17 @@ public class WifiConfiguration implements Parcelable {
         sbuf.append(" noInternetAccessExpected=" + this.noInternetAccessExpected);
         sbuf.append(WifiEnterpriseConfig.CA_CERT_ALIAS_DELIMITER);
         if (this.lastConnected != 0) {
-            sbuf.append(10);
+            sbuf.append('\n');
             sbuf.append("lastConnected: ");
             sbuf.append(TimeUtils.logTimeOfDay(this.lastConnected));
             sbuf.append(WifiEnterpriseConfig.CA_CERT_ALIAS_DELIMITER);
         }
-        sbuf.append(10);
+        sbuf.append('\n');
         if (this.linkedConfigurations != null) {
             for (String key : this.linkedConfigurations.keySet()) {
                 sbuf.append(" linked: ");
                 sbuf.append(key);
-                sbuf.append(10);
+                sbuf.append('\n');
             }
         }
         sbuf.append("recentFailure: ");
@@ -1134,7 +1137,7 @@ public class WifiConfiguration implements Parcelable {
         sbuf.append("\n");
         sbuf.append("ShareThisAp: ");
         sbuf.append(this.shareThisAp);
-        sbuf.append(10);
+        sbuf.append('\n');
         return sbuf.toString();
     }
 
@@ -1148,13 +1151,14 @@ public class WifiConfiguration implements Parcelable {
             return this.SSID.substring(1, length - 1);
         }
         if (length > 3 && this.SSID.charAt(0) == 'P' && this.SSID.charAt(1) == '\"' && this.SSID.charAt(length - 1) == '\"') {
-            return WifiSsid.createFromAsciiEncoded(this.SSID.substring(2, length - 1)).toString();
+            WifiSsid wifiSsid = WifiSsid.createFromAsciiEncoded(this.SSID.substring(2, length - 1));
+            return wifiSsid.toString();
         }
         return this.SSID;
     }
 
-    public static String userApprovedAsString(int userApproved2) {
-        switch (userApproved2) {
+    public static String userApprovedAsString(int userApproved) {
+        switch (userApproved) {
             case 0:
                 return "USER_UNSPECIFIED";
             case 1:
@@ -1176,7 +1180,7 @@ public class WifiConfiguration implements Parcelable {
                 this.allowedKeyManagement = current.allowedKeyManagement;
             }
             if (this.allowedKeyManagement.get(2)) {
-                keyMgmt = keyMgmt + KeyMgmt.strings[2];
+                keyMgmt = "" + KeyMgmt.strings[2];
             }
             if (this.allowedKeyManagement.get(5)) {
                 keyMgmt = keyMgmt + KeyMgmt.strings[5];
@@ -1187,16 +1191,16 @@ public class WifiConfiguration implements Parcelable {
             if (this.allowedKeyManagement.get(10)) {
                 keyMgmt = keyMgmt + KeyMgmt.strings[10];
             }
-            if (!TextUtils.isEmpty(keyMgmt)) {
-                StringBuilder sb = new StringBuilder();
-                sb.append(trimStringForKeyId(this.SSID));
-                sb.append(Session.SESSION_SEPARATION_CHAR_CHILD);
-                sb.append(keyMgmt);
-                sb.append(Session.SESSION_SEPARATION_CHAR_CHILD);
-                sb.append(trimStringForKeyId(this.enterpriseConfig.getKeyId(current != null ? current.enterpriseConfig : null)));
-                return sb.toString();
+            if (TextUtils.isEmpty(keyMgmt)) {
+                throw new IllegalStateException("Not an EAP network");
             }
-            throw new IllegalStateException("Not an EAP network");
+            StringBuilder sb = new StringBuilder();
+            sb.append(trimStringForKeyId(this.SSID));
+            sb.append(Session.SESSION_SEPARATION_CHAR_CHILD);
+            sb.append(keyMgmt);
+            sb.append(Session.SESSION_SEPARATION_CHAR_CHILD);
+            sb.append(trimStringForKeyId(this.enterpriseConfig.getKeyId(current != null ? current.enterpriseConfig : null)));
+            return sb.toString();
         } catch (NullPointerException e) {
             throw new IllegalStateException("Invalid config details");
         }
@@ -1206,7 +1210,7 @@ public class WifiConfiguration implements Parcelable {
         return string.replace("\"", "").replace(WifiEnterpriseConfig.CA_CERT_ALIAS_DELIMITER, "");
     }
 
-    /* access modifiers changed from: private */
+    /* JADX INFO: Access modifiers changed from: private */
     public static BitSet readBitSet(Parcel src) {
         int cardinality = src.readInt();
         BitSet set = new BitSet();
@@ -1234,32 +1238,29 @@ public class WifiConfiguration implements Parcelable {
     public int getAuthType() {
         if (this.allowedKeyManagement.cardinality() > 1) {
             throw new IllegalStateException("More than one auth type set");
-        } else if (this.allowedKeyManagement.get(1)) {
-            return 1;
-        } else {
-            if (this.allowedKeyManagement.get(4)) {
-                return 4;
-            }
-            if (this.allowedKeyManagement.get(2)) {
-                return 2;
-            }
-            if (this.allowedKeyManagement.get(3)) {
-                return 3;
-            }
-            if (this.allowedKeyManagement.get(15)) {
-                return 15;
-            }
-            if (this.allowedKeyManagement.get(8)) {
-                return 8;
-            }
-            if (this.allowedKeyManagement.get(9)) {
-                return 9;
-            }
-            if (this.allowedKeyManagement.get(10)) {
-                return 10;
-            }
-            return 0;
         }
+        if (this.allowedKeyManagement.get(1)) {
+            return 1;
+        }
+        if (this.allowedKeyManagement.get(4)) {
+            return 4;
+        }
+        if (this.allowedKeyManagement.get(2)) {
+            return 2;
+        }
+        if (this.allowedKeyManagement.get(3)) {
+            return 3;
+        }
+        if (this.allowedKeyManagement.get(15)) {
+            return 15;
+        }
+        if (this.allowedKeyManagement.get(8)) {
+            return 8;
+        }
+        if (this.allowedKeyManagement.get(9)) {
+            return 9;
+        }
+        return this.allowedKeyManagement.get(10) ? 10 : 0;
     }
 
     public String configKey(boolean allowCached) {
@@ -1268,10 +1269,10 @@ public class WifiConfiguration implements Parcelable {
         }
         if (this.providerFriendlyName != null) {
             String key = this.FQDN + KeyMgmt.strings[2];
-            if (this.shared) {
-                return key;
+            if (!this.shared) {
+                return key + NativeLibraryHelper.CLEAR_ABI_OVERRIDE + Integer.toString(UserHandle.getUserId(this.creatorUid));
             }
-            return key + NativeLibraryHelper.CLEAR_ABI_OVERRIDE + Integer.toString(UserHandle.getUserId(this.creatorUid));
+            return key;
         }
         String key2 = getSsidAndSecurityTypeString();
         if (!this.shared) {
@@ -1283,21 +1284,29 @@ public class WifiConfiguration implements Parcelable {
 
     public String getSsidAndSecurityTypeString() {
         if (this.allowedKeyManagement.get(1)) {
-            return this.SSID + KeyMgmt.strings[1];
+            String key = this.SSID + KeyMgmt.strings[1];
+            return key;
         } else if (this.allowedKeyManagement.get(2) || this.allowedKeyManagement.get(3)) {
-            return this.SSID + KeyMgmt.strings[2];
+            String key2 = this.SSID + KeyMgmt.strings[2];
+            return key2;
         } else if (this.wepKeys[0] != null) {
-            return this.SSID + "WEP";
+            String key3 = this.SSID + "WEP";
+            return key3;
         } else if (this.allowedKeyManagement.get(9)) {
-            return this.SSID + KeyMgmt.strings[9];
+            String key4 = this.SSID + KeyMgmt.strings[9];
+            return key4;
         } else if (this.allowedKeyManagement.get(8)) {
-            return this.SSID + KeyMgmt.strings[8];
+            String key5 = this.SSID + KeyMgmt.strings[8];
+            return key5;
         } else if (this.allowedKeyManagement.get(10)) {
-            return this.SSID + KeyMgmt.strings[10];
+            String key6 = this.SSID + KeyMgmt.strings[10];
+            return key6;
         } else if (this.allowedKeyManagement.get(15)) {
-            return this.SSID + KeyMgmt.strings[15];
+            String key7 = this.SSID + KeyMgmt.strings[15];
+            return key7;
         } else {
-            return this.SSID + KeyMgmt.strings[0];
+            String key8 = this.SSID + KeyMgmt.strings[0];
+            return key8;
         }
     }
 
@@ -1356,11 +1365,11 @@ public class WifiConfiguration implements Parcelable {
     }
 
     public void setHttpProxy(ProxyInfo httpProxy) {
-        ProxyInfo httpProxyCopy;
         IpConfiguration.ProxySettings proxySettingCopy;
+        ProxyInfo httpProxyCopy;
         if (httpProxy == null) {
             this.mIpConfiguration.setProxySettings(IpConfiguration.ProxySettings.NONE);
-            this.mIpConfiguration.setHttpProxy((ProxyInfo) null);
+            this.mIpConfiguration.setHttpProxy(null);
             return;
         }
         if (!Uri.EMPTY.equals(httpProxy.getPacFileUrl())) {
@@ -1370,12 +1379,11 @@ public class WifiConfiguration implements Parcelable {
             proxySettingCopy = IpConfiguration.ProxySettings.STATIC;
             httpProxyCopy = new ProxyInfo(httpProxy.getHost(), httpProxy.getPort(), httpProxy.getExclusionListAsString());
         }
-        if (httpProxyCopy.isValid()) {
-            this.mIpConfiguration.setProxySettings(proxySettingCopy);
-            this.mIpConfiguration.setHttpProxy(httpProxyCopy);
-            return;
+        if (!httpProxyCopy.isValid()) {
+            throw new IllegalArgumentException("Invalid ProxyInfo: " + httpProxyCopy.toString());
         }
-        throw new IllegalArgumentException("Invalid ProxyInfo: " + httpProxyCopy.toString());
+        this.mIpConfiguration.setProxySettings(proxySettingCopy);
+        this.mIpConfiguration.setHttpProxy(httpProxyCopy);
     }
 
     @UnsupportedAppUsage
@@ -1384,6 +1392,7 @@ public class WifiConfiguration implements Parcelable {
         this.mIpConfiguration.httpProxy = proxy;
     }
 
+    @Override // android.p007os.Parcelable
     public int describeContents() {
         return 0;
     }
@@ -1425,7 +1434,8 @@ public class WifiConfiguration implements Parcelable {
             for (int i = 0; i < this.wepKeys.length; i++) {
                 this.wepKeys[i] = source.wepKeys[i];
             }
-            this.wepTxKeyIndex = source.wepTxKeyIndex;
+            int i2 = source.wepTxKeyIndex;
+            this.wepTxKeyIndex = i2;
             this.priority = source.priority;
             this.hiddenSSID = source.hiddenSSID;
             this.allowedKeyManagement = (BitSet) source.allowedKeyManagement.clone();
@@ -1485,7 +1495,10 @@ public class WifiConfiguration implements Parcelable {
         }
     }
 
+    @Override // android.p007os.Parcelable
     public void writeToParcel(Parcel dest, int flags) {
+        long[] jArr;
+        String[] strArr;
         dest.writeInt(this.networkId);
         dest.writeInt(this.status);
         this.mNetworkSelectionStatus.writeToParcel(dest);
@@ -1574,18 +1587,18 @@ public class WifiConfiguration implements Parcelable {
         int version = in.readInt();
         if (version < 1 || version > 3) {
             throw new BackupUtils.BadVersionException("Unknown Backup Serialization Version");
-        } else if (version == 1) {
-            return null;
-        } else {
-            config.SSID = BackupUtils.readString(in);
-            config.apBand = in.readInt();
-            config.apChannel = in.readInt();
-            config.preSharedKey = BackupUtils.readString(in);
-            config.allowedKeyManagement.set(in.readInt());
-            if (version >= 3) {
-                config.hiddenSSID = in.readBoolean();
-            }
-            return config;
         }
+        if (version == 1) {
+            return null;
+        }
+        config.SSID = BackupUtils.readString(in);
+        config.apBand = in.readInt();
+        config.apChannel = in.readInt();
+        config.preSharedKey = BackupUtils.readString(in);
+        config.allowedKeyManagement.set(in.readInt());
+        if (version >= 3) {
+            config.hiddenSSID = in.readBoolean();
+        }
+        return config;
     }
 }

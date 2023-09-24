@@ -2,19 +2,24 @@ package android.graphics;
 
 import android.annotation.UnsupportedAppUsage;
 import android.graphics.Region;
+import dalvik.annotation.optimization.CriticalNative;
+import dalvik.annotation.optimization.FastNative;
 import libcore.util.NativeAllocationRegistry;
 
+/* loaded from: classes.dex */
 public class Path {
-    static final FillType[] sFillTypeArray = {FillType.WINDING, FillType.EVEN_ODD, FillType.INVERSE_WINDING, FillType.INVERSE_EVEN_ODD};
-    private static final NativeAllocationRegistry sRegistry = NativeAllocationRegistry.createMalloced(Path.class.getClassLoader(), nGetFinalizer());
     @UnsupportedAppUsage
     public boolean isSimplePath;
     private Direction mLastDirection;
     public final long mNativePath;
     @UnsupportedAppUsage
     public Region rects;
+    private static final NativeAllocationRegistry sRegistry = NativeAllocationRegistry.createMalloced(Path.class.getClassLoader(), nGetFinalizer());
+    static final FillType[] sFillTypeArray = {FillType.WINDING, FillType.EVEN_ODD, FillType.INVERSE_WINDING, FillType.INVERSE_EVEN_ODD};
 
-    public enum Op {
+    /* renamed from: android.graphics.Path$Op */
+    /* loaded from: classes.dex */
+    public enum EnumC0679Op {
         DIFFERENCE,
         INTERSECT,
         UNION,
@@ -50,6 +55,7 @@ public class Path {
 
     private static native void nCubicTo(long j, float f, float f2, float f3, float f4, float f5, float f6);
 
+    @CriticalNative
     private static native int nGetFillType(long j);
 
     private static native long nGetFinalizer();
@@ -60,10 +66,13 @@ public class Path {
 
     private static native long nInit(long j);
 
+    @CriticalNative
     private static native boolean nIsConvex(long j);
 
+    @CriticalNative
     private static native boolean nIsEmpty(long j);
 
+    @FastNative
     private static native boolean nIsRect(long j, RectF rectF);
 
     private static native void nLineTo(long j, float f, float f2);
@@ -84,12 +93,15 @@ public class Path {
 
     private static native void nRQuadTo(long j, float f, float f2, float f3, float f4);
 
+    @CriticalNative
     private static native void nReset(long j);
 
+    @CriticalNative
     private static native void nRewind(long j);
 
     private static native void nSet(long j, long j2);
 
+    @CriticalNative
     private static native void nSetFillType(long j, int i);
 
     private static native void nSetLastPoint(long j, float f, float f2);
@@ -141,38 +153,43 @@ public class Path {
     }
 
     public void set(Path src) {
-        if (this != src) {
-            this.isSimplePath = src.isSimplePath;
-            nSet(this.mNativePath, src.mNativePath);
-            if (this.isSimplePath) {
-                if (this.rects != null && src.rects != null) {
-                    this.rects.set(src.rects);
-                } else if (this.rects != null && src.rects == null) {
-                    this.rects.setEmpty();
-                } else if (src.rects != null) {
-                    this.rects = new Region(src.rects);
-                }
-            }
+        if (this == src) {
+            return;
+        }
+        this.isSimplePath = src.isSimplePath;
+        nSet(this.mNativePath, src.mNativePath);
+        if (!this.isSimplePath) {
+            return;
+        }
+        if (this.rects != null && src.rects != null) {
+            this.rects.set(src.rects);
+        } else if (this.rects != null && src.rects == null) {
+            this.rects.setEmpty();
+        } else if (src.rects != null) {
+            this.rects = new Region(src.rects);
         }
     }
 
-    public boolean op(Path path, Op op) {
-        return op(this, path, op);
+    /* renamed from: op */
+    public boolean m129op(Path path, EnumC0679Op op) {
+        return m128op(this, path, op);
     }
 
-    public boolean op(Path path1, Path path2, Op op) {
-        if (!nOp(path1.mNativePath, path2.mNativePath, op.ordinal(), this.mNativePath)) {
-            return false;
+    /* renamed from: op */
+    public boolean m128op(Path path1, Path path2, EnumC0679Op op) {
+        if (nOp(path1.mNativePath, path2.mNativePath, op.ordinal(), this.mNativePath)) {
+            this.isSimplePath = false;
+            this.rects = null;
+            return true;
         }
-        this.isSimplePath = false;
-        this.rects = null;
-        return true;
+        return false;
     }
 
     public boolean isConvex() {
         return nIsConvex(this.mNativePath);
     }
 
+    /* loaded from: classes.dex */
     public enum FillType {
         WINDING(0),
         EVEN_ODD(1),
@@ -181,7 +198,7 @@ public class Path {
         
         final int nativeInt;
 
-        private FillType(int ni) {
+        FillType(int ni) {
             this.nativeInt = ni;
         }
     }
@@ -195,11 +212,13 @@ public class Path {
     }
 
     public boolean isInverseFillType() {
-        return (FillType.INVERSE_WINDING.nativeInt & nGetFillType(this.mNativePath)) != 0;
+        int ft = nGetFillType(this.mNativePath);
+        return (FillType.INVERSE_WINDING.nativeInt & ft) != 0;
     }
 
     public void toggleInverseFillType() {
-        nSetFillType(this.mNativePath, nGetFillType(this.mNativePath) ^ FillType.INVERSE_WINDING.nativeInt);
+        int ft = nGetFillType(this.mNativePath);
+        nSetFillType(this.mNativePath, ft ^ FillType.INVERSE_WINDING.nativeInt);
     }
 
     public boolean isEmpty() {
@@ -274,13 +293,14 @@ public class Path {
         nClose(this.mNativePath);
     }
 
+    /* loaded from: classes.dex */
     public enum Direction {
         CW(0),
         CCW(1);
         
         final int nativeInt;
 
-        private Direction(int ni) {
+        Direction(int ni) {
             this.nativeInt = ni;
         }
     }
@@ -296,7 +316,7 @@ public class Path {
         if (this.rects == null) {
             this.rects = new Region();
         }
-        this.rects.op((int) left, (int) top, (int) right, (int) bottom, Region.Op.UNION);
+        this.rects.m126op((int) left, (int) top, (int) right, (int) bottom, Region.EnumC0685Op.UNION);
     }
 
     public void addRect(RectF rect, Direction dir) {
@@ -341,20 +361,18 @@ public class Path {
     }
 
     public void addRoundRect(RectF rect, float[] radii, Direction dir) {
-        if (rect != null) {
-            addRoundRect(rect.left, rect.top, rect.right, rect.bottom, radii, dir);
-            return;
+        if (rect == null) {
+            throw new NullPointerException("need rect parameter");
         }
-        throw new NullPointerException("need rect parameter");
+        addRoundRect(rect.left, rect.top, rect.right, rect.bottom, radii, dir);
     }
 
     public void addRoundRect(float left, float top, float right, float bottom, float[] radii, Direction dir) {
-        if (radii.length >= 8) {
-            this.isSimplePath = false;
-            nAddRoundRect(this.mNativePath, left, top, right, bottom, radii, dir.nativeInt);
-            return;
+        if (radii.length < 8) {
+            throw new ArrayIndexOutOfBoundsException("radii[] needs 8 values");
         }
-        throw new ArrayIndexOutOfBoundsException("radii[] needs 8 values");
+        this.isSimplePath = false;
+        nAddRoundRect(this.mNativePath, left, top, right, bottom, radii, dir.nativeInt);
     }
 
     public void addPath(Path src, float dx, float dy) {
@@ -384,14 +402,15 @@ public class Path {
     }
 
     public void offset(float dx, float dy) {
-        if (!this.isSimplePath || this.rects != null) {
-            if (this.isSimplePath && ((double) dx) == Math.rint((double) dx) && ((double) dy) == Math.rint((double) dy)) {
-                this.rects.translate((int) dx, (int) dy);
-            } else {
-                this.isSimplePath = false;
-            }
-            nOffset(this.mNativePath, dx, dy);
+        if (this.isSimplePath && this.rects == null) {
+            return;
         }
+        if (this.isSimplePath && dx == Math.rint(dx) && dy == Math.rint(dy)) {
+            this.rects.translate((int) dx, (int) dy);
+        } else {
+            this.isSimplePath = false;
+        }
+        nOffset(this.mNativePath, dx, dy);
     }
 
     public void setLastPoint(float dx, float dy) {
@@ -417,16 +436,15 @@ public class Path {
         return this.mNativePath;
     }
 
-    /* access modifiers changed from: package-private */
-    public final long mutateNI() {
+    final long mutateNI() {
         this.isSimplePath = false;
         return this.mNativePath;
     }
 
     public float[] approximate(float acceptableError) {
-        if (acceptableError >= 0.0f) {
-            return nApproximate(this.mNativePath, acceptableError);
+        if (acceptableError < 0.0f) {
+            throw new IllegalArgumentException("AcceptableError must be greater than or equal to 0");
         }
-        throw new IllegalArgumentException("AcceptableError must be greater than or equal to 0");
+        return nApproximate(this.mNativePath, acceptableError);
     }
 }

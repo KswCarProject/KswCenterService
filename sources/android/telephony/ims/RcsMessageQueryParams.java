@@ -1,17 +1,22 @@
 package android.telephony.ims;
 
-import android.os.Parcel;
-import android.os.Parcelable;
+import android.p007os.Parcel;
+import android.p007os.Parcelable;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.security.InvalidParameterException;
 
+/* loaded from: classes4.dex */
 public final class RcsMessageQueryParams implements Parcelable {
-    public static final Parcelable.Creator<RcsMessageQueryParams> CREATOR = new Parcelable.Creator<RcsMessageQueryParams>() {
+    public static final Parcelable.Creator<RcsMessageQueryParams> CREATOR = new Parcelable.Creator<RcsMessageQueryParams>() { // from class: android.telephony.ims.RcsMessageQueryParams.1
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public RcsMessageQueryParams createFromParcel(Parcel in) {
             return new RcsMessageQueryParams(in);
         }
 
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public RcsMessageQueryParams[] newArray(int size) {
             return new RcsMessageQueryParams[size];
         }
@@ -33,6 +38,7 @@ public final class RcsMessageQueryParams implements Parcelable {
     private int mThreadId;
 
     @Retention(RetentionPolicy.SOURCE)
+    /* loaded from: classes4.dex */
     public @interface SortingProperty {
     }
 
@@ -74,21 +80,22 @@ public final class RcsMessageQueryParams implements Parcelable {
         return this.mThreadId;
     }
 
+    /* loaded from: classes4.dex */
     public static class Builder {
         private int mFileTransferPresence;
         private boolean mIsAscending;
-        private int mLimit = 100;
         private String mMessageLike;
         private int mMessageType;
         private int mSortingProperty;
+        private int mLimit = 100;
         private int mThreadId = -1;
 
         public Builder setResultLimit(int limit) throws InvalidParameterException {
-            if (limit >= 0) {
-                this.mLimit = limit;
-                return this;
+            if (limit < 0) {
+                throw new InvalidParameterException("The query limit must be non-negative");
             }
-            throw new InvalidParameterException("The query limit must be non-negative");
+            this.mLimit = limit;
+            return this;
         }
 
         public Builder setMessageType(int messageType) {
@@ -140,10 +147,12 @@ public final class RcsMessageQueryParams implements Parcelable {
         this.mThreadId = in.readInt();
     }
 
+    @Override // android.p007os.Parcelable
     public int describeContents() {
         return 0;
     }
 
+    @Override // android.p007os.Parcelable
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeInt(this.mMessageType);
         dest.writeInt(this.mFileTransferPresence);

@@ -1,15 +1,18 @@
 package android.bluetooth;
 
-import android.os.Parcel;
-import android.os.Parcelable;
+import android.p007os.Parcel;
+import android.p007os.Parcelable;
 import java.util.Arrays;
 
+/* loaded from: classes.dex */
 public class SdpRecord implements Parcelable {
-    public static final Parcelable.Creator CREATOR = new Parcelable.Creator() {
+    public static final Parcelable.Creator CREATOR = new Parcelable.Creator() { // from class: android.bluetooth.SdpRecord.1
+        @Override // android.p007os.Parcelable.Creator
         public SdpRecord createFromParcel(Parcel in) {
             return new SdpRecord(in);
         }
 
+        @Override // android.p007os.Parcelable.Creator
         public SdpRecord[] newArray(int size) {
             return new SdpRecord[size];
         }
@@ -32,10 +35,12 @@ public class SdpRecord implements Parcelable {
         in.readByteArray(this.mRawData);
     }
 
+    @Override // android.p007os.Parcelable
     public int describeContents() {
         return 0;
     }
 
+    @Override // android.p007os.Parcelable
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeInt(this.mRawSize);
         dest.writeByteArray(this.mRawData);

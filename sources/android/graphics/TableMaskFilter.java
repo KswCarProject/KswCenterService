@@ -2,6 +2,7 @@ package android.graphics;
 
 import android.annotation.UnsupportedAppUsage;
 
+/* loaded from: classes.dex */
 public class TableMaskFilter extends MaskFilter {
     private static native long nativeNewClip(int i, int i2);
 
@@ -10,11 +11,10 @@ public class TableMaskFilter extends MaskFilter {
     private static native long nativeNewTable(byte[] bArr);
 
     public TableMaskFilter(byte[] table) {
-        if (table.length >= 256) {
-            this.native_instance = nativeNewTable(table);
-            return;
+        if (table.length < 256) {
+            throw new RuntimeException("table.length must be >= 256");
         }
-        throw new RuntimeException("table.length must be >= 256");
+        this.native_instance = nativeNewTable(table);
     }
 
     private TableMaskFilter(long ni) {

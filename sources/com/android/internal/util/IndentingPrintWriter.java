@@ -6,6 +6,7 @@ import java.io.PrintWriter;
 import java.io.Writer;
 import java.util.Arrays;
 
+/* loaded from: classes4.dex */
 public class IndentingPrintWriter extends PrintWriter {
     private char[] mCurrentIndent;
     private int mCurrentLength;
@@ -41,11 +42,12 @@ public class IndentingPrintWriter extends PrintWriter {
         this.mIndentBuilder.setLength(0);
         while (true) {
             int i2 = i;
-            if (i2 >= indent) {
+            if (i2 < indent) {
+                increaseIndent();
+                i = i2 + 1;
+            } else {
                 return this;
             }
-            increaseIndent();
-            i = i2 + 1;
         }
     }
 
@@ -78,21 +80,25 @@ public class IndentingPrintWriter extends PrintWriter {
         return this;
     }
 
+    @Override // java.io.PrintWriter
     public void println() {
         write(10);
     }
 
+    @Override // java.io.PrintWriter, java.io.Writer
     public void write(int c) {
         this.mSingleChar[0] = (char) c;
         write(this.mSingleChar, 0, 1);
     }
 
+    @Override // java.io.PrintWriter, java.io.Writer
     public void write(String s, int off, int len) {
         char[] buf = new char[len];
         s.getChars(off, len - off, buf, 0);
         write(buf, 0, len);
     }
 
+    @Override // java.io.PrintWriter, java.io.Writer
     public void write(char[] buf, int offset, int count) {
         int indentLength = this.mIndentBuilder.length();
         int bufferEnd = offset + count;
@@ -102,7 +108,7 @@ public class IndentingPrintWriter extends PrintWriter {
             int lineEnd = lineStart + 1;
             char ch = buf[lineStart];
             this.mCurrentLength++;
-            if (ch == 10) {
+            if (ch == '\n') {
                 maybeWriteIndent();
                 super.write(buf, lineStart2, lineEnd - lineStart2);
                 lineStart2 = lineEnd;

@@ -6,6 +6,7 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.util.function.Supplier;
 
+/* loaded from: classes4.dex */
 public class InsetsSourceConsumer {
     protected final InsetsController mController;
     private InsetsSourceControl mSourceControl;
@@ -15,6 +16,7 @@ public class InsetsSourceConsumer {
     protected boolean mVisible;
 
     @Retention(RetentionPolicy.SOURCE)
+    /* loaded from: classes4.dex */
     @interface ShowResult {
         public static final int SHOW_DELAYED = 1;
         public static final int SHOW_FAILED = 2;
@@ -30,15 +32,16 @@ public class InsetsSourceConsumer {
     }
 
     public void setControl(InsetsSourceControl control) {
-        if (this.mSourceControl != control) {
-            this.mSourceControl = control;
-            applyHiddenToControl();
-            if (applyLocalVisibilityOverride()) {
-                this.mController.notifyVisibilityChanged();
-            }
-            if (this.mSourceControl == null) {
-                this.mController.notifyControlRevoked(this);
-            }
+        if (this.mSourceControl == control) {
+            return;
+        }
+        this.mSourceControl = control;
+        applyHiddenToControl();
+        if (applyLocalVisibilityOverride()) {
+            this.mController.notifyVisibilityChanged();
+        }
+        if (this.mSourceControl == null) {
+            this.mController.notifyControlRevoked(this);
         }
     }
 
@@ -47,8 +50,7 @@ public class InsetsSourceConsumer {
         return this.mSourceControl;
     }
 
-    /* access modifiers changed from: package-private */
-    public int getType() {
+    int getType() {
         return this.mType;
     }
 
@@ -68,8 +70,7 @@ public class InsetsSourceConsumer {
     public void onWindowFocusLost() {
     }
 
-    /* access modifiers changed from: package-private */
-    public boolean applyLocalVisibilityOverride() {
+    boolean applyLocalVisibilityOverride() {
         if (this.mSourceControl == null || this.mState.getSource(this.mType).isVisible() == this.mVisible) {
             return false;
         }
@@ -82,33 +83,33 @@ public class InsetsSourceConsumer {
         return this.mVisible;
     }
 
-    /* access modifiers changed from: package-private */
-    public int requestShow(boolean fromController) {
+    int requestShow(boolean fromController) {
         return 0;
     }
 
-    /* access modifiers changed from: package-private */
-    public void notifyHidden() {
+    void notifyHidden() {
     }
 
     private void setVisible(boolean visible) {
-        if (this.mVisible != visible) {
-            this.mVisible = visible;
-            applyHiddenToControl();
-            applyLocalVisibilityOverride();
-            this.mController.notifyVisibilityChanged();
+        if (this.mVisible == visible) {
+            return;
         }
+        this.mVisible = visible;
+        applyHiddenToControl();
+        applyLocalVisibilityOverride();
+        this.mController.notifyVisibilityChanged();
     }
 
     private void applyHiddenToControl() {
-        if (this.mSourceControl != null) {
-            SurfaceControl.Transaction t = this.mTransactionSupplier.get();
-            if (this.mVisible) {
-                t.show(this.mSourceControl.getLeash());
-            } else {
-                t.hide(this.mSourceControl.getLeash());
-            }
-            t.apply();
+        if (this.mSourceControl == null) {
+            return;
         }
+        SurfaceControl.Transaction t = this.mTransactionSupplier.get();
+        if (this.mVisible) {
+            t.show(this.mSourceControl.getLeash());
+        } else {
+            t.hide(this.mSourceControl.getLeash());
+        }
+        t.apply();
     }
 }

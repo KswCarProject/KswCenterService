@@ -1,5 +1,6 @@
 package android.filterpacks.performance;
 
+/* loaded from: classes.dex */
 public class Throughput {
     private final int mPeriodFrames;
     private final int mPeriodTime;
@@ -26,11 +27,12 @@ public class Throughput {
     }
 
     public float getFramesPerSecond() {
-        return ((float) this.mPeriodFrames) / ((float) this.mPeriodTime);
+        return this.mPeriodFrames / this.mPeriodTime;
     }
 
     public float getNanosPerPixel() {
-        return (float) (((((double) this.mPeriodTime) / ((double) this.mPeriodFrames)) * 1000000.0d) / ((double) this.mPixels));
+        double frameTimeInNanos = (this.mPeriodTime / this.mPeriodFrames) * 1000000.0d;
+        return (float) (frameTimeInNanos / this.mPixels);
     }
 
     public String toString() {

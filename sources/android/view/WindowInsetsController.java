@@ -2,6 +2,7 @@ package android.view;
 
 import android.view.WindowInsets;
 
+/* loaded from: classes4.dex */
 public interface WindowInsetsController {
     void controlWindowInsetsAnimation(int i, WindowInsetsAnimationControlListener windowInsetsAnimationControlListener);
 
@@ -9,15 +10,15 @@ public interface WindowInsetsController {
 
     void show(int i);
 
-    void controlInputMethodAnimation(WindowInsetsAnimationControlListener listener) {
+    default void controlInputMethodAnimation(WindowInsetsAnimationControlListener listener) {
         controlWindowInsetsAnimation(WindowInsets.Type.ime(), listener);
     }
 
-    void showInputMethod() {
+    default void showInputMethod() {
         show(WindowInsets.Type.ime());
     }
 
-    void hideInputMethod() {
+    default void hideInputMethod() {
         hide(WindowInsets.Type.ime());
     }
 }

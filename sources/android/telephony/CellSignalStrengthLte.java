@@ -1,24 +1,16 @@
 package android.telephony;
 
 import android.annotation.UnsupportedAppUsage;
-import android.content.pm.PackageManager;
+import android.content.p002pm.PackageManager;
 import android.hardware.radio.V1_0.LteSignalStrength;
-import android.os.Parcel;
-import android.os.Parcelable;
-import android.os.PersistableBundle;
+import android.p007os.Parcel;
+import android.p007os.Parcelable;
+import android.p007os.PersistableBundle;
 import android.util.Log;
 import java.util.Objects;
 
+/* loaded from: classes.dex */
 public final class CellSignalStrengthLte extends CellSignalStrength implements Parcelable {
-    public static final Parcelable.Creator<CellSignalStrengthLte> CREATOR = new Parcelable.Creator<CellSignalStrengthLte>() {
-        public CellSignalStrengthLte createFromParcel(Parcel in) {
-            return new CellSignalStrengthLte(in);
-        }
-
-        public CellSignalStrengthLte[] newArray(int size) {
-            return new CellSignalStrengthLte[size];
-        }
-    };
     private static final boolean DBG = false;
     private static final String LOG_TAG = "CellSignalStrengthLte";
     private static final int MAX_LTE_RSRP = -44;
@@ -26,9 +18,7 @@ public final class CellSignalStrengthLte extends CellSignalStrength implements P
     private static final int SIGNAL_STRENGTH_LTE_RSSI_ASU_UNKNOWN = 99;
     private static final int SIGNAL_STRENGTH_LTE_RSSI_VALID_ASU_MAX_VALUE = 31;
     private static final int SIGNAL_STRENGTH_LTE_RSSI_VALID_ASU_MIN_VALUE = 0;
-    private static final CellSignalStrengthLte sInvalid = new CellSignalStrengthLte();
     private static final int sRsrpBoost = 0;
-    private static final int[] sThresholds = {PackageManager.INSTALL_FAILED_ABORTED, PackageManager.INSTALL_PARSE_FAILED_CERTIFICATE_ENCODING, -95, -85};
     @UnsupportedAppUsage(maxTargetSdk = 28)
     private int mCqi;
     private int mLevel;
@@ -43,6 +33,21 @@ public final class CellSignalStrengthLte extends CellSignalStrength implements P
     private int mSignalStrength;
     @UnsupportedAppUsage(maxTargetSdk = 28)
     private int mTimingAdvance;
+    private static final int[] sThresholds = {PackageManager.INSTALL_FAILED_ABORTED, PackageManager.INSTALL_PARSE_FAILED_CERTIFICATE_ENCODING, -95, -85};
+    private static final CellSignalStrengthLte sInvalid = new CellSignalStrengthLte();
+    public static final Parcelable.Creator<CellSignalStrengthLte> CREATOR = new Parcelable.Creator<CellSignalStrengthLte>() { // from class: android.telephony.CellSignalStrengthLte.1
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
+        public CellSignalStrengthLte createFromParcel(Parcel in) {
+            return new CellSignalStrengthLte(in);
+        }
+
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
+        public CellSignalStrengthLte[] newArray(int size) {
+            return new CellSignalStrengthLte[size];
+        }
+    };
 
     @UnsupportedAppUsage
     public CellSignalStrengthLte() {
@@ -57,10 +62,9 @@ public final class CellSignalStrengthLte extends CellSignalStrength implements P
         this.mRssnr = inRangeOrUnavailable(rssnr, -200, 300);
         this.mCqi = inRangeOrUnavailable(cqi, 0, 15);
         this.mTimingAdvance = inRangeOrUnavailable(timingAdvance, 0, 1282);
-        updateLevel((PersistableBundle) null, (ServiceState) null);
+        updateLevel(null, null);
     }
 
-    /* JADX INFO: this call moved to the top of the method (can break code semantics) */
     public CellSignalStrengthLte(LteSignalStrength lte) {
         this(convertRssiAsuToDBm(lte.signalStrength), lte.rsrp != Integer.MAX_VALUE ? -lte.rsrp : lte.rsrp, lte.rsrq != Integer.MAX_VALUE ? -lte.rsrq : lte.rsrq, lte.rssnr, lte.cqi, lte.timingAdvance);
     }
@@ -69,8 +73,7 @@ public final class CellSignalStrengthLte extends CellSignalStrength implements P
         copyFrom(s);
     }
 
-    /* access modifiers changed from: protected */
-    public void copyFrom(CellSignalStrengthLte s) {
+    protected void copyFrom(CellSignalStrengthLte s) {
         this.mSignalStrength = s.mSignalStrength;
         this.mRssi = s.mRssi;
         this.mRsrp = s.mRsrp;
@@ -81,10 +84,12 @@ public final class CellSignalStrengthLte extends CellSignalStrength implements P
         this.mLevel = s.mLevel;
     }
 
+    @Override // android.telephony.CellSignalStrength
     public CellSignalStrengthLte copy() {
         return new CellSignalStrengthLte(this);
     }
 
+    @Override // android.telephony.CellSignalStrength
     public void setDefaultValues() {
         this.mSignalStrength = Integer.MAX_VALUE;
         this.mRssi = Integer.MAX_VALUE;
@@ -96,10 +101,12 @@ public final class CellSignalStrengthLte extends CellSignalStrength implements P
         this.mLevel = 0;
     }
 
+    @Override // android.telephony.CellSignalStrength
     public int getLevel() {
         return this.mLevel;
     }
 
+    @Override // android.telephony.CellSignalStrength
     public void updateLevel(PersistableBundle cc, ServiceState ss) {
         boolean rsrpOnly;
         int[] thresholds;
@@ -129,7 +136,7 @@ public final class CellSignalStrengthLte extends CellSignalStrength implements P
                 rsrpIconLevel--;
             }
         }
-        Log.d(LOG_TAG, "updateLevel   rsrpOnly = " + rsrpOnly + "   rsrpIconLevel = " + rsrpIconLevel);
+        Log.m72d(LOG_TAG, "updateLevel   rsrpOnly = " + rsrpOnly + "   rsrpIconLevel = " + rsrpIconLevel);
         if (rsrpIconLevel != -1) {
             this.mLevel = rsrpIconLevel;
             return;
@@ -162,10 +169,8 @@ public final class CellSignalStrengthLte extends CellSignalStrength implements P
                 rssiIconLevel = 3;
             } else if (this.mRssi >= -103) {
                 rssiIconLevel = 2;
-            } else if (this.mRssi >= -113) {
-                rssiIconLevel = 1;
             } else {
-                rssiIconLevel = 0;
+                rssiIconLevel = this.mRssi >= -113 ? 1 : 0;
             }
             this.mLevel = rssiIconLevel;
         }
@@ -191,10 +196,12 @@ public final class CellSignalStrengthLte extends CellSignalStrength implements P
         return this.mCqi;
     }
 
+    @Override // android.telephony.CellSignalStrength
     public int getDbm() {
         return this.mRsrp;
     }
 
+    @Override // android.telephony.CellSignalStrength
     public int getAsuLevel() {
         int lteDbm = this.mRsrp;
         if (lteDbm == Integer.MAX_VALUE) {
@@ -206,28 +213,29 @@ public final class CellSignalStrengthLte extends CellSignalStrength implements P
         if (lteDbm >= -43) {
             return 97;
         }
-        return lteDbm + 140;
+        int lteAsuLevel = lteDbm + 140;
+        return lteAsuLevel;
     }
 
     public int getTimingAdvance() {
         return this.mTimingAdvance;
     }
 
+    @Override // android.telephony.CellSignalStrength
     public int hashCode() {
-        return Objects.hash(new Object[]{Integer.valueOf(this.mRssi), Integer.valueOf(this.mRsrp), Integer.valueOf(this.mRsrq), Integer.valueOf(this.mRssnr), Integer.valueOf(this.mCqi), Integer.valueOf(this.mTimingAdvance), Integer.valueOf(this.mLevel)});
+        return Objects.hash(Integer.valueOf(this.mRssi), Integer.valueOf(this.mRsrp), Integer.valueOf(this.mRsrq), Integer.valueOf(this.mRssnr), Integer.valueOf(this.mCqi), Integer.valueOf(this.mTimingAdvance), Integer.valueOf(this.mLevel));
     }
 
+    @Override // android.telephony.CellSignalStrength
     public boolean isValid() {
         return !equals(sInvalid);
     }
 
+    @Override // android.telephony.CellSignalStrength
     public boolean equals(Object o) {
-        if (!(o instanceof CellSignalStrengthLte)) {
-            return false;
-        }
-        CellSignalStrengthLte s = (CellSignalStrengthLte) o;
-        if (this.mRssi == s.mRssi && this.mRsrp == s.mRsrp && this.mRsrq == s.mRsrq && this.mRssnr == s.mRssnr && this.mCqi == s.mCqi && this.mTimingAdvance == s.mTimingAdvance && this.mLevel == s.mLevel) {
-            return true;
+        if (o instanceof CellSignalStrengthLte) {
+            CellSignalStrengthLte s = (CellSignalStrengthLte) o;
+            return this.mRssi == s.mRssi && this.mRsrp == s.mRsrp && this.mRsrq == s.mRsrq && this.mRssnr == s.mRssnr && this.mCqi == s.mCqi && this.mTimingAdvance == s.mTimingAdvance && this.mLevel == s.mLevel;
         }
         return false;
     }
@@ -236,6 +244,7 @@ public final class CellSignalStrengthLte extends CellSignalStrength implements P
         return "CellSignalStrengthLte: rssi=" + this.mRssi + " rsrp=" + this.mRsrp + " rsrq=" + this.mRsrq + " rssnr=" + this.mRssnr + " cqi=" + this.mCqi + " ta=" + this.mTimingAdvance + " level=" + this.mLevel;
     }
 
+    @Override // android.p007os.Parcelable
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeInt(this.mRssi);
         dest.writeInt(this.mRsrp);
@@ -257,22 +266,23 @@ public final class CellSignalStrengthLte extends CellSignalStrength implements P
         this.mLevel = in.readInt();
     }
 
+    @Override // android.p007os.Parcelable
     public int describeContents() {
         return 0;
     }
 
     private static void log(String s) {
-        Rlog.w(LOG_TAG, s);
+        Rlog.m80w(LOG_TAG, s);
     }
 
     private static int convertRssiAsuToDBm(int rssiAsu) {
         if (rssiAsu == 99) {
             return Integer.MAX_VALUE;
         }
-        if (rssiAsu >= 0 && rssiAsu <= 31) {
-            return (rssiAsu * 2) - 113;
+        if (rssiAsu < 0 || rssiAsu > 31) {
+            Rlog.m86e(LOG_TAG, "convertRssiAsuToDBm: invalid RSSI in ASU=" + rssiAsu);
+            return Integer.MAX_VALUE;
         }
-        Rlog.e(LOG_TAG, "convertRssiAsuToDBm: invalid RSSI in ASU=" + rssiAsu);
-        return Integer.MAX_VALUE;
+        return (rssiAsu * 2) - 113;
     }
 }

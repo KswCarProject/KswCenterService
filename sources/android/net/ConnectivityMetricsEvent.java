@@ -1,15 +1,20 @@
 package android.net;
 
-import android.os.Parcel;
-import android.os.Parcelable;
+import android.p007os.Parcel;
+import android.p007os.Parcelable;
 import com.android.internal.util.BitUtils;
 
+/* loaded from: classes3.dex */
 public final class ConnectivityMetricsEvent implements Parcelable {
-    public static final Parcelable.Creator<ConnectivityMetricsEvent> CREATOR = new Parcelable.Creator<ConnectivityMetricsEvent>() {
+    public static final Parcelable.Creator<ConnectivityMetricsEvent> CREATOR = new Parcelable.Creator<ConnectivityMetricsEvent>() { // from class: android.net.ConnectivityMetricsEvent.1
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public ConnectivityMetricsEvent createFromParcel(Parcel source) {
             return new ConnectivityMetricsEvent(source);
         }
 
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public ConnectivityMetricsEvent[] newArray(int size) {
             return new ConnectivityMetricsEvent[size];
         }
@@ -28,13 +33,15 @@ public final class ConnectivityMetricsEvent implements Parcelable {
         this.transports = in.readLong();
         this.netId = in.readInt();
         this.ifname = in.readString();
-        this.data = in.readParcelable((ClassLoader) null);
+        this.data = in.readParcelable(null);
     }
 
+    @Override // android.p007os.Parcelable
     public int describeContents() {
         return 0;
     }
 
+    @Override // android.p007os.Parcelable
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeLong(this.timestamp);
         dest.writeLong(this.transports);
@@ -44,8 +51,9 @@ public final class ConnectivityMetricsEvent implements Parcelable {
     }
 
     public String toString() {
+        int[] unpackBits;
         StringBuilder buffer = new StringBuilder("ConnectivityMetricsEvent(");
-        buffer.append(String.format("%tT.%tL", new Object[]{Long.valueOf(this.timestamp), Long.valueOf(this.timestamp)}));
+        buffer.append(String.format("%tT.%tL", Long.valueOf(this.timestamp), Long.valueOf(this.timestamp)));
         if (this.netId != 0) {
             buffer.append(", ");
             buffer.append("netId=");

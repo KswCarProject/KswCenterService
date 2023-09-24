@@ -4,14 +4,15 @@ import android.annotation.SystemApi;
 import android.net.MacAddress;
 import android.net.wifi.ScanResult;
 import android.net.wifi.aware.PeerHandle;
-import android.os.Parcel;
-import android.os.Parcelable;
+import android.p007os.Parcel;
+import android.p007os.Parcelable;
 import android.util.Log;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.util.Objects;
 
 @SystemApi
+/* loaded from: classes3.dex */
 public final class ResponderConfig implements Parcelable {
     private static final int AWARE_BAND_2_DISCOVERY_CHANNEL = 2437;
     public static final int CHANNEL_WIDTH_160MHZ = 3;
@@ -19,20 +20,25 @@ public final class ResponderConfig implements Parcelable {
     public static final int CHANNEL_WIDTH_40MHZ = 1;
     public static final int CHANNEL_WIDTH_80MHZ = 2;
     public static final int CHANNEL_WIDTH_80MHZ_PLUS_MHZ = 4;
-    public static final Parcelable.Creator<ResponderConfig> CREATOR = new Parcelable.Creator<ResponderConfig>() {
+    public static final Parcelable.Creator<ResponderConfig> CREATOR = new Parcelable.Creator<ResponderConfig>() { // from class: android.net.wifi.rtt.ResponderConfig.1
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public ResponderConfig[] newArray(int size) {
             return new ResponderConfig[size];
         }
 
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public ResponderConfig createFromParcel(Parcel in) {
+            boolean macAddressPresent = in.readBoolean();
             MacAddress macAddress = null;
-            if (in.readBoolean()) {
-                macAddress = MacAddress.CREATOR.createFromParcel(in);
-            } else {
-                Parcel parcel = in;
+            if (macAddressPresent) {
+                MacAddress macAddress2 = MacAddress.CREATOR.createFromParcel(in);
+                macAddress = macAddress2;
             }
+            boolean peerHandlePresent = in.readBoolean();
             PeerHandle peerHandle = null;
-            if (in.readBoolean()) {
+            if (peerHandlePresent) {
                 peerHandle = new PeerHandle(in.readInt());
             }
             PeerHandle peerHandle2 = peerHandle;
@@ -69,119 +75,120 @@ public final class ResponderConfig implements Parcelable {
     public final boolean supports80211mc;
 
     @Retention(RetentionPolicy.SOURCE)
+    /* loaded from: classes3.dex */
     public @interface ChannelWidth {
     }
 
     @Retention(RetentionPolicy.SOURCE)
+    /* loaded from: classes3.dex */
     public @interface PreambleType {
     }
 
     @Retention(RetentionPolicy.SOURCE)
+    /* loaded from: classes3.dex */
     public @interface ResponderType {
     }
 
-    public ResponderConfig(MacAddress macAddress2, int responderType2, boolean supports80211mc2, int channelWidth2, int frequency2, int centerFreq02, int centerFreq12, int preamble2) {
-        if (macAddress2 != null) {
-            this.macAddress = macAddress2;
-            this.peerHandle = null;
-            this.responderType = responderType2;
-            this.supports80211mc = supports80211mc2;
-            this.channelWidth = channelWidth2;
-            this.frequency = frequency2;
-            this.centerFreq0 = centerFreq02;
-            this.centerFreq1 = centerFreq12;
-            this.preamble = preamble2;
-            return;
+    public ResponderConfig(MacAddress macAddress, int responderType, boolean supports80211mc, int channelWidth, int frequency, int centerFreq0, int centerFreq1, int preamble) {
+        if (macAddress == null) {
+            throw new IllegalArgumentException("Invalid ResponderConfig - must specify a MAC address");
         }
-        throw new IllegalArgumentException("Invalid ResponderConfig - must specify a MAC address");
+        this.macAddress = macAddress;
+        this.peerHandle = null;
+        this.responderType = responderType;
+        this.supports80211mc = supports80211mc;
+        this.channelWidth = channelWidth;
+        this.frequency = frequency;
+        this.centerFreq0 = centerFreq0;
+        this.centerFreq1 = centerFreq1;
+        this.preamble = preamble;
     }
 
-    public ResponderConfig(PeerHandle peerHandle2, int responderType2, boolean supports80211mc2, int channelWidth2, int frequency2, int centerFreq02, int centerFreq12, int preamble2) {
+    public ResponderConfig(PeerHandle peerHandle, int responderType, boolean supports80211mc, int channelWidth, int frequency, int centerFreq0, int centerFreq1, int preamble) {
         this.macAddress = null;
-        this.peerHandle = peerHandle2;
-        this.responderType = responderType2;
-        this.supports80211mc = supports80211mc2;
-        this.channelWidth = channelWidth2;
-        this.frequency = frequency2;
-        this.centerFreq0 = centerFreq02;
-        this.centerFreq1 = centerFreq12;
-        this.preamble = preamble2;
+        this.peerHandle = peerHandle;
+        this.responderType = responderType;
+        this.supports80211mc = supports80211mc;
+        this.channelWidth = channelWidth;
+        this.frequency = frequency;
+        this.centerFreq0 = centerFreq0;
+        this.centerFreq1 = centerFreq1;
+        this.preamble = preamble;
     }
 
-    public ResponderConfig(MacAddress macAddress2, PeerHandle peerHandle2, int responderType2, boolean supports80211mc2, int channelWidth2, int frequency2, int centerFreq02, int centerFreq12, int preamble2) {
-        this.macAddress = macAddress2;
-        this.peerHandle = peerHandle2;
-        this.responderType = responderType2;
-        this.supports80211mc = supports80211mc2;
-        this.channelWidth = channelWidth2;
-        this.frequency = frequency2;
-        this.centerFreq0 = centerFreq02;
-        this.centerFreq1 = centerFreq12;
-        this.preamble = preamble2;
+    public ResponderConfig(MacAddress macAddress, PeerHandle peerHandle, int responderType, boolean supports80211mc, int channelWidth, int frequency, int centerFreq0, int centerFreq1, int preamble) {
+        this.macAddress = macAddress;
+        this.peerHandle = peerHandle;
+        this.responderType = responderType;
+        this.supports80211mc = supports80211mc;
+        this.channelWidth = channelWidth;
+        this.frequency = frequency;
+        this.centerFreq0 = centerFreq0;
+        this.centerFreq1 = centerFreq1;
+        this.preamble = preamble;
     }
 
     public static ResponderConfig fromScanResult(ScanResult scanResult) {
-        int preamble2;
-        int preamble3;
-        ScanResult scanResult2 = scanResult;
-        MacAddress macAddress2 = MacAddress.fromString(scanResult2.BSSID);
-        boolean supports80211mc2 = scanResult.is80211mcResponder();
-        int channelWidth2 = translateScanResultChannelWidth(scanResult2.channelWidth);
-        int frequency2 = scanResult2.frequency;
-        int centerFreq02 = scanResult2.centerFreq0;
-        int centerFreq12 = scanResult2.centerFreq1;
-        if (scanResult2.informationElements == null || scanResult2.informationElements.length == 0) {
-            Log.e(TAG, "Scan Results do not contain IEs - using backup method to select preamble");
-            if (channelWidth2 == 2 || channelWidth2 == 3) {
-                preamble2 = 2;
-            } else {
-                preamble2 = 1;
-            }
-        } else {
+        int i;
+        ScanResult.InformationElement[] informationElementArr;
+        int preamble;
+        MacAddress macAddress = MacAddress.fromString(scanResult.BSSID);
+        boolean supports80211mc = scanResult.is80211mcResponder();
+        int channelWidth = translateScanResultChannelWidth(scanResult.channelWidth);
+        int frequency = scanResult.frequency;
+        int centerFreq0 = scanResult.centerFreq0;
+        int centerFreq1 = scanResult.centerFreq1;
+        if (scanResult.informationElements != null && scanResult.informationElements.length != 0) {
             boolean vhtCapabilitiesPresent = false;
             boolean htCapabilitiesPresent = false;
-            for (ScanResult.InformationElement ie : scanResult2.informationElements) {
-                if (ie.id == 45) {
+            for (ScanResult.InformationElement ie : scanResult.informationElements) {
+                if (ie.f135id == 45) {
                     htCapabilitiesPresent = true;
-                } else if (ie.id == 191) {
+                } else if (ie.f135id == 191) {
                     vhtCapabilitiesPresent = true;
                 }
             }
             if (vhtCapabilitiesPresent) {
-                preamble3 = 2;
+                preamble = 2;
             } else if (htCapabilitiesPresent) {
-                preamble3 = 1;
+                preamble = 1;
             } else {
-                preamble3 = 0;
+                preamble = 0;
             }
-            preamble2 = preamble3;
+            i = preamble;
+        } else {
+            Log.m70e(TAG, "Scan Results do not contain IEs - using backup method to select preamble");
+            if (channelWidth == 2 || channelWidth == 3) {
+                i = 2;
+            } else {
+                i = 1;
+            }
         }
-        int i = centerFreq12;
-        return new ResponderConfig(macAddress2, 0, supports80211mc2, channelWidth2, frequency2, centerFreq02, centerFreq12, preamble2);
+        int preamble2 = i;
+        return new ResponderConfig(macAddress, 0, supports80211mc, channelWidth, frequency, centerFreq0, centerFreq1, preamble2);
     }
 
-    public static ResponderConfig fromWifiAwarePeerMacAddressWithDefaults(MacAddress macAddress2) {
-        return new ResponderConfig(macAddress2, 4, true, 0, (int) AWARE_BAND_2_DISCOVERY_CHANNEL, 0, 0, 1);
+    public static ResponderConfig fromWifiAwarePeerMacAddressWithDefaults(MacAddress macAddress) {
+        return new ResponderConfig(macAddress, 4, true, 0, (int) AWARE_BAND_2_DISCOVERY_CHANNEL, 0, 0, 1);
     }
 
-    public static ResponderConfig fromWifiAwarePeerHandleWithDefaults(PeerHandle peerHandle2) {
-        return new ResponderConfig(peerHandle2, 4, true, 0, (int) AWARE_BAND_2_DISCOVERY_CHANNEL, 0, 0, 1);
+    public static ResponderConfig fromWifiAwarePeerHandleWithDefaults(PeerHandle peerHandle) {
+        return new ResponderConfig(peerHandle, 4, true, 0, (int) AWARE_BAND_2_DISCOVERY_CHANNEL, 0, 0, 1);
     }
 
     public boolean isValid(boolean awareSupported) {
-        if ((this.macAddress == null && this.peerHandle == null) || (this.macAddress != null && this.peerHandle != null)) {
-            return false;
-        }
-        if (awareSupported || this.responderType != 4) {
-            return true;
+        if (!(this.macAddress == null && this.peerHandle == null) && (this.macAddress == null || this.peerHandle == null)) {
+            return awareSupported || this.responderType != 4;
         }
         return false;
     }
 
+    @Override // android.p007os.Parcelable
     public int describeContents() {
         return 0;
     }
 
+    @Override // android.p007os.Parcelable
     public void writeToParcel(Parcel dest, int flags) {
         if (this.macAddress == null) {
             dest.writeBoolean(false);
@@ -208,18 +215,15 @@ public final class ResponderConfig implements Parcelable {
         if (this == o) {
             return true;
         }
-        if (!(o instanceof ResponderConfig)) {
-            return false;
-        }
-        ResponderConfig lhs = (ResponderConfig) o;
-        if (Objects.equals(this.macAddress, lhs.macAddress) && Objects.equals(this.peerHandle, lhs.peerHandle) && this.responderType == lhs.responderType && this.supports80211mc == lhs.supports80211mc && this.channelWidth == lhs.channelWidth && this.frequency == lhs.frequency && this.centerFreq0 == lhs.centerFreq0 && this.centerFreq1 == lhs.centerFreq1 && this.preamble == lhs.preamble) {
-            return true;
+        if (o instanceof ResponderConfig) {
+            ResponderConfig lhs = (ResponderConfig) o;
+            return Objects.equals(this.macAddress, lhs.macAddress) && Objects.equals(this.peerHandle, lhs.peerHandle) && this.responderType == lhs.responderType && this.supports80211mc == lhs.supports80211mc && this.channelWidth == lhs.channelWidth && this.frequency == lhs.frequency && this.centerFreq0 == lhs.centerFreq0 && this.centerFreq1 == lhs.centerFreq1 && this.preamble == lhs.preamble;
         }
         return false;
     }
 
     public int hashCode() {
-        return Objects.hash(new Object[]{this.macAddress, this.peerHandle, Integer.valueOf(this.responderType), Boolean.valueOf(this.supports80211mc), Integer.valueOf(this.channelWidth), Integer.valueOf(this.frequency), Integer.valueOf(this.centerFreq0), Integer.valueOf(this.centerFreq1), Integer.valueOf(this.preamble)});
+        return Objects.hash(this.macAddress, this.peerHandle, Integer.valueOf(this.responderType), Boolean.valueOf(this.supports80211mc), Integer.valueOf(this.channelWidth), Integer.valueOf(this.frequency), Integer.valueOf(this.centerFreq0), Integer.valueOf(this.centerFreq1), Integer.valueOf(this.preamble));
     }
 
     public String toString() {

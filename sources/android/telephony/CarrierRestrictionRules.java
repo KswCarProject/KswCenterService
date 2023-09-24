@@ -1,8 +1,8 @@
 package android.telephony;
 
 import android.annotation.SystemApi;
-import android.os.Parcel;
-import android.os.Parcelable;
+import android.p007os.Parcel;
+import android.p007os.Parcelable;
 import android.service.carrier.CarrierIdentifier;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
@@ -10,16 +10,22 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Objects;
+import java.util.function.UnaryOperator;
 
 @SystemApi
+/* loaded from: classes.dex */
 public final class CarrierRestrictionRules implements Parcelable {
     public static final int CARRIER_RESTRICTION_DEFAULT_ALLOWED = 1;
     public static final int CARRIER_RESTRICTION_DEFAULT_NOT_ALLOWED = 0;
-    public static final Parcelable.Creator<CarrierRestrictionRules> CREATOR = new Parcelable.Creator<CarrierRestrictionRules>() {
+    public static final Parcelable.Creator<CarrierRestrictionRules> CREATOR = new Parcelable.Creator<CarrierRestrictionRules>() { // from class: android.telephony.CarrierRestrictionRules.1
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public CarrierRestrictionRules createFromParcel(Parcel in) {
             return new CarrierRestrictionRules(in);
         }
 
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public CarrierRestrictionRules[] newArray(int size) {
             return new CarrierRestrictionRules[size];
         }
@@ -27,20 +33,18 @@ public final class CarrierRestrictionRules implements Parcelable {
     public static final int MULTISIM_POLICY_NONE = 0;
     public static final int MULTISIM_POLICY_ONE_VALID_SIM_MUST_BE_PRESENT = 1;
     private static final char WILD_CHARACTER = '?';
-    /* access modifiers changed from: private */
-    public List<CarrierIdentifier> mAllowedCarriers;
-    /* access modifiers changed from: private */
-    public int mCarrierRestrictionDefault;
-    /* access modifiers changed from: private */
-    public List<CarrierIdentifier> mExcludedCarriers;
-    /* access modifiers changed from: private */
-    public int mMultiSimPolicy;
+    private List<CarrierIdentifier> mAllowedCarriers;
+    private int mCarrierRestrictionDefault;
+    private List<CarrierIdentifier> mExcludedCarriers;
+    private int mMultiSimPolicy;
 
     @Retention(RetentionPolicy.SOURCE)
+    /* loaded from: classes.dex */
     public @interface CarrierRestrictionDefault {
     }
 
     @Retention(RetentionPolicy.SOURCE)
+    /* loaded from: classes.dex */
     public @interface MultiSimPolicy {
     }
 
@@ -110,12 +114,17 @@ public final class CarrierRestrictionRules implements Parcelable {
         if (this.mMultiSimPolicy == 1) {
             Iterator<Boolean> it = result.iterator();
             while (true) {
-                if (it.hasNext()) {
-                    if (it.next().booleanValue()) {
-                        result.replaceAll($$Lambda$CarrierRestrictionRules$LmZXhiwgp1w_MAHEuZsMgdCVMiU.INSTANCE);
-                        break;
-                    }
-                } else {
+                if (!it.hasNext()) {
+                    break;
+                }
+                boolean b = it.next().booleanValue();
+                if (b) {
+                    result.replaceAll(new UnaryOperator() { // from class: android.telephony.-$$Lambda$CarrierRestrictionRules$LmZXhiwgp1w_MAHEuZsMgdCVMiU
+                        @Override // java.util.function.Function
+                        public final Object apply(Object obj) {
+                            return CarrierRestrictionRules.lambda$areCarrierIdentifiersAllowed$0((Boolean) obj);
+                        }
+                    });
                     break;
                 }
             }
@@ -135,20 +144,20 @@ public final class CarrierRestrictionRules implements Parcelable {
                 if (listItemValue.isEmpty() || patternMatch(idValue, listItemValue)) {
                     String listItemValue2 = convertNullToEmpty(listItem.getImsi());
                     String idValue2 = convertNullToEmpty(id.getImsi());
-                    if (!patternMatch(idValue2.substring(0, Math.min(idValue2.length(), listItemValue2.length())), listItemValue2)) {
-                        continue;
-                    } else {
+                    if (patternMatch(idValue2.substring(0, Math.min(idValue2.length(), listItemValue2.length())), listItemValue2)) {
                         String listItemValue3 = convertNullToEmpty(listItem.getGid1());
                         String idValue3 = convertNullToEmpty(id.getGid1());
-                        if (!patternMatch(idValue3.substring(0, Math.min(idValue3.length(), listItemValue3.length())), listItemValue3)) {
-                            continue;
-                        } else {
+                        if (patternMatch(idValue3.substring(0, Math.min(idValue3.length(), listItemValue3.length())), listItemValue3)) {
                             String listItemValue4 = convertNullToEmpty(listItem.getGid2());
                             String idValue4 = convertNullToEmpty(id.getGid2());
                             if (patternMatch(idValue4.substring(0, Math.min(idValue4.length(), listItemValue4.length())), listItemValue4)) {
                                 return true;
                             }
+                        } else {
+                            continue;
                         }
+                    } else {
+                        continue;
                     }
                 }
             }
@@ -174,6 +183,7 @@ public final class CarrierRestrictionRules implements Parcelable {
         return true;
     }
 
+    @Override // android.p007os.Parcelable
     public void writeToParcel(Parcel out, int flags) {
         out.writeTypedList(this.mAllowedCarriers);
         out.writeTypedList(this.mExcludedCarriers);
@@ -181,6 +191,7 @@ public final class CarrierRestrictionRules implements Parcelable {
         out.writeInt(this.mMultiSimPolicy);
     }
 
+    @Override // android.p007os.Parcelable
     public int describeContents() {
         return 0;
     }
@@ -189,6 +200,7 @@ public final class CarrierRestrictionRules implements Parcelable {
         return "CarrierRestrictionRules(allowed:" + this.mAllowedCarriers + ", excluded:" + this.mExcludedCarriers + ", default:" + this.mCarrierRestrictionDefault + ", multisim policy:" + this.mMultiSimPolicy + ")";
     }
 
+    /* loaded from: classes.dex */
     public static final class Builder {
         private final CarrierRestrictionRules mRules = new CarrierRestrictionRules();
 
@@ -199,27 +211,27 @@ public final class CarrierRestrictionRules implements Parcelable {
         public Builder setAllCarriersAllowed() {
             this.mRules.mAllowedCarriers.clear();
             this.mRules.mExcludedCarriers.clear();
-            int unused = this.mRules.mCarrierRestrictionDefault = 1;
+            this.mRules.mCarrierRestrictionDefault = 1;
             return this;
         }
 
         public Builder setAllowedCarriers(List<CarrierIdentifier> allowedCarriers) {
-            List unused = this.mRules.mAllowedCarriers = new ArrayList(allowedCarriers);
+            this.mRules.mAllowedCarriers = new ArrayList(allowedCarriers);
             return this;
         }
 
         public Builder setExcludedCarriers(List<CarrierIdentifier> excludedCarriers) {
-            List unused = this.mRules.mExcludedCarriers = new ArrayList(excludedCarriers);
+            this.mRules.mExcludedCarriers = new ArrayList(excludedCarriers);
             return this;
         }
 
         public Builder setDefaultCarrierRestriction(int carrierRestrictionDefault) {
-            int unused = this.mRules.mCarrierRestrictionDefault = carrierRestrictionDefault;
+            this.mRules.mCarrierRestrictionDefault = carrierRestrictionDefault;
             return this;
         }
 
         public Builder setMultiSimPolicy(int multiSimPolicy) {
-            int unused = this.mRules.mMultiSimPolicy = multiSimPolicy;
+            this.mRules.mMultiSimPolicy = multiSimPolicy;
             return this;
         }
     }

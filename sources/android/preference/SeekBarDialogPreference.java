@@ -7,9 +7,10 @@ import android.util.AttributeSet;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.SeekBar;
-import com.android.internal.R;
+import com.android.internal.C3132R;
 
 @Deprecated
+/* loaded from: classes3.dex */
 public class SeekBarDialogPreference extends DialogPreference {
     private final Drawable mMyIcon;
 
@@ -26,11 +27,11 @@ public class SeekBarDialogPreference extends DialogPreference {
 
     @UnsupportedAppUsage
     public SeekBarDialogPreference(Context context, AttributeSet attrs) {
-        this(context, attrs, R.attr.seekBarDialogPreferenceStyle);
+        this(context, attrs, C3132R.attr.seekBarDialogPreferenceStyle);
     }
 
     public SeekBarDialogPreference(Context context) {
-        this(context, (AttributeSet) null);
+        this(context, null);
     }
 
     public void createActionButtons() {
@@ -38,8 +39,8 @@ public class SeekBarDialogPreference extends DialogPreference {
         setNegativeButtonText(17039360);
     }
 
-    /* access modifiers changed from: protected */
-    public void onBindDialogView(View view) {
+    @Override // android.preference.DialogPreference
+    protected void onBindDialogView(View view) {
         super.onBindDialogView(view);
         ImageView iconView = (ImageView) view.findViewById(16908294);
         if (this.mMyIcon != null) {
@@ -50,6 +51,6 @@ public class SeekBarDialogPreference extends DialogPreference {
     }
 
     protected static SeekBar getSeekBar(View dialogView) {
-        return (SeekBar) dialogView.findViewById(R.id.seekbar);
+        return (SeekBar) dialogView.findViewById(C3132R.C3134id.seekbar);
     }
 }

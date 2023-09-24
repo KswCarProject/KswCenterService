@@ -9,28 +9,31 @@ import java.util.StringTokenizer;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+/* loaded from: classes3.dex */
 public class UrlQuerySanitizer {
-    private static final Pattern plusOrPercent = Pattern.compile("[+%]");
-    private static final ValueSanitizer sAllButNulAndAngleBracketsLegal = new IllegalCharacterValueSanitizer(1439);
+    private boolean mAllowUnregisteredParamaters;
+    private boolean mPreferFirstRepeatedParameter;
+    private static final ValueSanitizer sAllIllegal = new IllegalCharacterValueSanitizer(0);
     private static final ValueSanitizer sAllButNulLegal = new IllegalCharacterValueSanitizer(1535);
     private static final ValueSanitizer sAllButWhitespaceLegal = new IllegalCharacterValueSanitizer(1532);
-    private static final ValueSanitizer sAllIllegal = new IllegalCharacterValueSanitizer(0);
-    private static final ValueSanitizer sAmpAndSpaceLegal = new IllegalCharacterValueSanitizer(129);
-    private static final ValueSanitizer sAmpLegal = new IllegalCharacterValueSanitizer(128);
-    private static final ValueSanitizer sSpaceLegal = new IllegalCharacterValueSanitizer(1);
     private static final ValueSanitizer sURLLegal = new IllegalCharacterValueSanitizer(404);
     private static final ValueSanitizer sUrlAndSpaceLegal = new IllegalCharacterValueSanitizer(405);
-    private boolean mAllowUnregisteredParamaters;
+    private static final ValueSanitizer sAmpLegal = new IllegalCharacterValueSanitizer(128);
+    private static final ValueSanitizer sAmpAndSpaceLegal = new IllegalCharacterValueSanitizer(129);
+    private static final ValueSanitizer sSpaceLegal = new IllegalCharacterValueSanitizer(1);
+    private static final ValueSanitizer sAllButNulAndAngleBracketsLegal = new IllegalCharacterValueSanitizer(1439);
+    private static final Pattern plusOrPercent = Pattern.compile("[+%]");
+    private final HashMap<String, ValueSanitizer> mSanitizers = new HashMap<>();
     private final HashMap<String, String> mEntries = new HashMap<>();
     private final ArrayList<ParameterValuePair> mEntriesList = new ArrayList<>();
-    private boolean mPreferFirstRepeatedParameter;
-    private final HashMap<String, ValueSanitizer> mSanitizers = new HashMap<>();
     private ValueSanitizer mUnregisteredParameterValueSanitizer = getAllIllegal();
 
+    /* loaded from: classes3.dex */
     public interface ValueSanitizer {
         String sanitize(String str);
     }
 
+    /* loaded from: classes3.dex */
     public class ParameterValuePair {
         public String mParameter;
         public String mValue;
@@ -41,6 +44,7 @@ public class UrlQuerySanitizer {
         }
     }
 
+    /* loaded from: classes3.dex */
     public static class IllegalCharacterValueSanitizer implements ValueSanitizer {
         public static final int ALL_BUT_NUL_AND_ANGLE_BRACKETS_LEGAL = 1439;
         public static final int ALL_BUT_NUL_LEGAL = 1535;
@@ -53,9 +57,7 @@ public class UrlQuerySanitizer {
         public static final int AMP_OK = 128;
         public static final int DQUOTE_OK = 8;
         public static final int GT_OK = 64;
-        private static final String JAVASCRIPT_PREFIX = "javascript:";
         public static final int LT_OK = 32;
-        private static final int MIN_SCRIPT_PREFIX_LENGTH = Math.min(JAVASCRIPT_PREFIX.length(), VBSCRIPT_PREFIX.length());
         public static final int NON_7_BIT_ASCII_OK = 4;
         public static final int NUL_OK = 512;
         public static final int OTHER_WHITESPACE_OK = 2;
@@ -66,13 +68,16 @@ public class UrlQuerySanitizer {
         public static final int SQUOTE_OK = 16;
         public static final int URL_AND_SPACE_LEGAL = 405;
         public static final int URL_LEGAL = 404;
-        private static final String VBSCRIPT_PREFIX = "vbscript:";
         private int mFlags;
+        private static final String JAVASCRIPT_PREFIX = "javascript:";
+        private static final String VBSCRIPT_PREFIX = "vbscript:";
+        private static final int MIN_SCRIPT_PREFIX_LENGTH = Math.min(JAVASCRIPT_PREFIX.length(), VBSCRIPT_PREFIX.length());
 
         public IllegalCharacterValueSanitizer(int flags) {
             this.mFlags = flags;
         }
 
+        @Override // android.net.UrlQuerySanitizer.ValueSanitizer
         public String sanitize(String value) {
             if (value == null) {
                 return null;
@@ -120,85 +125,52 @@ public class UrlQuerySanitizer {
         }
 
         private boolean isWhitespace(char c) {
-            if (c == ' ') {
-                return true;
+            if (c != ' ') {
+                switch (c) {
+                    case '\t':
+                    case '\n':
+                    case 11:
+                    case '\f':
+                    case '\r':
+                        return true;
+                    default:
+                        return false;
+                }
             }
-            switch (c) {
-                case 9:
-                case 10:
-                case 11:
-                case 12:
-                case 13:
-                    return true;
-                default:
-                    return false;
-            }
+            return true;
         }
 
         private boolean characterIsLegal(char c) {
-            if (c != 0) {
-                if (c != ' ') {
-                    if (c != '\"') {
-                        if (c != '<') {
-                            if (c != '>') {
-                                switch (c) {
-                                    case 9:
-                                    case 10:
-                                    case 11:
-                                    case 12:
-                                    case 13:
-                                        if ((this.mFlags & 2) != 0) {
-                                            return true;
-                                        }
-                                        return false;
-                                    default:
-                                        switch (c) {
-                                            case '%':
-                                                if ((this.mFlags & 256) != 0) {
-                                                    return true;
-                                                }
-                                                return false;
-                                            case '&':
-                                                if ((this.mFlags & 128) != 0) {
-                                                    return true;
-                                                }
-                                                return false;
-                                            case '\'':
-                                                if ((this.mFlags & 16) != 0) {
-                                                    return true;
-                                                }
-                                                return false;
-                                            default:
-                                                if ((c < ' ' || c >= 127) && (c < 128 || (this.mFlags & 4) == 0)) {
-                                                    return false;
-                                                }
-                                                return true;
-                                        }
-                                }
-                            } else if ((this.mFlags & 64) != 0) {
-                                return true;
-                            } else {
-                                return false;
-                            }
-                        } else if ((32 & this.mFlags) != 0) {
-                            return true;
-                        } else {
-                            return false;
-                        }
-                    } else if ((this.mFlags & 8) != 0) {
-                        return true;
-                    } else {
-                        return false;
-                    }
-                } else if ((this.mFlags & 1) != 0) {
-                    return true;
-                } else {
-                    return false;
-                }
-            } else if ((this.mFlags & 512) != 0) {
-                return true;
+            if (c == 0) {
+                return (this.mFlags & 512) != 0;
+            } else if (c == ' ') {
+                return (this.mFlags & 1) != 0;
+            } else if (c == '\"') {
+                return (this.mFlags & 8) != 0;
+            } else if (c == '<') {
+                return (32 & this.mFlags) != 0;
+            } else if (c == '>') {
+                return (this.mFlags & 64) != 0;
             } else {
-                return false;
+                switch (c) {
+                    case '\t':
+                    case '\n':
+                    case 11:
+                    case '\f':
+                    case '\r':
+                        return (this.mFlags & 2) != 0;
+                    default:
+                        switch (c) {
+                            case '%':
+                                return (this.mFlags & 256) != 0;
+                            case '&':
+                                return (this.mFlags & 128) != 0;
+                            case '\'':
+                                return (this.mFlags & 16) != 0;
+                            default:
+                                return (c >= ' ' && c < '\u007f') || (c >= '\u0080' && (this.mFlags & 4) != 0);
+                        }
+                }
             }
         }
     }
@@ -306,8 +278,8 @@ public class UrlQuerySanitizer {
     }
 
     public void registerParameters(String[] parameters, ValueSanitizer valueSanitizer) {
-        for (String put : parameters) {
-            this.mSanitizers.put(put, valueSanitizer);
+        for (String str : parameters) {
+            this.mSanitizers.put(str, valueSanitizer);
         }
     }
 
@@ -327,21 +299,23 @@ public class UrlQuerySanitizer {
         return this.mPreferFirstRepeatedParameter;
     }
 
-    /* access modifiers changed from: protected */
-    public void parseEntry(String parameter, String value) {
+    protected void parseEntry(String parameter, String value) {
         String unescapedParameter = unescape(parameter);
         ValueSanitizer valueSanitizer = getEffectiveValueSanitizer(unescapedParameter);
-        if (valueSanitizer != null) {
-            addSanitizedEntry(unescapedParameter, valueSanitizer.sanitize(unescape(value)));
+        if (valueSanitizer == null) {
+            return;
         }
+        String unescapedValue = unescape(value);
+        String sanitizedValue = valueSanitizer.sanitize(unescapedValue);
+        addSanitizedEntry(unescapedParameter, sanitizedValue);
     }
 
-    /* access modifiers changed from: protected */
-    public void addSanitizedEntry(String parameter, String value) {
+    protected void addSanitizedEntry(String parameter, String value) {
         this.mEntriesList.add(new ParameterValuePair(parameter, value));
-        if (!this.mPreferFirstRepeatedParameter || !this.mEntries.containsKey(parameter)) {
-            this.mEntries.put(parameter, value);
+        if (this.mPreferFirstRepeatedParameter && this.mEntries.containsKey(parameter)) {
+            return;
         }
+        this.mEntries.put(parameter, value);
     }
 
     public ValueSanitizer getValueSanitizer(String parameter) {
@@ -350,61 +324,58 @@ public class UrlQuerySanitizer {
 
     public ValueSanitizer getEffectiveValueSanitizer(String parameter) {
         ValueSanitizer sanitizer = getValueSanitizer(parameter);
-        if (sanitizer != null || !this.mAllowUnregisteredParamaters) {
-            return sanitizer;
+        if (sanitizer == null && this.mAllowUnregisteredParamaters) {
+            return getUnregisteredParameterValueSanitizer();
         }
-        return getUnregisteredParameterValueSanitizer();
+        return sanitizer;
     }
 
     public String unescape(String string) {
         Matcher matcher = plusOrPercent.matcher(string);
-        if (!matcher.find()) {
-            return string;
-        }
-        int firstEscape = matcher.start();
-        int length = string.length();
-        StringBuilder stringBuilder = new StringBuilder(length);
-        stringBuilder.append(string.substring(0, firstEscape));
-        int i = firstEscape;
-        while (i < length) {
-            char c = string.charAt(i);
-            if (c == '+') {
-                c = ' ';
-            } else if (c == '%' && i + 2 < length) {
-                char c1 = string.charAt(i + 1);
-                char c2 = string.charAt(i + 2);
-                if (isHexDigit(c1) && isHexDigit(c2)) {
-                    c = (char) ((decodeHexDigit(c1) * 16) + decodeHexDigit(c2));
-                    i += 2;
+        if (matcher.find()) {
+            int firstEscape = matcher.start();
+            int length = string.length();
+            StringBuilder stringBuilder = new StringBuilder(length);
+            stringBuilder.append(string.substring(0, firstEscape));
+            int i = firstEscape;
+            while (i < length) {
+                char c = string.charAt(i);
+                if (c == '+') {
+                    c = ' ';
+                } else if (c == '%' && i + 2 < length) {
+                    char c1 = string.charAt(i + 1);
+                    char c2 = string.charAt(i + 2);
+                    if (isHexDigit(c1) && isHexDigit(c2)) {
+                        c = (char) ((decodeHexDigit(c1) * 16) + decodeHexDigit(c2));
+                        i += 2;
+                    }
                 }
+                stringBuilder.append(c);
+                i++;
             }
-            stringBuilder.append(c);
-            i++;
+            return stringBuilder.toString();
         }
-        return stringBuilder.toString();
+        return string;
     }
 
-    /* access modifiers changed from: protected */
-    public boolean isHexDigit(char c) {
+    protected boolean isHexDigit(char c) {
         return decodeHexDigit(c) >= 0;
     }
 
-    /* access modifiers changed from: protected */
-    public int decodeHexDigit(char c) {
+    protected int decodeHexDigit(char c) {
         if (c >= '0' && c <= '9') {
             return c - '0';
         }
         if (c >= 'A' && c <= 'F') {
             return (c - 'A') + 10;
         }
-        if (c < 'a' || c > 'f') {
-            return -1;
+        if (c >= 'a' && c <= 'f') {
+            return (c - 'a') + 10;
         }
-        return (c - 'a') + 10;
+        return -1;
     }
 
-    /* access modifiers changed from: protected */
-    public void clear() {
+    protected void clear() {
         this.mEntries.clear();
         this.mEntriesList.clear();
     }

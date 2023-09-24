@@ -6,6 +6,7 @@ import com.android.internal.util.Preconditions;
 import java.util.Arrays;
 import libcore.util.EmptyArray;
 
+/* loaded from: classes4.dex */
 public class IntArray implements Cloneable {
     private static final int MIN_CAPACITY_INCREMENT = 12;
     private int mSize;
@@ -78,7 +79,8 @@ public class IntArray implements Cloneable {
         int minCapacity = currentSize + count;
         if (minCapacity >= this.mValues.length) {
             int targetCap = (currentSize < 6 ? 12 : currentSize >> 1) + currentSize;
-            int[] newValues = ArrayUtils.newUnpaddedIntArray(targetCap > minCapacity ? targetCap : minCapacity);
+            int newCapacity = targetCap > minCapacity ? targetCap : minCapacity;
+            int[] newValues = ArrayUtils.newUnpaddedIntArray(newCapacity);
             System.arraycopy(this.mValues, 0, newValues, 0, currentSize);
             this.mValues = newValues;
         }
@@ -88,7 +90,8 @@ public class IntArray implements Cloneable {
         this.mSize = 0;
     }
 
-    public IntArray clone() throws CloneNotSupportedException {
+    /* renamed from: clone */
+    public IntArray m173clone() throws CloneNotSupportedException {
         IntArray clone = (IntArray) super.clone();
         clone.mValues = (int[]) this.mValues.clone();
         return clone;

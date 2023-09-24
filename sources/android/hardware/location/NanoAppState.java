@@ -1,16 +1,21 @@
 package android.hardware.location;
 
 import android.annotation.SystemApi;
-import android.os.Parcel;
-import android.os.Parcelable;
+import android.p007os.Parcel;
+import android.p007os.Parcelable;
 
 @SystemApi
+/* loaded from: classes.dex */
 public final class NanoAppState implements Parcelable {
-    public static final Parcelable.Creator<NanoAppState> CREATOR = new Parcelable.Creator<NanoAppState>() {
+    public static final Parcelable.Creator<NanoAppState> CREATOR = new Parcelable.Creator<NanoAppState>() { // from class: android.hardware.location.NanoAppState.1
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public NanoAppState createFromParcel(Parcel in) {
             return new NanoAppState(in);
         }
 
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public NanoAppState[] newArray(int size) {
             return new NanoAppState[size];
         }
@@ -30,7 +35,7 @@ public final class NanoAppState implements Parcelable {
     }
 
     public long getNanoAppVersion() {
-        return (long) this.mNanoAppVersion;
+        return this.mNanoAppVersion;
     }
 
     public boolean isEnabled() {
@@ -40,13 +45,15 @@ public final class NanoAppState implements Parcelable {
     private NanoAppState(Parcel in) {
         this.mNanoAppId = in.readLong();
         this.mNanoAppVersion = in.readInt();
-        this.mIsEnabled = in.readInt() != 1 ? false : true;
+        this.mIsEnabled = in.readInt() == 1;
     }
 
+    @Override // android.p007os.Parcelable
     public int describeContents() {
         return 0;
     }
 
+    @Override // android.p007os.Parcelable
     public void writeToParcel(Parcel out, int flags) {
         out.writeLong(this.mNanoAppId);
         out.writeInt(this.mNanoAppVersion);

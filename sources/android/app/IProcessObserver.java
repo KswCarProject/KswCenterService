@@ -1,11 +1,12 @@
 package android.app;
 
-import android.os.Binder;
-import android.os.IBinder;
-import android.os.IInterface;
-import android.os.Parcel;
-import android.os.RemoteException;
+import android.p007os.Binder;
+import android.p007os.IBinder;
+import android.p007os.IInterface;
+import android.p007os.Parcel;
+import android.p007os.RemoteException;
 
+/* loaded from: classes.dex */
 public interface IProcessObserver extends IInterface {
     void onForegroundActivitiesChanged(int i, int i2, boolean z) throws RemoteException;
 
@@ -13,21 +14,27 @@ public interface IProcessObserver extends IInterface {
 
     void onProcessDied(int i, int i2) throws RemoteException;
 
+    /* loaded from: classes.dex */
     public static class Default implements IProcessObserver {
+        @Override // android.app.IProcessObserver
         public void onForegroundActivitiesChanged(int pid, int uid, boolean foregroundActivities) throws RemoteException {
         }
 
+        @Override // android.app.IProcessObserver
         public void onForegroundServicesChanged(int pid, int uid, int serviceTypes) throws RemoteException {
         }
 
+        @Override // android.app.IProcessObserver
         public void onProcessDied(int pid, int uid) throws RemoteException {
         }
 
+        @Override // android.p007os.IInterface
         public IBinder asBinder() {
             return null;
         }
     }
 
+    /* loaded from: classes.dex */
     public static abstract class Stub extends Binder implements IProcessObserver {
         private static final String DESCRIPTOR = "android.app.IProcessObserver";
         static final int TRANSACTION_onForegroundActivitiesChanged = 1;
@@ -43,12 +50,13 @@ public interface IProcessObserver extends IInterface {
                 return null;
             }
             IInterface iin = obj.queryLocalInterface(DESCRIPTOR);
-            if (iin == null || !(iin instanceof IProcessObserver)) {
-                return new Proxy(obj);
+            if (iin != null && (iin instanceof IProcessObserver)) {
+                return (IProcessObserver) iin;
             }
-            return (IProcessObserver) iin;
+            return new Proxy(obj);
         }
 
+        @Override // android.p007os.IInterface
         public IBinder asBinder() {
             return this;
         }
@@ -66,34 +74,44 @@ public interface IProcessObserver extends IInterface {
             }
         }
 
+        @Override // android.p007os.Binder
         public String getTransactionName(int transactionCode) {
             return getDefaultTransactionName(transactionCode);
         }
 
+        @Override // android.p007os.Binder
         public boolean onTransact(int code, Parcel data, Parcel reply, int flags) throws RemoteException {
-            if (code != 1598968902) {
-                switch (code) {
-                    case 1:
-                        data.enforceInterface(DESCRIPTOR);
-                        onForegroundActivitiesChanged(data.readInt(), data.readInt(), data.readInt() != 0);
-                        return true;
-                    case 2:
-                        data.enforceInterface(DESCRIPTOR);
-                        onForegroundServicesChanged(data.readInt(), data.readInt(), data.readInt());
-                        return true;
-                    case 3:
-                        data.enforceInterface(DESCRIPTOR);
-                        onProcessDied(data.readInt(), data.readInt());
-                        return true;
-                    default:
-                        return super.onTransact(code, data, reply, flags);
-                }
-            } else {
+            if (code == 1598968902) {
                 reply.writeString(DESCRIPTOR);
                 return true;
             }
+            switch (code) {
+                case 1:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg0 = data.readInt();
+                    int _arg1 = data.readInt();
+                    boolean _arg2 = data.readInt() != 0;
+                    onForegroundActivitiesChanged(_arg0, _arg1, _arg2);
+                    return true;
+                case 2:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg02 = data.readInt();
+                    int _arg12 = data.readInt();
+                    int _arg22 = data.readInt();
+                    onForegroundServicesChanged(_arg02, _arg12, _arg22);
+                    return true;
+                case 3:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg03 = data.readInt();
+                    int _arg13 = data.readInt();
+                    onProcessDied(_arg03, _arg13);
+                    return true;
+                default:
+                    return super.onTransact(code, data, reply, flags);
+            }
         }
 
+        /* loaded from: classes.dex */
         private static class Proxy implements IProcessObserver {
             public static IProcessObserver sDefaultImpl;
             private IBinder mRemote;
@@ -102,6 +120,7 @@ public interface IProcessObserver extends IInterface {
                 this.mRemote = remote;
             }
 
+            @Override // android.p007os.IInterface
             public IBinder asBinder() {
                 return this.mRemote;
             }
@@ -110,16 +129,16 @@ public interface IProcessObserver extends IInterface {
                 return Stub.DESCRIPTOR;
             }
 
+            @Override // android.app.IProcessObserver
             public void onForegroundActivitiesChanged(int pid, int uid, boolean foregroundActivities) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeInt(pid);
                     _data.writeInt(uid);
-                    _data.writeInt(foregroundActivities);
-                    if (this.mRemote.transact(1, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    _data.writeInt(foregroundActivities ? 1 : 0);
+                    boolean _status = this.mRemote.transact(1, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().onForegroundActivitiesChanged(pid, uid, foregroundActivities);
                     }
                 } finally {
@@ -127,6 +146,7 @@ public interface IProcessObserver extends IInterface {
                 }
             }
 
+            @Override // android.app.IProcessObserver
             public void onForegroundServicesChanged(int pid, int uid, int serviceTypes) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
@@ -134,9 +154,8 @@ public interface IProcessObserver extends IInterface {
                     _data.writeInt(pid);
                     _data.writeInt(uid);
                     _data.writeInt(serviceTypes);
-                    if (this.mRemote.transact(2, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    boolean _status = this.mRemote.transact(2, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().onForegroundServicesChanged(pid, uid, serviceTypes);
                     }
                 } finally {
@@ -144,15 +163,15 @@ public interface IProcessObserver extends IInterface {
                 }
             }
 
+            @Override // android.app.IProcessObserver
             public void onProcessDied(int pid, int uid) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeInt(pid);
                     _data.writeInt(uid);
-                    if (this.mRemote.transact(3, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    boolean _status = this.mRemote.transact(3, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().onProcessDied(pid, uid);
                     }
                 } finally {
@@ -162,11 +181,11 @@ public interface IProcessObserver extends IInterface {
         }
 
         public static boolean setDefaultImpl(IProcessObserver impl) {
-            if (Proxy.sDefaultImpl != null || impl == null) {
-                return false;
+            if (Proxy.sDefaultImpl == null && impl != null) {
+                Proxy.sDefaultImpl = impl;
+                return true;
             }
-            Proxy.sDefaultImpl = impl;
-            return true;
+            return false;
         }
 
         public static IProcessObserver getDefaultImpl() {

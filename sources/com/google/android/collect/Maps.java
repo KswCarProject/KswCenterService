@@ -4,6 +4,7 @@ import android.annotation.UnsupportedAppUsage;
 import android.util.ArrayMap;
 import java.util.HashMap;
 
+/* loaded from: classes4.dex */
 public class Maps {
     @UnsupportedAppUsage
     public static <K, V> HashMap<K, V> newHashMap() {

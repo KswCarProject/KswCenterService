@@ -2,24 +2,29 @@ package android.service.euicc;
 
 import android.annotation.SystemApi;
 import android.annotation.UnsupportedAppUsage;
-import android.os.Parcel;
-import android.os.Parcelable;
+import android.p007os.Parcel;
+import android.p007os.Parcelable;
 import android.telephony.euicc.DownloadableSubscription;
 
 @SystemApi
+/* loaded from: classes3.dex */
 public final class GetDownloadableSubscriptionMetadataResult implements Parcelable {
-    public static final Parcelable.Creator<GetDownloadableSubscriptionMetadataResult> CREATOR = new Parcelable.Creator<GetDownloadableSubscriptionMetadataResult>() {
+    public static final Parcelable.Creator<GetDownloadableSubscriptionMetadataResult> CREATOR = new Parcelable.Creator<GetDownloadableSubscriptionMetadataResult>() { // from class: android.service.euicc.GetDownloadableSubscriptionMetadataResult.1
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public GetDownloadableSubscriptionMetadataResult createFromParcel(Parcel in) {
             return new GetDownloadableSubscriptionMetadataResult(in);
         }
 
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public GetDownloadableSubscriptionMetadataResult[] newArray(int size) {
             return new GetDownloadableSubscriptionMetadataResult[size];
         }
     };
     private final DownloadableSubscription mSubscription;
-    @Deprecated
     @UnsupportedAppUsage
+    @Deprecated
     public final int result;
 
     public int getResult() {
@@ -30,14 +35,14 @@ public final class GetDownloadableSubscriptionMetadataResult implements Parcelab
         return this.mSubscription;
     }
 
-    public GetDownloadableSubscriptionMetadataResult(int result2, DownloadableSubscription subscription) {
-        this.result = result2;
+    public GetDownloadableSubscriptionMetadataResult(int result, DownloadableSubscription subscription) {
+        this.result = result;
         if (this.result == 0) {
             this.mSubscription = subscription;
-        } else if (subscription == null) {
-            this.mSubscription = null;
+        } else if (subscription != null) {
+            throw new IllegalArgumentException("Error result with non-null subscription: " + result);
         } else {
-            throw new IllegalArgumentException("Error result with non-null subscription: " + result2);
+            this.mSubscription = null;
         }
     }
 
@@ -46,11 +51,13 @@ public final class GetDownloadableSubscriptionMetadataResult implements Parcelab
         this.mSubscription = (DownloadableSubscription) in.readTypedObject(DownloadableSubscription.CREATOR);
     }
 
+    @Override // android.p007os.Parcelable
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeInt(this.result);
         dest.writeTypedObject(this.mSubscription, flags);
     }
 
+    @Override // android.p007os.Parcelable
     public int describeContents() {
         return 0;
     }

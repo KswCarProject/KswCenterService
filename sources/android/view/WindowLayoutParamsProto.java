@@ -1,5 +1,6 @@
 package android.view;
 
+/* loaded from: classes4.dex */
 public final class WindowLayoutParamsProto {
     public static final long ALPHA = 1108101562380L;
     public static final long BUTTON_BRIGHTNESS = 1108101562382L;
@@ -32,6 +33,10 @@ public final class WindowLayoutParamsProto {
     public static final long VERTICAL_MARGIN = 1108101562375L;
     public static final long WIDTH = 1120986464260L;
     public static final long WINDOW_ANIMATIONS = 1120986464267L;
-    public static final long X = 1120986464258L;
-    public static final long Y = 1120986464259L;
+
+    /* renamed from: X */
+    public static final long f2423X = 1120986464258L;
+
+    /* renamed from: Y */
+    public static final long f2424Y = 1120986464259L;
 }

@@ -10,8 +10,9 @@ import java.util.HashMap;
 import java.util.Map;
 
 @RestrictTo({RestrictTo.Scope.LIBRARY_GROUP})
+/* loaded from: classes.dex */
 class Lifecycling {
-    private static Map<Class, Constructor<? extends GenericLifecycleObserver>> sCallbackCache = new HashMap();
+    private static Map<Class, Constructor<? extends GenericLifecycleObserver>> sCallbackCache;
     private static Constructor<? extends GenericLifecycleObserver> sREFLECTIVE;
 
     Lifecycling() {
@@ -19,9 +20,10 @@ class Lifecycling {
 
     static {
         try {
-            sREFLECTIVE = ReflectiveGenericLifecycleObserver.class.getDeclaredConstructor(new Class[]{Object.class});
+            sREFLECTIVE = ReflectiveGenericLifecycleObserver.class.getDeclaredConstructor(Object.class);
         } catch (NoSuchMethodException e) {
         }
+        sCallbackCache = new HashMap();
     }
 
     @NonNull
@@ -33,16 +35,18 @@ class Lifecycling {
             Class<?> klass = object.getClass();
             Constructor<? extends GenericLifecycleObserver> cachedConstructor = sCallbackCache.get(klass);
             if (cachedConstructor != null) {
-                return (GenericLifecycleObserver) cachedConstructor.newInstance(new Object[]{object});
+                return cachedConstructor.newInstance(object);
             }
             Constructor<? extends GenericLifecycleObserver> cachedConstructor2 = getGeneratedAdapterConstructor(klass);
-            if (cachedConstructor2 == null) {
+            if (cachedConstructor2 != null) {
+                if (!cachedConstructor2.isAccessible()) {
+                    cachedConstructor2.setAccessible(true);
+                }
+            } else {
                 cachedConstructor2 = sREFLECTIVE;
-            } else if (!cachedConstructor2.isAccessible()) {
-                cachedConstructor2.setAccessible(true);
             }
             sCallbackCache.put(klass, cachedConstructor2);
-            return (GenericLifecycleObserver) cachedConstructor2.newInstance(new Object[]{object});
+            return cachedConstructor2.newInstance(object);
         } catch (IllegalAccessException e) {
             throw new RuntimeException(e);
         } catch (InstantiationException e2) {
@@ -55,32 +59,26 @@ class Lifecycling {
     @Nullable
     private static Constructor<? extends GenericLifecycleObserver> getGeneratedAdapterConstructor(Class<?> klass) {
         String str;
-        String str2;
         Package aPackage = klass.getPackage();
         String fullPackage = aPackage != null ? aPackage.getName() : "";
         String name = klass.getCanonicalName();
         if (name == null) {
             return null;
         }
-        if (fullPackage.isEmpty()) {
-            str = name;
-        } else {
-            str = name.substring(fullPackage.length() + 1);
-        }
-        String adapterName = getAdapterName(str);
+        String adapterName = getAdapterName(fullPackage.isEmpty() ? name : name.substring(fullPackage.length() + 1));
         try {
             if (fullPackage.isEmpty()) {
-                str2 = adapterName;
+                str = adapterName;
             } else {
-                str2 = fullPackage + "." + adapterName;
+                str = fullPackage + "." + adapterName;
             }
-            return Class.forName(str2).getDeclaredConstructor(new Class[]{klass});
+            return Class.forName(str).getDeclaredConstructor(klass);
         } catch (ClassNotFoundException e) {
-            Class<? super Object> superclass = klass.getSuperclass();
-            if (superclass != null) {
-                return getGeneratedAdapterConstructor(superclass);
+            Class<?> superclass = klass.getSuperclass();
+            if (superclass == null) {
+                return null;
             }
-            return null;
+            return getGeneratedAdapterConstructor(superclass);
         } catch (NoSuchMethodException e2) {
             throw new RuntimeException(e2);
         }

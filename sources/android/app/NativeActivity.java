@@ -2,14 +2,14 @@ package android.app;
 
 import android.annotation.UnsupportedAppUsage;
 import android.content.Context;
-import android.content.pm.ActivityInfo;
-import android.content.pm.PackageManager;
+import android.content.p002pm.ActivityInfo;
+import android.content.p002pm.PackageManager;
 import android.content.res.AssetManager;
 import android.content.res.Configuration;
-import android.os.Build;
-import android.os.Bundle;
-import android.os.Looper;
-import android.os.MessageQueue;
+import android.p007os.Build;
+import android.p007os.Bundle;
+import android.p007os.Looper;
+import android.p007os.MessageQueue;
 import android.util.AttributeSet;
 import android.view.InputQueue;
 import android.view.Surface;
@@ -20,6 +20,7 @@ import android.view.inputmethod.InputMethodManager;
 import dalvik.system.BaseDexClassLoader;
 import java.io.File;
 
+/* loaded from: classes.dex */
 public class NativeActivity extends Activity implements SurfaceHolder.Callback2, InputQueue.Callback, ViewTreeObserver.OnGlobalLayoutListener {
     private static final String KEY_NATIVE_SAVED_STATE = "android:native_state";
     public static final String META_DATA_FUNC_NAME = "android.app.func_name";
@@ -75,6 +76,7 @@ public class NativeActivity extends Activity implements SurfaceHolder.Callback2,
 
     private native void unloadNativeCode(long j);
 
+    /* loaded from: classes.dex */
     static class NativeContentView extends View {
         NativeActivity mActivity;
 
@@ -87,10 +89,11 @@ public class NativeActivity extends Activity implements SurfaceHolder.Callback2,
         }
     }
 
-    /* access modifiers changed from: protected */
-    public void onCreate(Bundle savedInstanceState) {
-        Bundle bundle = savedInstanceState;
-        String libname = "main";
+    @Override // android.app.Activity
+    protected void onCreate(Bundle savedInstanceState) {
+        String libname;
+        byte[] nativeSavedState;
+        libname = "main";
         String funcname = "ANativeActivity_onCreate";
         this.mIMM = (InputMethodManager) getSystemService(InputMethodManager.class);
         getWindow().takeSurface(this);
@@ -99,16 +102,14 @@ public class NativeActivity extends Activity implements SurfaceHolder.Callback2,
         getWindow().setSoftInputMode(16);
         this.mNativeContentView = new NativeContentView(this);
         this.mNativeContentView.mActivity = this;
-        setContentView((View) this.mNativeContentView);
+        setContentView(this.mNativeContentView);
         this.mNativeContentView.requestFocus();
         this.mNativeContentView.getViewTreeObserver().addOnGlobalLayoutListener(this);
         try {
             ActivityInfo ai = getPackageManager().getActivityInfo(getIntent().getComponent(), 128);
             if (ai.metaData != null) {
                 String ln = ai.metaData.getString(META_DATA_LIB_NAME);
-                if (ln != null) {
-                    libname = ln;
-                }
+                libname = ln != null ? ln : "main";
                 String ln2 = ai.metaData.getString(META_DATA_FUNC_NAME);
                 if (ln2 != null) {
                     funcname = ln2;
@@ -119,17 +120,18 @@ public class NativeActivity extends Activity implements SurfaceHolder.Callback2,
             BaseDexClassLoader classLoader = (BaseDexClassLoader) getClassLoader();
             String path = classLoader.findLibrary(libname2);
             if (path != null) {
-                ActivityInfo activityInfo = ai;
-                String path2 = path;
-                BaseDexClassLoader baseDexClassLoader = classLoader;
-                this.mNativeHandle = loadNativeCode(path, funcname2, Looper.myQueue(), getAbsolutePath(getFilesDir()), getAbsolutePath(getObbDir()), getAbsolutePath(getExternalFilesDir((String) null)), Build.VERSION.SDK_INT, getAssets(), bundle != null ? bundle.getByteArray(KEY_NATIVE_SAVED_STATE) : null, classLoader, classLoader.getLdLibraryPath());
-                if (this.mNativeHandle != 0) {
-                    super.onCreate(savedInstanceState);
-                    return;
+                if (savedInstanceState == null) {
+                    nativeSavedState = null;
+                } else {
+                    nativeSavedState = savedInstanceState.getByteArray(KEY_NATIVE_SAVED_STATE);
                 }
-                throw new UnsatisfiedLinkError("Unable to load native library \"" + path2 + "\": " + getDlError());
+                this.mNativeHandle = loadNativeCode(path, funcname2, Looper.myQueue(), getAbsolutePath(getFilesDir()), getAbsolutePath(getObbDir()), getAbsolutePath(getExternalFilesDir(null)), Build.VERSION.SDK_INT, getAssets(), nativeSavedState, classLoader, classLoader.getLdLibraryPath());
+                if (this.mNativeHandle == 0) {
+                    throw new UnsatisfiedLinkError("Unable to load native library \"" + path + "\": " + getDlError());
+                }
+                super.onCreate(savedInstanceState);
+                return;
             }
-            String str = path;
             throw new IllegalArgumentException("Unable to find native library " + libname2 + " using classloader: " + classLoader.toString());
         } catch (PackageManager.NameNotFoundException e) {
             throw new RuntimeException("Error getting activity info", e);
@@ -143,8 +145,8 @@ public class NativeActivity extends Activity implements SurfaceHolder.Callback2,
         return null;
     }
 
-    /* access modifiers changed from: protected */
-    public void onDestroy() {
+    @Override // android.app.Activity
+    protected void onDestroy() {
         this.mDestroyed = true;
         if (this.mCurSurfaceHolder != null) {
             onSurfaceDestroyedNative(this.mNativeHandle);
@@ -158,20 +160,20 @@ public class NativeActivity extends Activity implements SurfaceHolder.Callback2,
         super.onDestroy();
     }
 
-    /* access modifiers changed from: protected */
-    public void onPause() {
+    @Override // android.app.Activity
+    protected void onPause() {
         super.onPause();
         onPauseNative(this.mNativeHandle);
     }
 
-    /* access modifiers changed from: protected */
-    public void onResume() {
+    @Override // android.app.Activity
+    protected void onResume() {
         super.onResume();
         onResumeNative(this.mNativeHandle);
     }
 
-    /* access modifiers changed from: protected */
-    public void onSaveInstanceState(Bundle outState) {
+    @Override // android.app.Activity
+    protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         byte[] state = onSaveInstanceStateNative(this.mNativeHandle);
         if (state != null) {
@@ -179,18 +181,19 @@ public class NativeActivity extends Activity implements SurfaceHolder.Callback2,
         }
     }
 
-    /* access modifiers changed from: protected */
-    public void onStart() {
+    @Override // android.app.Activity
+    protected void onStart() {
         super.onStart();
         onStartNative(this.mNativeHandle);
     }
 
-    /* access modifiers changed from: protected */
-    public void onStop() {
+    @Override // android.app.Activity
+    protected void onStop() {
         super.onStop();
         onStopNative(this.mNativeHandle);
     }
 
+    @Override // android.app.Activity, android.content.ComponentCallbacks
     public void onConfigurationChanged(Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
         if (!this.mDestroyed) {
@@ -198,6 +201,7 @@ public class NativeActivity extends Activity implements SurfaceHolder.Callback2,
         }
     }
 
+    @Override // android.app.Activity, android.content.ComponentCallbacks
     public void onLowMemory() {
         super.onLowMemory();
         if (!this.mDestroyed) {
@@ -205,6 +209,7 @@ public class NativeActivity extends Activity implements SurfaceHolder.Callback2,
         }
     }
 
+    @Override // android.app.Activity, android.view.Window.Callback
     public void onWindowFocusChanged(boolean hasFocus) {
         super.onWindowFocusChanged(hasFocus);
         if (!this.mDestroyed) {
@@ -212,6 +217,7 @@ public class NativeActivity extends Activity implements SurfaceHolder.Callback2,
         }
     }
 
+    @Override // android.view.SurfaceHolder.Callback
     public void surfaceCreated(SurfaceHolder holder) {
         if (!this.mDestroyed) {
             this.mCurSurfaceHolder = holder;
@@ -219,6 +225,7 @@ public class NativeActivity extends Activity implements SurfaceHolder.Callback2,
         }
     }
 
+    @Override // android.view.SurfaceHolder.Callback
     public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) {
         if (!this.mDestroyed) {
             this.mCurSurfaceHolder = holder;
@@ -226,6 +233,7 @@ public class NativeActivity extends Activity implements SurfaceHolder.Callback2,
         }
     }
 
+    @Override // android.view.SurfaceHolder.Callback2
     public void surfaceRedrawNeeded(SurfaceHolder holder) {
         if (!this.mDestroyed) {
             this.mCurSurfaceHolder = holder;
@@ -233,6 +241,7 @@ public class NativeActivity extends Activity implements SurfaceHolder.Callback2,
         }
     }
 
+    @Override // android.view.SurfaceHolder.Callback
     public void surfaceDestroyed(SurfaceHolder holder) {
         this.mCurSurfaceHolder = null;
         if (!this.mDestroyed) {
@@ -240,6 +249,7 @@ public class NativeActivity extends Activity implements SurfaceHolder.Callback2,
         }
     }
 
+    @Override // android.view.InputQueue.Callback
     public void onInputQueueCreated(InputQueue queue) {
         if (!this.mDestroyed) {
             this.mCurInputQueue = queue;
@@ -247,6 +257,7 @@ public class NativeActivity extends Activity implements SurfaceHolder.Callback2,
         }
     }
 
+    @Override // android.view.InputQueue.Callback
     public void onInputQueueDestroyed(InputQueue queue) {
         if (!this.mDestroyed) {
             onInputQueueDestroyedNative(this.mNativeHandle, queue.getNativePtr());
@@ -254,6 +265,7 @@ public class NativeActivity extends Activity implements SurfaceHolder.Callback2,
         }
     }
 
+    @Override // android.view.ViewTreeObserver.OnGlobalLayoutListener
     public void onGlobalLayout() {
         this.mNativeContentView.getLocationInWindow(this.mLocation);
         int w = this.mNativeContentView.getWidth();
@@ -269,27 +281,23 @@ public class NativeActivity extends Activity implements SurfaceHolder.Callback2,
         }
     }
 
-    /* access modifiers changed from: package-private */
     @UnsupportedAppUsage
-    public void setWindowFlags(int flags, int mask) {
+    void setWindowFlags(int flags, int mask) {
         getWindow().setFlags(flags, mask);
     }
 
-    /* access modifiers changed from: package-private */
     @UnsupportedAppUsage
-    public void setWindowFormat(int format) {
+    void setWindowFormat(int format) {
         getWindow().setFormat(format);
     }
 
-    /* access modifiers changed from: package-private */
     @UnsupportedAppUsage
-    public void showIme(int mode) {
+    void showIme(int mode) {
         this.mIMM.showSoftInput(this.mNativeContentView, mode);
     }
 
-    /* access modifiers changed from: package-private */
     @UnsupportedAppUsage
-    public void hideIme(int mode) {
+    void hideIme(int mode) {
         this.mIMM.hideSoftInputFromWindow(this.mNativeContentView.getWindowToken(), mode);
     }
 }

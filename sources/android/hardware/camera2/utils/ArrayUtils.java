@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
+/* loaded from: classes.dex */
 public class ArrayUtils {
     private static final boolean DEBUG = false;
     private static final String TAG = "ArrayUtils";
@@ -52,7 +53,7 @@ public class ArrayUtils {
         }
         List<Integer> convertedList = new ArrayList<>(list.size());
         for (String str : list) {
-            int strIndex = getArrayIndex((T[]) convertFrom, str);
+            int strIndex = getArrayIndex(convertFrom, str);
             if (strIndex >= 0 && strIndex < convertTo.length) {
                 convertedList.add(Integer.valueOf(convertTo[strIndex]));
             }
@@ -66,8 +67,9 @@ public class ArrayUtils {
         }
         int[] arr = new int[list.size()];
         int i = 0;
-        for (Integer intValue : list) {
-            arr[i] = intValue.intValue();
+        for (Integer num : list) {
+            int elem = num.intValue();
+            arr[i] = elem;
             i++;
         }
         return arr;

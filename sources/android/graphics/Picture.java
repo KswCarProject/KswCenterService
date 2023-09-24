@@ -4,6 +4,7 @@ import android.annotation.UnsupportedAppUsage;
 import java.io.InputStream;
 import java.io.OutputStream;
 
+/* loaded from: classes.dex */
 public class Picture {
     private static final int WORKING_STREAM_STORAGE = 16384;
     @UnsupportedAppUsage(maxTargetSdk = 28)
@@ -30,31 +31,28 @@ public class Picture {
     private static native boolean nativeWriteToStream(long j, OutputStream outputStream, byte[] bArr);
 
     public Picture() {
-        this(nativeConstructor(0));
+        this(nativeConstructor(0L));
     }
 
-    /* JADX INFO: this call moved to the top of the method (can break code semantics) */
     public Picture(Picture src) {
-        this(nativeConstructor(src != null ? src.mNativePicture : 0));
+        this(nativeConstructor(src != null ? src.mNativePicture : 0L));
     }
 
     public Picture(long nativePicture) {
-        if (nativePicture != 0) {
-            this.mNativePicture = nativePicture;
-            return;
+        if (nativePicture == 0) {
+            throw new IllegalArgumentException();
         }
-        throw new IllegalArgumentException();
+        this.mNativePicture = nativePicture;
     }
 
     public void close() {
         if (this.mNativePicture != 0) {
             nativeDestructor(this.mNativePicture);
-            this.mNativePicture = 0;
+            this.mNativePicture = 0L;
         }
     }
 
-    /* access modifiers changed from: protected */
-    public void finalize() throws Throwable {
+    protected void finalize() throws Throwable {
         try {
             close();
         } finally {
@@ -70,12 +68,13 @@ public class Picture {
 
     public Canvas beginRecording(int width, int height) {
         verifyValid();
-        if (this.mRecordingCanvas == null) {
-            this.mRecordingCanvas = new PictureCanvas(this, nativeBeginRecording(this.mNativePicture, width, height));
-            this.mRequiresHwAcceleration = false;
-            return this.mRecordingCanvas;
+        if (this.mRecordingCanvas != null) {
+            throw new IllegalStateException("Picture already recording, must call #endRecording()");
         }
-        throw new IllegalStateException("Picture already recording, must call #endRecording()");
+        long ni = nativeBeginRecording(this.mNativePicture, width, height);
+        this.mRecordingCanvas = new PictureCanvas(this, ni);
+        this.mRequiresHwAcceleration = false;
+        return this.mRecordingCanvas;
     }
 
     public void endRecording() {
@@ -123,11 +122,13 @@ public class Picture {
         verifyValid();
         if (stream == null) {
             throw new IllegalArgumentException("stream cannot be null");
-        } else if (!nativeWriteToStream(this.mNativePicture, stream, new byte[16384])) {
+        }
+        if (!nativeWriteToStream(this.mNativePicture, stream, new byte[16384])) {
             throw new RuntimeException();
         }
     }
 
+    /* loaded from: classes.dex */
     private static class PictureCanvas extends Canvas {
         boolean mHoldsHwBitmap;
         private final Picture mPicture;
@@ -138,20 +139,21 @@ public class Picture {
             this.mDensity = 0;
         }
 
+        @Override // android.graphics.Canvas
         public void setBitmap(Bitmap bitmap) {
             throw new RuntimeException("Cannot call setBitmap on a picture canvas");
         }
 
+        @Override // android.graphics.Canvas
         public void drawPicture(Picture picture) {
-            if (this.mPicture != picture) {
-                super.drawPicture(picture);
-                return;
+            if (this.mPicture == picture) {
+                throw new RuntimeException("Cannot draw a picture into its recording canvas");
             }
-            throw new RuntimeException("Cannot draw a picture into its recording canvas");
+            super.drawPicture(picture);
         }
 
-        /* access modifiers changed from: protected */
-        public void onHwBitmapInSwMode() {
+        @Override // android.graphics.BaseCanvas
+        protected void onHwBitmapInSwMode() {
             this.mHoldsHwBitmap = true;
         }
     }

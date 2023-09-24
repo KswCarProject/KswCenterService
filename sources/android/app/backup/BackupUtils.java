@@ -5,6 +5,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Collection;
 
+/* loaded from: classes.dex */
 public class BackupUtils {
     private BackupUtils() {
     }

@@ -12,13 +12,14 @@ import android.filterfw.core.Program;
 import android.filterfw.core.ShaderProgram;
 import android.filterfw.format.ImageFormat;
 
+/* loaded from: classes.dex */
 public class ResizeFilter extends Filter {
     @GenerateFieldPort(hasDefault = true, name = "generateMipMap")
-    private boolean mGenerateMipMap = false;
+    private boolean mGenerateMipMap;
     private int mInputChannels;
     @GenerateFieldPort(hasDefault = true, name = "keepAspectRatio")
-    private boolean mKeepAspectRatio = false;
-    private FrameFormat mLastFormat = null;
+    private boolean mKeepAspectRatio;
+    private FrameFormat mLastFormat;
     @GenerateFieldPort(name = "oheight")
     private int mOHeight;
     @GenerateFieldPort(name = "owidth")
@@ -28,26 +29,31 @@ public class ResizeFilter extends Filter {
 
     public ResizeFilter(String name) {
         super(name);
+        this.mKeepAspectRatio = false;
+        this.mGenerateMipMap = false;
+        this.mLastFormat = null;
     }
 
+    @Override // android.filterfw.core.Filter
     public void setupPorts() {
         addMaskedInputPort(SliceItem.FORMAT_IMAGE, ImageFormat.create(3));
         addOutputBasedOnInput(SliceItem.FORMAT_IMAGE, SliceItem.FORMAT_IMAGE);
     }
 
+    @Override // android.filterfw.core.Filter
     public FrameFormat getOutputFormat(String portName, FrameFormat inputFormat) {
         return inputFormat;
     }
 
-    /* access modifiers changed from: protected */
-    public void createProgram(FilterContext context, FrameFormat format) {
+    protected void createProgram(FilterContext context, FrameFormat format) {
         if (this.mLastFormat == null || this.mLastFormat.getTarget() != format.getTarget()) {
             this.mLastFormat = format;
             switch (format.getTarget()) {
                 case 2:
                     throw new RuntimeException("Native ResizeFilter not implemented yet!");
                 case 3:
-                    this.mProgram = ShaderProgram.createIdentity(context);
+                    ShaderProgram prog = ShaderProgram.createIdentity(context);
+                    this.mProgram = prog;
                     return;
                 default:
                     throw new RuntimeException("ResizeFilter could not create suitable program!");
@@ -55,6 +61,7 @@ public class ResizeFilter extends Filter {
         }
     }
 
+    @Override // android.filterfw.core.Filter
     public void process(FilterContext env) {
         Frame input = pullInput(SliceItem.FORMAT_IMAGE);
         createProgram(env, input.getFormat());
@@ -70,7 +77,7 @@ public class ResizeFilter extends Filter {
             mipmapped.setTextureParameter(10241, 9985);
             mipmapped.setDataFromFrame(input);
             mipmapped.generateMipMap();
-            this.mProgram.process((Frame) mipmapped, output);
+            this.mProgram.process(mipmapped, output);
             mipmapped.release();
         } else {
             this.mProgram.process(input, output);

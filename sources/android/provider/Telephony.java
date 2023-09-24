@@ -10,7 +10,7 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SqliteWrapper;
 import android.net.Uri;
-import android.os.Parcel;
+import android.p007os.Parcel;
 import android.speech.tts.TextToSpeech;
 import android.telephony.Rlog;
 import android.telephony.ServiceState;
@@ -29,9 +29,11 @@ import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+/* loaded from: classes3.dex */
 public final class Telephony {
     private static final String TAG = "Telephony";
 
+    /* loaded from: classes3.dex */
     public interface BaseMmsColumns extends BaseColumns {
         @Deprecated
         public static final String ADAPTATION_ALLOWED = "adp_a";
@@ -151,10 +153,12 @@ public final class Telephony {
         public static final String TRANSACTION_ID = "tr_id";
     }
 
+    /* loaded from: classes3.dex */
     public interface CanonicalAddressesColumns extends BaseColumns {
         public static final String ADDRESS = "address";
     }
 
+    /* loaded from: classes3.dex */
     public interface CarrierColumns extends BaseColumns {
         public static final Uri CONTENT_URI = Uri.parse("content://carrier_information/carrier");
         public static final String EXPIRATION_TIME = "expiration_time";
@@ -168,9 +172,12 @@ public final class Telephony {
         public static final String PUBLIC_KEY = "public_key";
     }
 
+    /* loaded from: classes3.dex */
     public interface TextBasedSmsChangesColumns {
         public static final Uri CONTENT_URI = Uri.parse("content://sms-changes");
-        public static final String ID = "_id";
+
+        /* renamed from: ID */
+        public static final String f163ID = "_id";
         public static final String NEW_READ_STATUS = "new_read_status";
         public static final String ORIG_ROW_ID = "orig_rowid";
         public static final String SUB_ID = "sub_id";
@@ -179,6 +186,7 @@ public final class Telephony {
         public static final int TYPE_UPDATE = 0;
     }
 
+    /* loaded from: classes3.dex */
     public interface TextBasedSmsColumns {
         public static final String ADDRESS = "address";
         public static final String BODY = "body";
@@ -213,6 +221,7 @@ public final class Telephony {
         public static final String TYPE = "type";
     }
 
+    /* loaded from: classes3.dex */
     public interface ThreadsColumns extends BaseColumns {
         public static final String ARCHIVED = "archived";
         public static final String ATTACHMENT_INFO = "attachment_info";
@@ -231,6 +240,7 @@ public final class Telephony {
     private Telephony() {
     }
 
+    /* loaded from: classes3.dex */
     public static final class Sms implements BaseColumns, TextBasedSmsColumns {
         public static final Uri CONTENT_URI = Uri.parse("content://sms");
         public static final String DEFAULT_SORT_ORDER = "date DESC";
@@ -248,30 +258,23 @@ public final class Telephony {
 
         public static Cursor query(ContentResolver cr, String[] projection) {
             SeempLog.record(10);
-            return cr.query(CONTENT_URI, projection, (String) null, (String[]) null, "date DESC");
+            return cr.query(CONTENT_URI, projection, null, null, "date DESC");
         }
 
         @UnsupportedAppUsage(maxTargetSdk = 28, trackingBug = 115609023)
         public static Cursor query(ContentResolver cr, String[] projection, String where, String orderBy) {
-            String str;
             SeempLog.record(10);
-            Uri uri = CONTENT_URI;
-            if (orderBy == null) {
-                str = "date DESC";
-            } else {
-                str = orderBy;
-            }
-            return cr.query(uri, projection, where, (String[]) null, str);
+            return cr.query(CONTENT_URI, projection, where, null, orderBy == null ? "date DESC" : orderBy);
         }
 
         @UnsupportedAppUsage
         public static Uri addMessageToUri(ContentResolver resolver, Uri uri, String address, String body, String subject, Long date, boolean read, boolean deliveryReport) {
-            return addMessageToUri(SubscriptionManager.getDefaultSmsSubscriptionId(), resolver, uri, address, body, subject, date, read, deliveryReport, -1);
+            return addMessageToUri(SubscriptionManager.getDefaultSmsSubscriptionId(), resolver, uri, address, body, subject, date, read, deliveryReport, -1L);
         }
 
         @UnsupportedAppUsage
         public static Uri addMessageToUri(int subId, ContentResolver resolver, Uri uri, String address, String body, String subject, Long date, boolean read, boolean deliveryReport) {
-            return addMessageToUri(subId, resolver, uri, address, body, subject, date, read, deliveryReport, -1);
+            return addMessageToUri(subId, resolver, uri, address, body, subject, date, read, deliveryReport, -1L);
         }
 
         @UnsupportedAppUsage
@@ -286,7 +289,7 @@ public final class Telephony {
 
         public static Uri addMessageToUri(int subId, ContentResolver resolver, Uri uri, String address, String body, String subject, Long date, boolean read, boolean deliveryReport, long threadId, int priority) {
             ContentValues values = new ContentValues(8);
-            Rlog.v(Telephony.TAG, "Telephony addMessageToUri sub id: " + subId);
+            Rlog.m82v(Telephony.TAG, "Telephony addMessageToUri sub id: " + subId);
             values.put("sub_id", Integer.valueOf(subId));
             values.put("address", address);
             if (date != null) {
@@ -335,10 +338,10 @@ public final class Telephony {
                 values.put("read", (Integer) 1);
             }
             values.put(TextBasedSmsColumns.ERROR_CODE, Integer.valueOf(error));
-            if (1 == SqliteWrapper.update(context, context.getContentResolver(), uri, values, (String) null, (String[]) null)) {
-                return true;
+            if (1 != SqliteWrapper.update(context, context.getContentResolver(), uri, values, null, null)) {
+                return false;
             }
-            return false;
+            return true;
         }
 
         @UnsupportedAppUsage
@@ -346,6 +349,7 @@ public final class Telephony {
             return messageType == 5 || messageType == 4 || messageType == 2 || messageType == 6;
         }
 
+        /* loaded from: classes3.dex */
         public static final class Inbox implements BaseColumns, TextBasedSmsColumns {
             public static final Uri CONTENT_URI = Uri.parse("content://sms/inbox");
             public static final String DEFAULT_SORT_ORDER = "date DESC";
@@ -364,6 +368,7 @@ public final class Telephony {
             }
         }
 
+        /* loaded from: classes3.dex */
         public static final class Sent implements BaseColumns, TextBasedSmsColumns {
             public static final Uri CONTENT_URI = Uri.parse("content://sms/sent");
             public static final String DEFAULT_SORT_ORDER = "date DESC";
@@ -382,6 +387,7 @@ public final class Telephony {
             }
         }
 
+        /* loaded from: classes3.dex */
         public static final class Draft implements BaseColumns, TextBasedSmsColumns {
             public static final Uri CONTENT_URI = Uri.parse("content://sms/draft");
             public static final String DEFAULT_SORT_ORDER = "date DESC";
@@ -400,6 +406,7 @@ public final class Telephony {
             }
         }
 
+        /* loaded from: classes3.dex */
         public static final class Outbox implements BaseColumns, TextBasedSmsColumns {
             public static final Uri CONTENT_URI = Uri.parse("content://sms/outbox");
             public static final String DEFAULT_SORT_ORDER = "date DESC";
@@ -417,6 +424,7 @@ public final class Telephony {
             }
         }
 
+        /* loaded from: classes3.dex */
         public static final class Conversations implements BaseColumns, TextBasedSmsColumns {
             public static final Uri CONTENT_URI = Uri.parse("content://sms/conversations");
             public static final String DEFAULT_SORT_ORDER = "date DESC";
@@ -427,6 +435,7 @@ public final class Telephony {
             }
         }
 
+        /* loaded from: classes3.dex */
         public static final class Intents {
             public static final String ACTION_CHANGE_DEFAULT = "android.provider.Telephony.ACTION_CHANGE_DEFAULT";
             public static final String ACTION_DEFAULT_SMS_PACKAGE_CHANGED = "android.provider.action.DEFAULT_SMS_PACKAGE_CHANGED";
@@ -465,38 +474,40 @@ public final class Telephony {
                 try {
                     Object[] messages = (Object[]) intent.getSerializableExtra("pdus");
                     if (messages == null) {
-                        Rlog.e(Telephony.TAG, "pdus does not exist in the intent");
+                        Rlog.m86e(Telephony.TAG, "pdus does not exist in the intent");
                         return null;
                     }
                     String format = intent.getStringExtra("format");
                     int subId = intent.getIntExtra(PhoneConstants.SUBSCRIPTION_KEY, SubscriptionManager.getDefaultSmsSubscriptionId());
-                    Rlog.v(Telephony.TAG, " getMessagesFromIntent sub_id : " + subId);
+                    Rlog.m82v(Telephony.TAG, " getMessagesFromIntent sub_id : " + subId);
                     int pduCount = messages.length;
                     SmsMessage[] msgs = new SmsMessage[pduCount];
                     for (int i = 0; i < pduCount; i++) {
-                        msgs[i] = SmsMessage.createFromPdu((byte[]) messages[i], format);
+                        byte[] pdu = (byte[]) messages[i];
+                        msgs[i] = SmsMessage.createFromPdu(pdu, format);
                         if (msgs[i] != null) {
                             msgs[i].setSubId(subId);
                         }
                     }
                     return msgs;
                 } catch (ClassCastException e) {
-                    Rlog.e(Telephony.TAG, "getMessagesFromIntent: " + e);
+                    Rlog.m86e(Telephony.TAG, "getMessagesFromIntent: " + e);
                     return null;
                 }
             }
         }
     }
 
+    /* loaded from: classes3.dex */
     public static final class Threads implements ThreadsColumns {
         public static final int BROADCAST_THREAD = 1;
         public static final int COMMON_THREAD = 0;
-        public static final Uri CONTENT_URI = Uri.withAppendedPath(MmsSms.CONTENT_URI, "conversations");
         @UnsupportedAppUsage
         private static final String[] ID_PROJECTION = {"_id"};
-        public static final Uri OBSOLETE_THREADS_URI = Uri.withAppendedPath(CONTENT_URI, "obsolete");
         @UnsupportedAppUsage
         private static final Uri THREAD_ID_CONTENT_URI = Uri.parse("content://mms-sms/threadID");
+        public static final Uri CONTENT_URI = Uri.withAppendedPath(MmsSms.CONTENT_URI, "conversations");
+        public static final Uri OBSOLETE_THREADS_URI = Uri.withAppendedPath(CONTENT_URI, "obsolete");
 
         private Threads() {
         }
@@ -515,23 +526,24 @@ public final class Telephony {
                 }
                 uriBuilder.appendQueryParameter("recipient", recipient);
             }
-            Cursor cursor = SqliteWrapper.query(context, context.getContentResolver(), uriBuilder.build(), ID_PROJECTION, (String) null, (String[]) null, (String) null);
+            Uri uri = uriBuilder.build();
+            Cursor cursor = SqliteWrapper.query(context, context.getContentResolver(), uri, ID_PROJECTION, null, null, null);
             if (cursor != null) {
                 try {
                     if (cursor.moveToFirst()) {
                         return cursor.getLong(0);
                     }
-                    Rlog.e(Telephony.TAG, "getOrCreateThreadId returned no rows!");
-                    cursor.close();
+                    Rlog.m86e(Telephony.TAG, "getOrCreateThreadId returned no rows!");
                 } finally {
                     cursor.close();
                 }
             }
-            Rlog.e(Telephony.TAG, "getOrCreateThreadId failed with " + recipients.size() + " recipients");
+            Rlog.m86e(Telephony.TAG, "getOrCreateThreadId failed with " + recipients.size() + " recipients");
             throw new IllegalArgumentException("Unable to find or allocate a thread ID.");
         }
     }
 
+    /* loaded from: classes3.dex */
     public interface RcsColumns {
         public static final String AUTHORITY = "rcs";
         public static final Uri CONTENT_AND_AUTHORITY = Uri.parse("content://rcs");
@@ -539,12 +551,14 @@ public final class Telephony {
         public static final long TIMESTAMP_NOT_SET = 0;
         public static final int TRANSACTION_FAILED = Integer.MIN_VALUE;
 
+        /* loaded from: classes3.dex */
         public interface Rcs1To1ThreadColumns extends RcsThreadColumns {
             public static final String FALLBACK_THREAD_ID_COLUMN = "rcs_fallback_thread_id";
-            public static final Uri RCS_1_TO_1_THREAD_URI = Uri.withAppendedPath(RcsColumns.CONTENT_AND_AUTHORITY, RCS_1_TO_1_THREAD_URI_PART);
             public static final String RCS_1_TO_1_THREAD_URI_PART = "p2p_thread";
+            public static final Uri RCS_1_TO_1_THREAD_URI = Uri.withAppendedPath(RcsColumns.CONTENT_AND_AUTHORITY, RCS_1_TO_1_THREAD_URI_PART);
         }
 
+        /* loaded from: classes3.dex */
         public interface RcsEventTypes {
             public static final int ICON_CHANGED_EVENT_TYPE = 8;
             public static final int NAME_CHANGED_EVENT_TYPE = 16;
@@ -553,14 +567,13 @@ public final class Telephony {
             public static final int PARTICIPANT_LEFT_EVENT_TYPE = 4;
         }
 
+        /* loaded from: classes3.dex */
         public interface RcsFileTransferColumns {
             public static final String CONTENT_TYPE_COLUMN = "content_type";
             public static final String CONTENT_URI_COLUMN = "content_uri";
             public static final String DURATION_MILLIS_COLUMN = "duration";
             public static final String FILE_SIZE_COLUMN = "file_size";
             public static final String FILE_TRANSFER_ID_COLUMN = "rcs_file_transfer_id";
-            public static final Uri FILE_TRANSFER_URI = Uri.withAppendedPath(RcsColumns.CONTENT_AND_AUTHORITY, FILE_TRANSFER_URI_PART);
-            public static final String FILE_TRANSFER_URI_PART = "file_transfer";
             public static final String HEIGHT_COLUMN = "height";
             public static final String PREVIEW_TYPE_COLUMN = "preview_type";
             public static final String PREVIEW_URI_COLUMN = "preview_uri";
@@ -568,25 +581,30 @@ public final class Telephony {
             public static final String SUCCESSFULLY_TRANSFERRED_BYTES = "transfer_offset";
             public static final String TRANSFER_STATUS_COLUMN = "transfer_status";
             public static final String WIDTH_COLUMN = "width";
+            public static final String FILE_TRANSFER_URI_PART = "file_transfer";
+            public static final Uri FILE_TRANSFER_URI = Uri.withAppendedPath(RcsColumns.CONTENT_AND_AUTHORITY, FILE_TRANSFER_URI_PART);
         }
 
+        /* loaded from: classes3.dex */
         public interface RcsGroupThreadColumns extends RcsThreadColumns {
             public static final String CONFERENCE_URI_COLUMN = "conference_uri";
             public static final String GROUP_ICON_COLUMN = "group_icon";
             public static final String GROUP_NAME_COLUMN = "group_name";
             public static final String OWNER_PARTICIPANT_COLUMN = "owner_participant";
-            public static final Uri RCS_GROUP_THREAD_URI = Uri.withAppendedPath(RcsColumns.CONTENT_AND_AUTHORITY, RCS_GROUP_THREAD_URI_PART);
             public static final String RCS_GROUP_THREAD_URI_PART = "group_thread";
+            public static final Uri RCS_GROUP_THREAD_URI = Uri.withAppendedPath(RcsColumns.CONTENT_AND_AUTHORITY, RCS_GROUP_THREAD_URI_PART);
         }
 
+        /* loaded from: classes3.dex */
         public interface RcsIncomingMessageColumns extends RcsMessageColumns {
             public static final String ARRIVAL_TIMESTAMP_COLUMN = "arrival_timestamp";
-            public static final Uri INCOMING_MESSAGE_URI = Uri.withAppendedPath(RcsColumns.CONTENT_AND_AUTHORITY, INCOMING_MESSAGE_URI_PART);
-            public static final String INCOMING_MESSAGE_URI_PART = "incoming_message";
             public static final String SEEN_TIMESTAMP_COLUMN = "seen_timestamp";
             public static final String SENDER_PARTICIPANT_ID_COLUMN = "sender_participant";
+            public static final String INCOMING_MESSAGE_URI_PART = "incoming_message";
+            public static final Uri INCOMING_MESSAGE_URI = Uri.withAppendedPath(RcsColumns.CONTENT_AND_AUTHORITY, INCOMING_MESSAGE_URI_PART);
         }
 
+        /* loaded from: classes3.dex */
         public interface RcsMessageColumns {
             public static final String GLOBAL_ID_COLUMN = "rcs_message_global_id";
             public static final String LATITUDE_COLUMN = "latitude";
@@ -599,41 +617,48 @@ public final class Telephony {
             public static final String SUB_ID_COLUMN = "sub_id";
         }
 
+        /* loaded from: classes3.dex */
         public interface RcsMessageDeliveryColumns extends RcsOutgoingMessageColumns {
             public static final String DELIVERED_TIMESTAMP_COLUMN = "delivered_timestamp";
             public static final String DELIVERY_URI_PART = "delivery";
             public static final String SEEN_TIMESTAMP_COLUMN = "seen_timestamp";
         }
 
+        /* loaded from: classes3.dex */
         public interface RcsOutgoingMessageColumns extends RcsMessageColumns {
-            public static final Uri OUTGOING_MESSAGE_URI = Uri.withAppendedPath(RcsColumns.CONTENT_AND_AUTHORITY, OUTGOING_MESSAGE_URI_PART);
             public static final String OUTGOING_MESSAGE_URI_PART = "outgoing_message";
+            public static final Uri OUTGOING_MESSAGE_URI = Uri.withAppendedPath(RcsColumns.CONTENT_AND_AUTHORITY, OUTGOING_MESSAGE_URI_PART);
         }
 
+        /* loaded from: classes3.dex */
         public interface RcsParticipantColumns {
             public static final String CANONICAL_ADDRESS_ID_COLUMN = "canonical_address_id";
             public static final String RCS_ALIAS_COLUMN = "rcs_alias";
             public static final String RCS_PARTICIPANT_ID_COLUMN = "rcs_participant_id";
-            public static final Uri RCS_PARTICIPANT_URI = Uri.withAppendedPath(RcsColumns.CONTENT_AND_AUTHORITY, RCS_PARTICIPANT_URI_PART);
             public static final String RCS_PARTICIPANT_URI_PART = "participant";
+            public static final Uri RCS_PARTICIPANT_URI = Uri.withAppendedPath(RcsColumns.CONTENT_AND_AUTHORITY, RCS_PARTICIPANT_URI_PART);
         }
 
+        /* loaded from: classes3.dex */
         public interface RcsParticipantEventColumns {
             public static final String ALIAS_CHANGE_EVENT_URI_PART = "alias_change_event";
             public static final String NEW_ALIAS_COLUMN = "new_alias";
         }
 
+        /* loaded from: classes3.dex */
         public interface RcsParticipantHelpers extends RcsParticipantColumns {
             public static final String RCS_PARTICIPANT_WITH_ADDRESS_VIEW = "rcs_participant_with_address_view";
             public static final String RCS_PARTICIPANT_WITH_THREAD_VIEW = "rcs_participant_with_thread_view";
         }
 
+        /* loaded from: classes3.dex */
         public interface RcsThreadColumns {
             public static final String RCS_THREAD_ID_COLUMN = "rcs_thread_id";
-            public static final Uri RCS_THREAD_URI = Uri.withAppendedPath(RcsColumns.CONTENT_AND_AUTHORITY, RCS_THREAD_URI_PART);
             public static final String RCS_THREAD_URI_PART = "thread";
+            public static final Uri RCS_THREAD_URI = Uri.withAppendedPath(RcsColumns.CONTENT_AND_AUTHORITY, RCS_THREAD_URI_PART);
         }
 
+        /* loaded from: classes3.dex */
         public interface RcsThreadEventColumns {
             public static final String DESTINATION_PARTICIPANT_ID_COLUMN = "destination_participant";
             public static final String EVENT_ID_COLUMN = "event_id";
@@ -648,11 +673,13 @@ public final class Telephony {
             public static final String TIMESTAMP_COLUMN = "origination_timestamp";
         }
 
+        /* loaded from: classes3.dex */
         public interface RcsUnifiedEventHelper extends RcsParticipantEventColumns, RcsThreadEventColumns {
             public static final Uri RCS_EVENT_QUERY_URI = Uri.withAppendedPath(RcsColumns.CONTENT_AND_AUTHORITY, "event");
             public static final String RCS_EVENT_QUERY_URI_PATH = "event";
         }
 
+        /* loaded from: classes3.dex */
         public interface RcsUnifiedMessageColumns extends RcsIncomingMessageColumns, RcsOutgoingMessageColumns {
             public static final String MESSAGE_TYPE_COLUMN = "message_type";
             public static final int MESSAGE_TYPE_INCOMING = 1;
@@ -663,123 +690,79 @@ public final class Telephony {
             public static final String UNIFIED_OUTGOING_MESSAGE_VIEW = "unified_outgoing_message_view";
         }
 
+        /* loaded from: classes3.dex */
         public interface RcsUnifiedThreadColumns extends RcsThreadColumns, Rcs1To1ThreadColumns, RcsGroupThreadColumns {
             public static final int THREAD_TYPE_1_TO_1 = 0;
             public static final String THREAD_TYPE_COLUMN = "thread_type";
             public static final int THREAD_TYPE_GROUP = 1;
         }
 
+        /* loaded from: classes3.dex */
         public interface RcsCanonicalAddressHelper {
-            /* JADX WARNING: Code restructure failed: missing block: B:20:0x0051, code lost:
-                if (r3 != null) goto L_0x0053;
-             */
-            /* JADX WARNING: Code restructure failed: missing block: B:21:0x0053, code lost:
-                if (r2 != null) goto L_0x0055;
-             */
-            /* JADX WARNING: Code restructure failed: missing block: B:23:?, code lost:
-                r3.close();
-             */
-            /* JADX WARNING: Code restructure failed: missing block: B:24:0x0059, code lost:
-                r5 = move-exception;
-             */
-            /* JADX WARNING: Code restructure failed: missing block: B:25:0x005a, code lost:
-                r2.addSuppressed(r5);
-             */
-            /* JADX WARNING: Code restructure failed: missing block: B:26:0x005e, code lost:
-                r3.close();
-             */
-            /* JADX WARNING: Code restructure failed: missing block: B:9:0x0031, code lost:
-                r4 = move-exception;
-             */
-            /* Code decompiled incorrectly, please refer to instructions dump. */
-            static long getOrCreateCanonicalAddressId(android.content.ContentResolver r6, java.lang.String r7) {
-                /*
-                    android.net.Uri r0 = android.provider.Telephony.RcsColumns.CONTENT_AND_AUTHORITY
-                    android.net.Uri$Builder r0 = r0.buildUpon()
-                    java.lang.String r1 = "canonical-address"
-                    r0.appendPath(r1)
-                    java.lang.String r1 = "address"
-                    r0.appendQueryParameter(r1, r7)
-                    android.net.Uri r1 = r0.build()
-                    r2 = 0
-                    android.database.Cursor r3 = r6.query(r1, r2, r2, r2)
-                    if (r3 == 0) goto L_0x0035
-                    boolean r4 = r3.moveToFirst()     // Catch:{ Throwable -> 0x0033 }
-                    if (r4 == 0) goto L_0x0035
-                    java.lang.String r4 = "_id"
-                    int r4 = r3.getColumnIndex(r4)     // Catch:{ Throwable -> 0x0033 }
-                    long r4 = r3.getLong(r4)     // Catch:{ Throwable -> 0x0033 }
-                    if (r3 == 0) goto L_0x0030
-                    r3.close()
-                L_0x0030:
-                    return r4
-                L_0x0031:
-                    r4 = move-exception
-                    goto L_0x0051
-                L_0x0033:
-                    r2 = move-exception
-                    goto L_0x0050
-                L_0x0035:
-                    java.lang.String r4 = "Telephony"
-                    java.lang.String r5 = "getOrCreateCanonicalAddressId returned no rows"
-                    android.telephony.Rlog.e(r4, r5)     // Catch:{ Throwable -> 0x0033 }
-                    if (r3 == 0) goto L_0x0041
-                    r3.close()
-                L_0x0041:
-                    java.lang.String r2 = "Telephony"
-                    java.lang.String r3 = "getOrCreateCanonicalAddressId failed"
-                    android.telephony.Rlog.e(r2, r3)
-                    java.lang.IllegalArgumentException r2 = new java.lang.IllegalArgumentException
-                    java.lang.String r3 = "Unable to find or allocate a canonical address ID"
-                    r2.<init>(r3)
-                    throw r2
-                L_0x0050:
-                    throw r2     // Catch:{ all -> 0x0031 }
-                L_0x0051:
-                    if (r3 == 0) goto L_0x0061
-                    if (r2 == 0) goto L_0x005e
-                    r3.close()     // Catch:{ Throwable -> 0x0059 }
-                    goto L_0x0061
-                L_0x0059:
-                    r5 = move-exception
-                    r2.addSuppressed(r5)
-                    goto L_0x0061
-                L_0x005e:
-                    r3.close()
-                L_0x0061:
-                    throw r4
-                */
-                throw new UnsupportedOperationException("Method not decompiled: android.provider.Telephony.RcsColumns.RcsCanonicalAddressHelper.getOrCreateCanonicalAddressId(android.content.ContentResolver, java.lang.String):long");
+            static long getOrCreateCanonicalAddressId(ContentResolver contentResolver, String canonicalAddress) {
+                Uri.Builder uriBuilder = RcsColumns.CONTENT_AND_AUTHORITY.buildUpon();
+                uriBuilder.appendPath("canonical-address");
+                uriBuilder.appendQueryParameter("address", canonicalAddress);
+                Uri uri = uriBuilder.build();
+                Cursor cursor = contentResolver.query(uri, null, null, null);
+                if (cursor != null) {
+                    try {
+                        if (cursor.moveToFirst()) {
+                            long j = cursor.getLong(cursor.getColumnIndex("_id"));
+                            if (cursor != null) {
+                                cursor.close();
+                            }
+                            return j;
+                        }
+                    } catch (Throwable th) {
+                        try {
+                            throw th;
+                        } catch (Throwable th2) {
+                            if (cursor != null) {
+                                if (th != null) {
+                                    try {
+                                        cursor.close();
+                                    } catch (Throwable th3) {
+                                        th.addSuppressed(th3);
+                                    }
+                                } else {
+                                    cursor.close();
+                                }
+                            }
+                            throw th2;
+                        }
+                    }
+                }
+                Rlog.m86e(Telephony.TAG, "getOrCreateCanonicalAddressId returned no rows");
+                if (cursor != null) {
+                    cursor.close();
+                }
+                Rlog.m86e(Telephony.TAG, "getOrCreateCanonicalAddressId failed");
+                throw new IllegalArgumentException("Unable to find or allocate a canonical address ID");
             }
         }
     }
 
+    /* loaded from: classes3.dex */
     public static final class Mms implements BaseMmsColumns {
-        public static final Uri CONTENT_URI = Uri.parse("content://mms");
         public static final String DEFAULT_SORT_ORDER = "date DESC";
-        @UnsupportedAppUsage
-        public static final Pattern NAME_ADDR_EMAIL_PATTERN = Pattern.compile("\\s*(\"[^\"]*\"|[^<>\"]+)\\s*<([^<>]+)>\\s*");
+        public static final Uri CONTENT_URI = Uri.parse("content://mms");
         public static final Uri REPORT_REQUEST_URI = Uri.withAppendedPath(CONTENT_URI, "report-request");
         public static final Uri REPORT_STATUS_URI = Uri.withAppendedPath(CONTENT_URI, "report-status");
+        @UnsupportedAppUsage
+        public static final Pattern NAME_ADDR_EMAIL_PATTERN = Pattern.compile("\\s*(\"[^\"]*\"|[^<>\"]+)\\s*<([^<>]+)>\\s*");
 
         private Mms() {
         }
 
         public static Cursor query(ContentResolver cr, String[] projection) {
             SeempLog.record(10);
-            return cr.query(CONTENT_URI, projection, (String) null, (String[]) null, "date DESC");
+            return cr.query(CONTENT_URI, projection, null, null, "date DESC");
         }
 
         public static Cursor query(ContentResolver cr, String[] projection, String where, String orderBy) {
-            String str;
             SeempLog.record(10);
-            Uri uri = CONTENT_URI;
-            if (orderBy == null) {
-                str = "date DESC";
-            } else {
-                str = orderBy;
-            }
-            return cr.query(uri, projection, where, (String[]) null, str);
+            return cr.query(CONTENT_URI, projection, where, null, orderBy == null ? "date DESC" : orderBy);
         }
 
         @UnsupportedAppUsage
@@ -796,7 +779,9 @@ public final class Telephony {
             if (TextUtils.isEmpty(address)) {
                 return false;
             }
-            return Patterns.EMAIL_ADDRESS.matcher(extractAddrSpec(address)).matches();
+            String s = extractAddrSpec(address);
+            Matcher match = Patterns.EMAIL_ADDRESS.matcher(s);
+            return match.matches();
         }
 
         @UnsupportedAppUsage
@@ -804,9 +789,11 @@ public final class Telephony {
             if (TextUtils.isEmpty(number)) {
                 return false;
             }
-            return Patterns.PHONE.matcher(number).matches();
+            Matcher match = Patterns.PHONE.matcher(number);
+            return match.matches();
         }
 
+        /* loaded from: classes3.dex */
         public static final class Inbox implements BaseMmsColumns {
             public static final Uri CONTENT_URI = Uri.parse("content://mms/inbox");
             public static final String DEFAULT_SORT_ORDER = "date DESC";
@@ -815,6 +802,7 @@ public final class Telephony {
             }
         }
 
+        /* loaded from: classes3.dex */
         public static final class Sent implements BaseMmsColumns {
             public static final Uri CONTENT_URI = Uri.parse("content://mms/sent");
             public static final String DEFAULT_SORT_ORDER = "date DESC";
@@ -823,6 +811,7 @@ public final class Telephony {
             }
         }
 
+        /* loaded from: classes3.dex */
         public static final class Draft implements BaseMmsColumns {
             public static final Uri CONTENT_URI = Uri.parse("content://mms/drafts");
             public static final String DEFAULT_SORT_ORDER = "date DESC";
@@ -831,6 +820,7 @@ public final class Telephony {
             }
         }
 
+        /* loaded from: classes3.dex */
         public static final class Outbox implements BaseMmsColumns {
             public static final Uri CONTENT_URI = Uri.parse("content://mms/outbox");
             public static final String DEFAULT_SORT_ORDER = "date DESC";
@@ -839,6 +829,7 @@ public final class Telephony {
             }
         }
 
+        /* loaded from: classes3.dex */
         public static final class Addr implements BaseColumns {
             public static final String ADDRESS = "address";
             public static final String CHARSET = "charset";
@@ -850,6 +841,7 @@ public final class Telephony {
             }
         }
 
+        /* loaded from: classes3.dex */
         public static final class Part implements BaseColumns {
             public static final String CHARSET = "chset";
             public static final String CONTENT_DISPOSITION = "cd";
@@ -870,6 +862,7 @@ public final class Telephony {
             }
         }
 
+        /* loaded from: classes3.dex */
         public static final class Rate {
             public static final Uri CONTENT_URI = Uri.withAppendedPath(Mms.CONTENT_URI, TextToSpeech.Engine.KEY_PARAM_RATE);
             public static final String SENT_TIME = "sent_time";
@@ -878,6 +871,7 @@ public final class Telephony {
             }
         }
 
+        /* loaded from: classes3.dex */
         public static final class Intents {
             public static final String CONTENT_CHANGED_ACTION = "android.intent.action.CONTENT_CHANGED";
             public static final String DELETED_CONTENTS = "deleted_contents";
@@ -887,13 +881,8 @@ public final class Telephony {
         }
     }
 
+    /* loaded from: classes3.dex */
     public static final class MmsSms implements BaseColumns {
-        public static final Uri CONTENT_CONVERSATIONS_URI = Uri.parse("content://mms-sms/conversations");
-        public static final Uri CONTENT_DRAFT_URI = Uri.parse("content://mms-sms/draft");
-        public static final Uri CONTENT_FILTER_BYPHONE_URI = Uri.parse("content://mms-sms/messages/byphone");
-        public static final Uri CONTENT_LOCKED_URI = Uri.parse("content://mms-sms/locked");
-        public static final Uri CONTENT_UNDELIVERED_URI = Uri.parse("content://mms-sms/undelivered");
-        public static final Uri CONTENT_URI = Uri.parse("content://mms-sms/");
         public static final int ERR_TYPE_GENERIC = 1;
         public static final int ERR_TYPE_GENERIC_PERMANENT = 10;
         public static final int ERR_TYPE_MMS_PROTO_PERMANENT = 12;
@@ -903,13 +892,20 @@ public final class Telephony {
         public static final int ERR_TYPE_TRANSPORT_FAILURE = 4;
         public static final int MMS_PROTO = 1;
         public static final int NO_ERROR = 0;
-        public static final Uri SEARCH_URI = Uri.parse("content://mms-sms/search");
         public static final int SMS_PROTO = 0;
         public static final String TYPE_DISCRIMINATOR_COLUMN = "transport_type";
+        public static final Uri CONTENT_URI = Uri.parse("content://mms-sms/");
+        public static final Uri CONTENT_CONVERSATIONS_URI = Uri.parse("content://mms-sms/conversations");
+        public static final Uri CONTENT_FILTER_BYPHONE_URI = Uri.parse("content://mms-sms/messages/byphone");
+        public static final Uri CONTENT_UNDELIVERED_URI = Uri.parse("content://mms-sms/undelivered");
+        public static final Uri CONTENT_DRAFT_URI = Uri.parse("content://mms-sms/draft");
+        public static final Uri CONTENT_LOCKED_URI = Uri.parse("content://mms-sms/locked");
+        public static final Uri SEARCH_URI = Uri.parse("content://mms-sms/search");
 
         private MmsSms() {
         }
 
+        /* loaded from: classes3.dex */
         public static final class PendingMessages implements BaseColumns {
             public static final Uri CONTENT_URI = Uri.withAppendedPath(MmsSms.CONTENT_URI, ImsConferenceState.STATUS_PENDING);
             public static final String DUE_TIME = "due_time";
@@ -926,8 +922,11 @@ public final class Telephony {
             }
         }
 
+        /* loaded from: classes3.dex */
         public static final class WordsTable {
-            public static final String ID = "_id";
+
+            /* renamed from: ID */
+            public static final String f162ID = "_id";
             public static final String INDEXED_TEXT = "index_text";
             public static final String SOURCE_ROW_ID = "source_id";
             public static final String TABLE_ID = "table_to_use";
@@ -937,6 +936,7 @@ public final class Telephony {
         }
     }
 
+    /* loaded from: classes3.dex */
     public static final class Carriers implements BaseColumns {
         public static final String APN = "apn";
         @SystemApi
@@ -952,15 +952,11 @@ public final class Telephony {
         public static final int CARRIER_EDITED = 4;
         public static final String CARRIER_ENABLED = "carrier_enabled";
         public static final String CARRIER_ID = "carrier_id";
-        public static final Uri CONTENT_URI = Uri.parse("content://telephony/carriers");
         public static final String CURRENT = "current";
         public static final String DEFAULT_SORT_ORDER = "name ASC";
-        public static final Uri DPC_URI = Uri.parse("content://telephony/carriers/dpc");
         @SystemApi
         public static final String EDITED_STATUS = "edited";
         public static final String ENFORCE_KEY = "enforced";
-        public static final Uri ENFORCE_MANAGED_URI = Uri.parse("content://telephony/carriers/enforce_managed");
-        public static final Uri FILTERED_URI = Uri.parse("content://telephony/carriers/filtered");
         @SystemApi
         public static final String MAX_CONNECTIONS = "max_conns";
         public static final String MCC = "mcc";
@@ -989,7 +985,6 @@ public final class Telephony {
         public static final String PROXY = "proxy";
         public static final String ROAMING_PROTOCOL = "roaming_protocol";
         public static final String SERVER = "server";
-        public static final Uri SIM_APN_URI = Uri.parse("content://telephony/carriers/sim_apn_list");
         public static final String SKIP_464XLAT = "skip_464xlat";
         public static final int SKIP_464XLAT_DEFAULT = -1;
         public static final int SKIP_464XLAT_DISABLE = 0;
@@ -1012,12 +1007,19 @@ public final class Telephony {
         public static final String USER_VISIBLE = "user_visible";
         @SystemApi
         public static final String WAIT_TIME_RETRY = "wait_time";
+        public static final Uri CONTENT_URI = Uri.parse("content://telephony/carriers");
+        public static final Uri SIM_APN_URI = Uri.parse("content://telephony/carriers/sim_apn_list");
+        public static final Uri DPC_URI = Uri.parse("content://telephony/carriers/dpc");
+        public static final Uri FILTERED_URI = Uri.parse("content://telephony/carriers/filtered");
+        public static final Uri ENFORCE_MANAGED_URI = Uri.parse("content://telephony/carriers/enforce_managed");
 
         @Retention(RetentionPolicy.SOURCE)
+        /* loaded from: classes3.dex */
         public @interface EditStatus {
         }
 
         @Retention(RetentionPolicy.SOURCE)
+        /* loaded from: classes3.dex */
         public @interface Skip464XlatStatus {
         }
 
@@ -1025,36 +1027,38 @@ public final class Telephony {
         }
     }
 
+    /* loaded from: classes3.dex */
     public static final class CellBroadcasts implements BaseColumns {
         public static final String CID = "cid";
-        public static final String CMAS_CATEGORY = "cmas_category";
-        public static final String CMAS_CERTAINTY = "cmas_certainty";
-        public static final String CMAS_MESSAGE_CLASS = "cmas_message_class";
-        public static final String CMAS_RESPONSE_TYPE = "cmas_response_type";
-        public static final String CMAS_SEVERITY = "cmas_severity";
-        public static final String CMAS_URGENCY = "cmas_urgency";
-        public static final Uri CONTENT_URI = Uri.parse("content://cellbroadcasts");
         public static final String DEFAULT_SORT_ORDER = "date DESC";
         public static final String DELIVERY_TIME = "date";
-        public static final String ETWS_WARNING_TYPE = "etws_warning_type";
-        public static final String GEOGRAPHICAL_SCOPE = "geo_scope";
-        public static final String LAC = "lac";
         public static final String LANGUAGE_CODE = "language";
         public static final String MESSAGE_BODY = "body";
         public static final String MESSAGE_FORMAT = "format";
         public static final String MESSAGE_PRIORITY = "priority";
         public static final String MESSAGE_READ = "read";
         public static final String PLMN = "plmn";
-        public static final String[] QUERY_COLUMNS = {"_id", GEOGRAPHICAL_SCOPE, "plmn", LAC, "cid", "serial_number", SERVICE_CATEGORY, "language", "body", "date", "read", "format", "priority", ETWS_WARNING_TYPE, CMAS_MESSAGE_CLASS, CMAS_CATEGORY, CMAS_RESPONSE_TYPE, CMAS_SEVERITY, CMAS_URGENCY, CMAS_CERTAINTY};
         public static final String SERIAL_NUMBER = "serial_number";
-        public static final String SERVICE_CATEGORY = "service_category";
         public static final String V1_MESSAGE_CODE = "message_code";
         public static final String V1_MESSAGE_IDENTIFIER = "message_id";
+        public static final Uri CONTENT_URI = Uri.parse("content://cellbroadcasts");
+        public static final String GEOGRAPHICAL_SCOPE = "geo_scope";
+        public static final String LAC = "lac";
+        public static final String SERVICE_CATEGORY = "service_category";
+        public static final String ETWS_WARNING_TYPE = "etws_warning_type";
+        public static final String CMAS_MESSAGE_CLASS = "cmas_message_class";
+        public static final String CMAS_CATEGORY = "cmas_category";
+        public static final String CMAS_RESPONSE_TYPE = "cmas_response_type";
+        public static final String CMAS_SEVERITY = "cmas_severity";
+        public static final String CMAS_URGENCY = "cmas_urgency";
+        public static final String CMAS_CERTAINTY = "cmas_certainty";
+        public static final String[] QUERY_COLUMNS = {"_id", GEOGRAPHICAL_SCOPE, "plmn", LAC, "cid", "serial_number", SERVICE_CATEGORY, "language", "body", "date", "read", "format", "priority", ETWS_WARNING_TYPE, CMAS_MESSAGE_CLASS, CMAS_CATEGORY, CMAS_RESPONSE_TYPE, CMAS_SEVERITY, CMAS_URGENCY, CMAS_CERTAINTY};
 
         private CellBroadcasts() {
         }
     }
 
+    /* loaded from: classes3.dex */
     public static final class ServiceStateTable {
         public static final String AUTHORITY = "service-state";
         public static final String CDMA_DEFAULT_ROAMING_INDICATOR = "cdma_default_roaming_indicator";
@@ -1105,6 +1109,7 @@ public final class Telephony {
         }
     }
 
+    /* loaded from: classes3.dex */
     public static final class CarrierId implements BaseColumns {
         public static final String AUTHORITY = "carrier_id";
         public static final String CARRIER_ID = "carrier_id";
@@ -1114,6 +1119,7 @@ public final class Telephony {
         public static final String SPECIFIC_CARRIER_ID = "specific_carrier_id";
         public static final String SPECIFIC_CARRIER_ID_NAME = "specific_carrier_id_name";
 
+        /* loaded from: classes3.dex */
         public static final class All implements BaseColumns {
             public static final String APN = "apn";
             public static final Uri CONTENT_URI = Uri.parse("content://carrier_id/all");

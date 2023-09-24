@@ -4,26 +4,24 @@ import android.annotation.UnsupportedAppUsage;
 import android.content.Context;
 import android.media.AudioAttributes;
 import android.net.Uri;
-import android.os.PowerManager;
-import android.os.SystemClock;
+import android.p007os.PowerManager;
+import android.p007os.SystemClock;
 import android.util.Log;
 import java.util.LinkedList;
 
+/* loaded from: classes3.dex */
 public class AsyncPlayer {
     private static final int PLAY = 1;
     private static final int STOP = 2;
     private static final boolean mDebug = false;
-    /* access modifiers changed from: private */
-    public final LinkedList<Command> mCmdQueue = new LinkedList<>();
-    /* access modifiers changed from: private */
-    public MediaPlayer mPlayer;
-    private int mState = 2;
-    /* access modifiers changed from: private */
-    public String mTag;
-    /* access modifiers changed from: private */
-    public Thread mThread;
+    private MediaPlayer mPlayer;
+    private String mTag;
+    private Thread mThread;
     private PowerManager.WakeLock mWakeLock;
+    private final LinkedList<Command> mCmdQueue = new LinkedList<>();
+    private int mState = 2;
 
+    /* loaded from: classes3.dex */
     private static final class Command {
         AudioAttributes attributes;
         int code;
@@ -40,7 +38,7 @@ public class AsyncPlayer {
         }
     }
 
-    /* access modifiers changed from: private */
+    /* JADX INFO: Access modifiers changed from: private */
     public void startSound(Command cmd) {
         try {
             MediaPlayer player = new MediaPlayer();
@@ -56,19 +54,21 @@ public class AsyncPlayer {
             long delay = SystemClock.uptimeMillis() - cmd.requestTime;
             if (delay > 1000) {
                 String str = this.mTag;
-                Log.w(str, "Notification sound delayed by " + delay + "msecs");
+                Log.m64w(str, "Notification sound delayed by " + delay + "msecs");
             }
         } catch (Exception e) {
             String str2 = this.mTag;
-            Log.w(str2, "error loading sound for " + cmd.uri, e);
+            Log.m63w(str2, "error loading sound for " + cmd.uri, e);
         }
     }
 
-    private final class Thread extends Thread {
+    /* loaded from: classes3.dex */
+    private final class Thread extends java.lang.Thread {
         Thread() {
             super("AsyncPlayer-" + AsyncPlayer.this.mTag);
         }
 
+        @Override // java.lang.Thread, java.lang.Runnable
         public void run() {
             Command cmd;
             while (true) {
@@ -81,29 +81,27 @@ public class AsyncPlayer {
                         break;
                     case 2:
                         if (AsyncPlayer.this.mPlayer == null) {
-                            Log.w(AsyncPlayer.this.mTag, "STOP command without a player");
+                            Log.m64w(AsyncPlayer.this.mTag, "STOP command without a player");
                             break;
                         } else {
                             long delay = SystemClock.uptimeMillis() - cmd.requestTime;
                             if (delay > 1000) {
-                                String access$000 = AsyncPlayer.this.mTag;
-                                Log.w(access$000, "Notification stop delayed by " + delay + "msecs");
+                                String str = AsyncPlayer.this.mTag;
+                                Log.m64w(str, "Notification stop delayed by " + delay + "msecs");
                             }
                             AsyncPlayer.this.mPlayer.stop();
                             AsyncPlayer.this.mPlayer.release();
-                            MediaPlayer unused = AsyncPlayer.this.mPlayer = null;
+                            AsyncPlayer.this.mPlayer = null;
                             break;
                         }
                 }
                 synchronized (AsyncPlayer.this.mCmdQueue) {
                     if (AsyncPlayer.this.mCmdQueue.size() == 0) {
-                        Thread unused2 = AsyncPlayer.this.mThread = null;
+                        AsyncPlayer.this.mThread = null;
                         AsyncPlayer.this.releaseWakeLock();
                         return;
                     }
                 }
-            }
-            while (true) {
             }
         }
     }
@@ -118,12 +116,13 @@ public class AsyncPlayer {
 
     public void play(Context context, Uri uri, boolean looping, int stream) {
         PlayerBase.deprecateStreamTypeForPlayback(stream, "AsyncPlayer", "play()");
-        if (context != null && uri != null) {
-            try {
-                play(context, uri, looping, new AudioAttributes.Builder().setInternalLegacyStreamType(stream).build());
-            } catch (IllegalArgumentException e) {
-                Log.e(this.mTag, "Call to deprecated AsyncPlayer.play() method caused:", e);
-            }
+        if (context == null || uri == null) {
+            return;
+        }
+        try {
+            play(context, uri, looping, new AudioAttributes.Builder().setInternalLegacyStreamType(stream).build());
+        } catch (IllegalArgumentException e) {
+            Log.m69e(this.mTag, "Call to deprecated AsyncPlayer.play() method caused:", e);
         }
     }
 
@@ -167,11 +166,11 @@ public class AsyncPlayer {
 
     @UnsupportedAppUsage
     public void setUsesWakeLock(Context context) {
-        if (this.mWakeLock == null && this.mThread == null) {
-            this.mWakeLock = ((PowerManager) context.getSystemService(Context.POWER_SERVICE)).newWakeLock(1, this.mTag);
-            return;
+        if (this.mWakeLock != null || this.mThread != null) {
+            throw new RuntimeException("assertion failed mWakeLock=" + this.mWakeLock + " mThread=" + this.mThread);
         }
-        throw new RuntimeException("assertion failed mWakeLock=" + this.mWakeLock + " mThread=" + this.mThread);
+        PowerManager pm = (PowerManager) context.getSystemService(Context.POWER_SERVICE);
+        this.mWakeLock = pm.newWakeLock(1, this.mTag);
     }
 
     private void acquireWakeLock() {
@@ -180,7 +179,7 @@ public class AsyncPlayer {
         }
     }
 
-    /* access modifiers changed from: private */
+    /* JADX INFO: Access modifiers changed from: private */
     public void releaseWakeLock() {
         if (this.mWakeLock != null) {
             this.mWakeLock.release();

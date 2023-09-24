@@ -7,6 +7,7 @@ import android.widget.LinearLayout;
 import android.widget.RemoteViews;
 
 @RemoteViews.RemoteView
+/* loaded from: classes4.dex */
 public class RemeasuringLinearLayout extends LinearLayout {
     public RemeasuringLinearLayout(Context context) {
         super(context);
@@ -24,18 +25,19 @@ public class RemeasuringLinearLayout extends LinearLayout {
         super(context, attrs, defStyleAttr, defStyleRes);
     }
 
-    /* access modifiers changed from: protected */
-    public void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
+    @Override // android.widget.LinearLayout, android.view.View
+    protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
         super.onMeasure(widthMeasureSpec, heightMeasureSpec);
         int count = getChildCount();
         int height = 0;
         for (int i = 0; i < count; i++) {
             View child = getChildAt(i);
-            if (!(child == null || child.getVisibility() == 8)) {
+            if (child != null && child.getVisibility() != 8) {
                 LinearLayout.LayoutParams lp = (LinearLayout.LayoutParams) child.getLayoutParams();
                 height = Math.max(height, child.getMeasuredHeight() + height + lp.topMargin + lp.bottomMargin);
             }
         }
-        setMeasuredDimension(getMeasuredWidth(), height);
+        int i2 = getMeasuredWidth();
+        setMeasuredDimension(i2, height);
     }
 }

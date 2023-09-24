@@ -5,9 +5,9 @@ import android.graphics.Path;
 import android.graphics.PointF;
 import java.util.ArrayList;
 
+/* loaded from: classes.dex */
 public class PathKeyframes implements Keyframes {
-    /* access modifiers changed from: private */
-    public static final ArrayList<Keyframe> EMPTY_KEYFRAMES = new ArrayList<>();
+    private static final ArrayList<Keyframe> EMPTY_KEYFRAMES = new ArrayList<>();
     private static final int FRACTION_OFFSET = 0;
     private static final int NUM_COMPONENTS = 3;
     private static final int X_OFFSET = 1;
@@ -27,10 +27,12 @@ public class PathKeyframes implements Keyframes {
         this.mKeyframeData = path.approximate(error);
     }
 
+    @Override // android.animation.Keyframes
     public ArrayList<Keyframe> getKeyframes() {
         return EMPTY_KEYFRAMES;
     }
 
+    @Override // android.animation.Keyframes
     public Object getValue(float fraction) {
         int numPoints = this.mKeyframeData.length / 3;
         if (fraction < 0.0f) {
@@ -52,10 +54,10 @@ public class PathKeyframes implements Keyframes {
             float midFraction = this.mKeyframeData[(mid * 3) + 0];
             if (fraction < midFraction) {
                 high = mid - 1;
-            } else if (fraction <= midFraction) {
-                return pointForIndex(mid);
-            } else {
+            } else if (fraction > midFraction) {
                 low = mid + 1;
+            } else {
+                return pointForIndex(mid);
             }
         }
         return interpolateInRange(fraction, high, low);
@@ -65,25 +67,33 @@ public class PathKeyframes implements Keyframes {
         int startBase = startIndex * 3;
         int endBase = endIndex * 3;
         float startFraction = this.mKeyframeData[startBase + 0];
-        float intervalFraction = (fraction - startFraction) / (this.mKeyframeData[endBase + 0] - startFraction);
+        float endFraction = this.mKeyframeData[endBase + 0];
+        float intervalFraction = (fraction - startFraction) / (endFraction - startFraction);
         float startX = this.mKeyframeData[startBase + 1];
         float endX = this.mKeyframeData[endBase + 1];
         float startY = this.mKeyframeData[startBase + 2];
         float endY = this.mKeyframeData[endBase + 2];
-        this.mTempPointF.set(interpolate(intervalFraction, startX, endX), interpolate(intervalFraction, startY, endY));
+        float x = interpolate(intervalFraction, startX, endX);
+        float y = interpolate(intervalFraction, startY, endY);
+        this.mTempPointF.set(x, y);
         return this.mTempPointF;
     }
 
+    @Override // android.animation.Keyframes
     public void setEvaluator(TypeEvaluator evaluator) {
     }
 
+    @Override // android.animation.Keyframes
     public Class getType() {
         return PointF.class;
     }
 
-    public Keyframes clone() {
+    @Override // android.animation.Keyframes
+    /* renamed from: clone */
+    public Keyframes m142clone() {
         try {
-            return (Keyframes) super.clone();
+            Keyframes clone = (Keyframes) super.clone();
+            return clone;
         } catch (CloneNotSupportedException e) {
             return null;
         }
@@ -91,89 +101,112 @@ public class PathKeyframes implements Keyframes {
 
     private PointF pointForIndex(int index) {
         int base = index * 3;
-        this.mTempPointF.set(this.mKeyframeData[base + 1], this.mKeyframeData[base + 2]);
+        int xOffset = base + 1;
+        int yOffset = base + 2;
+        this.mTempPointF.set(this.mKeyframeData[xOffset], this.mKeyframeData[yOffset]);
         return this.mTempPointF;
     }
 
     private static float interpolate(float fraction, float startValue, float endValue) {
-        return ((endValue - startValue) * fraction) + startValue;
+        float diff = endValue - startValue;
+        return (diff * fraction) + startValue;
     }
 
     public Keyframes.FloatKeyframes createXFloatKeyframes() {
-        return new FloatKeyframesBase() {
+        return new FloatKeyframesBase() { // from class: android.animation.PathKeyframes.1
+            @Override // android.animation.Keyframes.FloatKeyframes
             public float getFloatValue(float fraction) {
-                return ((PointF) PathKeyframes.this.getValue(fraction)).x;
+                PointF pointF = (PointF) PathKeyframes.this.getValue(fraction);
+                return pointF.f61x;
             }
         };
     }
 
     public Keyframes.FloatKeyframes createYFloatKeyframes() {
-        return new FloatKeyframesBase() {
+        return new FloatKeyframesBase() { // from class: android.animation.PathKeyframes.2
+            @Override // android.animation.Keyframes.FloatKeyframes
             public float getFloatValue(float fraction) {
-                return ((PointF) PathKeyframes.this.getValue(fraction)).y;
+                PointF pointF = (PointF) PathKeyframes.this.getValue(fraction);
+                return pointF.f62y;
             }
         };
     }
 
     public Keyframes.IntKeyframes createXIntKeyframes() {
-        return new IntKeyframesBase() {
+        return new IntKeyframesBase() { // from class: android.animation.PathKeyframes.3
+            @Override // android.animation.Keyframes.IntKeyframes
             public int getIntValue(float fraction) {
-                return Math.round(((PointF) PathKeyframes.this.getValue(fraction)).x);
+                PointF pointF = (PointF) PathKeyframes.this.getValue(fraction);
+                return Math.round(pointF.f61x);
             }
         };
     }
 
     public Keyframes.IntKeyframes createYIntKeyframes() {
-        return new IntKeyframesBase() {
+        return new IntKeyframesBase() { // from class: android.animation.PathKeyframes.4
+            @Override // android.animation.Keyframes.IntKeyframes
             public int getIntValue(float fraction) {
-                return Math.round(((PointF) PathKeyframes.this.getValue(fraction)).y);
+                PointF pointF = (PointF) PathKeyframes.this.getValue(fraction);
+                return Math.round(pointF.f62y);
             }
         };
     }
 
+    /* loaded from: classes.dex */
     private static abstract class SimpleKeyframes implements Keyframes {
         private SimpleKeyframes() {
         }
 
+        @Override // android.animation.Keyframes
         public void setEvaluator(TypeEvaluator evaluator) {
         }
 
+        @Override // android.animation.Keyframes
         public ArrayList<Keyframe> getKeyframes() {
             return PathKeyframes.EMPTY_KEYFRAMES;
         }
 
-        public Keyframes clone() {
+        @Override // android.animation.Keyframes
+        /* renamed from: clone */
+        public Keyframes m143clone() {
             try {
-                return (Keyframes) super.clone();
+                Keyframes clone = (Keyframes) super.clone();
+                return clone;
             } catch (CloneNotSupportedException e) {
                 return null;
             }
         }
     }
 
+    /* loaded from: classes.dex */
     static abstract class IntKeyframesBase extends SimpleKeyframes implements Keyframes.IntKeyframes {
         IntKeyframesBase() {
             super();
         }
 
+        @Override // android.animation.Keyframes
         public Class getType() {
             return Integer.class;
         }
 
+        @Override // android.animation.Keyframes
         public Object getValue(float fraction) {
             return Integer.valueOf(getIntValue(fraction));
         }
     }
 
+    /* loaded from: classes.dex */
     static abstract class FloatKeyframesBase extends SimpleKeyframes implements Keyframes.FloatKeyframes {
         FloatKeyframesBase() {
             super();
         }
 
+        @Override // android.animation.Keyframes
         public Class getType() {
             return Float.class;
         }
 
+        @Override // android.animation.Keyframes
         public Object getValue(float fraction) {
             return Float.valueOf(getFloatValue(fraction));
         }

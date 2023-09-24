@@ -6,6 +6,7 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.util.List;
 
+/* loaded from: classes.dex */
 public interface BluetoothProfile {
     public static final int A2DP = 2;
     @UnsupportedAppUsage
@@ -48,9 +49,11 @@ public interface BluetoothProfile {
     public static final int STATE_DISCONNECTING = 3;
 
     @Retention(RetentionPolicy.SOURCE)
+    /* loaded from: classes.dex */
     public @interface BtProfileState {
     }
 
+    /* loaded from: classes.dex */
     public interface ServiceListener {
         void onServiceConnected(int i, BluetoothProfile bluetoothProfile);
 

@@ -1,13 +1,13 @@
 package android.util.proto;
 
 import android.net.wifi.WifiEnterpriseConfig;
-import android.net.wifi.WifiScanner;
-import android.os.BatteryStats;
+import android.p007os.BatteryStats;
 import android.util.Log;
 import com.android.internal.midi.MidiConstants;
 import com.ibm.icu.text.Bidi;
 import java.util.ArrayList;
 
+/* loaded from: classes4.dex */
 public final class EncodedBuffer {
     private static final String TAG = "EncodedBuffer";
     private int mBufferCount;
@@ -68,7 +68,8 @@ public final class EncodedBuffer {
     public void skipRead(int amount) {
         if (amount < 0) {
             throw new RuntimeException("skipRead with negative amount=" + amount);
-        } else if (amount != 0) {
+        } else if (amount == 0) {
+        } else {
             if (amount <= this.mChunkSize - this.mReadIndex) {
                 this.mReadIndex += amount;
                 return;
@@ -105,7 +106,7 @@ public final class EncodedBuffer {
         long result = 0;
         do {
             byte b = readRawByte();
-            result |= ((long) (b & Bidi.LEVEL_DEFAULT_RTL)) << bits;
+            result |= (b & Bidi.LEVEL_DEFAULT_RTL) << bits;
             if ((b & 128) == 0) {
                 return result;
             }
@@ -115,7 +116,7 @@ public final class EncodedBuffer {
     }
 
     public int readRawFixed32() {
-        return (readRawByte() & 255) | ((readRawByte() & 255) << 8) | ((readRawByte() & 255) << WifiScanner.PnoSettings.PnoNetwork.FLAG_SAME_NETWORK) | ((readRawByte() & 255) << 24);
+        return (readRawByte() & 255) | ((readRawByte() & 255) << 8) | ((readRawByte() & 255) << 16) | ((readRawByte() & 255) << 24);
     }
 
     private void nextWriteBuffer() {
@@ -141,23 +142,20 @@ public final class EncodedBuffer {
     }
 
     public static int getRawVarint32Size(int val) {
-        if ((val & -128) == 0) {
+        if ((val & (-128)) == 0) {
             return 1;
         }
-        if ((val & -16384) == 0) {
+        if ((val & (-16384)) == 0) {
             return 2;
         }
-        if ((-2097152 & val) == 0) {
+        if (((-2097152) & val) == 0) {
             return 3;
         }
-        if ((-268435456 & val) == 0) {
-            return 4;
-        }
-        return 5;
+        return ((-268435456) & val) == 0 ? 4 : 5;
     }
 
     public void writeRawVarint32(int val) {
-        while ((val & -128) != 0) {
+        while ((val & (-128)) != 0) {
             writeRawByte((byte) ((val & 127) | 128));
             val >>>= 7;
         }
@@ -173,42 +171,39 @@ public final class EncodedBuffer {
     }
 
     public static int getRawVarint64Size(long val) {
-        if ((-128 & val) == 0) {
+        if (((-128) & val) == 0) {
             return 1;
         }
-        if ((-16384 & val) == 0) {
+        if (((-16384) & val) == 0) {
             return 2;
         }
-        if ((-2097152 & val) == 0) {
+        if (((-2097152) & val) == 0) {
             return 3;
         }
-        if ((-268435456 & val) == 0) {
+        if (((-268435456) & val) == 0) {
             return 4;
         }
-        if ((-34359738368L & val) == 0) {
+        if (((-34359738368L) & val) == 0) {
             return 5;
         }
-        if ((-4398046511104L & val) == 0) {
+        if (((-4398046511104L) & val) == 0) {
             return 6;
         }
-        if ((-562949953421312L & val) == 0) {
+        if (((-562949953421312L) & val) == 0) {
             return 7;
         }
         if ((BatteryStats.STEP_LEVEL_MODIFIED_MODE_MASK & val) == 0) {
             return 8;
         }
-        if ((Long.MIN_VALUE & val) == 0) {
-            return 9;
-        }
-        return 10;
+        return (Long.MIN_VALUE & val) == 0 ? 9 : 10;
     }
 
     public void writeRawVarint64(long val) {
-        while ((-128 & val) != 0) {
-            writeRawByte((byte) ((int) ((127 & val) | 128)));
+        while (((-128) & val) != 0) {
+            writeRawByte((byte) ((127 & val) | 128));
             val >>>= 7;
         }
-        writeRawByte((byte) ((int) val));
+        writeRawByte((byte) val);
     }
 
     public static int getRawZigZag64Size(long val) {
@@ -227,14 +222,14 @@ public final class EncodedBuffer {
     }
 
     public void writeRawFixed64(long val) {
-        writeRawByte((byte) ((int) val));
-        writeRawByte((byte) ((int) (val >> 8)));
-        writeRawByte((byte) ((int) (val >> 16)));
-        writeRawByte((byte) ((int) (val >> 24)));
-        writeRawByte((byte) ((int) (val >> 32)));
-        writeRawByte((byte) ((int) (val >> 40)));
-        writeRawByte((byte) ((int) (val >> 48)));
-        writeRawByte((byte) ((int) (val >> 56)));
+        writeRawByte((byte) val);
+        writeRawByte((byte) (val >> 8));
+        writeRawByte((byte) (val >> 16));
+        writeRawByte((byte) (val >> 24));
+        writeRawByte((byte) (val >> 32));
+        writeRawByte((byte) (val >> 40));
+        writeRawByte((byte) (val >> 48));
+        writeRawByte((byte) (val >> 56));
     }
 
     public void writeRawBuffer(byte[] val) {
@@ -244,55 +239,41 @@ public final class EncodedBuffer {
     }
 
     public void writeRawBuffer(byte[] val, int offset, int length) {
-        if (val != null) {
-            int amt = length < this.mChunkSize - this.mWriteIndex ? length : this.mChunkSize - this.mWriteIndex;
-            if (amt > 0) {
-                System.arraycopy(val, offset, this.mWriteBuffer, this.mWriteIndex, amt);
-                this.mWriteIndex += amt;
-                length -= amt;
-                offset += amt;
-            }
-            while (length > 0) {
-                nextWriteBuffer();
-                int amt2 = length < this.mChunkSize ? length : this.mChunkSize;
-                System.arraycopy(val, offset, this.mWriteBuffer, this.mWriteIndex, amt2);
-                this.mWriteIndex += amt2;
-                length -= amt2;
-                offset += amt2;
-            }
+        if (val == null) {
+            return;
+        }
+        int amt = length < this.mChunkSize - this.mWriteIndex ? length : this.mChunkSize - this.mWriteIndex;
+        if (amt > 0) {
+            System.arraycopy(val, offset, this.mWriteBuffer, this.mWriteIndex, amt);
+            this.mWriteIndex += amt;
+            length -= amt;
+            offset += amt;
+        }
+        while (length > 0) {
+            nextWriteBuffer();
+            int amt2 = length < this.mChunkSize ? length : this.mChunkSize;
+            System.arraycopy(val, offset, this.mWriteBuffer, this.mWriteIndex, amt2);
+            this.mWriteIndex += amt2;
+            length -= amt2;
+            offset += amt2;
         }
     }
 
     public void writeFromThisBuffer(int srcOffset, int size) {
         if (this.mReadLimit < 0) {
             throw new IllegalStateException("writeFromThisBuffer before startEditing");
-        } else if (srcOffset < getWritePos()) {
+        }
+        if (srcOffset < getWritePos()) {
             throw new IllegalArgumentException("Can only move forward in the buffer -- srcOffset=" + srcOffset + " size=" + size + WifiEnterpriseConfig.CA_CERT_ALIAS_DELIMITER + getDebugString());
         } else if (srcOffset + size > this.mReadableSize) {
             throw new IllegalArgumentException("Trying to move more data than there is -- srcOffset=" + srcOffset + " size=" + size + WifiEnterpriseConfig.CA_CERT_ALIAS_DELIMITER + getDebugString());
-        } else if (size != 0) {
-            if (srcOffset != (this.mWriteBufIndex * this.mChunkSize) + this.mWriteIndex) {
-                int readBufIndex = srcOffset / this.mChunkSize;
-                byte[] readBuffer = this.mBuffers.get(readBufIndex);
-                int readIndex = srcOffset % this.mChunkSize;
-                while (size > 0) {
-                    if (this.mWriteIndex >= this.mChunkSize) {
-                        nextWriteBuffer();
-                    }
-                    if (readIndex >= this.mChunkSize) {
-                        readBufIndex++;
-                        readBuffer = this.mBuffers.get(readBufIndex);
-                        readIndex = 0;
-                    }
-                    int amt = Math.min(size, Math.min(this.mChunkSize - this.mWriteIndex, this.mChunkSize - readIndex));
-                    System.arraycopy(readBuffer, readIndex, this.mWriteBuffer, this.mWriteIndex, amt);
-                    this.mWriteIndex += amt;
-                    readIndex += amt;
-                    size -= amt;
+        } else if (size == 0) {
+        } else {
+            if (srcOffset == (this.mWriteBufIndex * this.mChunkSize) + this.mWriteIndex) {
+                if (size <= this.mChunkSize - this.mWriteIndex) {
+                    this.mWriteIndex += size;
+                    return;
                 }
-            } else if (size <= this.mChunkSize - this.mWriteIndex) {
-                this.mWriteIndex += size;
-            } else {
                 int size2 = size - (this.mChunkSize - this.mWriteIndex);
                 this.mWriteIndex = size2 % this.mChunkSize;
                 if (this.mWriteIndex == 0) {
@@ -302,6 +283,28 @@ public final class EncodedBuffer {
                     this.mWriteBufIndex += (size2 / this.mChunkSize) + 1;
                 }
                 this.mWriteBuffer = this.mBuffers.get(this.mWriteBufIndex);
+                return;
+            }
+            int readBufIndex = srcOffset / this.mChunkSize;
+            byte[] readBuffer = this.mBuffers.get(readBufIndex);
+            int readIndex = srcOffset % this.mChunkSize;
+            while (size > 0) {
+                if (this.mWriteIndex >= this.mChunkSize) {
+                    nextWriteBuffer();
+                }
+                if (readIndex >= this.mChunkSize) {
+                    readBufIndex++;
+                    byte[] readBuffer2 = this.mBuffers.get(readBufIndex);
+                    readBuffer = readBuffer2;
+                    readIndex = 0;
+                }
+                int spaceInWriteBuffer = this.mChunkSize - this.mWriteIndex;
+                int availableInReadBuffer = this.mChunkSize - readIndex;
+                int amt = Math.min(size, Math.min(spaceInWriteBuffer, availableInReadBuffer));
+                System.arraycopy(readBuffer, readIndex, this.mWriteBuffer, this.mWriteIndex, amt);
+                this.mWriteIndex += amt;
+                readIndex += amt;
+                size -= amt;
             }
         }
     }
@@ -311,21 +314,20 @@ public final class EncodedBuffer {
     }
 
     public void rewindWriteTo(int writePos) {
-        if (writePos <= getWritePos()) {
-            this.mWriteBufIndex = writePos / this.mChunkSize;
-            this.mWriteIndex = writePos % this.mChunkSize;
-            if (this.mWriteIndex == 0 && this.mWriteBufIndex != 0) {
-                this.mWriteIndex = this.mChunkSize;
-                this.mWriteBufIndex--;
-            }
-            this.mWriteBuffer = this.mBuffers.get(this.mWriteBufIndex);
-            return;
+        if (writePos > getWritePos()) {
+            throw new RuntimeException("rewindWriteTo only can go backwards" + writePos);
         }
-        throw new RuntimeException("rewindWriteTo only can go backwards" + writePos);
+        this.mWriteBufIndex = writePos / this.mChunkSize;
+        this.mWriteIndex = writePos % this.mChunkSize;
+        if (this.mWriteIndex == 0 && this.mWriteBufIndex != 0) {
+            this.mWriteIndex = this.mChunkSize;
+            this.mWriteBufIndex--;
+        }
+        this.mWriteBuffer = this.mBuffers.get(this.mWriteBufIndex);
     }
 
     public int getRawFixed32At(int pos) {
-        return (this.mBuffers.get(pos / this.mChunkSize)[pos % this.mChunkSize] & 255) | ((this.mBuffers.get((pos + 1) / this.mChunkSize)[(pos + 1) % this.mChunkSize] & 255) << 8) | ((this.mBuffers.get((pos + 2) / this.mChunkSize)[(pos + 2) % this.mChunkSize] & 255) << WifiScanner.PnoSettings.PnoNetwork.FLAG_SAME_NETWORK) | ((this.mBuffers.get((pos + 3) / this.mChunkSize)[(pos + 3) % this.mChunkSize] & 255) << 24);
+        return (this.mBuffers.get(pos / this.mChunkSize)[pos % this.mChunkSize] & 255) | ((this.mBuffers.get((pos + 1) / this.mChunkSize)[(pos + 1) % this.mChunkSize] & 255) << 8) | ((this.mBuffers.get((pos + 2) / this.mChunkSize)[(pos + 2) % this.mChunkSize] & 255) << 16) | ((this.mBuffers.get((pos + 3) / this.mChunkSize)[(pos + 3) % this.mChunkSize] & 255) << 24);
     }
 
     public void editRawFixed32(int pos, int val) {
@@ -347,15 +349,15 @@ public final class EncodedBuffer {
         byte[] result = new byte[size];
         int bufCount = size / this.mChunkSize;
         int writeIndex = 0;
-        int bufIndex = 0;
-        while (bufIndex < bufCount) {
-            System.arraycopy(this.mBuffers.get(bufIndex), 0, result, writeIndex, this.mChunkSize);
+        int writeIndex2 = 0;
+        while (writeIndex2 < bufCount) {
+            System.arraycopy(this.mBuffers.get(writeIndex2), 0, result, writeIndex, this.mChunkSize);
             writeIndex += this.mChunkSize;
-            bufIndex++;
+            writeIndex2++;
         }
         int lastSize = size - (this.mChunkSize * bufCount);
         if (lastSize > 0) {
-            System.arraycopy(this.mBuffers.get(bufIndex), 0, result, writeIndex, lastSize);
+            System.arraycopy(this.mBuffers.get(writeIndex2), 0, result, writeIndex, lastSize);
         }
         return result;
     }
@@ -394,7 +396,7 @@ public final class EncodedBuffer {
         for (int i = 0; i < length; i++) {
             if (i % 16 == 0) {
                 if (i != 0) {
-                    Log.d(tag, sb.toString());
+                    Log.m72d(tag, sb.toString());
                     sb = new StringBuffer();
                 }
                 sb.append(prefix);
@@ -419,7 +421,7 @@ public final class EncodedBuffer {
                 sb.append((char) (d + 87));
             }
         }
-        Log.d(tag, sb.toString());
+        Log.m72d(tag, sb.toString());
         return length;
     }
 }

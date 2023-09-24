@@ -1,11 +1,12 @@
 package android.graphics;
 
-import android.os.Parcel;
-import android.os.Process;
+import android.p007os.Parcel;
+import android.p007os.Process;
 import android.util.ArrayMap;
 import com.android.internal.annotations.GuardedBy;
 import java.util.ArrayList;
 
+/* loaded from: classes.dex */
 public class LeakyTypefaceStorage {
     private static final Object sLock = new Object();
     @GuardedBy({"sLock"})

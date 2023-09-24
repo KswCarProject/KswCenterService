@@ -2,10 +2,11 @@ package com.android.internal.widget;
 
 import android.database.DataSetObservable;
 import android.database.DataSetObserver;
-import android.os.Parcelable;
+import android.p007os.Parcelable;
 import android.view.View;
 import android.view.ViewGroup;
 
+/* loaded from: classes4.dex */
 public abstract class PagerAdapter {
     public static final int POSITION_NONE = -2;
     public static final int POSITION_UNCHANGED = -1;

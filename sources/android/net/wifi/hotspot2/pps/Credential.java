@@ -1,8 +1,8 @@
 package android.net.wifi.hotspot2.pps;
 
 import android.net.wifi.ParcelUtil;
-import android.os.Parcel;
-import android.os.Parcelable;
+import android.p007os.Parcel;
+import android.p007os.Parcelable;
 import android.security.keystore.KeyProperties;
 import android.text.TextUtils;
 import android.util.Log;
@@ -18,39 +18,44 @@ import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
 
+/* loaded from: classes3.dex */
 public final class Credential implements Parcelable {
-    public static final Parcelable.Creator<Credential> CREATOR = new Parcelable.Creator<Credential>() {
+    public static final Parcelable.Creator<Credential> CREATOR = new Parcelable.Creator<Credential>() { // from class: android.net.wifi.hotspot2.pps.Credential.1
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public Credential createFromParcel(Parcel in) {
             Credential credential = new Credential();
             credential.setCreationTimeInMillis(in.readLong());
             credential.setExpirationTimeInMillis(in.readLong());
             credential.setRealm(in.readString());
             credential.setCheckAaaServerCertStatus(in.readInt() != 0);
-            credential.setUserCredential((UserCredential) in.readParcelable((ClassLoader) null));
-            credential.setCertCredential((CertificateCredential) in.readParcelable((ClassLoader) null));
-            credential.setSimCredential((SimCredential) in.readParcelable((ClassLoader) null));
+            credential.setUserCredential((UserCredential) in.readParcelable(null));
+            credential.setCertCredential((CertificateCredential) in.readParcelable(null));
+            credential.setSimCredential((SimCredential) in.readParcelable(null));
             credential.setCaCertificates(ParcelUtil.readCertificates(in));
             credential.setClientCertificateChain(ParcelUtil.readCertificates(in));
             credential.setClientPrivateKey(ParcelUtil.readPrivateKey(in));
             return credential;
         }
 
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public Credential[] newArray(int size) {
             return new Credential[size];
         }
     };
     private static final int MAX_REALM_BYTES = 253;
     private static final String TAG = "Credential";
-    private X509Certificate[] mCaCertificates = null;
-    private CertificateCredential mCertCredential = null;
-    private boolean mCheckAaaServerCertStatus = false;
-    private X509Certificate[] mClientCertificateChain = null;
-    private PrivateKey mClientPrivateKey = null;
-    private long mCreationTimeInMillis = Long.MIN_VALUE;
-    private long mExpirationTimeInMillis = Long.MIN_VALUE;
-    private String mRealm = null;
-    private SimCredential mSimCredential = null;
-    private UserCredential mUserCredential = null;
+    private X509Certificate[] mCaCertificates;
+    private CertificateCredential mCertCredential;
+    private boolean mCheckAaaServerCertStatus;
+    private X509Certificate[] mClientCertificateChain;
+    private PrivateKey mClientPrivateKey;
+    private long mCreationTimeInMillis;
+    private long mExpirationTimeInMillis;
+    private String mRealm;
+    private SimCredential mSimCredential;
+    private UserCredential mUserCredential;
 
     public void setCreationTimeInMillis(long creationTimeInMillis) {
         this.mCreationTimeInMillis = creationTimeInMillis;
@@ -84,41 +89,42 @@ public final class Credential implements Parcelable {
         return this.mCheckAaaServerCertStatus;
     }
 
+    /* loaded from: classes3.dex */
     public static final class UserCredential implements Parcelable {
+        private static final int MAX_PASSWORD_BYTES = 255;
+        private static final int MAX_USERNAME_BYTES = 63;
+        private boolean mAbleToShare;
+        private int mEapType;
+        private boolean mMachineManaged;
+        private String mNonEapInnerMethod;
+        private String mPassword;
+        private String mSoftTokenApp;
+        private String mUsername;
+        public static final String AUTH_METHOD_PAP = "PAP";
         public static final String AUTH_METHOD_MSCHAP = "MS-CHAP";
         public static final String AUTH_METHOD_MSCHAPV2 = "MS-CHAP-V2";
-        public static final String AUTH_METHOD_PAP = "PAP";
-        public static final Parcelable.Creator<UserCredential> CREATOR = new Parcelable.Creator<UserCredential>() {
+        private static final Set<String> SUPPORTED_AUTH = new HashSet(Arrays.asList(AUTH_METHOD_PAP, AUTH_METHOD_MSCHAP, AUTH_METHOD_MSCHAPV2));
+        public static final Parcelable.Creator<UserCredential> CREATOR = new Parcelable.Creator<UserCredential>() { // from class: android.net.wifi.hotspot2.pps.Credential.UserCredential.1
+            /* JADX WARN: Can't rename method to resolve collision */
+            @Override // android.p007os.Parcelable.Creator
             public UserCredential createFromParcel(Parcel in) {
                 UserCredential userCredential = new UserCredential();
                 userCredential.setUsername(in.readString());
                 userCredential.setPassword(in.readString());
-                boolean z = false;
                 userCredential.setMachineManaged(in.readInt() != 0);
                 userCredential.setSoftTokenApp(in.readString());
-                if (in.readInt() != 0) {
-                    z = true;
-                }
-                userCredential.setAbleToShare(z);
+                userCredential.setAbleToShare(in.readInt() != 0);
                 userCredential.setEapType(in.readInt());
                 userCredential.setNonEapInnerMethod(in.readString());
                 return userCredential;
             }
 
+            /* JADX WARN: Can't rename method to resolve collision */
+            @Override // android.p007os.Parcelable.Creator
             public UserCredential[] newArray(int size) {
                 return new UserCredential[size];
             }
         };
-        private static final int MAX_PASSWORD_BYTES = 255;
-        private static final int MAX_USERNAME_BYTES = 63;
-        private static final Set<String> SUPPORTED_AUTH = new HashSet(Arrays.asList(new String[]{AUTH_METHOD_PAP, AUTH_METHOD_MSCHAP, AUTH_METHOD_MSCHAPV2}));
-        private boolean mAbleToShare = false;
-        private int mEapType = Integer.MIN_VALUE;
-        private boolean mMachineManaged = false;
-        private String mNonEapInnerMethod = null;
-        private String mPassword = null;
-        private String mSoftTokenApp = null;
-        private String mUsername = null;
 
         public void setUsername(String username) {
             this.mUsername = username;
@@ -177,9 +183,23 @@ public final class Credential implements Parcelable {
         }
 
         public UserCredential() {
+            this.mUsername = null;
+            this.mPassword = null;
+            this.mMachineManaged = false;
+            this.mSoftTokenApp = null;
+            this.mAbleToShare = false;
+            this.mEapType = Integer.MIN_VALUE;
+            this.mNonEapInnerMethod = null;
         }
 
         public UserCredential(UserCredential source) {
+            this.mUsername = null;
+            this.mPassword = null;
+            this.mMachineManaged = false;
+            this.mSoftTokenApp = null;
+            this.mAbleToShare = false;
+            this.mEapType = Integer.MIN_VALUE;
+            this.mNonEapInnerMethod = null;
             if (source != null) {
                 this.mUsername = source.mUsername;
                 this.mPassword = source.mPassword;
@@ -191,10 +211,12 @@ public final class Credential implements Parcelable {
             }
         }
 
+        @Override // android.p007os.Parcelable
         public int describeContents() {
             return 0;
         }
 
+        @Override // android.p007os.Parcelable
         public void writeToParcel(Parcel dest, int flags) {
             dest.writeString(this.mUsername);
             dest.writeString(this.mPassword);
@@ -209,45 +231,42 @@ public final class Credential implements Parcelable {
             if (this == thatObject) {
                 return true;
             }
-            if (!(thatObject instanceof UserCredential)) {
-                return false;
+            if (thatObject instanceof UserCredential) {
+                UserCredential that = (UserCredential) thatObject;
+                return TextUtils.equals(this.mUsername, that.mUsername) && TextUtils.equals(this.mPassword, that.mPassword) && this.mMachineManaged == that.mMachineManaged && TextUtils.equals(this.mSoftTokenApp, that.mSoftTokenApp) && this.mAbleToShare == that.mAbleToShare && this.mEapType == that.mEapType && TextUtils.equals(this.mNonEapInnerMethod, that.mNonEapInnerMethod);
             }
-            UserCredential that = (UserCredential) thatObject;
-            if (!TextUtils.equals(this.mUsername, that.mUsername) || !TextUtils.equals(this.mPassword, that.mPassword) || this.mMachineManaged != that.mMachineManaged || !TextUtils.equals(this.mSoftTokenApp, that.mSoftTokenApp) || this.mAbleToShare != that.mAbleToShare || this.mEapType != that.mEapType || !TextUtils.equals(this.mNonEapInnerMethod, that.mNonEapInnerMethod)) {
-                return false;
-            }
-            return true;
+            return false;
         }
 
         public int hashCode() {
-            return Objects.hash(new Object[]{this.mUsername, this.mPassword, Boolean.valueOf(this.mMachineManaged), this.mSoftTokenApp, Boolean.valueOf(this.mAbleToShare), Integer.valueOf(this.mEapType), this.mNonEapInnerMethod});
+            return Objects.hash(this.mUsername, this.mPassword, Boolean.valueOf(this.mMachineManaged), this.mSoftTokenApp, Boolean.valueOf(this.mAbleToShare), Integer.valueOf(this.mEapType), this.mNonEapInnerMethod);
         }
 
         public String toString() {
-            return "Username: " + this.mUsername + "\n" + "MachineManaged: " + this.mMachineManaged + "\n" + "SoftTokenApp: " + this.mSoftTokenApp + "\n" + "AbleToShare: " + this.mAbleToShare + "\n" + "EAPType: " + this.mEapType + "\n" + "AuthMethod: " + this.mNonEapInnerMethod + "\n";
+            return "Username: " + this.mUsername + "\nMachineManaged: " + this.mMachineManaged + "\nSoftTokenApp: " + this.mSoftTokenApp + "\nAbleToShare: " + this.mAbleToShare + "\nEAPType: " + this.mEapType + "\nAuthMethod: " + this.mNonEapInnerMethod + "\n";
         }
 
         public boolean validate() {
             if (TextUtils.isEmpty(this.mUsername)) {
-                Log.d(Credential.TAG, "Missing username");
+                Log.m72d(Credential.TAG, "Missing username");
                 return false;
             } else if (this.mUsername.getBytes(StandardCharsets.UTF_8).length > 63) {
-                Log.d(Credential.TAG, "username exceeding maximum length: " + this.mUsername.getBytes(StandardCharsets.UTF_8).length);
+                Log.m72d(Credential.TAG, "username exceeding maximum length: " + this.mUsername.getBytes(StandardCharsets.UTF_8).length);
                 return false;
             } else if (TextUtils.isEmpty(this.mPassword)) {
-                Log.d(Credential.TAG, "Missing password");
+                Log.m72d(Credential.TAG, "Missing password");
                 return false;
             } else if (this.mPassword.getBytes(StandardCharsets.UTF_8).length > 255) {
-                Log.d(Credential.TAG, "password exceeding maximum length: " + this.mPassword.getBytes(StandardCharsets.UTF_8).length);
+                Log.m72d(Credential.TAG, "password exceeding maximum length: " + this.mPassword.getBytes(StandardCharsets.UTF_8).length);
                 return false;
             } else if (this.mEapType != 21) {
-                Log.d(Credential.TAG, "Invalid EAP Type for user credential: " + this.mEapType);
+                Log.m72d(Credential.TAG, "Invalid EAP Type for user credential: " + this.mEapType);
                 return false;
-            } else if (SUPPORTED_AUTH.contains(this.mNonEapInnerMethod)) {
-                return true;
+            } else if (!SUPPORTED_AUTH.contains(this.mNonEapInnerMethod)) {
+                Log.m72d(Credential.TAG, "Invalid non-EAP inner method for EAP-TTLS: " + this.mNonEapInnerMethod);
+                return false;
             } else {
-                Log.d(Credential.TAG, "Invalid non-EAP inner method for EAP-TTLS: " + this.mNonEapInnerMethod);
-                return false;
+                return true;
             }
         }
     }
@@ -260,10 +279,13 @@ public final class Credential implements Parcelable {
         return this.mUserCredential;
     }
 
+    /* loaded from: classes3.dex */
     public static final class CertificateCredential implements Parcelable {
         private static final int CERT_SHA256_FINGER_PRINT_LENGTH = 32;
         public static final String CERT_TYPE_X509V3 = "x509v3";
-        public static final Parcelable.Creator<CertificateCredential> CREATOR = new Parcelable.Creator<CertificateCredential>() {
+        public static final Parcelable.Creator<CertificateCredential> CREATOR = new Parcelable.Creator<CertificateCredential>() { // from class: android.net.wifi.hotspot2.pps.Credential.CertificateCredential.1
+            /* JADX WARN: Can't rename method to resolve collision */
+            @Override // android.p007os.Parcelable.Creator
             public CertificateCredential createFromParcel(Parcel in) {
                 CertificateCredential certCredential = new CertificateCredential();
                 certCredential.setCertType(in.readString());
@@ -271,12 +293,14 @@ public final class Credential implements Parcelable {
                 return certCredential;
             }
 
+            /* JADX WARN: Can't rename method to resolve collision */
+            @Override // android.p007os.Parcelable.Creator
             public CertificateCredential[] newArray(int size) {
                 return new CertificateCredential[size];
             }
         };
-        private byte[] mCertSha256Fingerprint = null;
-        private String mCertType = null;
+        private byte[] mCertSha256Fingerprint;
+        private String mCertType;
 
         public void setCertType(String certType) {
             this.mCertType = certType;
@@ -295,9 +319,13 @@ public final class Credential implements Parcelable {
         }
 
         public CertificateCredential() {
+            this.mCertType = null;
+            this.mCertSha256Fingerprint = null;
         }
 
         public CertificateCredential(CertificateCredential source) {
+            this.mCertType = null;
+            this.mCertSha256Fingerprint = null;
             if (source != null) {
                 this.mCertType = source.mCertType;
                 if (source.mCertSha256Fingerprint != null) {
@@ -306,10 +334,12 @@ public final class Credential implements Parcelable {
             }
         }
 
+        @Override // android.p007os.Parcelable
         public int describeContents() {
             return 0;
         }
 
+        @Override // android.p007os.Parcelable
         public void writeToParcel(Parcel dest, int flags) {
             dest.writeString(this.mCertType);
             dest.writeByteArray(this.mCertSha256Fingerprint);
@@ -319,18 +349,15 @@ public final class Credential implements Parcelable {
             if (this == thatObject) {
                 return true;
             }
-            if (!(thatObject instanceof CertificateCredential)) {
-                return false;
+            if (thatObject instanceof CertificateCredential) {
+                CertificateCredential that = (CertificateCredential) thatObject;
+                return TextUtils.equals(this.mCertType, that.mCertType) && Arrays.equals(this.mCertSha256Fingerprint, that.mCertSha256Fingerprint);
             }
-            CertificateCredential that = (CertificateCredential) thatObject;
-            if (!TextUtils.equals(this.mCertType, that.mCertType) || !Arrays.equals(this.mCertSha256Fingerprint, that.mCertSha256Fingerprint)) {
-                return false;
-            }
-            return true;
+            return false;
         }
 
         public int hashCode() {
-            return Objects.hash(new Object[]{this.mCertType, Integer.valueOf(Arrays.hashCode(this.mCertSha256Fingerprint))});
+            return Objects.hash(this.mCertType, Integer.valueOf(Arrays.hashCode(this.mCertSha256Fingerprint)));
         }
 
         public String toString() {
@@ -339,13 +366,13 @@ public final class Credential implements Parcelable {
 
         public boolean validate() {
             if (!TextUtils.equals(CERT_TYPE_X509V3, this.mCertType)) {
-                Log.d(Credential.TAG, "Unsupported certificate type: " + this.mCertType);
+                Log.m72d(Credential.TAG, "Unsupported certificate type: " + this.mCertType);
                 return false;
-            } else if (this.mCertSha256Fingerprint != null && this.mCertSha256Fingerprint.length == 32) {
-                return true;
+            } else if (this.mCertSha256Fingerprint == null || this.mCertSha256Fingerprint.length != 32) {
+                Log.m72d(Credential.TAG, "Invalid SHA-256 fingerprint");
+                return false;
             } else {
-                Log.d(Credential.TAG, "Invalid SHA-256 fingerprint");
-                return false;
+                return true;
             }
         }
     }
@@ -358,8 +385,11 @@ public final class Credential implements Parcelable {
         return this.mCertCredential;
     }
 
+    /* loaded from: classes3.dex */
     public static final class SimCredential implements Parcelable {
-        public static final Parcelable.Creator<SimCredential> CREATOR = new Parcelable.Creator<SimCredential>() {
+        public static final Parcelable.Creator<SimCredential> CREATOR = new Parcelable.Creator<SimCredential>() { // from class: android.net.wifi.hotspot2.pps.Credential.SimCredential.1
+            /* JADX WARN: Can't rename method to resolve collision */
+            @Override // android.p007os.Parcelable.Creator
             public SimCredential createFromParcel(Parcel in) {
                 SimCredential simCredential = new SimCredential();
                 simCredential.setImsi(in.readString());
@@ -367,13 +397,15 @@ public final class Credential implements Parcelable {
                 return simCredential;
             }
 
+            /* JADX WARN: Can't rename method to resolve collision */
+            @Override // android.p007os.Parcelable.Creator
             public SimCredential[] newArray(int size) {
                 return new SimCredential[size];
             }
         };
         private static final int MAX_IMSI_LENGTH = 15;
-        private int mEapType = Integer.MIN_VALUE;
-        private String mImsi = null;
+        private int mEapType;
+        private String mImsi;
 
         public void setImsi(String imsi) {
             this.mImsi = imsi;
@@ -392,15 +424,20 @@ public final class Credential implements Parcelable {
         }
 
         public SimCredential() {
+            this.mImsi = null;
+            this.mEapType = Integer.MIN_VALUE;
         }
 
         public SimCredential(SimCredential source) {
+            this.mImsi = null;
+            this.mEapType = Integer.MIN_VALUE;
             if (source != null) {
                 this.mImsi = source.mImsi;
                 this.mEapType = source.mEapType;
             }
         }
 
+        @Override // android.p007os.Parcelable
         public int describeContents() {
             return 0;
         }
@@ -409,46 +446,44 @@ public final class Credential implements Parcelable {
             if (this == thatObject) {
                 return true;
             }
-            if (!(thatObject instanceof SimCredential)) {
-                return false;
+            if (thatObject instanceof SimCredential) {
+                SimCredential that = (SimCredential) thatObject;
+                return TextUtils.equals(this.mImsi, that.mImsi) && this.mEapType == that.mEapType;
             }
-            SimCredential that = (SimCredential) thatObject;
-            if (!TextUtils.equals(this.mImsi, that.mImsi) || this.mEapType != that.mEapType) {
-                return false;
-            }
-            return true;
+            return false;
         }
 
         public int hashCode() {
-            return Objects.hash(new Object[]{this.mImsi, Integer.valueOf(this.mEapType)});
+            return Objects.hash(this.mImsi, Integer.valueOf(this.mEapType));
         }
 
         public String toString() {
-            return "IMSI: " + this.mImsi + "\n" + "EAPType: " + this.mEapType + "\n";
+            return "IMSI: " + this.mImsi + "\nEAPType: " + this.mEapType + "\n";
         }
 
+        @Override // android.p007os.Parcelable
         public void writeToParcel(Parcel dest, int flags) {
             dest.writeString(this.mImsi);
             dest.writeInt(this.mEapType);
         }
 
         public boolean validate() {
-            if (!verifyImsi()) {
-                return false;
-            }
-            if (this.mEapType == 18 || this.mEapType == 23 || this.mEapType == 50) {
+            if (verifyImsi()) {
+                if (this.mEapType != 18 && this.mEapType != 23 && this.mEapType != 50) {
+                    Log.m72d(Credential.TAG, "Invalid EAP Type for SIM credential: " + this.mEapType);
+                    return false;
+                }
                 return true;
             }
-            Log.d(Credential.TAG, "Invalid EAP Type for SIM credential: " + this.mEapType);
             return false;
         }
 
         private boolean verifyImsi() {
             if (TextUtils.isEmpty(this.mImsi)) {
-                Log.d(Credential.TAG, "Missing IMSI");
+                Log.m72d(Credential.TAG, "Missing IMSI");
                 return false;
             } else if (this.mImsi.length() > 15) {
-                Log.d(Credential.TAG, "IMSI exceeding maximum length: " + this.mImsi.length());
+                Log.m72d(Credential.TAG, "IMSI exceeding maximum length: " + this.mImsi.length());
                 return false;
             } else {
                 char stopChar = 0;
@@ -459,10 +494,7 @@ public final class Credential implements Parcelable {
                 if (nonDigit == this.mImsi.length()) {
                     return true;
                 }
-                if (nonDigit == this.mImsi.length() - 1 && stopChar == '*') {
-                    return true;
-                }
-                return false;
+                return nonDigit == this.mImsi.length() - 1 && stopChar == '*';
             }
         }
     }
@@ -514,9 +546,29 @@ public final class Credential implements Parcelable {
     }
 
     public Credential() {
+        this.mCreationTimeInMillis = Long.MIN_VALUE;
+        this.mExpirationTimeInMillis = Long.MIN_VALUE;
+        this.mRealm = null;
+        this.mCheckAaaServerCertStatus = false;
+        this.mUserCredential = null;
+        this.mCertCredential = null;
+        this.mSimCredential = null;
+        this.mCaCertificates = null;
+        this.mClientCertificateChain = null;
+        this.mClientPrivateKey = null;
     }
 
     public Credential(Credential source) {
+        this.mCreationTimeInMillis = Long.MIN_VALUE;
+        this.mExpirationTimeInMillis = Long.MIN_VALUE;
+        this.mRealm = null;
+        this.mCheckAaaServerCertStatus = false;
+        this.mUserCredential = null;
+        this.mCertCredential = null;
+        this.mSimCredential = null;
+        this.mCaCertificates = null;
+        this.mClientCertificateChain = null;
+        this.mClientPrivateKey = null;
         if (source != null) {
             this.mCreationTimeInMillis = source.mCreationTimeInMillis;
             this.mExpirationTimeInMillis = source.mExpirationTimeInMillis;
@@ -541,10 +593,12 @@ public final class Credential implements Parcelable {
         }
     }
 
+    @Override // android.p007os.Parcelable
     public int describeContents() {
         return 0;
     }
 
+    @Override // android.p007os.Parcelable
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeLong(this.mCreationTimeInMillis);
         dest.writeLong(this.mExpirationTimeInMillis);
@@ -562,18 +616,15 @@ public final class Credential implements Parcelable {
         if (this == thatObject) {
             return true;
         }
-        if (!(thatObject instanceof Credential)) {
-            return false;
+        if (thatObject instanceof Credential) {
+            Credential that = (Credential) thatObject;
+            return TextUtils.equals(this.mRealm, that.mRealm) && this.mCreationTimeInMillis == that.mCreationTimeInMillis && this.mExpirationTimeInMillis == that.mExpirationTimeInMillis && this.mCheckAaaServerCertStatus == that.mCheckAaaServerCertStatus && (this.mUserCredential != null ? this.mUserCredential.equals(that.mUserCredential) : that.mUserCredential == null) && (this.mCertCredential != null ? this.mCertCredential.equals(that.mCertCredential) : that.mCertCredential == null) && (this.mSimCredential != null ? this.mSimCredential.equals(that.mSimCredential) : that.mSimCredential == null) && isX509CertificatesEquals(this.mCaCertificates, that.mCaCertificates) && isX509CertificatesEquals(this.mClientCertificateChain, that.mClientCertificateChain) && isPrivateKeyEquals(this.mClientPrivateKey, that.mClientPrivateKey);
         }
-        Credential that = (Credential) thatObject;
-        if (!TextUtils.equals(this.mRealm, that.mRealm) || this.mCreationTimeInMillis != that.mCreationTimeInMillis || this.mExpirationTimeInMillis != that.mExpirationTimeInMillis || this.mCheckAaaServerCertStatus != that.mCheckAaaServerCertStatus || (this.mUserCredential != null ? !this.mUserCredential.equals(that.mUserCredential) : that.mUserCredential != null) || (this.mCertCredential != null ? !this.mCertCredential.equals(that.mCertCredential) : that.mCertCredential != null) || (this.mSimCredential != null ? !this.mSimCredential.equals(that.mSimCredential) : that.mSimCredential != null) || !isX509CertificatesEquals(this.mCaCertificates, that.mCaCertificates) || !isX509CertificatesEquals(this.mClientCertificateChain, that.mClientCertificateChain) || !isPrivateKeyEquals(this.mClientPrivateKey, that.mClientPrivateKey)) {
-            return false;
-        }
-        return true;
+        return false;
     }
 
     public int hashCode() {
-        return Objects.hash(new Object[]{Long.valueOf(this.mCreationTimeInMillis), Long.valueOf(this.mExpirationTimeInMillis), this.mRealm, Boolean.valueOf(this.mCheckAaaServerCertStatus), this.mUserCredential, this.mCertCredential, this.mSimCredential, this.mClientPrivateKey, Integer.valueOf(Arrays.hashCode(this.mCaCertificates)), Integer.valueOf(Arrays.hashCode(this.mClientCertificateChain))});
+        return Objects.hash(Long.valueOf(this.mCreationTimeInMillis), Long.valueOf(this.mExpirationTimeInMillis), this.mRealm, Boolean.valueOf(this.mCheckAaaServerCertStatus), this.mUserCredential, this.mCertCredential, this.mSimCredential, this.mClientPrivateKey, Integer.valueOf(Arrays.hashCode(this.mCaCertificates)), Integer.valueOf(Arrays.hashCode(this.mClientCertificateChain)));
     }
 
     public String toString() {
@@ -610,89 +661,81 @@ public final class Credential implements Parcelable {
 
     public boolean validate(boolean isR1) {
         if (TextUtils.isEmpty(this.mRealm)) {
-            Log.d(TAG, "Missing realm");
+            Log.m72d(TAG, "Missing realm");
             return false;
         } else if (this.mRealm.getBytes(StandardCharsets.UTF_8).length > 253) {
-            Log.d(TAG, "realm exceeding maximum length: " + this.mRealm.getBytes(StandardCharsets.UTF_8).length);
+            Log.m72d(TAG, "realm exceeding maximum length: " + this.mRealm.getBytes(StandardCharsets.UTF_8).length);
             return false;
         } else if (this.mUserCredential != null) {
-            if (!verifyUserCredential(isR1)) {
-                return false;
-            }
-            return true;
+            return verifyUserCredential(isR1);
         } else if (this.mCertCredential != null) {
-            if (!verifyCertCredential(isR1)) {
-                return false;
-            }
-            return true;
-        } else if (this.mSimCredential == null) {
-            Log.d(TAG, "Missing required credential");
-            return false;
-        } else if (!verifySimCredential()) {
-            return false;
+            return verifyCertCredential(isR1);
+        } else if (this.mSimCredential != null) {
+            return verifySimCredential();
         } else {
-            return true;
+            Log.m72d(TAG, "Missing required credential");
+            return false;
         }
     }
 
     private boolean verifyUserCredential(boolean isR1) {
         if (this.mUserCredential == null) {
-            Log.d(TAG, "Missing user credential");
+            Log.m72d(TAG, "Missing user credential");
             return false;
         } else if (this.mCertCredential != null || this.mSimCredential != null) {
-            Log.d(TAG, "Contained more than one type of credential");
+            Log.m72d(TAG, "Contained more than one type of credential");
             return false;
-        } else if (!this.mUserCredential.validate()) {
-            return false;
-        } else {
-            if (!isR1 || this.mCaCertificates != null) {
-                return true;
+        } else if (this.mUserCredential.validate()) {
+            if (isR1 && this.mCaCertificates == null) {
+                Log.m72d(TAG, "Missing CA Certificate for user credential");
+                return false;
             }
-            Log.d(TAG, "Missing CA Certificate for user credential");
+            return true;
+        } else {
             return false;
         }
     }
 
     private boolean verifyCertCredential(boolean isR1) {
         if (this.mCertCredential == null) {
-            Log.d(TAG, "Missing certificate credential");
+            Log.m72d(TAG, "Missing certificate credential");
             return false;
         } else if (this.mUserCredential != null || this.mSimCredential != null) {
-            Log.d(TAG, "Contained more than one type of credential");
+            Log.m72d(TAG, "Contained more than one type of credential");
             return false;
-        } else if (!this.mCertCredential.validate()) {
-            return false;
-        } else {
+        } else if (this.mCertCredential.validate()) {
             if (isR1 && this.mCaCertificates == null) {
-                Log.d(TAG, "Missing CA Certificate for certificate credential");
+                Log.m72d(TAG, "Missing CA Certificate for certificate credential");
                 return false;
             } else if (this.mClientPrivateKey == null) {
-                Log.d(TAG, "Missing client private key for certificate credential");
+                Log.m72d(TAG, "Missing client private key for certificate credential");
                 return false;
             } else {
                 try {
-                    if (verifySha256Fingerprint(this.mClientCertificateChain, this.mCertCredential.getCertSha256Fingerprint())) {
-                        return true;
+                    if (!verifySha256Fingerprint(this.mClientCertificateChain, this.mCertCredential.getCertSha256Fingerprint())) {
+                        Log.m72d(TAG, "SHA-256 fingerprint mismatch");
+                        return false;
                     }
-                    Log.d(TAG, "SHA-256 fingerprint mismatch");
-                    return false;
+                    return true;
                 } catch (NoSuchAlgorithmException | CertificateEncodingException e) {
-                    Log.d(TAG, "Failed to verify SHA-256 fingerprint: " + e.getMessage());
+                    Log.m72d(TAG, "Failed to verify SHA-256 fingerprint: " + e.getMessage());
                     return false;
                 }
             }
+        } else {
+            return false;
         }
     }
 
     private boolean verifySimCredential() {
         if (this.mSimCredential == null) {
-            Log.d(TAG, "Missing SIM credential");
+            Log.m72d(TAG, "Missing SIM credential");
             return false;
-        } else if (this.mUserCredential == null && this.mCertCredential == null) {
-            return this.mSimCredential.validate();
+        } else if (this.mUserCredential != null || this.mCertCredential != null) {
+            Log.m72d(TAG, "Contained more than one type of credential");
+            return false;
         } else {
-            Log.d(TAG, "Contained more than one type of credential");
-            return false;
+            return this.mSimCredential.validate();
         }
     }
 
@@ -703,10 +746,10 @@ public final class Credential implements Parcelable {
         if (key1 == null || key2 == null) {
             return false;
         }
-        if (!TextUtils.equals(key1.getAlgorithm(), key2.getAlgorithm()) || !Arrays.equals(key1.getEncoded(), key2.getEncoded())) {
-            return false;
+        if (TextUtils.equals(key1.getAlgorithm(), key2.getAlgorithm()) && Arrays.equals(key1.getEncoded(), key2.getEncoded())) {
+            return true;
         }
-        return true;
+        return false;
     }
 
     public static boolean isX509CertificateEquals(X509Certificate cert1, X509Certificate cert2) {
@@ -717,7 +760,8 @@ public final class Credential implements Parcelable {
             return false;
         }
         try {
-            return Arrays.equals(cert1.getEncoded(), cert2.getEncoded());
+            boolean result = Arrays.equals(cert1.getEncoded(), cert2.getEncoded());
+            return result;
         } catch (CertificateEncodingException e) {
             return false;
         }
@@ -745,7 +789,8 @@ public final class Credential implements Parcelable {
         MessageDigest digester = MessageDigest.getInstance(KeyProperties.DIGEST_SHA256);
         for (X509Certificate certificate : certChain) {
             digester.reset();
-            if (Arrays.equals(expectedFingerprint, digester.digest(certificate.getEncoded()))) {
+            byte[] fingerprint = digester.digest(certificate.getEncoded());
+            if (Arrays.equals(expectedFingerprint, fingerprint)) {
                 return true;
             }
         }

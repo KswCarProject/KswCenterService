@@ -1,12 +1,13 @@
 package android.util;
 
-import android.content.pm.Signature;
+import android.content.p002pm.Signature;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.Arrays;
 
+/* loaded from: classes4.dex */
 public final class PackageUtils {
     private PackageUtils() {
     }
@@ -24,7 +25,8 @@ public final class PackageUtils {
         if (signatures.length == 1) {
             return computeSha256Digest(signatures[0].toByteArray());
         }
-        return computeSignaturesSha256Digest(computeSignaturesSha256Digests(signatures));
+        String[] sha256Digests = computeSignaturesSha256Digests(signatures);
+        return computeSignaturesSha256Digest(sha256Digests);
     }
 
     public static String computeSignaturesSha256Digest(String[] sha256Digests) {

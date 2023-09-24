@@ -4,6 +4,7 @@ import android.content.Context;
 import android.util.AttributeSet;
 
 @Deprecated
+/* loaded from: classes3.dex */
 public class PreferenceCategory extends PreferenceGroup {
     private static final String TAG = "PreferenceCategory";
 
@@ -20,21 +21,23 @@ public class PreferenceCategory extends PreferenceGroup {
     }
 
     public PreferenceCategory(Context context) {
-        this(context, (AttributeSet) null);
+        this(context, null);
     }
 
-    /* access modifiers changed from: protected */
-    public boolean onPrepareAddPreference(Preference preference) {
-        if (!(preference instanceof PreferenceCategory)) {
-            return super.onPrepareAddPreference(preference);
+    @Override // android.preference.PreferenceGroup
+    protected boolean onPrepareAddPreference(Preference preference) {
+        if (preference instanceof PreferenceCategory) {
+            throw new IllegalArgumentException("Cannot add a PreferenceCategory directly to a PreferenceCategory");
         }
-        throw new IllegalArgumentException("Cannot add a PreferenceCategory directly to a PreferenceCategory");
+        return super.onPrepareAddPreference(preference);
     }
 
+    @Override // android.preference.Preference
     public boolean isEnabled() {
         return false;
     }
 
+    @Override // android.preference.Preference
     public boolean shouldDisableDependents() {
         return !super.isEnabled();
     }

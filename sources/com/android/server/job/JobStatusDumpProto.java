@@ -1,5 +1,6 @@
 package com.android.server.job;
 
+/* loaded from: classes4.dex */
 public final class JobStatusDumpProto {
     public static final int ACTIVE = 0;
     public static final long CALLING_UID = 1120986464257L;
@@ -41,6 +42,7 @@ public final class JobStatusDumpProto {
     public static final long UNSATISFIED_CONSTRAINTS = 2259152797705L;
     public static final int WORKING_SET = 1;
 
+    /* loaded from: classes4.dex */
     public final class JobInfo {
         public static final long BACKOFF_POLICY = 1146756268054L;
         public static final long CLIP_DATA = 1146756268048L;
@@ -70,6 +72,7 @@ public final class JobStatusDumpProto {
         public JobInfo() {
         }
 
+        /* loaded from: classes4.dex */
         public final class TriggerContentUri {
             public static final long FLAGS = 1120986464257L;
             public static final long URI = 1138166333442L;
@@ -78,6 +81,7 @@ public final class JobStatusDumpProto {
             }
         }
 
+        /* loaded from: classes4.dex */
         public final class Backoff {
             public static final int BACKOFF_POLICY_EXPONENTIAL = 1;
             public static final int BACKOFF_POLICY_LINEAR = 0;
@@ -89,6 +93,7 @@ public final class JobStatusDumpProto {
         }
     }
 
+    /* loaded from: classes4.dex */
     public final class ImplicitConstraints {
         public static final long IS_NOT_DOZING = 1133871366145L;
         public static final long IS_NOT_RESTRICTED_IN_BG = 1133871366146L;
@@ -97,6 +102,7 @@ public final class JobStatusDumpProto {
         }
     }
 
+    /* loaded from: classes4.dex */
     public final class JobWorkItem {
         public static final long DELIVERY_COUNT = 1120986464258L;
         public static final long INTENT = 1146756268035L;

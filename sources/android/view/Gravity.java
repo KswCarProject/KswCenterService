@@ -2,6 +2,7 @@ package android.view;
 
 import android.graphics.Rect;
 
+/* loaded from: classes4.dex */
 public class Gravity {
     public static final int AXIS_CLIP = 8;
     public static final int AXIS_PULL_AFTER = 4;
@@ -36,7 +37,8 @@ public class Gravity {
     }
 
     public static void apply(int gravity, int w, int h, Rect container, Rect outRect, int layoutDirection) {
-        apply(getAbsoluteGravity(gravity, layoutDirection), w, h, container, 0, 0, outRect);
+        int absGravity = getAbsoluteGravity(gravity, layoutDirection);
+        apply(absGravity, w, h, container, 0, 0, outRect);
     }
 
     public static void apply(int gravity, int w, int h, Rect container, int xAdj, int yAdj, Rect outRect) {
@@ -58,15 +60,15 @@ public class Gravity {
             if ((gravity & 8) == 8 && outRect.right > container.right) {
                 outRect.right = container.right;
             }
-        } else if (i != 4) {
-            outRect.left = container.left + xAdj;
-            outRect.right = container.right + xAdj;
-        } else {
+        } else if (i == 4) {
             outRect.right = container.right - xAdj;
             outRect.left = outRect.right - w;
             if ((gravity & 8) == 8 && outRect.left < container.left) {
                 outRect.left = container.left;
             }
+        } else {
+            outRect.left = container.left + xAdj;
+            outRect.right = container.right + xAdj;
         }
         int i2 = gravity & 96;
         if (i2 == 0) {
@@ -86,20 +88,21 @@ public class Gravity {
             if ((gravity & 128) == 128 && outRect.bottom > container.bottom) {
                 outRect.bottom = container.bottom;
             }
-        } else if (i2 != 64) {
-            outRect.top = container.top + yAdj;
-            outRect.bottom = container.bottom + yAdj;
-        } else {
+        } else if (i2 == 64) {
             outRect.bottom = container.bottom - yAdj;
             outRect.top = outRect.bottom - h;
             if ((gravity & 128) == 128 && outRect.top < container.top) {
                 outRect.top = container.top;
             }
+        } else {
+            outRect.top = container.top + yAdj;
+            outRect.bottom = container.bottom + yAdj;
         }
     }
 
     public static void apply(int gravity, int w, int h, Rect container, int xAdj, int yAdj, Rect outRect, int layoutDirection) {
-        apply(getAbsoluteGravity(gravity, layoutDirection), w, h, container, xAdj, yAdj, outRect);
+        int absGravity = getAbsoluteGravity(gravity, layoutDirection);
+        apply(absGravity, w, h, container, xAdj, yAdj, outRect);
     }
 
     public static void applyDisplay(int gravity, Rect display, Rect inoutObj) {
@@ -143,20 +146,20 @@ public class Gravity {
         } else if (inoutObj.right > display.right) {
             off2 = display.right - inoutObj.right;
         }
-        if (off2 == 0) {
-            return;
+        if (off2 != 0) {
+            if (inoutObj.width() > display.right - display.left) {
+                inoutObj.left = display.left;
+                inoutObj.right = display.right;
+                return;
+            }
+            inoutObj.left += off2;
+            inoutObj.right += off2;
         }
-        if (inoutObj.width() > display.right - display.left) {
-            inoutObj.left = display.left;
-            inoutObj.right = display.right;
-            return;
-        }
-        inoutObj.left += off2;
-        inoutObj.right += off2;
     }
 
     public static void applyDisplay(int gravity, Rect display, Rect inoutObj, int layoutDirection) {
-        applyDisplay(getAbsoluteGravity(gravity, layoutDirection), display, inoutObj);
+        int absGravity = getAbsoluteGravity(gravity, layoutDirection);
+        applyDisplay(absGravity, display, inoutObj);
     }
 
     public static boolean isVertical(int gravity) {
@@ -169,25 +172,25 @@ public class Gravity {
 
     public static int getAbsoluteGravity(int gravity, int layoutDirection) {
         int result = gravity;
-        if ((8388608 & result) <= 0) {
-            return result;
-        }
-        if ((result & 8388611) == 8388611) {
-            int result2 = result & -8388612;
-            if (layoutDirection == 1) {
-                result = result2 | 5;
-            } else {
-                result = result2 | 3;
+        if ((8388608 & result) > 0) {
+            if ((result & 8388611) == 8388611) {
+                int result2 = result & (-8388612);
+                if (layoutDirection == 1) {
+                    result = result2 | 5;
+                } else {
+                    result = result2 | 3;
+                }
+            } else if ((result & 8388613) == 8388613) {
+                int result3 = result & (-8388614);
+                if (layoutDirection == 1) {
+                    result = result3 | 3;
+                } else {
+                    result = result3 | 5;
+                }
             }
-        } else if ((result & 8388613) == 8388613) {
-            int result3 = result & -8388614;
-            if (layoutDirection == 1) {
-                result = result3 | 3;
-            } else {
-                result = result3 | 5;
-            }
+            return result & (-8388609);
         }
-        return result & -8388609;
+        return result;
     }
 
     public static String toString(int gravity) {

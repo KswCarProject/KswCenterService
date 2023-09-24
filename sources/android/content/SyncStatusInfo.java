@@ -1,21 +1,26 @@
 package android.content;
 
 import android.annotation.UnsupportedAppUsage;
-import android.os.Parcel;
-import android.os.Parcelable;
+import android.p007os.Parcel;
+import android.p007os.Parcelable;
 import android.util.Log;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.Iterator;
 
+/* loaded from: classes.dex */
 public class SyncStatusInfo implements Parcelable {
     @UnsupportedAppUsage
-    public static final Parcelable.Creator<SyncStatusInfo> CREATOR = new Parcelable.Creator<SyncStatusInfo>() {
+    public static final Parcelable.Creator<SyncStatusInfo> CREATOR = new Parcelable.Creator<SyncStatusInfo>() { // from class: android.content.SyncStatusInfo.1
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public SyncStatusInfo createFromParcel(Parcel in) {
             return new SyncStatusInfo(in);
         }
 
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public SyncStatusInfo[] newArray(int size) {
             return new SyncStatusInfo[size];
         }
@@ -41,18 +46,19 @@ public class SyncStatusInfo implements Parcelable {
     @UnsupportedAppUsage
     public long lastSuccessTime;
     public long lastTodayResetTime;
-    private final ArrayList<Long> mLastEventTimes = new ArrayList<>();
-    private final ArrayList<String> mLastEvents = new ArrayList<>();
+    private final ArrayList<Long> mLastEventTimes;
+    private final ArrayList<String> mLastEvents;
     @UnsupportedAppUsage
     public boolean pending;
-    public final long[] perSourceLastFailureTimes = new long[6];
-    public final long[] perSourceLastSuccessTimes = new long[6];
+    public final long[] perSourceLastFailureTimes;
+    public final long[] perSourceLastSuccessTimes;
     @UnsupportedAppUsage
     private ArrayList<Long> periodicSyncTimes;
-    public final Stats todayStats = new Stats();
-    public final Stats totalStats = new Stats();
-    public final Stats yesterdayStats = new Stats();
+    public final Stats todayStats;
+    public final Stats totalStats;
+    public final Stats yesterdayStats;
 
+    /* loaded from: classes.dex */
     public static class Stats {
         public int numCancels;
         public int numFailures;
@@ -79,7 +85,7 @@ public class SyncStatusInfo implements Parcelable {
         }
 
         public void clear() {
-            this.totalElapsedTime = 0;
+            this.totalElapsedTime = 0L;
             this.numSyncs = 0;
             this.numSourcePoll = 0;
             this.numSourceOther = 0;
@@ -119,8 +125,15 @@ public class SyncStatusInfo implements Parcelable {
     }
 
     @UnsupportedAppUsage
-    public SyncStatusInfo(int authorityId2) {
-        this.authorityId = authorityId2;
+    public SyncStatusInfo(int authorityId) {
+        this.totalStats = new Stats();
+        this.todayStats = new Stats();
+        this.yesterdayStats = new Stats();
+        this.perSourceLastSuccessTimes = new long[6];
+        this.perSourceLastFailureTimes = new long[6];
+        this.mLastEventTimes = new ArrayList<>();
+        this.mLastEvents = new ArrayList<>();
+        this.authorityId = authorityId;
     }
 
     @UnsupportedAppUsage
@@ -129,14 +142,16 @@ public class SyncStatusInfo implements Parcelable {
         if (i > 0) {
             return i;
         }
-        Log.d(TAG, "Unknown lastFailureMesg:" + this.lastFailureMesg);
+        Log.m72d(TAG, "Unknown lastFailureMesg:" + this.lastFailureMesg);
         return def;
     }
 
+    @Override // android.p007os.Parcelable
     public int describeContents() {
         return 0;
     }
 
+    @Override // android.p007os.Parcelable
     public void writeToParcel(Parcel parcel, int flags) {
         parcel.writeInt(6);
         parcel.writeInt(this.authorityId);
@@ -158,7 +173,8 @@ public class SyncStatusInfo implements Parcelable {
             parcel.writeInt(this.periodicSyncTimes.size());
             Iterator<Long> it = this.periodicSyncTimes.iterator();
             while (it.hasNext()) {
-                parcel.writeLong(it.next().longValue());
+                long periodicSyncTime = it.next().longValue();
+                parcel.writeLong(periodicSyncTime);
             }
         } else {
             parcel.writeInt(-1);
@@ -181,9 +197,16 @@ public class SyncStatusInfo implements Parcelable {
 
     @UnsupportedAppUsage
     public SyncStatusInfo(Parcel parcel) {
+        this.totalStats = new Stats();
+        this.todayStats = new Stats();
+        this.yesterdayStats = new Stats();
+        this.perSourceLastSuccessTimes = new long[6];
+        this.perSourceLastFailureTimes = new long[6];
+        this.mLastEventTimes = new ArrayList<>();
+        this.mLastEvents = new ArrayList<>();
         int version = parcel.readInt();
-        if (!(version == 6 || version == 1)) {
-            Log.w("SyncStatusInfo", "Unknown version: " + version);
+        if (version != 6 && version != 1) {
+            Log.m64w("SyncStatusInfo", "Unknown version: " + version);
         }
         this.authorityId = parcel.readInt();
         this.totalStats.totalElapsedTime = parcel.readLong();
@@ -245,6 +268,13 @@ public class SyncStatusInfo implements Parcelable {
     }
 
     public SyncStatusInfo(SyncStatusInfo other) {
+        this.totalStats = new Stats();
+        this.todayStats = new Stats();
+        this.yesterdayStats = new Stats();
+        this.perSourceLastSuccessTimes = new long[6];
+        this.perSourceLastFailureTimes = new long[6];
+        this.mLastEventTimes = new ArrayList<>();
+        this.mLastEvents = new ArrayList<>();
         this.authorityId = other.authorityId;
         other.totalStats.copyTo(this.totalStats);
         other.todayStats.copyTo(this.todayStats);
@@ -279,10 +309,10 @@ public class SyncStatusInfo implements Parcelable {
 
     @UnsupportedAppUsage
     public long getPeriodicSyncTime(int index) {
-        if (this.periodicSyncTimes == null || index >= this.periodicSyncTimes.size()) {
-            return 0;
+        if (this.periodicSyncTimes != null && index < this.periodicSyncTimes.size()) {
+            return this.periodicSyncTimes.get(index).longValue();
         }
-        return this.periodicSyncTimes.get(index).longValue();
+        return 0L;
     }
 
     @UnsupportedAppUsage
@@ -316,10 +346,10 @@ public class SyncStatusInfo implements Parcelable {
     public void setLastSuccess(int source, long lastSyncTime) {
         this.lastSuccessTime = lastSyncTime;
         this.lastSuccessSource = source;
-        this.lastFailureTime = 0;
+        this.lastFailureTime = 0L;
         this.lastFailureSource = -1;
         this.lastFailureMesg = null;
-        this.initialFailureTime = 0;
+        this.initialFailureTime = 0L;
         if (source >= 0 && source < this.perSourceLastSuccessTimes.length) {
             this.perSourceLastSuccessTimes[source] = lastSyncTime;
         }
@@ -353,11 +383,10 @@ public class SyncStatusInfo implements Parcelable {
     public void maybeResetTodayStats(boolean clockValid, boolean force) {
         long now = System.currentTimeMillis();
         if (!force) {
-            if (!areSameDates(now, this.lastTodayResetTime)) {
-                if (now < this.lastTodayResetTime && !clockValid) {
-                    return;
-                }
-            } else {
+            if (areSameDates(now, this.lastTodayResetTime)) {
+                return;
+            }
+            if (now < this.lastTodayResetTime && !clockValid) {
                 return;
             }
         }
@@ -371,9 +400,6 @@ public class SyncStatusInfo implements Parcelable {
         Calendar c2 = new GregorianCalendar();
         c1.setTimeInMillis(time1);
         c2.setTimeInMillis(time2);
-        if (c1.get(1) == c2.get(1) && c1.get(6) == c2.get(6)) {
-            return true;
-        }
-        return false;
+        return c1.get(1) == c2.get(1) && c1.get(6) == c2.get(6);
     }
 }

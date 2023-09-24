@@ -1,15 +1,18 @@
 package android.location;
 
-import android.os.Bundle;
-import android.os.Parcel;
-import android.os.Parcelable;
+import android.p007os.Bundle;
+import android.p007os.Parcel;
+import android.p007os.Parcelable;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 
+/* loaded from: classes.dex */
 public class Address implements Parcelable {
-    public static final Parcelable.Creator<Address> CREATOR = new Parcelable.Creator<Address>() {
+    public static final Parcelable.Creator<Address> CREATOR = new Parcelable.Creator<Address>() { // from class: android.location.Address.1
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public Address createFromParcel(Parcel in) {
             Locale locale;
             String language = in.readString();
@@ -21,91 +24,70 @@ public class Address implements Parcelable {
             }
             Address a = new Address(locale);
             int N = in.readInt();
-            boolean z = false;
             if (N > 0) {
-                HashMap unused = a.mAddressLines = new HashMap(N);
+                a.mAddressLines = new HashMap(N);
                 for (int i = 0; i < N; i++) {
                     int index = in.readInt();
-                    a.mAddressLines.put(Integer.valueOf(index), in.readString());
-                    int unused2 = a.mMaxAddressLineIndex = Math.max(a.mMaxAddressLineIndex, index);
+                    String line = in.readString();
+                    a.mAddressLines.put(Integer.valueOf(index), line);
+                    a.mMaxAddressLineIndex = Math.max(a.mMaxAddressLineIndex, index);
                 }
             } else {
-                HashMap unused3 = a.mAddressLines = null;
-                int unused4 = a.mMaxAddressLineIndex = -1;
+                a.mAddressLines = null;
+                a.mMaxAddressLineIndex = -1;
             }
-            String unused5 = a.mFeatureName = in.readString();
-            String unused6 = a.mAdminArea = in.readString();
-            String unused7 = a.mSubAdminArea = in.readString();
-            String unused8 = a.mLocality = in.readString();
-            String unused9 = a.mSubLocality = in.readString();
-            String unused10 = a.mThoroughfare = in.readString();
-            String unused11 = a.mSubThoroughfare = in.readString();
-            String unused12 = a.mPremises = in.readString();
-            String unused13 = a.mPostalCode = in.readString();
-            String unused14 = a.mCountryCode = in.readString();
-            String unused15 = a.mCountryName = in.readString();
-            boolean unused16 = a.mHasLatitude = in.readInt() != 0;
+            a.mFeatureName = in.readString();
+            a.mAdminArea = in.readString();
+            a.mSubAdminArea = in.readString();
+            a.mLocality = in.readString();
+            a.mSubLocality = in.readString();
+            a.mThoroughfare = in.readString();
+            a.mSubThoroughfare = in.readString();
+            a.mPremises = in.readString();
+            a.mPostalCode = in.readString();
+            a.mCountryCode = in.readString();
+            a.mCountryName = in.readString();
+            a.mHasLatitude = in.readInt() != 0;
             if (a.mHasLatitude) {
-                double unused17 = a.mLatitude = in.readDouble();
+                a.mLatitude = in.readDouble();
             }
-            if (in.readInt() != 0) {
-                z = true;
-            }
-            boolean unused18 = a.mHasLongitude = z;
+            a.mHasLongitude = in.readInt() != 0;
             if (a.mHasLongitude) {
-                double unused19 = a.mLongitude = in.readDouble();
+                a.mLongitude = in.readDouble();
             }
-            String unused20 = a.mPhone = in.readString();
-            String unused21 = a.mUrl = in.readString();
-            Bundle unused22 = a.mExtras = in.readBundle();
+            a.mPhone = in.readString();
+            a.mUrl = in.readString();
+            a.mExtras = in.readBundle();
             return a;
         }
 
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public Address[] newArray(int size) {
             return new Address[size];
         }
     };
-    /* access modifiers changed from: private */
-    public HashMap<Integer, String> mAddressLines;
-    /* access modifiers changed from: private */
-    public String mAdminArea;
-    /* access modifiers changed from: private */
-    public String mCountryCode;
-    /* access modifiers changed from: private */
-    public String mCountryName;
-    /* access modifiers changed from: private */
-    public Bundle mExtras = null;
-    /* access modifiers changed from: private */
-    public String mFeatureName;
-    /* access modifiers changed from: private */
-    public boolean mHasLatitude = false;
-    /* access modifiers changed from: private */
-    public boolean mHasLongitude = false;
-    /* access modifiers changed from: private */
-    public double mLatitude;
+    private HashMap<Integer, String> mAddressLines;
+    private String mAdminArea;
+    private String mCountryCode;
+    private String mCountryName;
+    private String mFeatureName;
+    private double mLatitude;
     private Locale mLocale;
-    /* access modifiers changed from: private */
-    public String mLocality;
-    /* access modifiers changed from: private */
-    public double mLongitude;
-    /* access modifiers changed from: private */
-    public int mMaxAddressLineIndex = -1;
-    /* access modifiers changed from: private */
-    public String mPhone;
-    /* access modifiers changed from: private */
-    public String mPostalCode;
-    /* access modifiers changed from: private */
-    public String mPremises;
-    /* access modifiers changed from: private */
-    public String mSubAdminArea;
-    /* access modifiers changed from: private */
-    public String mSubLocality;
-    /* access modifiers changed from: private */
-    public String mSubThoroughfare;
-    /* access modifiers changed from: private */
-    public String mThoroughfare;
-    /* access modifiers changed from: private */
-    public String mUrl;
+    private String mLocality;
+    private double mLongitude;
+    private String mPhone;
+    private String mPostalCode;
+    private String mPremises;
+    private String mSubAdminArea;
+    private String mSubLocality;
+    private String mSubThoroughfare;
+    private String mThoroughfare;
+    private String mUrl;
+    private int mMaxAddressLineIndex = -1;
+    private boolean mHasLatitude = false;
+    private boolean mHasLongitude = false;
+    private Bundle mExtras = null;
 
     public Address(Locale locale) {
         this.mLocale = locale;
@@ -130,22 +112,21 @@ public class Address implements Parcelable {
     }
 
     public void setAddressLine(int index, String line) {
-        if (index >= 0) {
-            if (this.mAddressLines == null) {
-                this.mAddressLines = new HashMap<>();
+        if (index < 0) {
+            throw new IllegalArgumentException("index = " + index + " < 0");
+        }
+        if (this.mAddressLines == null) {
+            this.mAddressLines = new HashMap<>();
+        }
+        this.mAddressLines.put(Integer.valueOf(index), line);
+        if (line == null) {
+            this.mMaxAddressLineIndex = -1;
+            for (Integer i : this.mAddressLines.keySet()) {
+                this.mMaxAddressLineIndex = Math.max(this.mMaxAddressLineIndex, i.intValue());
             }
-            this.mAddressLines.put(Integer.valueOf(index), line);
-            if (line == null) {
-                this.mMaxAddressLineIndex = -1;
-                for (Integer i : this.mAddressLines.keySet()) {
-                    this.mMaxAddressLineIndex = Math.max(this.mMaxAddressLineIndex, i.intValue());
-                }
-                return;
-            }
-            this.mMaxAddressLineIndex = Math.max(this.mMaxAddressLineIndex, index);
             return;
         }
-        throw new IllegalArgumentException("index = " + index + " < 0");
+        this.mMaxAddressLineIndex = Math.max(this.mMaxAddressLineIndex, index);
     }
 
     public String getFeatureName() {
@@ -353,6 +334,7 @@ public class Address implements Parcelable {
         return sb.toString();
     }
 
+    @Override // android.p007os.Parcelable
     public int describeContents() {
         if (this.mExtras != null) {
             return this.mExtras.describeContents();
@@ -360,6 +342,7 @@ public class Address implements Parcelable {
         return 0;
     }
 
+    @Override // android.p007os.Parcelable
     public void writeToParcel(Parcel parcel, int flags) {
         parcel.writeString(this.mLocale.getLanguage());
         parcel.writeString(this.mLocale.getCountry());

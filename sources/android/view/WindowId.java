@@ -1,18 +1,21 @@
 package android.view;
 
-import android.os.Handler;
-import android.os.IBinder;
-import android.os.Message;
-import android.os.Parcel;
-import android.os.Parcelable;
-import android.os.RemoteException;
+import android.p007os.Handler;
+import android.p007os.IBinder;
+import android.p007os.Message;
+import android.p007os.Parcel;
+import android.p007os.Parcelable;
+import android.p007os.RemoteException;
 import android.view.IWindowFocusObserver;
 import android.view.IWindowId;
 import com.ibm.icu.text.PluralRules;
 import java.util.HashMap;
 
+/* loaded from: classes4.dex */
 public class WindowId implements Parcelable {
-    public static final Parcelable.Creator<WindowId> CREATOR = new Parcelable.Creator<WindowId>() {
+    public static final Parcelable.Creator<WindowId> CREATOR = new Parcelable.Creator<WindowId>() { // from class: android.view.WindowId.1
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public WindowId createFromParcel(Parcel in) {
             IBinder target = in.readStrongBinder();
             if (target != null) {
@@ -21,15 +24,18 @@ public class WindowId implements Parcelable {
             return null;
         }
 
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public WindowId[] newArray(int size) {
             return new WindowId[size];
         }
     };
     private final IWindowId mToken;
 
+    /* loaded from: classes4.dex */
     public static abstract class FocusObserver {
-        final Handler mHandler = new H();
-        final IWindowFocusObserver.Stub mIObserver = new IWindowFocusObserver.Stub() {
+        final IWindowFocusObserver.Stub mIObserver = new IWindowFocusObserver.Stub() { // from class: android.view.WindowId.FocusObserver.1
+            @Override // android.view.IWindowFocusObserver
             public void focusGained(IBinder inputToken) {
                 WindowId token;
                 synchronized (FocusObserver.this.mRegistrations) {
@@ -42,6 +48,7 @@ public class WindowId implements Parcelable {
                 }
             }
 
+            @Override // android.view.IWindowFocusObserver
             public void focusLost(IBinder inputToken) {
                 WindowId token;
                 synchronized (FocusObserver.this.mRegistrations) {
@@ -55,15 +62,19 @@ public class WindowId implements Parcelable {
             }
         };
         final HashMap<IBinder, WindowId> mRegistrations = new HashMap<>();
+        final Handler mHandler = new HandlerC2755H();
 
         public abstract void onFocusGained(WindowId windowId);
 
         public abstract void onFocusLost(WindowId windowId);
 
-        class H extends Handler {
-            H() {
+        /* renamed from: android.view.WindowId$FocusObserver$H */
+        /* loaded from: classes4.dex */
+        class HandlerC2755H extends Handler {
+            HandlerC2755H() {
             }
 
+            @Override // android.p007os.Handler
             public void handleMessage(Message msg) {
                 switch (msg.what) {
                     case 1:
@@ -90,27 +101,25 @@ public class WindowId implements Parcelable {
 
     public void registerFocusObserver(FocusObserver observer) {
         synchronized (observer.mRegistrations) {
-            if (!observer.mRegistrations.containsKey(this.mToken.asBinder())) {
-                observer.mRegistrations.put(this.mToken.asBinder(), this);
-                try {
-                    this.mToken.registerFocusObserver(observer.mIObserver);
-                } catch (RemoteException e) {
-                }
-            } else {
+            if (observer.mRegistrations.containsKey(this.mToken.asBinder())) {
                 throw new IllegalStateException("Focus observer already registered with input token");
+            }
+            observer.mRegistrations.put(this.mToken.asBinder(), this);
+            try {
+                this.mToken.registerFocusObserver(observer.mIObserver);
+            } catch (RemoteException e) {
             }
         }
     }
 
     public void unregisterFocusObserver(FocusObserver observer) {
         synchronized (observer.mRegistrations) {
-            if (observer.mRegistrations.remove(this.mToken.asBinder()) != null) {
-                try {
-                    this.mToken.unregisterFocusObserver(observer.mIObserver);
-                } catch (RemoteException e) {
-                }
-            } else {
+            if (observer.mRegistrations.remove(this.mToken.asBinder()) == null) {
                 throw new IllegalStateException("Focus observer not registered with input token");
+            }
+            try {
+                this.mToken.unregisterFocusObserver(observer.mIObserver);
+            } catch (RemoteException e) {
             }
         }
     }
@@ -136,10 +145,12 @@ public class WindowId implements Parcelable {
         return sb.toString();
     }
 
+    @Override // android.p007os.Parcelable
     public int describeContents() {
         return 0;
     }
 
+    @Override // android.p007os.Parcelable
     public void writeToParcel(Parcel out, int flags) {
         out.writeStrongBinder(this.mToken.asBinder());
     }

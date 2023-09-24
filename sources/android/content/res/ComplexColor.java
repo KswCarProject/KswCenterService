@@ -2,6 +2,7 @@ package android.content.res;
 
 import android.content.res.Resources;
 
+/* loaded from: classes.dex */
 public abstract class ComplexColor {
     private int mChangingConfigurations;
 
@@ -17,8 +18,7 @@ public abstract class ComplexColor {
         return false;
     }
 
-    /* access modifiers changed from: package-private */
-    public final void setBaseChangingConfigurations(int changingConfigurations) {
+    final void setBaseChangingConfigurations(int changingConfigurations) {
         this.mChangingConfigurations = changingConfigurations;
     }
 

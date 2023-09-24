@@ -2,6 +2,7 @@ package android.hardware.radio.V1_0;
 
 import java.util.ArrayList;
 
+/* loaded from: classes.dex */
 public final class UusDcs {
     public static final int IA5C = 4;
     public static final int OSIHLP = 1;

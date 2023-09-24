@@ -1,7 +1,7 @@
 package android.provider;
 
 import android.media.ExifInterface;
-import android.os.Bundle;
+import android.p007os.Bundle;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -9,14 +9,15 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+/* loaded from: classes3.dex */
 public final class MetadataReader {
-    private static final String[] DEFAULT_EXIF_TAGS = {"FNumber", ExifInterface.TAG_COPYRIGHT, ExifInterface.TAG_DATETIME, ExifInterface.TAG_EXPOSURE_TIME, ExifInterface.TAG_FOCAL_LENGTH, "FNumber", ExifInterface.TAG_GPS_LATITUDE, ExifInterface.TAG_GPS_LATITUDE_REF, ExifInterface.TAG_GPS_LONGITUDE, ExifInterface.TAG_GPS_LONGITUDE_REF, ExifInterface.TAG_IMAGE_LENGTH, ExifInterface.TAG_IMAGE_WIDTH, "ISOSpeedRatings", ExifInterface.TAG_MAKE, ExifInterface.TAG_MODEL, ExifInterface.TAG_ORIENTATION, ExifInterface.TAG_SHUTTER_SPEED_VALUE};
     private static final String JPEG_MIME_TYPE = "image/jpeg";
     private static final String JPG_MIME_TYPE = "image/jpg";
     private static final int TYPE_DOUBLE = 1;
     private static final int TYPE_INT = 0;
-    private static final Map<String, Integer> TYPE_MAPPING = new HashMap();
     private static final int TYPE_STRING = 2;
+    private static final String[] DEFAULT_EXIF_TAGS = {"FNumber", ExifInterface.TAG_COPYRIGHT, ExifInterface.TAG_DATETIME, ExifInterface.TAG_EXPOSURE_TIME, ExifInterface.TAG_FOCAL_LENGTH, "FNumber", ExifInterface.TAG_GPS_LATITUDE, ExifInterface.TAG_GPS_LATITUDE_REF, ExifInterface.TAG_GPS_LONGITUDE, ExifInterface.TAG_GPS_LONGITUDE_REF, ExifInterface.TAG_IMAGE_LENGTH, ExifInterface.TAG_IMAGE_WIDTH, "ISOSpeedRatings", ExifInterface.TAG_MAKE, ExifInterface.TAG_MODEL, ExifInterface.TAG_ORIENTATION, ExifInterface.TAG_SHUTTER_SPEED_VALUE};
+    private static final Map<String, Integer> TYPE_MAPPING = new HashMap();
 
     private MetadataReader() {
     }

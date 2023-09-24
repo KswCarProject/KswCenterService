@@ -5,8 +5,8 @@ import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.DatabaseUtils;
 import android.database.sqlite.SQLiteDatabase;
-import android.os.Build;
-import android.os.CancellationSignal;
+import android.p007os.Build;
+import android.p007os.CancellationSignal;
 import android.provider.BaseColumns;
 import android.text.TextUtils;
 import android.util.ArrayMap;
@@ -21,21 +21,22 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import libcore.util.EmptyArray;
 
+/* loaded from: classes.dex */
 public class SQLiteQueryBuilder {
     private static final String TAG = "SQLiteQueryBuilder";
-    private static final Pattern sAggregationPattern = Pattern.compile("(?i)(AVG|COUNT|MAX|MIN|SUM|TOTAL|GROUP_CONCAT)\\((.+)\\)");
-    private static final Pattern sLimitPattern = Pattern.compile("\\s*\\d+\\s*(,\\s*\\d+\\s*)?");
-    @UnsupportedAppUsage(maxTargetSdk = 28, trackingBug = 115609023)
-    private boolean mDistinct = false;
-    private SQLiteDatabase.CursorFactory mFactory = null;
-    private boolean mProjectionAggregationAllowed = false;
-    private List<Pattern> mProjectionGreylist = null;
-    private Map<String, String> mProjectionMap = null;
     private boolean mStrict;
+    private static final Pattern sLimitPattern = Pattern.compile("\\s*\\d+\\s*(,\\s*\\d+\\s*)?");
+    private static final Pattern sAggregationPattern = Pattern.compile("(?i)(AVG|COUNT|MAX|MIN|SUM|TOTAL|GROUP_CONCAT)\\((.+)\\)");
+    private Map<String, String> mProjectionMap = null;
+    private List<Pattern> mProjectionGreylist = null;
+    private boolean mProjectionAggregationAllowed = false;
     @UnsupportedAppUsage(maxTargetSdk = 28, trackingBug = 115609023)
     private String mTables = "";
     @UnsupportedAppUsage(maxTargetSdk = 28, trackingBug = 115609023)
     private StringBuilder mWhereClause = null;
+    @UnsupportedAppUsage(maxTargetSdk = 28, trackingBug = 115609023)
+    private boolean mDistinct = false;
+    private SQLiteDatabase.CursorFactory mFactory = null;
 
     public void setDistinct(boolean distinct) {
         this.mDistinct = distinct;
@@ -123,28 +124,28 @@ public class SQLiteQueryBuilder {
     public static String buildQueryString(boolean distinct, String tables, String[] columns, String where, String groupBy, String having, String orderBy, String limit) {
         if (TextUtils.isEmpty(groupBy) && !TextUtils.isEmpty(having)) {
             throw new IllegalArgumentException("HAVING clauses are only permitted when using a groupBy clause");
-        } else if (TextUtils.isEmpty(limit) || sLimitPattern.matcher(limit).matches()) {
-            StringBuilder query = new StringBuilder(120);
-            query.append("SELECT ");
-            if (distinct) {
-                query.append("DISTINCT ");
-            }
-            if (columns == null || columns.length == 0) {
-                query.append("* ");
-            } else {
-                appendColumns(query, columns);
-            }
-            query.append("FROM ");
-            query.append(tables);
-            appendClause(query, " WHERE ", where);
-            appendClause(query, " GROUP BY ", groupBy);
-            appendClause(query, " HAVING ", having);
-            appendClause(query, " ORDER BY ", orderBy);
-            appendClause(query, " LIMIT ", limit);
-            return query.toString();
-        } else {
+        }
+        if (!TextUtils.isEmpty(limit) && !sLimitPattern.matcher(limit).matches()) {
             throw new IllegalArgumentException("invalid LIMIT clauses:" + limit);
         }
+        StringBuilder query = new StringBuilder(120);
+        query.append("SELECT ");
+        if (distinct) {
+            query.append("DISTINCT ");
+        }
+        if (columns != null && columns.length != 0) {
+            appendColumns(query, columns);
+        } else {
+            query.append("* ");
+        }
+        query.append("FROM ");
+        query.append(tables);
+        appendClause(query, " WHERE ", where);
+        appendClause(query, " GROUP BY ", groupBy);
+        appendClause(query, " HAVING ", having);
+        appendClause(query, " ORDER BY ", orderBy);
+        appendClause(query, " LIMIT ", limit);
+        return query.toString();
     }
 
     private static void appendClause(StringBuilder s, String name, String clause) {
@@ -169,38 +170,33 @@ public class SQLiteQueryBuilder {
     }
 
     public Cursor query(SQLiteDatabase db, String[] projectionIn, String selection, String[] selectionArgs, String groupBy, String having, String sortOrder) {
-        return query(db, projectionIn, selection, selectionArgs, groupBy, having, sortOrder, (String) null, (CancellationSignal) null);
+        return query(db, projectionIn, selection, selectionArgs, groupBy, having, sortOrder, null, null);
     }
 
     public Cursor query(SQLiteDatabase db, String[] projectionIn, String selection, String[] selectionArgs, String groupBy, String having, String sortOrder, String limit) {
-        return query(db, projectionIn, selection, selectionArgs, groupBy, having, sortOrder, limit, (CancellationSignal) null);
+        return query(db, projectionIn, selection, selectionArgs, groupBy, having, sortOrder, limit, null);
     }
 
     public Cursor query(SQLiteDatabase db, String[] projectionIn, String selection, String[] selectionArgs, String groupBy, String having, String sortOrder, String limit, CancellationSignal cancellationSignal) {
         String sql;
-        String str = selection;
         if (this.mTables == null) {
             return null;
         }
         String unwrappedSql = buildQuery(projectionIn, selection, groupBy, having, sortOrder, limit);
-        if (!this.mStrict || str == null || selection.length() <= 0) {
-            SQLiteDatabase sQLiteDatabase = db;
-            CancellationSignal cancellationSignal2 = cancellationSignal;
+        if (!this.mStrict || selection == null || selection.length() <= 0) {
             sql = unwrappedSql;
         } else {
-            SQLiteDatabase sQLiteDatabase2 = db;
             db.validateSql(unwrappedSql, cancellationSignal);
             sql = buildQuery(projectionIn, wrap(selection), groupBy, having, sortOrder, limit);
         }
-        String[] sqlArgs = selectionArgs;
         if (Log.isLoggable(TAG, 3)) {
             if (Build.IS_DEBUGGABLE) {
-                Log.d(TAG, sql + " with args " + Arrays.toString(sqlArgs));
+                Log.m72d(TAG, sql + " with args " + Arrays.toString(selectionArgs));
             } else {
-                Log.d(TAG, sql);
+                Log.m72d(TAG, sql);
             }
         }
-        return db.rawQueryWithFactory(this.mFactory, sql, sqlArgs, SQLiteDatabase.findEditTable(this.mTables), cancellationSignal);
+        return db.rawQueryWithFactory(this.mFactory, sql, selectionArgs, SQLiteDatabase.findEditTable(this.mTables), cancellationSignal);
     }
 
     public int update(SQLiteDatabase db, ContentValues values, String selection, String[] selectionArgs) {
@@ -210,7 +206,7 @@ public class SQLiteQueryBuilder {
         Objects.requireNonNull(values, "No values defined");
         String unwrappedSql = buildUpdate(values, selection);
         if (this.mStrict) {
-            db.validateSql(unwrappedSql, (CancellationSignal) null);
+            db.validateSql(unwrappedSql, null);
             sql = buildUpdate(values, wrap(selection));
         } else {
             sql = unwrappedSql;
@@ -220,7 +216,7 @@ public class SQLiteQueryBuilder {
         }
         ArrayMap<String, Object> rawValues = values.getValues();
         int valuesLength = rawValues.size();
-        Object[] sqlArgs = new Object[(selectionArgs.length + valuesLength)];
+        Object[] sqlArgs = new Object[selectionArgs.length + valuesLength];
         for (int i = 0; i < sqlArgs.length; i++) {
             if (i < valuesLength) {
                 sqlArgs[i] = rawValues.valueAt(i);
@@ -230,9 +226,9 @@ public class SQLiteQueryBuilder {
         }
         if (Log.isLoggable(TAG, 3)) {
             if (Build.IS_DEBUGGABLE) {
-                Log.d(TAG, sql + " with args " + Arrays.toString(sqlArgs));
+                Log.m72d(TAG, sql + " with args " + Arrays.toString(sqlArgs));
             } else {
-                Log.d(TAG, sql);
+                Log.m72d(TAG, sql);
             }
         }
         return db.executeSql(sql, sqlArgs);
@@ -244,25 +240,25 @@ public class SQLiteQueryBuilder {
         Objects.requireNonNull(db, "No database defined");
         String unwrappedSql = buildDelete(selection);
         if (this.mStrict) {
-            db.validateSql(unwrappedSql, (CancellationSignal) null);
+            db.validateSql(unwrappedSql, null);
             sql = buildDelete(wrap(selection));
         } else {
             sql = unwrappedSql;
         }
-        String[] sqlArgs = selectionArgs;
         if (Log.isLoggable(TAG, 3)) {
             if (Build.IS_DEBUGGABLE) {
-                Log.d(TAG, sql + " with args " + Arrays.toString(sqlArgs));
+                Log.m72d(TAG, sql + " with args " + Arrays.toString(selectionArgs));
             } else {
-                Log.d(TAG, sql);
+                Log.m72d(TAG, sql);
             }
         }
-        return db.executeSql(sql, sqlArgs);
+        return db.executeSql(sql, selectionArgs);
     }
 
     public String buildQuery(String[] projectionIn, String selection, String groupBy, String having, String sortOrder, String limit) {
-        String str = selection;
-        return buildQueryString(this.mDistinct, this.mTables, computeProjection(projectionIn), computeWhere(selection), groupBy, having, sortOrder, limit);
+        String[] projection = computeProjection(projectionIn);
+        String where = computeWhere(selection);
+        return buildQueryString(this.mDistinct, this.mTables, projection, where, groupBy, having, sortOrder, limit);
     }
 
     @Deprecated
@@ -286,7 +282,8 @@ public class SQLiteQueryBuilder {
             sql.append(rawValues.keyAt(i));
             sql.append("=?");
         }
-        appendClause(sql, " WHERE ", computeWhere(selection));
+        String where = computeWhere(selection);
+        appendClause(sql, " WHERE ", where);
         return sql.toString();
     }
 
@@ -294,35 +291,26 @@ public class SQLiteQueryBuilder {
         StringBuilder sql = new StringBuilder(120);
         sql.append("DELETE FROM ");
         sql.append(this.mTables);
-        appendClause(sql, " WHERE ", computeWhere(selection));
+        String where = computeWhere(selection);
+        appendClause(sql, " WHERE ", where);
         return sql.toString();
     }
 
     public String buildUnionSubQuery(String typeDiscriminatorColumn, String[] unionColumns, Set<String> columnsPresentInTable, int computedColumnsOffset, String typeDiscriminatorValue, String selection, String groupBy, String having) {
-        String str = typeDiscriminatorColumn;
-        String[] strArr = unionColumns;
-        int unionColumnsCount = strArr.length;
+        int unionColumnsCount = unionColumns.length;
         String[] projectionIn = new String[unionColumnsCount];
         for (int i = 0; i < unionColumnsCount; i++) {
-            String unionColumn = strArr[i];
+            String unionColumn = unionColumns[i];
             if (unionColumn.equals(typeDiscriminatorColumn)) {
                 projectionIn[i] = "'" + typeDiscriminatorValue + "' AS " + typeDiscriminatorColumn;
-                Set<String> set = columnsPresentInTable;
-                int i2 = computedColumnsOffset;
             } else {
-                String str2 = typeDiscriminatorValue;
-                if (i <= computedColumnsOffset) {
-                    Set<String> set2 = columnsPresentInTable;
-                } else if (!columnsPresentInTable.contains(unionColumn)) {
+                if (i > computedColumnsOffset && !columnsPresentInTable.contains(unionColumn)) {
                     projectionIn[i] = "NULL AS " + unionColumn;
                 }
                 projectionIn[i] = unionColumn;
             }
         }
-        Set<String> set3 = columnsPresentInTable;
-        int i3 = computedColumnsOffset;
-        String str3 = typeDiscriminatorValue;
-        return buildQuery(projectionIn, selection, groupBy, having, (String) null, (String) null);
+        return buildQuery(projectionIn, selection, groupBy, having, null, null);
     }
 
     @Deprecated
@@ -346,97 +334,97 @@ public class SQLiteQueryBuilder {
     }
 
     private static String maybeWithOperator(String operator, String column) {
-        if (operator == null) {
-            return column;
+        if (operator != null) {
+            return operator + "(" + column + ")";
         }
-        return operator + "(" + column + ")";
+        return column;
     }
 
     @UnsupportedAppUsage(maxTargetSdk = 28, trackingBug = 115609023)
     public String[] computeProjection(String[] projectionIn) {
         int i = 0;
-        if (projectionIn == null || projectionIn.length <= 0) {
-            if (this.mProjectionMap == null) {
-                return null;
-            }
-            Set<Map.Entry<String, String>> entrySet = this.mProjectionMap.entrySet();
-            String[] projection = new String[entrySet.size()];
-            for (Map.Entry<String, String> entry : entrySet) {
-                if (!entry.getKey().equals(BaseColumns._COUNT)) {
-                    projection[i] = entry.getValue();
-                    i++;
-                }
-            }
-            return projection;
-        } else if (this.mProjectionMap == null) {
-            return projectionIn;
-        } else {
-            String[] projection2 = new String[projectionIn.length];
-            int length = projectionIn.length;
-            while (i < length) {
-                String operator = null;
-                String userColumn = projectionIn[i];
-                String column = this.mProjectionMap.get(userColumn);
-                if (this.mProjectionAggregationAllowed) {
-                    Matcher matcher = sAggregationPattern.matcher(userColumn);
-                    if (matcher.matches()) {
-                        operator = matcher.group(1);
-                        userColumn = matcher.group(2);
-                        column = this.mProjectionMap.get(userColumn);
+        if (projectionIn != null && projectionIn.length > 0) {
+            if (this.mProjectionMap != null) {
+                String[] projection = new String[projectionIn.length];
+                int length = projectionIn.length;
+                while (i < length) {
+                    String operator = null;
+                    String userColumn = projectionIn[i];
+                    String column = this.mProjectionMap.get(userColumn);
+                    if (this.mProjectionAggregationAllowed) {
+                        Matcher matcher = sAggregationPattern.matcher(userColumn);
+                        if (matcher.matches()) {
+                            operator = matcher.group(1);
+                            userColumn = matcher.group(2);
+                            column = this.mProjectionMap.get(userColumn);
+                        }
                     }
-                }
-                if (column != null) {
-                    projection2[i] = maybeWithOperator(operator, column);
-                } else if (this.mStrict || (!userColumn.contains(" AS ") && !userColumn.contains(" as "))) {
-                    if (this.mProjectionGreylist != null) {
-                        boolean match = false;
-                        Iterator<Pattern> it = this.mProjectionGreylist.iterator();
-                        while (true) {
-                            if (it.hasNext()) {
-                                if (it.next().matcher(userColumn).matches()) {
+                    if (column != null) {
+                        projection[i] = maybeWithOperator(operator, column);
+                    } else if (!this.mStrict && (userColumn.contains(" AS ") || userColumn.contains(" as "))) {
+                        projection[i] = maybeWithOperator(operator, userColumn);
+                    } else {
+                        if (this.mProjectionGreylist != null) {
+                            boolean match = false;
+                            Iterator<Pattern> it = this.mProjectionGreylist.iterator();
+                            while (true) {
+                                if (!it.hasNext()) {
+                                    break;
+                                }
+                                Pattern p = it.next();
+                                if (p.matcher(userColumn).matches()) {
                                     match = true;
                                     break;
                                 }
-                            } else {
-                                break;
+                            }
+                            if (match) {
+                                Log.m64w(TAG, "Allowing abusive custom column: " + userColumn);
+                                projection[i] = maybeWithOperator(operator, userColumn);
                             }
                         }
-                        if (match) {
-                            Log.w(TAG, "Allowing abusive custom column: " + userColumn);
-                            projection2[i] = maybeWithOperator(operator, userColumn);
-                        }
+                        throw new IllegalArgumentException("Invalid column " + projectionIn[i]);
                     }
-                    throw new IllegalArgumentException("Invalid column " + projectionIn[i]);
-                } else {
-                    projection2[i] = maybeWithOperator(operator, userColumn);
+                    i++;
                 }
-                i++;
+                return projection;
+            }
+            return projectionIn;
+        } else if (this.mProjectionMap != null) {
+            Set<Map.Entry<String, String>> entrySet = this.mProjectionMap.entrySet();
+            String[] projection2 = new String[entrySet.size()];
+            for (Map.Entry<String, String> entry : entrySet) {
+                if (!entry.getKey().equals(BaseColumns._COUNT)) {
+                    projection2[i] = entry.getValue();
+                    i++;
+                }
             }
             return projection2;
+        } else {
+            return null;
         }
     }
 
     public String computeWhere(String selection) {
         boolean hasInternal = !TextUtils.isEmpty(this.mWhereClause);
         boolean hasExternal = !TextUtils.isEmpty(selection);
-        if (!hasInternal && !hasExternal) {
-            return null;
+        if (hasInternal || hasExternal) {
+            StringBuilder where = new StringBuilder();
+            if (hasInternal) {
+                where.append('(');
+                where.append((CharSequence) this.mWhereClause);
+                where.append(')');
+            }
+            if (hasInternal && hasExternal) {
+                where.append(" AND ");
+            }
+            if (hasExternal) {
+                where.append('(');
+                where.append(selection);
+                where.append(')');
+            }
+            return where.toString();
         }
-        StringBuilder where = new StringBuilder();
-        if (hasInternal) {
-            where.append('(');
-            where.append(this.mWhereClause);
-            where.append(')');
-        }
-        if (hasInternal && hasExternal) {
-            where.append(" AND ");
-        }
-        if (hasExternal) {
-            where.append('(');
-            where.append(selection);
-            where.append(')');
-        }
-        return where.toString();
+        return null;
     }
 
     private String wrap(String arg) {

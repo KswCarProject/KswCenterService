@@ -2,6 +2,7 @@ package android.hardware.usb.gadget.V1_0;
 
 import java.util.ArrayList;
 
+/* loaded from: classes.dex */
 public final class Status {
     public static final int CONFIGURATION_NOT_SUPPORTED = 4;
     public static final int ERROR = 1;

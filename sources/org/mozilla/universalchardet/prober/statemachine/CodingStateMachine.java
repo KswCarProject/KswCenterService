@@ -1,5 +1,6 @@
 package org.mozilla.universalchardet.prober.statemachine;
 
+/* loaded from: classes5.dex */
 public class CodingStateMachine {
     protected int currentBytePos;
     protected int currentCharLen;

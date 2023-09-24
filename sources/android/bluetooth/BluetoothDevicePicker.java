@@ -1,5 +1,6 @@
 package android.bluetooth;
 
+/* loaded from: classes.dex */
 public interface BluetoothDevicePicker {
     public static final String ACTION_DEVICE_SELECTED = "android.bluetooth.devicepicker.action.DEVICE_SELECTED";
     public static final String ACTION_LAUNCH = "android.bluetooth.devicepicker.action.LAUNCH";

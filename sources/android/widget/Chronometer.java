@@ -7,7 +7,7 @@ import android.icu.text.MeasureFormat;
 import android.icu.util.Measure;
 import android.icu.util.MeasureUnit;
 import android.net.Uri;
-import android.os.SystemClock;
+import android.p007os.SystemClock;
 import android.text.format.DateUtils;
 import android.util.AttributeSet;
 import android.util.Log;
@@ -17,13 +17,14 @@ import android.view.inspector.InspectionCompanion;
 import android.view.inspector.PropertyMapper;
 import android.view.inspector.PropertyReader;
 import android.widget.RemoteViews;
-import com.android.internal.R;
+import com.android.internal.C3132R;
 import java.util.ArrayList;
 import java.util.Formatter;
 import java.util.IllegalFormatException;
 import java.util.Locale;
 
 @RemoteViews.RemoteView
+/* loaded from: classes4.dex */
 public class Chronometer extends TextView {
     private static final int HOUR_IN_SEC = 3600;
     private static final int MIN_IN_SEC = 60;
@@ -39,40 +40,41 @@ public class Chronometer extends TextView {
     private long mNow;
     private OnChronometerTickListener mOnChronometerTickListener;
     private StringBuilder mRecycle;
-    /* access modifiers changed from: private */
-    public boolean mRunning;
+    private boolean mRunning;
     private boolean mStarted;
-    /* access modifiers changed from: private */
-    public final Runnable mTickRunnable;
+    private final Runnable mTickRunnable;
     private boolean mVisible;
 
+    /* loaded from: classes4.dex */
     public interface OnChronometerTickListener {
         void onChronometerTick(Chronometer chronometer);
     }
 
+    /* loaded from: classes4.dex */
     public final class InspectionCompanion implements android.view.inspector.InspectionCompanion<Chronometer> {
         private int mCountDownId;
         private int mFormatId;
         private boolean mPropertiesMapped = false;
 
+        @Override // android.view.inspector.InspectionCompanion
         public void mapProperties(PropertyMapper propertyMapper) {
             this.mCountDownId = propertyMapper.mapBoolean("countDown", 16844059);
             this.mFormatId = propertyMapper.mapObject("format", 16843013);
             this.mPropertiesMapped = true;
         }
 
+        @Override // android.view.inspector.InspectionCompanion
         public void readProperties(Chronometer node, PropertyReader propertyReader) {
-            if (this.mPropertiesMapped) {
-                propertyReader.readBoolean(this.mCountDownId, node.isCountDown());
-                propertyReader.readObject(this.mFormatId, node.getFormat());
-                return;
+            if (!this.mPropertiesMapped) {
+                throw new InspectionCompanion.UninitializedPropertyMapException();
             }
-            throw new InspectionCompanion.UninitializedPropertyMapException();
+            propertyReader.readBoolean(this.mCountDownId, node.isCountDown());
+            propertyReader.readObject(this.mFormatId, node.getFormat());
         }
     }
 
     public Chronometer(Context context) {
-        this(context, (AttributeSet) null, 0);
+        this(context, null, 0);
     }
 
     public Chronometer(Context context, AttributeSet attrs) {
@@ -87,17 +89,18 @@ public class Chronometer extends TextView {
         super(context, attrs, defStyleAttr, defStyleRes);
         this.mFormatterArgs = new Object[1];
         this.mRecycle = new StringBuilder(8);
-        this.mTickRunnable = new Runnable() {
+        this.mTickRunnable = new Runnable() { // from class: android.widget.Chronometer.1
+            @Override // java.lang.Runnable
             public void run() {
                 if (Chronometer.this.mRunning) {
                     Chronometer.this.updateText(SystemClock.elapsedRealtime());
                     Chronometer.this.dispatchChronometerTick();
-                    Chronometer.this.postDelayed(Chronometer.this.mTickRunnable, 1000);
+                    Chronometer.this.postDelayed(Chronometer.this.mTickRunnable, 1000L);
                 }
             }
         };
-        TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.Chronometer, defStyleAttr, defStyleRes);
-        saveAttributeDataForStyleable(context, R.styleable.Chronometer, attrs, a, defStyleAttr, defStyleRes);
+        TypedArray a = context.obtainStyledAttributes(attrs, C3132R.styleable.Chronometer, defStyleAttr, defStyleRes);
+        saveAttributeDataForStyleable(context, C3132R.styleable.Chronometer, attrs, a, defStyleAttr, defStyleRes);
         setFormat(a.getString(0));
         setCountDown(a.getBoolean(1, false));
         a.recycle();
@@ -175,27 +178,27 @@ public class Chronometer extends TextView {
         updateRunning();
     }
 
-    /* access modifiers changed from: protected */
-    public void onDetachedFromWindow() {
+    @Override // android.view.View
+    protected void onDetachedFromWindow() {
         super.onDetachedFromWindow();
         this.mVisible = false;
         updateRunning();
     }
 
-    /* access modifiers changed from: protected */
-    public void onWindowVisibilityChanged(int visibility) {
+    @Override // android.view.View
+    protected void onWindowVisibilityChanged(int visibility) {
         super.onWindowVisibilityChanged(visibility);
         this.mVisible = visibility == 0;
         updateRunning();
     }
 
-    /* access modifiers changed from: protected */
-    public void onVisibilityChanged(View changedView, int visibility) {
+    @Override // android.widget.TextView, android.view.View
+    protected void onVisibilityChanged(View changedView, int visibility) {
         super.onVisibilityChanged(changedView, visibility);
         updateRunning();
     }
 
-    /* access modifiers changed from: private */
+    /* JADX INFO: Access modifiers changed from: private */
     public synchronized void updateText(long now) {
         this.mNow = now;
         long seconds = (this.mCountDown ? this.mBase - now : now - this.mBase) / 1000;
@@ -206,7 +209,7 @@ public class Chronometer extends TextView {
         }
         String text = DateUtils.formatElapsedTime(this.mRecycle, seconds);
         if (negative) {
-            text = getResources().getString(R.string.negative_duration, text);
+            text = getResources().getString(C3132R.string.negative_duration, text);
         }
         if (this.mFormat != null) {
             Locale loc = Locale.getDefault();
@@ -221,12 +224,12 @@ public class Chronometer extends TextView {
                 text = this.mFormatBuilder.toString();
             } catch (IllegalFormatException e) {
                 if (!this.mLogged) {
-                    Log.w(TAG, "Illegal format string: " + this.mFormat);
+                    Log.m64w(TAG, "Illegal format string: " + this.mFormat);
                     this.mLogged = true;
                 }
             }
         }
-        setText((CharSequence) text);
+        setText(text);
     }
 
     private void updateRunning() {
@@ -235,7 +238,7 @@ public class Chronometer extends TextView {
             if (running) {
                 updateText(SystemClock.elapsedRealtime());
                 dispatchChronometerTick();
-                postDelayed(this.mTickRunnable, 1000);
+                postDelayed(this.mTickRunnable, 1000L);
             } else {
                 removeCallbacks(this.mTickRunnable);
             }
@@ -243,8 +246,7 @@ public class Chronometer extends TextView {
         }
     }
 
-    /* access modifiers changed from: package-private */
-    public void dispatchChronometerTick() {
+    void dispatchChronometerTick() {
         if (this.mOnChronometerTickListener != null) {
             this.mOnChronometerTickListener.onChronometerTick(this);
         }
@@ -277,10 +279,12 @@ public class Chronometer extends TextView {
         return MeasureFormat.getInstance(Locale.getDefault(), MeasureFormat.FormatWidth.WIDE).formatMeasures((Measure[]) measures.toArray(new Measure[measures.size()]));
     }
 
+    @Override // android.view.View
     public CharSequence getContentDescription() {
         return formatDuration(this.mNow - this.mBase);
     }
 
+    @Override // android.widget.TextView, android.view.View
     public CharSequence getAccessibilityClassName() {
         return Chronometer.class.getName();
     }

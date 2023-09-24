@@ -3,6 +3,7 @@ package android.hardware.radio.V1_0;
 import com.android.internal.telephony.IccCardConstants;
 import java.util.ArrayList;
 
+/* loaded from: classes.dex */
 public final class CdmaCallWaitingNumberPresentation {
     public static final int ALLOWED = 0;
     public static final int RESTRICTED = 1;

@@ -1,5 +1,6 @@
 package com.android.server.job;
 
+/* loaded from: classes4.dex */
 public final class DataSetProto {
     public static final long ELAPSED_TIME_MS = 1112396529666L;
     public static final long MAX_CONCURRENCY = 1120986464261L;
@@ -8,6 +9,7 @@ public final class DataSetProto {
     public static final long PERIOD_MS = 1112396529667L;
     public static final long START_CLOCK_TIME_MS = 1112396529665L;
 
+    /* loaded from: classes4.dex */
     public final class PackageEntryProto {
         public static final long ACTIVE = 1133871366151L;
         public static final long ACTIVE_STATE = 1146756268036L;
@@ -22,6 +24,7 @@ public final class DataSetProto {
         public PackageEntryProto() {
         }
 
+        /* loaded from: classes4.dex */
         public final class State {
             public static final long COUNT = 1120986464258L;
             public static final long DURATION_MS = 1112396529665L;
@@ -30,6 +33,7 @@ public final class DataSetProto {
             }
         }
 
+        /* loaded from: classes4.dex */
         public final class StopReasonCount {
             public static final long COUNT = 1120986464258L;
             public static final long REASON = 1159641169921L;

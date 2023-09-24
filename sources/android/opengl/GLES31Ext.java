@@ -3,6 +3,7 @@ package android.opengl;
 import java.nio.ByteBuffer;
 import java.nio.IntBuffer;
 
+/* loaded from: classes3.dex */
 public class GLES31Ext {
     public static final int GL_BLEND_ADVANCED_COHERENT_KHR = 37509;
     public static final int GL_BUFFER_KHR = 33504;
@@ -205,6 +206,7 @@ public class GLES31Ext {
     public static final int GL_UNSIGNED_INT_SAMPLER_CUBE_MAP_ARRAY_EXT = 36879;
     public static final int GL_VERTEX_ARRAY_KHR = 32884;
 
+    /* loaded from: classes3.dex */
     public interface DebugProcKHR {
         void onMessage(int i, int i2, int i3, int i4, String str);
     }

@@ -1,5 +1,6 @@
 package android.graphics;
 
+/* loaded from: classes.dex */
 public class SumPathEffect extends PathEffect {
     private static native long nativeCreate(long j, long j2);
 

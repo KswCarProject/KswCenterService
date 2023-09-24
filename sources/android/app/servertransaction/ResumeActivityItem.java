@@ -2,18 +2,23 @@ package android.app.servertransaction;
 
 import android.app.ActivityTaskManager;
 import android.app.ClientTransactionHandler;
-import android.os.IBinder;
-import android.os.Parcel;
-import android.os.Parcelable;
-import android.os.RemoteException;
-import android.os.Trace;
+import android.p007os.IBinder;
+import android.p007os.Parcel;
+import android.p007os.Parcelable;
+import android.p007os.RemoteException;
+import android.p007os.Trace;
 
+/* loaded from: classes.dex */
 public class ResumeActivityItem extends ActivityLifecycleItem {
-    public static final Parcelable.Creator<ResumeActivityItem> CREATOR = new Parcelable.Creator<ResumeActivityItem>() {
+    public static final Parcelable.Creator<ResumeActivityItem> CREATOR = new Parcelable.Creator<ResumeActivityItem>() { // from class: android.app.servertransaction.ResumeActivityItem.1
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public ResumeActivityItem createFromParcel(Parcel in) {
             return new ResumeActivityItem(in);
         }
 
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public ResumeActivityItem[] newArray(int size) {
             return new ResumeActivityItem[size];
         }
@@ -23,18 +28,21 @@ public class ResumeActivityItem extends ActivityLifecycleItem {
     private int mProcState;
     private boolean mUpdateProcState;
 
+    @Override // android.app.servertransaction.BaseClientRequest
     public void preExecute(ClientTransactionHandler client, IBinder token) {
         if (this.mUpdateProcState) {
             client.updateProcessState(this.mProcState, false);
         }
     }
 
+    @Override // android.app.servertransaction.BaseClientRequest
     public void execute(ClientTransactionHandler client, IBinder token, PendingTransactionActions pendingActions) {
-        Trace.traceBegin(64, "activityResume");
+        Trace.traceBegin(64L, "activityResume");
         client.handleResumeActivity(token, true, this.mIsForward, "RESUME_ACTIVITY");
-        Trace.traceEnd(64);
+        Trace.traceEnd(64L);
     }
 
+    @Override // android.app.servertransaction.BaseClientRequest
     public void postExecute(ClientTransactionHandler client, IBinder token, PendingTransactionActions pendingActions) {
         try {
             ActivityTaskManager.getService().activityResumed(token);
@@ -43,6 +51,7 @@ public class ResumeActivityItem extends ActivityLifecycleItem {
         }
     }
 
+    @Override // android.app.servertransaction.ActivityLifecycleItem
     public int getTargetState() {
         return 3;
     }
@@ -72,6 +81,7 @@ public class ResumeActivityItem extends ActivityLifecycleItem {
         return instance;
     }
 
+    @Override // android.app.servertransaction.ActivityLifecycleItem, android.app.servertransaction.ObjectPoolItem
     public void recycle() {
         super.recycle();
         this.mProcState = -1;
@@ -80,6 +90,7 @@ public class ResumeActivityItem extends ActivityLifecycleItem {
         ObjectPool.recycle(this);
     }
 
+    @Override // android.p007os.Parcelable
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeInt(this.mProcState);
         dest.writeBoolean(this.mUpdateProcState);
@@ -107,7 +118,8 @@ public class ResumeActivityItem extends ActivityLifecycleItem {
     }
 
     public int hashCode() {
-        return (((((17 * 31) + this.mProcState) * 31) + (this.mUpdateProcState ? 1 : 0)) * 31) + (this.mIsForward ? 1 : 0);
+        int result = (17 * 31) + this.mProcState;
+        return (((result * 31) + (this.mUpdateProcState ? 1 : 0)) * 31) + (this.mIsForward ? 1 : 0);
     }
 
     public String toString() {

@@ -2,106 +2,110 @@ package android.view.textservice;
 
 import android.content.ComponentName;
 import android.content.Context;
-import android.content.pm.PackageManager;
-import android.content.pm.ResolveInfo;
-import android.content.pm.ServiceInfo;
+import android.content.p002pm.PackageManager;
+import android.content.p002pm.ResolveInfo;
+import android.content.p002pm.ServiceInfo;
 import android.content.res.Resources;
 import android.content.res.TypedArray;
 import android.content.res.XmlResourceParser;
 import android.graphics.drawable.Drawable;
-import android.os.Parcel;
-import android.os.Parcelable;
+import android.p007os.Parcel;
+import android.p007os.Parcelable;
 import android.provider.SettingsStringUtil;
 import android.util.AttributeSet;
 import android.util.PrintWriterPrinter;
 import android.util.Slog;
 import android.util.Xml;
-import com.android.internal.R;
+import com.android.internal.C3132R;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
 import org.xmlpull.v1.XmlPullParserException;
 
+/* loaded from: classes4.dex */
 public final class SpellCheckerInfo implements Parcelable {
-    public static final Parcelable.Creator<SpellCheckerInfo> CREATOR = new Parcelable.Creator<SpellCheckerInfo>() {
-        public SpellCheckerInfo createFromParcel(Parcel source) {
-            return new SpellCheckerInfo(source);
-        }
-
-        public SpellCheckerInfo[] newArray(int size) {
-            return new SpellCheckerInfo[size];
-        }
-    };
-    private static final String TAG = SpellCheckerInfo.class.getSimpleName();
     private final String mId;
     private final int mLabel;
     private final ResolveInfo mService;
     private final String mSettingsActivityName;
     private final ArrayList<SpellCheckerSubtype> mSubtypes = new ArrayList<>();
+    private static final String TAG = SpellCheckerInfo.class.getSimpleName();
+    public static final Parcelable.Creator<SpellCheckerInfo> CREATOR = new Parcelable.Creator<SpellCheckerInfo>() { // from class: android.view.textservice.SpellCheckerInfo.1
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
+        public SpellCheckerInfo createFromParcel(Parcel source) {
+            return new SpellCheckerInfo(source);
+        }
+
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
+        public SpellCheckerInfo[] newArray(int size) {
+            return new SpellCheckerInfo[size];
+        }
+    };
 
     public SpellCheckerInfo(Context context, ResolveInfo service) throws XmlPullParserException, IOException {
         int i;
         Resources res;
-        ResolveInfo resolveInfo = service;
-        this.mService = resolveInfo;
-        ServiceInfo si = resolveInfo.serviceInfo;
+        this.mService = service;
+        ServiceInfo si = service.serviceInfo;
         this.mId = new ComponentName(si.packageName, si.name).flattenToShortString();
         PackageManager pm = context.getPackageManager();
         XmlResourceParser parser = null;
         try {
-            parser = si.loadXmlMetaData(pm, SpellCheckerSession.SERVICE_META_DATA);
-            if (parser != null) {
+            try {
+                parser = si.loadXmlMetaData(pm, SpellCheckerSession.SERVICE_META_DATA);
+                if (parser == null) {
+                    throw new XmlPullParserException("No android.view.textservice.scs meta-data");
+                }
                 Resources res2 = pm.getResourcesForApplication(si.applicationInfo);
                 AttributeSet attrs = Xml.asAttributeSet(parser);
                 while (true) {
-                    int next = parser.next();
-                    int type = next;
+                    int type = parser.next();
                     i = 1;
-                    if (next == 1 || type == 2) {
+                    if (type == 1 || type == 2) {
+                        break;
                     }
                 }
-                if ("spell-checker".equals(parser.getName())) {
-                    TypedArray sa = res2.obtainAttributes(attrs, R.styleable.SpellChecker);
-                    int label = sa.getResourceId(0, 0);
-                    String settingsActivityComponent = sa.getString(1);
-                    sa.recycle();
-                    int depth = parser.getDepth();
-                    while (true) {
-                        int next2 = parser.next();
-                        int type2 = next2;
-                        if ((next2 != 3 || parser.getDepth() > depth) && type2 != i) {
-                            if (type2 != 2) {
-                                res = res2;
-                            } else if ("subtype".equals(parser.getName())) {
-                                TypedArray a = res2.obtainAttributes(attrs, R.styleable.SpellChecker_Subtype);
-                                res = res2;
-                                this.mSubtypes.add(new SpellCheckerSubtype(a.getResourceId(0, 0), a.getString(1), a.getString(4), a.getString(2), a.getInt(3, 0)));
-                            } else {
+                String nodeName = parser.getName();
+                if (!"spell-checker".equals(nodeName)) {
+                    throw new XmlPullParserException("Meta-data does not start with spell-checker tag");
+                }
+                TypedArray sa = res2.obtainAttributes(attrs, C3132R.styleable.SpellChecker);
+                int label = sa.getResourceId(0, 0);
+                String settingsActivityComponent = sa.getString(1);
+                sa.recycle();
+                int depth = parser.getDepth();
+                while (true) {
+                    int type2 = parser.next();
+                    if ((type2 != 3 || parser.getDepth() > depth) && type2 != i) {
+                        if (type2 != 2) {
+                            res = res2;
+                        } else {
+                            String subtypeNodeName = parser.getName();
+                            if (!"subtype".equals(subtypeNodeName)) {
                                 throw new XmlPullParserException("Meta-data in spell-checker does not start with subtype tag");
                             }
-                            res2 = res;
-                            i = 1;
+                            TypedArray a = res2.obtainAttributes(attrs, C3132R.styleable.SpellChecker_Subtype);
+                            res = res2;
+                            SpellCheckerSubtype subtype = new SpellCheckerSubtype(a.getResourceId(0, 0), a.getString(1), a.getString(4), a.getString(2), a.getInt(3, 0));
+                            this.mSubtypes.add(subtype);
                         }
+                        res2 = res;
+                        i = 1;
                     }
-                    if (parser != null) {
-                        parser.close();
-                    }
-                    this.mLabel = label;
-                    this.mSettingsActivityName = settingsActivityComponent;
-                    return;
                 }
-                Resources resources = res2;
-                throw new XmlPullParserException("Meta-data does not start with spell-checker tag");
+                this.mLabel = label;
+                this.mSettingsActivityName = settingsActivityComponent;
+            } catch (Exception e) {
+                String str = TAG;
+                Slog.m56e(str, "Caught exception: " + e);
+                throw new XmlPullParserException("Unable to create context for: " + si.packageName);
             }
-            throw new XmlPullParserException("No android.view.textservice.scs meta-data");
-        } catch (Exception e) {
-            Slog.e(TAG, "Caught exception: " + e);
-            throw new XmlPullParserException("Unable to create context for: " + si.packageName);
-        } catch (Throwable th) {
+        } finally {
             if (parser != null) {
                 parser.close();
             }
-            throw th;
         }
     }
 
@@ -125,6 +129,7 @@ public final class SpellCheckerInfo implements Parcelable {
         return this.mService.serviceInfo.packageName;
     }
 
+    @Override // android.p007os.Parcelable
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeInt(this.mLabel);
         dest.writeString(this.mId);
@@ -160,6 +165,7 @@ public final class SpellCheckerInfo implements Parcelable {
         return this.mSubtypes.get(index);
     }
 
+    @Override // android.p007os.Parcelable
     public int describeContents() {
         return 0;
     }

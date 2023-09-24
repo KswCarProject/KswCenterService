@@ -4,7 +4,6 @@ import android.animation.Animator;
 import android.animation.TimeInterpolator;
 import android.animation.ValueAnimator;
 import android.app.Activity;
-import android.app.ActivityOptions;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.ContextWrapper;
@@ -21,21 +20,21 @@ import android.view.ViewConfiguration;
 import android.view.ViewGroup;
 import android.view.animation.DecelerateInterpolator;
 import android.widget.FrameLayout;
-import com.android.internal.R;
+import com.android.internal.C3132R;
 import com.android.internal.widget.SwipeDismissLayout;
 
+/* loaded from: classes4.dex */
 public class SwipeDismissLayout extends FrameLayout {
     private static final float MAX_DIST_THRESHOLD = 0.33f;
     private static final float MIN_DIST_THRESHOLD = 0.1f;
     private static final String TAG = "SwipeDismissLayout";
     private int mActiveTouchId;
-    private boolean mActivityTranslucencyConverted = false;
-    private boolean mBlockGesture = false;
+    private boolean mActivityTranslucencyConverted;
+    private boolean mBlockGesture;
     private boolean mDiscardIntercept;
-    private final DismissAnimator mDismissAnimator = new DismissAnimator();
-    private boolean mDismissable = true;
-    /* access modifiers changed from: private */
-    public boolean mDismissed;
+    private final DismissAnimator mDismissAnimator;
+    private boolean mDismissable;
+    private boolean mDismissed;
     private OnDismissedListener mDismissedListener;
     private float mDownX;
     private float mDownY;
@@ -43,16 +42,18 @@ public class SwipeDismissLayout extends FrameLayout {
     private float mLastX;
     private int mMinFlingVelocity;
     private OnSwipeProgressChangedListener mProgressListener;
-    private IntentFilter mScreenOffFilter = new IntentFilter(Intent.ACTION_SCREEN_OFF);
+    private IntentFilter mScreenOffFilter;
     private BroadcastReceiver mScreenOffReceiver;
     private int mSlop;
     private boolean mSwiping;
     private VelocityTracker mVelocityTracker;
 
+    /* loaded from: classes4.dex */
     public interface OnDismissedListener {
         void onDismissed(SwipeDismissLayout swipeDismissLayout);
     }
 
+    /* loaded from: classes4.dex */
     public interface OnSwipeProgressChangedListener {
         void onSwipeCancelled(SwipeDismissLayout swipeDismissLayout);
 
@@ -61,16 +62,31 @@ public class SwipeDismissLayout extends FrameLayout {
 
     public SwipeDismissLayout(Context context) {
         super(context);
+        this.mBlockGesture = false;
+        this.mActivityTranslucencyConverted = false;
+        this.mDismissAnimator = new DismissAnimator();
+        this.mScreenOffFilter = new IntentFilter(Intent.ACTION_SCREEN_OFF);
+        this.mDismissable = true;
         init(context);
     }
 
     public SwipeDismissLayout(Context context, AttributeSet attrs) {
         super(context, attrs);
+        this.mBlockGesture = false;
+        this.mActivityTranslucencyConverted = false;
+        this.mDismissAnimator = new DismissAnimator();
+        this.mScreenOffFilter = new IntentFilter(Intent.ACTION_SCREEN_OFF);
+        this.mDismissable = true;
         init(context);
     }
 
     public SwipeDismissLayout(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
+        this.mBlockGesture = false;
+        this.mActivityTranslucencyConverted = false;
+        this.mDismissAnimator = new DismissAnimator();
+        this.mScreenOffFilter = new IntentFilter(Intent.ACTION_SCREEN_OFF);
+        this.mDismissable = true;
         init(context);
     }
 
@@ -78,7 +94,7 @@ public class SwipeDismissLayout extends FrameLayout {
         ViewConfiguration vc = ViewConfiguration.get(context);
         this.mSlop = vc.getScaledTouchSlop();
         this.mMinFlingVelocity = vc.getScaledMinimumFlingVelocity();
-        TypedArray a = context.getTheme().obtainStyledAttributes(R.styleable.Theme);
+        TypedArray a = context.getTheme().obtainStyledAttributes(C3132R.styleable.Theme);
         this.mIsWindowNativelyTranslucent = a.getBoolean(5, false);
         a.recycle();
     }
@@ -91,36 +107,45 @@ public class SwipeDismissLayout extends FrameLayout {
         this.mProgressListener = listener;
     }
 
-    /* access modifiers changed from: protected */
-    public void onAttachedToWindow() {
+    @Override // android.view.ViewGroup, android.view.View
+    protected void onAttachedToWindow() {
         super.onAttachedToWindow();
         try {
-            this.mScreenOffReceiver = new BroadcastReceiver() {
-                public void onReceive(Context context, Intent intent) {
-                    SwipeDismissLayout.this.post(new Runnable() {
-                        public final void run() {
-                            SwipeDismissLayout.AnonymousClass1.lambda$onReceive$0(SwipeDismissLayout.AnonymousClass1.this);
-                        }
-                    });
-                }
-
-                public static /* synthetic */ void lambda$onReceive$0(AnonymousClass1 r1) {
-                    if (SwipeDismissLayout.this.mDismissed) {
-                        SwipeDismissLayout.this.dismiss();
-                    } else {
-                        SwipeDismissLayout.this.cancel();
-                    }
-                    SwipeDismissLayout.this.resetMembers();
-                }
-            };
+            this.mScreenOffReceiver = new C33901();
             getContext().registerReceiver(this.mScreenOffReceiver, this.mScreenOffFilter);
         } catch (ReceiverCallNotAllowedException e) {
             this.mScreenOffReceiver = null;
         }
     }
 
-    /* access modifiers changed from: protected */
-    public void onDetachedFromWindow() {
+    /* renamed from: com.android.internal.widget.SwipeDismissLayout$1 */
+    /* loaded from: classes4.dex */
+    class C33901 extends BroadcastReceiver {
+        C33901() {
+        }
+
+        @Override // android.content.BroadcastReceiver
+        public void onReceive(Context context, Intent intent) {
+            SwipeDismissLayout.this.post(new Runnable() { // from class: com.android.internal.widget.-$$Lambda$SwipeDismissLayout$1$NDXsqpv65OVP2OutTHt-hDxJywg
+                @Override // java.lang.Runnable
+                public final void run() {
+                    SwipeDismissLayout.C33901.lambda$onReceive$0(SwipeDismissLayout.C33901.this);
+                }
+            });
+        }
+
+        public static /* synthetic */ void lambda$onReceive$0(C33901 c33901) {
+            if (SwipeDismissLayout.this.mDismissed) {
+                SwipeDismissLayout.this.dismiss();
+            } else {
+                SwipeDismissLayout.this.cancel();
+            }
+            SwipeDismissLayout.this.resetMembers();
+        }
+    }
+
+    @Override // android.view.ViewGroup, android.view.View
+    protected void onDetachedFromWindow() {
         if (this.mScreenOffReceiver != null) {
             getContext().unregisterReceiver(this.mScreenOffReceiver);
             this.mScreenOffReceiver = null;
@@ -128,6 +153,7 @@ public class SwipeDismissLayout extends FrameLayout {
         super.onDetachedFromWindow();
     }
 
+    @Override // android.view.ViewGroup
     public boolean onInterceptTouchEvent(MotionEvent ev) {
         checkGesture(ev);
         if (this.mBlockGesture) {
@@ -153,7 +179,11 @@ public class SwipeDismissLayout extends FrameLayout {
             case 2:
                 if (this.mVelocityTracker != null && !this.mDiscardIntercept) {
                     int pointerIndex = ev.findPointerIndex(this.mActiveTouchId);
-                    if (pointerIndex != -1) {
+                    if (pointerIndex == -1) {
+                        Log.m70e(TAG, "Invalid pointer index: ignoring.");
+                        this.mDiscardIntercept = true;
+                        break;
+                    } else {
                         float dx = ev.getRawX() - this.mDownX;
                         float x = ev.getX(pointerIndex);
                         float y = ev.getY(pointerIndex);
@@ -164,10 +194,6 @@ public class SwipeDismissLayout extends FrameLayout {
                             updateSwiping(ev);
                             break;
                         }
-                    } else {
-                        Log.e(TAG, "Invalid pointer index: ignoring.");
-                        this.mDiscardIntercept = true;
-                        break;
                     }
                 }
                 break;
@@ -176,18 +202,18 @@ public class SwipeDismissLayout extends FrameLayout {
                 break;
             case 6:
                 int actionIndex = ev.getActionIndex();
-                if (ev.getPointerId(actionIndex) == this.mActiveTouchId) {
-                    this.mActiveTouchId = ev.getPointerId(actionIndex == 0 ? 1 : 0);
+                int pointerId = ev.getPointerId(actionIndex);
+                if (pointerId == this.mActiveTouchId) {
+                    int newActionIndex = actionIndex == 0 ? 1 : 0;
+                    this.mActiveTouchId = ev.getPointerId(newActionIndex);
                     break;
                 }
                 break;
         }
-        if (this.mDiscardIntercept || !this.mSwiping) {
-            return false;
-        }
-        return true;
+        return !this.mDiscardIntercept && this.mSwiping;
     }
 
+    @Override // android.view.View
     public boolean onTouchEvent(MotionEvent ev) {
         checkGesture(ev);
         if (this.mBlockGesture) {
@@ -202,7 +228,7 @@ public class SwipeDismissLayout extends FrameLayout {
                 updateDismiss(ev);
                 if (this.mDismissed) {
                     this.mDismissAnimator.animateDismissal(ev.getRawX() - this.mDownX);
-                } else if (this.mSwiping && this.mLastX != -2.14748365E9f) {
+                } else if (this.mSwiping && this.mLastX != -2.1474836E9f) {
                     this.mDismissAnimator.animateRecovery(ev.getRawX() - this.mDownX);
                 }
                 resetMembers();
@@ -224,22 +250,21 @@ public class SwipeDismissLayout extends FrameLayout {
         return true;
     }
 
-    /* access modifiers changed from: private */
+    /* JADX INFO: Access modifiers changed from: private */
     public void setProgress(float deltaX) {
         if (this.mProgressListener != null && deltaX >= 0.0f) {
-            this.mProgressListener.onSwipeProgressChanged(this, progressToAlpha(deltaX / ((float) getWidth())), deltaX);
+            this.mProgressListener.onSwipeProgressChanged(this, progressToAlpha(deltaX / getWidth()), deltaX);
         }
     }
 
-    /* access modifiers changed from: private */
+    /* JADX INFO: Access modifiers changed from: private */
     public void dismiss() {
         if (this.mDismissedListener != null) {
             this.mDismissedListener.onDismissed(this);
         }
     }
 
-    /* access modifiers changed from: protected */
-    public void cancel() {
+    protected void cancel() {
         Activity activity;
         if (!this.mIsWindowNativelyTranslucent && (activity = findActivity()) != null && this.mActivityTranslucencyConverted) {
             activity.convertFromTranslucent();
@@ -250,14 +275,14 @@ public class SwipeDismissLayout extends FrameLayout {
         }
     }
 
-    /* access modifiers changed from: private */
+    /* JADX INFO: Access modifiers changed from: private */
     public void resetMembers() {
         if (this.mVelocityTracker != null) {
             this.mVelocityTracker.recycle();
         }
         this.mVelocityTracker = null;
         this.mDownX = 0.0f;
-        this.mLastX = -2.14748365E9f;
+        this.mLastX = -2.1474836E9f;
         this.mDownY = 0.0f;
         this.mSwiping = false;
         this.mDismissed = false;
@@ -271,8 +296,8 @@ public class SwipeDismissLayout extends FrameLayout {
             float deltaX = ev.getRawX() - this.mDownX;
             float deltaY = ev.getRawY() - this.mDownY;
             boolean z = false;
-            if ((deltaX * deltaX) + (deltaY * deltaY) > ((float) (this.mSlop * this.mSlop))) {
-                if (deltaX > ((float) (this.mSlop * 2)) && Math.abs(deltaY) < Math.abs(deltaX)) {
+            if ((deltaX * deltaX) + (deltaY * deltaY) > this.mSlop * this.mSlop) {
+                if (deltaX > this.mSlop * 2 && Math.abs(deltaY) < Math.abs(deltaX)) {
                     z = true;
                 }
                 this.mSwiping = z;
@@ -281,7 +306,7 @@ public class SwipeDismissLayout extends FrameLayout {
             }
         }
         if (this.mSwiping && !oldSwiping && !this.mIsWindowNativelyTranslucent && (activity = findActivity()) != null) {
-            this.mActivityTranslucencyConverted = activity.convertToTranslucent((Activity.TranslucentConversionListener) null, (ActivityOptions) null);
+            this.mActivityTranslucencyConverted = activity.convertToTranslucent(null, null);
         }
     }
 
@@ -289,39 +314,34 @@ public class SwipeDismissLayout extends FrameLayout {
         float deltaX = ev.getRawX() - this.mDownX;
         this.mVelocityTracker.computeCurrentVelocity(1000);
         float xVelocity = this.mVelocityTracker.getXVelocity();
-        if (this.mLastX == -2.14748365E9f) {
+        if (this.mLastX == -2.1474836E9f) {
             xVelocity = deltaX / ((float) ((ev.getEventTime() - ev.getDownTime()) / 1000));
         }
-        if (!this.mDismissed && ((deltaX > ((float) getWidth()) * Math.max(Math.min(((-0.23000002f * xVelocity) / ((float) this.mMinFlingVelocity)) + MAX_DIST_THRESHOLD, MAX_DIST_THRESHOLD), MIN_DIST_THRESHOLD) && ev.getRawX() >= this.mLastX) || xVelocity >= ((float) this.mMinFlingVelocity))) {
-            this.mDismissed = true;
+        if (!this.mDismissed) {
+            float distanceThreshold = getWidth() * Math.max(Math.min((((-0.23000002f) * xVelocity) / this.mMinFlingVelocity) + MAX_DIST_THRESHOLD, (float) MAX_DIST_THRESHOLD), (float) MIN_DIST_THRESHOLD);
+            if ((deltaX > distanceThreshold && ev.getRawX() >= this.mLastX) || xVelocity >= this.mMinFlingVelocity) {
+                this.mDismissed = true;
+            }
         }
-        if (this.mDismissed && this.mSwiping && xVelocity < ((float) (-this.mMinFlingVelocity))) {
+        if (this.mDismissed && this.mSwiping && xVelocity < (-this.mMinFlingVelocity)) {
             this.mDismissed = false;
         }
     }
 
-    /* access modifiers changed from: protected */
-    public boolean canScroll(View v, boolean checkV, float dx, float x, float y) {
-        View view = v;
-        if (view instanceof ViewGroup) {
-            ViewGroup group = (ViewGroup) view;
+    protected boolean canScroll(View v, boolean checkV, float dx, float x, float y) {
+        if (v instanceof ViewGroup) {
+            ViewGroup group = (ViewGroup) v;
             int scrollX = v.getScrollX();
             int scrollY = v.getScrollY();
-            for (int i = group.getChildCount() - 1; i >= 0; i--) {
+            int count = group.getChildCount();
+            for (int i = count - 1; i >= 0; i--) {
                 View child = group.getChildAt(i);
-                if (x + ((float) scrollX) >= ((float) child.getLeft()) && x + ((float) scrollX) < ((float) child.getRight()) && y + ((float) scrollY) >= ((float) child.getTop()) && y + ((float) scrollY) < ((float) child.getBottom())) {
-                    if (canScroll(child, true, dx, (x + ((float) scrollX)) - ((float) child.getLeft()), (y + ((float) scrollY)) - ((float) child.getTop()))) {
-                        return true;
-                    }
+                if (x + scrollX >= child.getLeft() && x + scrollX < child.getRight() && y + scrollY >= child.getTop() && y + scrollY < child.getBottom() && canScroll(child, true, dx, (x + scrollX) - child.getLeft(), (y + scrollY) - child.getTop())) {
+                    return true;
                 }
             }
         }
-        if (!checkV) {
-            float f = dx;
-        } else if (v.canScrollHorizontally((int) (-dx))) {
-            return true;
-        }
-        return false;
+        return checkV && v.canScrollHorizontally((int) (-dx));
     }
 
     public void setDismissable(boolean dismissable) {
@@ -351,30 +371,28 @@ public class SwipeDismissLayout extends FrameLayout {
         return null;
     }
 
+    /* loaded from: classes4.dex */
     private class DismissAnimator implements ValueAnimator.AnimatorUpdateListener, Animator.AnimatorListener {
-        private final long DISMISS_DURATION = 250;
         private final TimeInterpolator DISMISS_INTERPOLATOR = new DecelerateInterpolator(1.5f);
+        private final long DISMISS_DURATION = 250;
         private final ValueAnimator mDismissAnimator = new ValueAnimator();
-        private boolean mDismissOnComplete = false;
         private boolean mWasCanceled = false;
+        private boolean mDismissOnComplete = false;
 
         DismissAnimator() {
             this.mDismissAnimator.addUpdateListener(this);
             this.mDismissAnimator.addListener(this);
         }
 
-        /* access modifiers changed from: package-private */
-        public void animateDismissal(float currentTranslation) {
-            animate(currentTranslation / ((float) SwipeDismissLayout.this.getWidth()), 1.0f, 250, this.DISMISS_INTERPOLATOR, true);
+        void animateDismissal(float currentTranslation) {
+            animate(currentTranslation / SwipeDismissLayout.this.getWidth(), 1.0f, 250L, this.DISMISS_INTERPOLATOR, true);
         }
 
-        /* access modifiers changed from: package-private */
-        public void animateRecovery(float currentTranslation) {
-            animate(currentTranslation / ((float) SwipeDismissLayout.this.getWidth()), 0.0f, 250, this.DISMISS_INTERPOLATOR, false);
+        void animateRecovery(float currentTranslation) {
+            animate(currentTranslation / SwipeDismissLayout.this.getWidth(), 0.0f, 250L, this.DISMISS_INTERPOLATOR, false);
         }
 
-        /* access modifiers changed from: package-private */
-        public boolean isAnimating() {
+        boolean isAnimating() {
             return this.mDismissAnimator.isStarted();
         }
 
@@ -387,29 +405,34 @@ public class SwipeDismissLayout extends FrameLayout {
             this.mDismissAnimator.start();
         }
 
+        @Override // android.animation.ValueAnimator.AnimatorUpdateListener
         public void onAnimationUpdate(ValueAnimator animation) {
-            SwipeDismissLayout.this.setProgress(((float) SwipeDismissLayout.this.getWidth()) * ((Float) animation.getAnimatedValue()).floatValue());
+            float value = ((Float) animation.getAnimatedValue()).floatValue();
+            SwipeDismissLayout.this.setProgress(SwipeDismissLayout.this.getWidth() * value);
         }
 
+        @Override // android.animation.Animator.AnimatorListener
         public void onAnimationStart(Animator animation) {
             this.mWasCanceled = false;
         }
 
+        @Override // android.animation.Animator.AnimatorListener
         public void onAnimationCancel(Animator animation) {
             this.mWasCanceled = true;
         }
 
+        @Override // android.animation.Animator.AnimatorListener
         public void onAnimationEnd(Animator animation) {
-            if (this.mWasCanceled) {
-                return;
-            }
-            if (this.mDismissOnComplete) {
-                SwipeDismissLayout.this.dismiss();
-            } else {
-                SwipeDismissLayout.this.cancel();
+            if (!this.mWasCanceled) {
+                if (this.mDismissOnComplete) {
+                    SwipeDismissLayout.this.dismiss();
+                } else {
+                    SwipeDismissLayout.this.cancel();
+                }
             }
         }
 
+        @Override // android.animation.Animator.AnimatorListener
         public void onAnimationRepeat(Animator animation) {
         }
     }

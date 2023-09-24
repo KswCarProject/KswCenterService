@@ -7,12 +7,12 @@ import android.app.KeyguardManager;
 import android.app.trust.ITrustManager;
 import android.content.Context;
 import android.content.Intent;
-import android.content.pm.ResolveInfo;
-import android.os.Binder;
-import android.os.Handler;
-import android.os.IBinder;
-import android.os.RemoteException;
-import android.os.ServiceManager;
+import android.content.p002pm.ResolveInfo;
+import android.p007os.Binder;
+import android.p007os.Handler;
+import android.p007os.IBinder;
+import android.p007os.RemoteException;
+import android.p007os.ServiceManager;
 import android.provider.Settings;
 import android.service.persistentdata.IPersistentDataBlockService;
 import android.util.Log;
@@ -24,6 +24,7 @@ import com.android.internal.widget.LockPatternUtils;
 import java.util.List;
 import java.util.Objects;
 
+/* loaded from: classes.dex */
 public class KeyguardManager {
     public static final String ACTION_CONFIRM_DEVICE_CREDENTIAL = "android.app.action.CONFIRM_DEVICE_CREDENTIAL";
     public static final String ACTION_CONFIRM_DEVICE_CREDENTIAL_WITH_USER = "android.app.action.CONFIRM_DEVICE_CREDENTIAL_WITH_USER";
@@ -34,56 +35,58 @@ public class KeyguardManager {
     public static final String EXTRA_TITLE = "android.app.extra.TITLE";
     public static final int RESULT_ALTERNATE = 1;
     private static final String TAG = "KeyguardManager";
+    private final Context mContext;
+    private final IWindowManager mWM = WindowManagerGlobal.getWindowManagerService();
     private final IActivityManager mAm = ActivityManager.getService();
-    /* access modifiers changed from: private */
-    public final Context mContext;
-    private final INotificationManager mNotificationManager = INotificationManager.Stub.asInterface(ServiceManager.getServiceOrThrow("notification"));
     private final ITrustManager mTrustManager = ITrustManager.Stub.asInterface(ServiceManager.getServiceOrThrow(Context.TRUST_SERVICE));
-    /* access modifiers changed from: private */
-    public final IWindowManager mWM = WindowManagerGlobal.getWindowManagerService();
+    private final INotificationManager mNotificationManager = INotificationManager.Stub.asInterface(ServiceManager.getServiceOrThrow("notification"));
 
     @Deprecated
+    /* loaded from: classes.dex */
     public interface OnKeyguardExitResult {
         void onKeyguardExitResult(boolean z);
     }
 
     @Deprecated
     public Intent createConfirmDeviceCredentialIntent(CharSequence title, CharSequence description) {
-        if (!isDeviceSecure()) {
-            return null;
+        if (isDeviceSecure()) {
+            Intent intent = new Intent(ACTION_CONFIRM_DEVICE_CREDENTIAL);
+            intent.putExtra(EXTRA_TITLE, title);
+            intent.putExtra(EXTRA_DESCRIPTION, description);
+            intent.setPackage(getSettingsPackageForIntent(intent));
+            return intent;
         }
-        Intent intent = new Intent(ACTION_CONFIRM_DEVICE_CREDENTIAL);
-        intent.putExtra(EXTRA_TITLE, title);
-        intent.putExtra(EXTRA_DESCRIPTION, description);
-        intent.setPackage(getSettingsPackageForIntent(intent));
-        return intent;
+        return null;
     }
 
     public Intent createConfirmDeviceCredentialIntent(CharSequence title, CharSequence description, int userId) {
-        if (!isDeviceSecure(userId)) {
-            return null;
+        if (isDeviceSecure(userId)) {
+            Intent intent = new Intent(ACTION_CONFIRM_DEVICE_CREDENTIAL_WITH_USER);
+            intent.putExtra(EXTRA_TITLE, title);
+            intent.putExtra(EXTRA_DESCRIPTION, description);
+            intent.putExtra(Intent.EXTRA_USER_ID, userId);
+            intent.setPackage(getSettingsPackageForIntent(intent));
+            return intent;
         }
-        Intent intent = new Intent(ACTION_CONFIRM_DEVICE_CREDENTIAL_WITH_USER);
-        intent.putExtra(EXTRA_TITLE, title);
-        intent.putExtra(EXTRA_DESCRIPTION, description);
-        intent.putExtra(Intent.EXTRA_USER_ID, userId);
-        intent.setPackage(getSettingsPackageForIntent(intent));
-        return intent;
+        return null;
     }
 
     @SystemApi
     public Intent createConfirmFactoryResetCredentialIntent(CharSequence title, CharSequence description, CharSequence alternateButtonLabel) {
         if (!LockPatternUtils.frpCredentialEnabled(this.mContext)) {
-            Log.w(TAG, "Factory reset credentials not supported.");
+            Log.m64w(TAG, "Factory reset credentials not supported.");
             throw new UnsupportedOperationException("not supported on this device");
-        } else if (Settings.Global.getInt(this.mContext.getContentResolver(), "device_provisioned", 0) == 0) {
+        } else if (Settings.Global.getInt(this.mContext.getContentResolver(), "device_provisioned", 0) != 0) {
+            Log.m70e(TAG, "Factory reset credential cannot be verified after provisioning.");
+            throw new IllegalStateException("must not be provisioned yet");
+        } else {
             try {
                 IPersistentDataBlockService pdb = IPersistentDataBlockService.Stub.asInterface(ServiceManager.getService(Context.PERSISTENT_DATA_BLOCK_SERVICE));
                 if (pdb == null) {
-                    Log.e(TAG, "No persistent data block service");
+                    Log.m70e(TAG, "No persistent data block service");
                     throw new UnsupportedOperationException("not supported on this device");
                 } else if (!pdb.hasFrpCredentialHandle()) {
-                    Log.i(TAG, "The persistent data block does not have a factory reset credential.");
+                    Log.m68i(TAG, "The persistent data block does not have a factory reset credential.");
                     return null;
                 } else {
                     Intent intent = new Intent(ACTION_CONFIRM_FRP_CREDENTIAL);
@@ -96,9 +99,6 @@ public class KeyguardManager {
             } catch (RemoteException e) {
                 throw e.rethrowFromSystemServer();
             }
-        } else {
-            Log.e(TAG, "Factory reset credential cannot be verified after provisioning.");
-            throw new IllegalStateException("must not be provisioned yet");
         }
     }
 
@@ -129,6 +129,7 @@ public class KeyguardManager {
     }
 
     @Deprecated
+    /* loaded from: classes.dex */
     public class KeyguardLock {
         private final String mTag;
         private final IBinder mToken = new Binder();
@@ -152,6 +153,7 @@ public class KeyguardManager {
         }
     }
 
+    /* loaded from: classes.dex */
     public static abstract class KeyguardDismissCallback {
         public void onDismissError() {
         }
@@ -224,19 +226,21 @@ public class KeyguardManager {
     }
 
     public void requestDismissKeyguard(Activity activity, KeyguardDismissCallback callback) {
-        requestDismissKeyguard(activity, (CharSequence) null, callback);
+        requestDismissKeyguard(activity, null, callback);
     }
 
     @SystemApi
     public void requestDismissKeyguard(final Activity activity, CharSequence message, final KeyguardDismissCallback callback) {
         try {
-            ActivityTaskManager.getService().dismissKeyguard(activity.getActivityToken(), new IKeyguardDismissCallback.Stub() {
+            ActivityTaskManager.getService().dismissKeyguard(activity.getActivityToken(), new IKeyguardDismissCallback.Stub() { // from class: android.app.KeyguardManager.1
+                @Override // com.android.internal.policy.IKeyguardDismissCallback
                 public void onDismissError() throws RemoteException {
                     if (callback != null && !activity.isDestroyed()) {
                         Handler handler = activity.mHandler;
-                        KeyguardDismissCallback keyguardDismissCallback = callback;
+                        final KeyguardDismissCallback keyguardDismissCallback = callback;
                         Objects.requireNonNull(keyguardDismissCallback);
-                        handler.post(new Runnable() {
+                        handler.post(new Runnable() { // from class: android.app.-$$Lambda$rztNj2LGZZegxvT34NFbOqZrZHM
+                            @Override // java.lang.Runnable
                             public final void run() {
                                 KeyguardManager.KeyguardDismissCallback.this.onDismissError();
                             }
@@ -244,12 +248,14 @@ public class KeyguardManager {
                     }
                 }
 
+                @Override // com.android.internal.policy.IKeyguardDismissCallback
                 public void onDismissSucceeded() throws RemoteException {
                     if (callback != null && !activity.isDestroyed()) {
                         Handler handler = activity.mHandler;
-                        KeyguardDismissCallback keyguardDismissCallback = callback;
+                        final KeyguardDismissCallback keyguardDismissCallback = callback;
                         Objects.requireNonNull(keyguardDismissCallback);
-                        handler.post(new Runnable() {
+                        handler.post(new Runnable() { // from class: android.app.-$$Lambda$YTMEV7TmbMrzjIag59qAffcsEUw
+                            @Override // java.lang.Runnable
                             public final void run() {
                                 KeyguardManager.KeyguardDismissCallback.this.onDismissSucceeded();
                             }
@@ -257,12 +263,14 @@ public class KeyguardManager {
                     }
                 }
 
+                @Override // com.android.internal.policy.IKeyguardDismissCallback
                 public void onDismissCancelled() throws RemoteException {
                     if (callback != null && !activity.isDestroyed()) {
                         Handler handler = activity.mHandler;
-                        KeyguardDismissCallback keyguardDismissCallback = callback;
+                        final KeyguardDismissCallback keyguardDismissCallback = callback;
                         Objects.requireNonNull(keyguardDismissCallback);
-                        handler.post(new Runnable() {
+                        handler.post(new Runnable() { // from class: android.app.-$$Lambda$KlsE01yvVI54Xvdo0TIjyhUKWHQ
+                            @Override // java.lang.Runnable
                             public final void run() {
                                 KeyguardManager.KeyguardDismissCallback.this.onDismissCancelled();
                             }
@@ -278,7 +286,8 @@ public class KeyguardManager {
     @Deprecated
     public void exitKeyguardSecurely(final OnKeyguardExitResult callback) {
         try {
-            this.mWM.exitKeyguardSecurely(new IOnKeyguardExitResult.Stub() {
+            this.mWM.exitKeyguardSecurely(new IOnKeyguardExitResult.Stub() { // from class: android.app.KeyguardManager.2
+                @Override // android.view.IOnKeyguardExitResult
                 public void onKeyguardExitResult(boolean success) throws RemoteException {
                     if (callback != null) {
                         callback.onKeyguardExitResult(success);

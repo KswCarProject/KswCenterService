@@ -2,8 +2,8 @@ package android.permission;
 
 import android.annotation.SystemApi;
 import android.content.Context;
-import android.content.pm.IPackageManager;
-import android.os.RemoteException;
+import android.content.p002pm.IPackageManager;
+import android.p007os.RemoteException;
 import com.android.internal.annotations.Immutable;
 import com.android.server.SystemConfig;
 import java.util.ArrayList;
@@ -11,6 +11,7 @@ import java.util.List;
 import java.util.Objects;
 
 @SystemApi
+/* loaded from: classes3.dex */
 public final class PermissionManager {
     public static final ArrayList<SplitPermissionInfo> SPLIT_PERMISSIONS = SystemConfig.getInstance().getSplitPermissions();
     private final Context mContext;
@@ -44,6 +45,7 @@ public final class PermissionManager {
     }
 
     @Immutable
+    /* loaded from: classes3.dex */
     public static final class SplitPermissionInfo {
         private final List<String> mNewPerms;
         private final String mSplitPerm;
@@ -57,14 +59,14 @@ public final class PermissionManager {
                 return false;
             }
             SplitPermissionInfo that = (SplitPermissionInfo) o;
-            if (this.mTargetSdk != that.mTargetSdk || !this.mSplitPerm.equals(that.mSplitPerm) || !this.mNewPerms.equals(that.mNewPerms)) {
-                return false;
+            if (this.mTargetSdk == that.mTargetSdk && this.mSplitPerm.equals(that.mSplitPerm) && this.mNewPerms.equals(that.mNewPerms)) {
+                return true;
             }
-            return true;
+            return false;
         }
 
         public int hashCode() {
-            return Objects.hash(new Object[]{this.mSplitPerm, this.mNewPerms, Integer.valueOf(this.mTargetSdk)});
+            return Objects.hash(this.mSplitPerm, this.mNewPerms, Integer.valueOf(this.mTargetSdk));
         }
 
         public String getSplitPermission() {

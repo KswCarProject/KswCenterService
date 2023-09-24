@@ -1,14 +1,17 @@
 package android.bluetooth;
 
-import android.os.Parcel;
-import android.os.Parcelable;
+import android.p007os.Parcel;
+import android.p007os.Parcelable;
 
+/* loaded from: classes.dex */
 public class SdpPseRecord implements Parcelable {
-    public static final Parcelable.Creator CREATOR = new Parcelable.Creator() {
+    public static final Parcelable.Creator CREATOR = new Parcelable.Creator() { // from class: android.bluetooth.SdpPseRecord.1
+        @Override // android.p007os.Parcelable.Creator
         public SdpPseRecord createFromParcel(Parcel in) {
             return new SdpPseRecord(in);
         }
 
+        @Override // android.p007os.Parcelable.Creator
         public SdpPseRecord[] newArray(int size) {
             return new SdpPseRecord[size];
         }
@@ -38,6 +41,7 @@ public class SdpPseRecord implements Parcelable {
         this.mServiceName = in.readString();
     }
 
+    @Override // android.p007os.Parcelable
     public int describeContents() {
         return 0;
     }
@@ -66,6 +70,7 @@ public class SdpPseRecord implements Parcelable {
         return this.mSupportedRepositories;
     }
 
+    @Override // android.p007os.Parcelable
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeInt(this.mRfcommChannelNumber);
         dest.writeInt(this.mL2capPsm);
@@ -78,7 +83,7 @@ public class SdpPseRecord implements Parcelable {
     public String toString() {
         String ret = "Bluetooth MNS SDP Record:\n";
         if (this.mRfcommChannelNumber != -1) {
-            ret = ret + "RFCOMM Chan Number: " + this.mRfcommChannelNumber + "\n";
+            ret = "Bluetooth MNS SDP Record:\nRFCOMM Chan Number: " + this.mRfcommChannelNumber + "\n";
         }
         if (this.mL2capPsm != -1) {
             ret = ret + "L2CAP PSM: " + this.mL2capPsm + "\n";
@@ -92,9 +97,9 @@ public class SdpPseRecord implements Parcelable {
         if (this.mSupportedFeatures != -1) {
             ret = ret + "Supported features: " + this.mSupportedFeatures + "\n";
         }
-        if (this.mSupportedRepositories == -1) {
-            return ret;
+        if (this.mSupportedRepositories != -1) {
+            return ret + "Supported repositories: " + this.mSupportedRepositories + "\n";
         }
-        return ret + "Supported repositories: " + this.mSupportedRepositories + "\n";
+        return ret;
     }
 }

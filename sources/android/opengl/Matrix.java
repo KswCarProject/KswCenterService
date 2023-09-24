@@ -1,5 +1,6 @@
 package android.opengl;
 
+/* loaded from: classes3.dex */
 public class Matrix {
     private static final float[] sTemp = new float[32];
 
@@ -101,69 +102,85 @@ public class Matrix {
     public static void orthoM(float[] m, int mOffset, float left, float right, float bottom, float top, float near, float far) {
         if (left == right) {
             throw new IllegalArgumentException("left == right");
-        } else if (bottom == top) {
+        }
+        if (bottom == top) {
             throw new IllegalArgumentException("bottom == top");
-        } else if (near != far) {
-            float r_width = 1.0f / (right - left);
-            float r_height = 1.0f / (top - bottom);
-            float r_depth = 1.0f / (far - near);
-            m[mOffset + 0] = r_width * 2.0f;
-            m[mOffset + 5] = 2.0f * r_height;
-            m[mOffset + 10] = -2.0f * r_depth;
-            m[mOffset + 12] = (-(right + left)) * r_width;
-            m[mOffset + 13] = (-(top + bottom)) * r_height;
-            m[mOffset + 14] = (-(far + near)) * r_depth;
-            m[mOffset + 15] = 1.0f;
-            m[mOffset + 1] = 0.0f;
-            m[mOffset + 2] = 0.0f;
-            m[mOffset + 3] = 0.0f;
-            m[mOffset + 4] = 0.0f;
-            m[mOffset + 6] = 0.0f;
-            m[mOffset + 7] = 0.0f;
-            m[mOffset + 8] = 0.0f;
-            m[mOffset + 9] = 0.0f;
-            m[mOffset + 11] = 0.0f;
-        } else {
+        }
+        if (near == far) {
             throw new IllegalArgumentException("near == far");
         }
+        float r_width = 1.0f / (right - left);
+        float r_height = 1.0f / (top - bottom);
+        float r_depth = 1.0f / (far - near);
+        float x = r_width * 2.0f;
+        float y = 2.0f * r_height;
+        float z = (-2.0f) * r_depth;
+        float tx = (-(right + left)) * r_width;
+        float ty = (-(top + bottom)) * r_height;
+        float tz = (-(far + near)) * r_depth;
+        m[mOffset + 0] = x;
+        m[mOffset + 5] = y;
+        m[mOffset + 10] = z;
+        m[mOffset + 12] = tx;
+        m[mOffset + 13] = ty;
+        m[mOffset + 14] = tz;
+        m[mOffset + 15] = 1.0f;
+        m[mOffset + 1] = 0.0f;
+        m[mOffset + 2] = 0.0f;
+        m[mOffset + 3] = 0.0f;
+        m[mOffset + 4] = 0.0f;
+        m[mOffset + 6] = 0.0f;
+        m[mOffset + 7] = 0.0f;
+        m[mOffset + 8] = 0.0f;
+        m[mOffset + 9] = 0.0f;
+        m[mOffset + 11] = 0.0f;
     }
 
     public static void frustumM(float[] m, int offset, float left, float right, float bottom, float top, float near, float far) {
         if (left == right) {
             throw new IllegalArgumentException("left == right");
-        } else if (top == bottom) {
+        }
+        if (top == bottom) {
             throw new IllegalArgumentException("top == bottom");
-        } else if (near == far) {
+        }
+        if (near == far) {
             throw new IllegalArgumentException("near == far");
-        } else if (near <= 0.0f) {
+        }
+        if (near <= 0.0f) {
             throw new IllegalArgumentException("near <= 0.0f");
-        } else if (far > 0.0f) {
-            float r_width = 1.0f / (right - left);
-            float r_height = 1.0f / (top - bottom);
-            float r_depth = 1.0f / (near - far);
-            m[offset + 0] = near * r_width * 2.0f;
-            m[offset + 5] = near * r_height * 2.0f;
-            m[offset + 8] = (right + left) * r_width;
-            m[offset + 9] = (top + bottom) * r_height;
-            m[offset + 10] = (far + near) * r_depth;
-            m[offset + 14] = far * near * r_depth * 2.0f;
-            m[offset + 11] = -1.0f;
-            m[offset + 1] = 0.0f;
-            m[offset + 2] = 0.0f;
-            m[offset + 3] = 0.0f;
-            m[offset + 4] = 0.0f;
-            m[offset + 6] = 0.0f;
-            m[offset + 7] = 0.0f;
-            m[offset + 12] = 0.0f;
-            m[offset + 13] = 0.0f;
-            m[offset + 15] = 0.0f;
-        } else {
+        }
+        if (far <= 0.0f) {
             throw new IllegalArgumentException("far <= 0.0f");
         }
+        float r_width = 1.0f / (right - left);
+        float r_height = 1.0f / (top - bottom);
+        float r_depth = 1.0f / (near - far);
+        float x = near * r_width * 2.0f;
+        float y = near * r_height * 2.0f;
+        float A = (right + left) * r_width;
+        float B = (top + bottom) * r_height;
+        float C = (far + near) * r_depth;
+        float D = far * near * r_depth * 2.0f;
+        m[offset + 0] = x;
+        m[offset + 5] = y;
+        m[offset + 8] = A;
+        m[offset + 9] = B;
+        m[offset + 10] = C;
+        m[offset + 14] = D;
+        m[offset + 11] = -1.0f;
+        m[offset + 1] = 0.0f;
+        m[offset + 2] = 0.0f;
+        m[offset + 3] = 0.0f;
+        m[offset + 4] = 0.0f;
+        m[offset + 6] = 0.0f;
+        m[offset + 7] = 0.0f;
+        m[offset + 12] = 0.0f;
+        m[offset + 13] = 0.0f;
+        m[offset + 15] = 0.0f;
     }
 
     public static void perspectiveM(float[] m, int offset, float fovy, float aspect, float zNear, float zFar) {
-        float f = 1.0f / ((float) Math.tan(((double) fovy) * 0.008726646259971648d));
+        float f = 1.0f / ((float) Math.tan(fovy * 0.008726646259971648d));
         float rangeReciprocal = 1.0f / (zNear - zFar);
         m[offset + 0] = f / aspect;
         m[offset + 1] = 0.0f;
@@ -184,7 +201,7 @@ public class Matrix {
     }
 
     public static float length(float x, float y, float z) {
-        return (float) Math.sqrt((double) ((x * x) + (y * y) + (z * z)));
+        return (float) Math.sqrt((x * x) + (y * y) + (z * z));
     }
 
     public static void setIdentityM(float[] sm, int smOffset) {
@@ -223,8 +240,9 @@ public class Matrix {
             tm[tmOffset + i] = m[mOffset + i];
         }
         for (int i2 = 0; i2 < 4; i2++) {
+            int tmi = tmOffset + i2;
             int mi = mOffset + i2;
-            tm[tmOffset + i2 + 12] = (m[mi] * x) + (m[mi + 4] * y) + (m[mi + 8] * z) + m[mi + 12];
+            tm[tmi + 12] = (m[mi] * x) + (m[mi + 4] * y) + (m[mi + 8] * z) + m[mi + 12];
         }
     }
 
@@ -252,9 +270,9 @@ public class Matrix {
     }
 
     public static void setRotateM(float[] rm, int rmOffset, float a, float x, float y, float z) {
-        float z2;
-        float y2;
         float x2;
+        float y2;
+        float z2;
         rm[rmOffset + 3] = 0.0f;
         rm[rmOffset + 7] = 0.0f;
         rm[rmOffset + 11] = 0.0f;
@@ -263,8 +281,8 @@ public class Matrix {
         rm[rmOffset + 14] = 0.0f;
         rm[rmOffset + 15] = 1.0f;
         float a2 = 0.017453292f * a;
-        float s = (float) Math.sin((double) a2);
-        float c = (float) Math.cos((double) a2);
+        float s = (float) Math.sin(a2);
+        float c = (float) Math.cos(a2);
         if (1.0f == x && 0.0f == y && 0.0f == z) {
             rm[rmOffset + 5] = c;
             rm[rmOffset + 10] = c;
@@ -323,23 +341,19 @@ public class Matrix {
             rm[rmOffset + 2] = (zx * nc) - ys;
             rm[rmOffset + 6] = (yz * nc) + xs;
             rm[rmOffset + 10] = (z2 * z2 * nc) + c;
-            return;
         }
-        float f = x;
-        float f2 = y;
-        float f3 = z;
     }
 
     public static void setRotateEulerM(float[] rm, int rmOffset, float x, float y, float z) {
         float x2 = x * 0.017453292f;
         float y2 = y * 0.017453292f;
         float z2 = 0.017453292f * z;
-        float cx = (float) Math.cos((double) x2);
-        float sx = (float) Math.sin((double) x2);
-        float cy = (float) Math.cos((double) y2);
-        float sy = (float) Math.sin((double) y2);
-        float cz = (float) Math.cos((double) z2);
-        float sz = (float) Math.sin((double) z2);
+        float cx = (float) Math.cos(x2);
+        float sx = (float) Math.sin(x2);
+        float cy = (float) Math.cos(y2);
+        float sy = (float) Math.sin(y2);
+        float cz = (float) Math.cos(z2);
+        float sz = (float) Math.sin(z2);
         float cxsy = cx * sy;
         float sxsy = sx * sy;
         rm[rmOffset + 0] = cy * cz;
@@ -361,14 +375,9 @@ public class Matrix {
     }
 
     public static void setLookAtM(float[] rm, int rmOffset, float eyeX, float eyeY, float eyeZ, float centerX, float centerY, float centerZ, float upX, float upY, float upZ) {
-        float[] fArr = rm;
-        int i = rmOffset;
-        float f = eyeX;
-        float f2 = eyeY;
-        float f3 = eyeZ;
-        float fx = centerX - f;
-        float fy = centerY - f2;
-        float fz = centerZ - f3;
+        float fx = centerX - eyeX;
+        float fy = centerY - eyeY;
+        float fz = centerZ - eyeZ;
         float rlf = 1.0f / length(fx, fy, fz);
         float fx2 = fx * rlf;
         float fy2 = fy * rlf;
@@ -380,23 +389,25 @@ public class Matrix {
         float sx2 = sx * rls;
         float sy2 = sy * rls;
         float sz2 = sz * rls;
-        fArr[i + 0] = sx2;
-        fArr[i + 1] = (sy2 * fz2) - (sz2 * fy2);
-        fArr[i + 2] = -fx2;
-        fArr[i + 3] = 0.0f;
-        fArr[i + 4] = sy2;
-        fArr[i + 5] = (sz2 * fx2) - (sx2 * fz2);
-        float f4 = sy2;
-        fArr[i + 6] = -fy2;
-        fArr[i + 7] = 0.0f;
-        fArr[i + 8] = sz2;
-        fArr[i + 9] = (sx2 * fy2) - (sy2 * fx2);
-        fArr[i + 10] = -fz2;
-        fArr[i + 11] = 0.0f;
-        fArr[i + 12] = 0.0f;
-        fArr[i + 13] = 0.0f;
-        fArr[i + 14] = 0.0f;
-        fArr[i + 15] = 1.0f;
-        translateM(fArr, i, -f, -f2, -f3);
+        float ux = (sy2 * fz2) - (sz2 * fy2);
+        float uy = (sz2 * fx2) - (sx2 * fz2);
+        float uz = (sx2 * fy2) - (sy2 * fx2);
+        rm[rmOffset + 0] = sx2;
+        rm[rmOffset + 1] = ux;
+        rm[rmOffset + 2] = -fx2;
+        rm[rmOffset + 3] = 0.0f;
+        rm[rmOffset + 4] = sy2;
+        rm[rmOffset + 5] = uy;
+        rm[rmOffset + 6] = -fy2;
+        rm[rmOffset + 7] = 0.0f;
+        rm[rmOffset + 8] = sz2;
+        rm[rmOffset + 9] = uz;
+        rm[rmOffset + 10] = -fz2;
+        rm[rmOffset + 11] = 0.0f;
+        rm[rmOffset + 12] = 0.0f;
+        rm[rmOffset + 13] = 0.0f;
+        rm[rmOffset + 14] = 0.0f;
+        rm[rmOffset + 15] = 1.0f;
+        translateM(rm, rmOffset, -eyeX, -eyeY, -eyeZ);
     }
 }

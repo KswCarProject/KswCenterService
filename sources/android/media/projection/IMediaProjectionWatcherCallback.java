@@ -1,28 +1,34 @@
 package android.media.projection;
 
-import android.os.Binder;
-import android.os.IBinder;
-import android.os.IInterface;
-import android.os.Parcel;
-import android.os.RemoteException;
+import android.p007os.Binder;
+import android.p007os.IBinder;
+import android.p007os.IInterface;
+import android.p007os.Parcel;
+import android.p007os.RemoteException;
 
+/* loaded from: classes3.dex */
 public interface IMediaProjectionWatcherCallback extends IInterface {
     void onStart(MediaProjectionInfo mediaProjectionInfo) throws RemoteException;
 
     void onStop(MediaProjectionInfo mediaProjectionInfo) throws RemoteException;
 
+    /* loaded from: classes3.dex */
     public static class Default implements IMediaProjectionWatcherCallback {
+        @Override // android.media.projection.IMediaProjectionWatcherCallback
         public void onStart(MediaProjectionInfo info) throws RemoteException {
         }
 
+        @Override // android.media.projection.IMediaProjectionWatcherCallback
         public void onStop(MediaProjectionInfo info) throws RemoteException {
         }
 
+        @Override // android.p007os.IInterface
         public IBinder asBinder() {
             return null;
         }
     }
 
+    /* loaded from: classes3.dex */
     public static abstract class Stub extends Binder implements IMediaProjectionWatcherCallback {
         private static final String DESCRIPTOR = "android.media.projection.IMediaProjectionWatcherCallback";
         static final int TRANSACTION_onStart = 1;
@@ -37,12 +43,13 @@ public interface IMediaProjectionWatcherCallback extends IInterface {
                 return null;
             }
             IInterface iin = obj.queryLocalInterface(DESCRIPTOR);
-            if (iin == null || !(iin instanceof IMediaProjectionWatcherCallback)) {
-                return new Proxy(obj);
+            if (iin != null && (iin instanceof IMediaProjectionWatcherCallback)) {
+                return (IMediaProjectionWatcherCallback) iin;
             }
-            return (IMediaProjectionWatcherCallback) iin;
+            return new Proxy(obj);
         }
 
+        @Override // android.p007os.IInterface
         public IBinder asBinder() {
             return this;
         }
@@ -58,37 +65,35 @@ public interface IMediaProjectionWatcherCallback extends IInterface {
             }
         }
 
+        @Override // android.p007os.Binder
         public String getTransactionName(int transactionCode) {
             return getDefaultTransactionName(transactionCode);
         }
 
+        @Override // android.p007os.Binder
         public boolean onTransact(int code, Parcel data, Parcel reply, int flags) throws RemoteException {
-            if (code != 1598968902) {
-                MediaProjectionInfo _arg0 = null;
-                switch (code) {
-                    case 1:
-                        data.enforceInterface(DESCRIPTOR);
-                        if (data.readInt() != 0) {
-                            _arg0 = MediaProjectionInfo.CREATOR.createFromParcel(data);
-                        }
-                        onStart(_arg0);
-                        return true;
-                    case 2:
-                        data.enforceInterface(DESCRIPTOR);
-                        if (data.readInt() != 0) {
-                            _arg0 = MediaProjectionInfo.CREATOR.createFromParcel(data);
-                        }
-                        onStop(_arg0);
-                        return true;
-                    default:
-                        return super.onTransact(code, data, reply, flags);
-                }
-            } else {
+            MediaProjectionInfo _arg0;
+            if (code == 1598968902) {
                 reply.writeString(DESCRIPTOR);
                 return true;
             }
+            switch (code) {
+                case 1:
+                    data.enforceInterface(DESCRIPTOR);
+                    _arg0 = data.readInt() != 0 ? MediaProjectionInfo.CREATOR.createFromParcel(data) : null;
+                    onStart(_arg0);
+                    return true;
+                case 2:
+                    data.enforceInterface(DESCRIPTOR);
+                    _arg0 = data.readInt() != 0 ? MediaProjectionInfo.CREATOR.createFromParcel(data) : null;
+                    onStop(_arg0);
+                    return true;
+                default:
+                    return super.onTransact(code, data, reply, flags);
+            }
         }
 
+        /* loaded from: classes3.dex */
         private static class Proxy implements IMediaProjectionWatcherCallback {
             public static IMediaProjectionWatcherCallback sDefaultImpl;
             private IBinder mRemote;
@@ -97,6 +102,7 @@ public interface IMediaProjectionWatcherCallback extends IInterface {
                 this.mRemote = remote;
             }
 
+            @Override // android.p007os.IInterface
             public IBinder asBinder() {
                 return this.mRemote;
             }
@@ -105,6 +111,7 @@ public interface IMediaProjectionWatcherCallback extends IInterface {
                 return Stub.DESCRIPTOR;
             }
 
+            @Override // android.media.projection.IMediaProjectionWatcherCallback
             public void onStart(MediaProjectionInfo info) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
@@ -115,9 +122,8 @@ public interface IMediaProjectionWatcherCallback extends IInterface {
                     } else {
                         _data.writeInt(0);
                     }
-                    if (this.mRemote.transact(1, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    boolean _status = this.mRemote.transact(1, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().onStart(info);
                     }
                 } finally {
@@ -125,6 +131,7 @@ public interface IMediaProjectionWatcherCallback extends IInterface {
                 }
             }
 
+            @Override // android.media.projection.IMediaProjectionWatcherCallback
             public void onStop(MediaProjectionInfo info) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
@@ -135,9 +142,8 @@ public interface IMediaProjectionWatcherCallback extends IInterface {
                     } else {
                         _data.writeInt(0);
                     }
-                    if (this.mRemote.transact(2, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    boolean _status = this.mRemote.transact(2, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().onStop(info);
                     }
                 } finally {
@@ -147,11 +153,11 @@ public interface IMediaProjectionWatcherCallback extends IInterface {
         }
 
         public static boolean setDefaultImpl(IMediaProjectionWatcherCallback impl) {
-            if (Proxy.sDefaultImpl != null || impl == null) {
-                return false;
+            if (Proxy.sDefaultImpl == null && impl != null) {
+                Proxy.sDefaultImpl = impl;
+                return true;
             }
-            Proxy.sDefaultImpl = impl;
-            return true;
+            return false;
         }
 
         public static IMediaProjectionWatcherCallback getDefaultImpl() {

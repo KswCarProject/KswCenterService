@@ -2,8 +2,10 @@ package android.webkit;
 
 import java.util.Set;
 
+/* loaded from: classes4.dex */
 public class GeolocationPermissions {
 
+    /* loaded from: classes4.dex */
     public interface Callback {
         void invoke(String str, boolean z, boolean z2);
     }
@@ -12,10 +14,10 @@ public class GeolocationPermissions {
         return WebViewFactory.getProvider().getGeolocationPermissions();
     }
 
-    public void getOrigins(ValueCallback<Set<String>> valueCallback) {
+    public void getOrigins(ValueCallback<Set<String>> callback) {
     }
 
-    public void getAllowed(String origin, ValueCallback<Boolean> valueCallback) {
+    public void getAllowed(String origin, ValueCallback<Boolean> callback) {
     }
 
     public void clear(String origin) {

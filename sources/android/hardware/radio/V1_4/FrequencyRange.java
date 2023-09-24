@@ -2,6 +2,7 @@ package android.hardware.radio.V1_4;
 
 import java.util.ArrayList;
 
+/* loaded from: classes.dex */
 public final class FrequencyRange {
     public static final int HIGH = 3;
     public static final int LOW = 1;

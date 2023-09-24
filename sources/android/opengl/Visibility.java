@@ -1,5 +1,6 @@
 package android.opengl;
 
+/* loaded from: classes3.dex */
 public class Visibility {
     public static native void computeBoundingSphere(float[] fArr, int i, int i2, float[] fArr2, int i3);
 

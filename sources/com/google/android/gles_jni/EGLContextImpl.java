@@ -1,8 +1,9 @@
 package com.google.android.gles_jni;
 
 import javax.microedition.khronos.egl.EGLContext;
-import javax.microedition.khronos.opengles.GL;
+import javax.microedition.khronos.opengles.InterfaceC3683GL;
 
+/* loaded from: classes4.dex */
 public class EGLContextImpl extends EGLContext {
     long mEGLContext;
     private GLImpl mGLContext = new GLImpl();
@@ -11,7 +12,8 @@ public class EGLContextImpl extends EGLContext {
         this.mEGLContext = ctx;
     }
 
-    public GL getGL() {
+    @Override // javax.microedition.khronos.egl.EGLContext
+    public InterfaceC3683GL getGL() {
         return this.mGLContext;
     }
 
@@ -22,13 +24,15 @@ public class EGLContextImpl extends EGLContext {
         if (o == null || getClass() != o.getClass()) {
             return false;
         }
-        if (this.mEGLContext == ((EGLContextImpl) o).mEGLContext) {
+        EGLContextImpl that = (EGLContextImpl) o;
+        if (this.mEGLContext == that.mEGLContext) {
             return true;
         }
         return false;
     }
 
     public int hashCode() {
-        return (17 * 31) + ((int) (this.mEGLContext ^ (this.mEGLContext >>> 32)));
+        int result = (17 * 31) + ((int) (this.mEGLContext ^ (this.mEGLContext >>> 32)));
+        return result;
     }
 }

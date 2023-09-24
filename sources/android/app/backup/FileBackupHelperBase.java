@@ -2,11 +2,12 @@ package android.app.backup;
 
 import android.annotation.UnsupportedAppUsage;
 import android.content.Context;
-import android.os.ParcelFileDescriptor;
+import android.p007os.ParcelFileDescriptor;
 import android.util.Log;
 import java.io.File;
 import java.io.FileDescriptor;
 
+/* loaded from: classes.dex */
 class FileBackupHelperBase {
     private static final String TAG = "FileBackupHelperBase";
     Context mContext;
@@ -27,8 +28,7 @@ class FileBackupHelperBase {
         this.mContext = context;
     }
 
-    /* access modifiers changed from: protected */
-    public void finalize() throws Throwable {
+    protected void finalize() throws Throwable {
         try {
             dtor(this.mPtr);
         } finally {
@@ -37,54 +37,45 @@ class FileBackupHelperBase {
     }
 
     static void performBackup_checked(ParcelFileDescriptor oldState, BackupDataOutput data, ParcelFileDescriptor newState, String[] files, String[] keys) {
-        if (files.length != 0) {
-            int length = files.length;
-            int i = 0;
-            while (i < length) {
-                String f = files[i];
-                if (f.charAt(0) == '/') {
-                    i++;
-                } else {
-                    throw new RuntimeException("files must have all absolute paths: " + f);
-                }
+        if (files.length == 0) {
+            return;
+        }
+        for (String f : files) {
+            if (f.charAt(0) != '/') {
+                throw new RuntimeException("files must have all absolute paths: " + f);
             }
-            if (files.length == keys.length) {
-                FileDescriptor oldStateFd = oldState != null ? oldState.getFileDescriptor() : null;
-                FileDescriptor newStateFd = newState.getFileDescriptor();
-                if (newStateFd != null) {
-                    int err = performBackup_native(oldStateFd, data.mBackupWriter, newStateFd, files, keys);
-                    if (err != 0) {
-                        throw new RuntimeException("Backup failed 0x" + Integer.toHexString(err));
-                    }
-                    return;
-                }
-                throw new NullPointerException();
-            }
+        }
+        if (files.length != keys.length) {
             throw new RuntimeException("files.length=" + files.length + " keys.length=" + keys.length);
+        }
+        FileDescriptor oldStateFd = oldState != null ? oldState.getFileDescriptor() : null;
+        FileDescriptor newStateFd = newState.getFileDescriptor();
+        if (newStateFd == null) {
+            throw new NullPointerException();
+        }
+        int err = performBackup_native(oldStateFd, data.mBackupWriter, newStateFd, files, keys);
+        if (err != 0) {
+            throw new RuntimeException("Backup failed 0x" + Integer.toHexString(err));
         }
     }
 
-    /* access modifiers changed from: package-private */
-    public boolean writeFile(File f, BackupDataInputStream in) {
-        f.getParentFile().mkdirs();
+    boolean writeFile(File f, BackupDataInputStream in) {
+        File parent = f.getParentFile();
+        parent.mkdirs();
         int result = writeFile_native(this.mPtr, f.getAbsolutePath(), in.mData.mBackupReader);
         if (result != 0 && !this.mExceptionLogged) {
-            Log.e(TAG, "Failed restoring file '" + f + "' for app '" + this.mContext.getPackageName() + "' result=0x" + Integer.toHexString(result));
+            Log.m70e(TAG, "Failed restoring file '" + f + "' for app '" + this.mContext.getPackageName() + "' result=0x" + Integer.toHexString(result));
             this.mExceptionLogged = true;
         }
-        if (result == 0) {
-            return true;
-        }
-        return false;
+        return result == 0;
     }
 
     @UnsupportedAppUsage
     public void writeNewStateDescription(ParcelFileDescriptor fd) {
-        int writeSnapshot_native = writeSnapshot_native(this.mPtr, fd.getFileDescriptor());
+        writeSnapshot_native(this.mPtr, fd.getFileDescriptor());
     }
 
-    /* access modifiers changed from: package-private */
-    public boolean isKeyInList(String key, String[] list) {
+    boolean isKeyInList(String key, String[] list) {
         for (String s : list) {
             if (s.equals(key)) {
                 return true;

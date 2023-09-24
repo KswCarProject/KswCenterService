@@ -1,7 +1,8 @@
 package android.media;
 
-import android.os.Parcel;
+import android.p007os.Parcel;
 
+/* loaded from: classes3.dex */
 public final class TimedMetaData {
     private static final String TAG = "TimedMetaData";
     private byte[] mMetaData;
@@ -18,12 +19,11 @@ public final class TimedMetaData {
     }
 
     public TimedMetaData(long timestampUs, byte[] metaData) {
-        if (metaData != null) {
-            this.mTimestampUs = timestampUs;
-            this.mMetaData = metaData;
-            return;
+        if (metaData == null) {
+            throw new IllegalArgumentException("null metaData is not allowed");
         }
-        throw new IllegalArgumentException("null metaData is not allowed");
+        this.mTimestampUs = timestampUs;
+        this.mMetaData = metaData;
     }
 
     public long getTimestamp() {

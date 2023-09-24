@@ -28,7 +28,7 @@
     <string name="import_config_success">Konfigurationserfolg importieren!</string>
     <string name="no_update">NO</string>
     <string name="ota_update">OTA UPDATE</string>
-    <string name="ota_update_message">Upgrade-Datei erkannt.\10Möchten Sie jetzt ein Upgrade durchführen?</string>
+    <string name="ota_update_message">Upgrade-Datei erkannt.\nMöchten Sie jetzt ein Upgrade durchführen?</string>
     <string name="search_menu_title">Suchen</string>
     <string name="status_bar_notification_info_overflow">999+</string>
     <string name="update_success">Update Erfolg!</string>

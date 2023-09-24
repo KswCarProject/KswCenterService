@@ -3,21 +3,26 @@ package com.android.internal.net;
 import android.annotation.UnsupportedAppUsage;
 import android.app.PendingIntent;
 import android.net.NetworkInfo;
-import android.os.Parcel;
-import android.os.Parcelable;
+import android.p007os.Parcel;
+import android.p007os.Parcelable;
 import android.util.Log;
 
+/* loaded from: classes4.dex */
 public class LegacyVpnInfo implements Parcelable {
     @UnsupportedAppUsage
-    public static final Parcelable.Creator<LegacyVpnInfo> CREATOR = new Parcelable.Creator<LegacyVpnInfo>() {
+    public static final Parcelable.Creator<LegacyVpnInfo> CREATOR = new Parcelable.Creator<LegacyVpnInfo>() { // from class: com.android.internal.net.LegacyVpnInfo.1
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public LegacyVpnInfo createFromParcel(Parcel in) {
             LegacyVpnInfo info = new LegacyVpnInfo();
             info.key = in.readString();
             info.state = in.readInt();
-            info.intent = (PendingIntent) in.readParcelable((ClassLoader) null);
+            info.intent = (PendingIntent) in.readParcelable(null);
             return info;
         }
 
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public LegacyVpnInfo[] newArray(int size) {
             return new LegacyVpnInfo[size];
         }
@@ -35,10 +40,12 @@ public class LegacyVpnInfo implements Parcelable {
     @UnsupportedAppUsage
     public int state = -1;
 
+    @Override // android.p007os.Parcelable
     public int describeContents() {
         return 0;
     }
 
+    @Override // android.p007os.Parcelable
     public void writeToParcel(Parcel out, int flags) {
         out.writeString(this.key);
         out.writeInt(this.state);
@@ -56,7 +63,7 @@ public class LegacyVpnInfo implements Parcelable {
             case FAILED:
                 return 5;
             default:
-                Log.w(TAG, "Unhandled state " + info.getDetailedState() + " ; treating as disconnected");
+                Log.m64w(TAG, "Unhandled state " + info.getDetailedState() + " ; treating as disconnected");
                 return 0;
         }
     }

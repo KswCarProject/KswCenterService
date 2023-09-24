@@ -7,10 +7,10 @@ import android.content.ConfigurationProto;
 import android.content.ResourcesConfigurationProto;
 import android.hardware.Camera;
 import android.net.wifi.WifiEnterpriseConfig;
-import android.os.Build;
-import android.os.LocaleList;
-import android.os.Parcel;
-import android.os.Parcelable;
+import android.p007os.Build;
+import android.p007os.LocaleList;
+import android.p007os.Parcel;
+import android.p007os.Parcelable;
 import android.telephony.SmsManager;
 import android.text.TextUtils;
 import android.util.DisplayMetrics;
@@ -31,6 +31,7 @@ import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
 import org.xmlpull.v1.XmlSerializer;
 
+/* loaded from: classes.dex */
 public final class Configuration implements Parcelable, Comparable<Configuration> {
     public static final int ASSETS_SEQ_UNDEFINED = 0;
     public static final int COLOR_MODE_HDR_MASK = 12;
@@ -43,19 +44,9 @@ public final class Configuration implements Parcelable, Comparable<Configuration
     public static final int COLOR_MODE_WIDE_COLOR_GAMUT_NO = 1;
     public static final int COLOR_MODE_WIDE_COLOR_GAMUT_UNDEFINED = 0;
     public static final int COLOR_MODE_WIDE_COLOR_GAMUT_YES = 2;
-    public static final Parcelable.Creator<Configuration> CREATOR = new Parcelable.Creator<Configuration>() {
-        public Configuration createFromParcel(Parcel source) {
-            return new Configuration(source);
-        }
-
-        public Configuration[] newArray(int size) {
-            return new Configuration[size];
-        }
-    };
     public static final int DENSITY_DPI_ANY = 65534;
     public static final int DENSITY_DPI_NONE = 65535;
     public static final int DENSITY_DPI_UNDEFINED = 0;
-    public static final Configuration EMPTY = new Configuration();
     public static final int HARDKEYBOARDHIDDEN_NO = 1;
     public static final int HARDKEYBOARDHIDDEN_UNDEFINED = 0;
     public static final int HARDKEYBOARDHIDDEN_YES = 2;
@@ -190,18 +181,33 @@ public final class Configuration implements Parcelable, Comparable<Configuration
     @UnsupportedAppUsage
     public boolean userSetLocale;
     public final WindowConfiguration windowConfiguration;
+    public static final Configuration EMPTY = new Configuration();
+    public static final Parcelable.Creator<Configuration> CREATOR = new Parcelable.Creator<Configuration>() { // from class: android.content.res.Configuration.1
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
+        public Configuration createFromParcel(Parcel source) {
+            return new Configuration(source);
+        }
+
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
+        public Configuration[] newArray(int size) {
+            return new Configuration[size];
+        }
+    };
 
     @Retention(RetentionPolicy.SOURCE)
+    /* loaded from: classes.dex */
     public @interface NativeConfig {
     }
 
     public static int resetScreenLayout(int curLayout) {
-        return (-268435520 & curLayout) | 36;
+        return ((-268435520) & curLayout) | 36;
     }
 
     public static int reduceScreenLayout(int curLayout, int longSizeDp, int shortSizeDp) {
-        boolean screenLayoutCompatNeeded;
         int screenLayoutSize;
+        boolean screenLayoutCompatNeeded;
         int screenLayoutSize2 = 0;
         if (longSizeDp < 470) {
             screenLayoutCompatNeeded = false;
@@ -210,10 +216,10 @@ public final class Configuration implements Parcelable, Comparable<Configuration
         } else {
             if (longSizeDp >= 960 && shortSizeDp >= 720) {
                 screenLayoutSize = 4;
-            } else if (longSizeDp < 640 || shortSizeDp < 480) {
-                screenLayoutSize = 2;
-            } else {
+            } else if (longSizeDp >= 640 && shortSizeDp >= 480) {
                 screenLayoutSize = 3;
+            } else {
+                screenLayoutSize = 2;
             }
             if (shortSizeDp > 321 || longSizeDp > 570) {
                 screenLayoutCompatNeeded = true;
@@ -225,13 +231,14 @@ public final class Configuration implements Parcelable, Comparable<Configuration
             }
         }
         if (screenLayoutSize2 == 0) {
-            curLayout = (curLayout & -49) | 16;
+            curLayout = (curLayout & (-49)) | 16;
         }
         if (screenLayoutCompatNeeded) {
             curLayout |= 268435456;
         }
-        if (screenLayoutSize < (curLayout & 15)) {
-            return (curLayout & -16) | screenLayoutSize;
+        int curSize = curLayout & 15;
+        if (screenLayoutSize < curSize) {
+            return (curLayout & (-16)) | screenLayoutSize;
         }
         return curLayout;
     }
@@ -300,10 +307,7 @@ public final class Configuration implements Parcelable, Comparable<Configuration
 
     public boolean isLayoutSizeAtLeast(int size) {
         int cur = this.screenLayout & 15;
-        if (cur != 0 && cur >= size) {
-            return true;
-        }
-        return false;
+        return cur != 0 && cur >= size;
     }
 
     public Configuration() {
@@ -317,14 +321,8 @@ public final class Configuration implements Parcelable, Comparable<Configuration
     }
 
     private void fixUpLocaleList() {
-        LocaleList localeList;
         if ((this.locale == null && !this.mLocaleList.isEmpty()) || (this.locale != null && !this.locale.equals(this.mLocaleList.get(0)))) {
-            if (this.locale == null) {
-                localeList = LocaleList.getEmptyLocaleList();
-            } else {
-                localeList = new LocaleList(this.locale);
-            }
-            this.mLocaleList = localeList;
+            this.mLocaleList = this.locale == null ? LocaleList.getEmptyLocaleList() : new LocaleList(this.locale);
         }
     }
 
@@ -387,11 +385,11 @@ public final class Configuration implements Parcelable, Comparable<Configuration
             sb.append(" ?layoutDir");
         } else if (layoutDir == 64) {
             sb.append(" ldltr");
-        } else if (layoutDir != 128) {
+        } else if (layoutDir == 128) {
+            sb.append(" ldrtl");
+        } else {
             sb.append(" layoutDir=");
             sb.append(layoutDir >> 6);
-        } else {
-            sb.append(" ldrtl");
         }
         if (this.smallestScreenWidthDp != 0) {
             sb.append(" sw");
@@ -446,22 +444,22 @@ public final class Configuration implements Parcelable, Comparable<Configuration
         if (i == 0) {
             sb.append(" ?long");
         } else if (i != 16) {
-            if (i != 32) {
+            if (i == 32) {
+                sb.append(" long");
+            } else {
                 sb.append(" layoutLong=");
                 sb.append(this.screenLayout & 48);
-            } else {
-                sb.append(" long");
             }
         }
         int i2 = this.colorMode & 12;
         if (i2 == 0) {
             sb.append(" ?ldr");
         } else if (i2 != 4) {
-            if (i2 != 8) {
+            if (i2 == 8) {
+                sb.append(" hdr");
+            } else {
                 sb.append(" dynamicRange=");
                 sb.append(this.colorMode & 12);
-            } else {
-                sb.append(" hdr");
             }
         }
         switch (this.colorMode & 3) {
@@ -526,11 +524,11 @@ public final class Configuration implements Parcelable, Comparable<Configuration
         if (i3 == 0) {
             sb.append(" ?night");
         } else if (i3 != 16) {
-            if (i3 != 32) {
+            if (i3 == 32) {
+                sb.append(" night");
+            } else {
                 sb.append(" night=");
                 sb.append(this.uiMode & 48);
-            } else {
-                sb.append(" night");
             }
         }
         switch (this.touchscreen) {
@@ -663,22 +661,22 @@ public final class Configuration implements Parcelable, Comparable<Configuration
             }
             protoOutputStream.write(1155346202629L, this.screenLayout);
             protoOutputStream.write(1155346202630L, this.colorMode);
-            protoOutputStream.write((long) ConfigurationProto.TOUCHSCREEN, this.touchscreen);
+            protoOutputStream.write(ConfigurationProto.TOUCHSCREEN, this.touchscreen);
             protoOutputStream.write(1155346202632L, this.keyboard);
-            protoOutputStream.write((long) ConfigurationProto.KEYBOARD_HIDDEN, this.keyboardHidden);
-            protoOutputStream.write((long) ConfigurationProto.HARD_KEYBOARD_HIDDEN, this.hardKeyboardHidden);
-            protoOutputStream.write((long) ConfigurationProto.NAVIGATION, this.navigation);
-            protoOutputStream.write((long) ConfigurationProto.NAVIGATION_HIDDEN, this.navigationHidden);
-            protoOutputStream.write((long) ConfigurationProto.UI_MODE, this.uiMode);
-            protoOutputStream.write((long) ConfigurationProto.SMALLEST_SCREEN_WIDTH_DP, this.smallestScreenWidthDp);
-            protoOutputStream.write((long) ConfigurationProto.DENSITY_DPI, this.densityDpi);
+            protoOutputStream.write(ConfigurationProto.KEYBOARD_HIDDEN, this.keyboardHidden);
+            protoOutputStream.write(ConfigurationProto.HARD_KEYBOARD_HIDDEN, this.hardKeyboardHidden);
+            protoOutputStream.write(ConfigurationProto.NAVIGATION, this.navigation);
+            protoOutputStream.write(ConfigurationProto.NAVIGATION_HIDDEN, this.navigationHidden);
+            protoOutputStream.write(ConfigurationProto.UI_MODE, this.uiMode);
+            protoOutputStream.write(ConfigurationProto.SMALLEST_SCREEN_WIDTH_DP, this.smallestScreenWidthDp);
+            protoOutputStream.write(ConfigurationProto.DENSITY_DPI, this.densityDpi);
             if (!persisted && this.windowConfiguration != null) {
                 this.windowConfiguration.writeToProto(protoOutputStream, 1146756268051L);
             }
         }
-        protoOutputStream.write((long) ConfigurationProto.ORIENTATION, this.orientation);
-        protoOutputStream.write((long) ConfigurationProto.SCREEN_WIDTH_DP, this.screenWidthDp);
-        protoOutputStream.write((long) ConfigurationProto.SCREEN_HEIGHT_DP, this.screenHeightDp);
+        protoOutputStream.write(ConfigurationProto.ORIENTATION, this.orientation);
+        protoOutputStream.write(ConfigurationProto.SCREEN_WIDTH_DP, this.screenWidthDp);
+        protoOutputStream.write(ConfigurationProto.SCREEN_HEIGHT_DP, this.screenHeightDp);
         protoOutputStream.end(token);
     }
 
@@ -691,124 +689,127 @@ public final class Configuration implements Parcelable, Comparable<Configuration
     }
 
     public void readFromProto(ProtoInputStream protoInputStream, long fieldId) throws IOException {
-        long localeToken;
-        String script;
-        String variant;
-        String variant2;
-        String country;
-        ProtoInputStream protoInputStream2 = protoInputStream;
         long token = protoInputStream.start(fieldId);
         List<Locale> list = new ArrayList<>();
         while (true) {
             List<Locale> list2 = list;
             try {
-                if (protoInputStream.nextField() != -1) {
-                    switch (protoInputStream.getFieldNumber()) {
-                        case 1:
-                            this.fontScale = protoInputStream2.readFloat(1108101562369L);
-                            break;
-                        case 2:
-                            this.mcc = protoInputStream2.readInt(1155346202626L);
-                            break;
-                        case 3:
-                            this.mnc = protoInputStream2.readInt(1155346202627L);
-                            break;
-                        case 4:
-                            localeToken = protoInputStream2.start(2246267895812L);
-                            script = "";
-                            variant = "";
-                            variant2 = "";
-                            country = "";
-                            while (protoInputStream.nextField() != -1) {
-                                switch (protoInputStream.getFieldNumber()) {
-                                    case 1:
-                                        country = protoInputStream2.readString(1138166333441L);
-                                        break;
-                                    case 2:
-                                        variant2 = protoInputStream2.readString(1138166333442L);
-                                        break;
-                                    case 3:
-                                        variant = protoInputStream2.readString(1138166333443L);
-                                        break;
-                                    case 4:
-                                        script = protoInputStream2.readString(1138166333444L);
-                                        break;
-                                }
-                            }
-                            protoInputStream2.end(localeToken);
-                            list2.add(new Locale.Builder().setLanguage(country).setRegion(variant2).setVariant(variant).setScript(script).build());
-                            break;
-                        case 5:
-                            this.screenLayout = protoInputStream2.readInt(1155346202629L);
-                            break;
-                        case 6:
-                            this.colorMode = protoInputStream2.readInt(1155346202630L);
-                            break;
-                        case 7:
-                            this.touchscreen = protoInputStream2.readInt(ConfigurationProto.TOUCHSCREEN);
-                            break;
-                        case 8:
-                            this.keyboard = protoInputStream2.readInt(1155346202632L);
-                            break;
-                        case 9:
-                            this.keyboardHidden = protoInputStream2.readInt(ConfigurationProto.KEYBOARD_HIDDEN);
-                            break;
-                        case 10:
-                            this.hardKeyboardHidden = protoInputStream2.readInt(ConfigurationProto.HARD_KEYBOARD_HIDDEN);
-                            break;
-                        case 11:
-                            this.navigation = protoInputStream2.readInt(ConfigurationProto.NAVIGATION);
-                            break;
-                        case 12:
-                            this.navigationHidden = protoInputStream2.readInt(ConfigurationProto.NAVIGATION_HIDDEN);
-                            break;
-                        case 13:
-                            this.orientation = protoInputStream2.readInt(ConfigurationProto.ORIENTATION);
-                            break;
-                        case 14:
-                            this.uiMode = protoInputStream2.readInt(ConfigurationProto.UI_MODE);
-                            break;
-                        case 15:
-                            this.screenWidthDp = protoInputStream2.readInt(ConfigurationProto.SCREEN_WIDTH_DP);
-                            break;
-                        case 16:
-                            this.screenHeightDp = protoInputStream2.readInt(ConfigurationProto.SCREEN_HEIGHT_DP);
-                            break;
-                        case 17:
-                            this.smallestScreenWidthDp = protoInputStream2.readInt(ConfigurationProto.SMALLEST_SCREEN_WIDTH_DP);
-                            break;
-                        case 18:
-                            this.densityDpi = protoInputStream2.readInt(ConfigurationProto.DENSITY_DPI);
-                            break;
-                        case 19:
-                            this.windowConfiguration.readFromProto(protoInputStream2, 1146756268051L);
-                            break;
-                    }
-                    list = list2;
-                } else {
+                if (protoInputStream.nextField() == -1) {
                     if (list2.size() > 0) {
                         setLocales(new LocaleList((Locale[]) list2.toArray(new Locale[list2.size()])));
                     }
-                    protoInputStream2.end(token);
+                    protoInputStream.end(token);
                     return;
                 }
-            } catch (WireTypeMismatchException wtme) {
-                throw wtme;
-            } catch (IllformedLocaleException e) {
-                Slog.e(TAG, "readFromProto error building locale with: language-" + country + ";country-" + variant2 + ";variant-" + variant + ";script-" + script);
+                switch (protoInputStream.getFieldNumber()) {
+                    case 1:
+                        this.fontScale = protoInputStream.readFloat(1108101562369L);
+                        break;
+                    case 2:
+                        this.mcc = protoInputStream.readInt(1155346202626L);
+                        break;
+                    case 3:
+                        this.mnc = protoInputStream.readInt(1155346202627L);
+                        break;
+                    case 4:
+                        long localeToken = protoInputStream.start(2246267895812L);
+                        String script = "";
+                        String variant = "";
+                        String variant2 = "";
+                        String country = "";
+                        while (protoInputStream.nextField() != -1) {
+                            try {
+                                switch (protoInputStream.getFieldNumber()) {
+                                    case 1:
+                                        String language = protoInputStream.readString(1138166333441L);
+                                        country = language;
+                                        break;
+                                    case 2:
+                                        String country2 = protoInputStream.readString(1138166333442L);
+                                        variant2 = country2;
+                                        break;
+                                    case 3:
+                                        String variant3 = protoInputStream.readString(1138166333443L);
+                                        variant = variant3;
+                                        break;
+                                    case 4:
+                                        script = protoInputStream.readString(1138166333444L);
+                                        break;
+                                }
+                            } catch (WireTypeMismatchException wtme) {
+                                throw wtme;
+                            }
+                        }
+                        protoInputStream.end(localeToken);
+                        try {
+                            Locale locale = new Locale.Builder().setLanguage(country).setRegion(variant2).setVariant(variant).setScript(script).build();
+                            list2.add(locale);
+                            break;
+                        } catch (IllformedLocaleException e) {
+                            Slog.m56e(TAG, "readFromProto error building locale with: language-" + country + ";country-" + variant2 + ";variant-" + variant + ";script-" + script);
+                            break;
+                        }
+                        break;
+                    case 5:
+                        this.screenLayout = protoInputStream.readInt(1155346202629L);
+                        break;
+                    case 6:
+                        this.colorMode = protoInputStream.readInt(1155346202630L);
+                        break;
+                    case 7:
+                        this.touchscreen = protoInputStream.readInt(ConfigurationProto.TOUCHSCREEN);
+                        break;
+                    case 8:
+                        this.keyboard = protoInputStream.readInt(1155346202632L);
+                        break;
+                    case 9:
+                        this.keyboardHidden = protoInputStream.readInt(ConfigurationProto.KEYBOARD_HIDDEN);
+                        break;
+                    case 10:
+                        this.hardKeyboardHidden = protoInputStream.readInt(ConfigurationProto.HARD_KEYBOARD_HIDDEN);
+                        break;
+                    case 11:
+                        this.navigation = protoInputStream.readInt(ConfigurationProto.NAVIGATION);
+                        break;
+                    case 12:
+                        this.navigationHidden = protoInputStream.readInt(ConfigurationProto.NAVIGATION_HIDDEN);
+                        break;
+                    case 13:
+                        this.orientation = protoInputStream.readInt(ConfigurationProto.ORIENTATION);
+                        break;
+                    case 14:
+                        this.uiMode = protoInputStream.readInt(ConfigurationProto.UI_MODE);
+                        break;
+                    case 15:
+                        this.screenWidthDp = protoInputStream.readInt(ConfigurationProto.SCREEN_WIDTH_DP);
+                        break;
+                    case 16:
+                        this.screenHeightDp = protoInputStream.readInt(ConfigurationProto.SCREEN_HEIGHT_DP);
+                        break;
+                    case 17:
+                        this.smallestScreenWidthDp = protoInputStream.readInt(ConfigurationProto.SMALLEST_SCREEN_WIDTH_DP);
+                        break;
+                    case 18:
+                        this.densityDpi = protoInputStream.readInt(ConfigurationProto.DENSITY_DPI);
+                        break;
+                    case 19:
+                        this.windowConfiguration.readFromProto(protoInputStream, 1146756268051L);
+                        break;
+                }
+                list = list2;
             } catch (Throwable th) {
                 if (list2.size() > 0) {
                     setLocales(new LocaleList((Locale[]) list2.toArray(new Locale[list2.size()])));
                 }
-                protoInputStream2.end(token);
+                protoInputStream.end(token);
                 throw th;
             }
         }
     }
 
     public void writeResConfigToProto(ProtoOutputStream protoOutputStream, long fieldId, DisplayMetrics metrics) {
-        int height;
         int width;
+        int height;
         if (metrics.widthPixels >= metrics.heightPixels) {
             width = metrics.widthPixels;
             height = metrics.heightPixels;
@@ -820,12 +821,12 @@ public final class Configuration implements Parcelable, Comparable<Configuration
         writeToProto(protoOutputStream, 1146756268033L);
         protoOutputStream.write(1155346202626L, Build.VERSION.RESOURCES_SDK_INT);
         protoOutputStream.write(1155346202627L, width);
-        protoOutputStream.write((long) ResourcesConfigurationProto.SCREEN_HEIGHT_PX, height);
+        protoOutputStream.write(ResourcesConfigurationProto.SCREEN_HEIGHT_PX, height);
         protoOutputStream.end(token);
     }
 
-    public static String uiModeToString(int uiMode2) {
-        switch (uiMode2) {
+    public static String uiModeToString(int uiMode) {
+        switch (uiMode) {
             case 0:
                 return "UI_MODE_TYPE_UNDEFINED";
             case 1:
@@ -843,7 +844,7 @@ public final class Configuration implements Parcelable, Comparable<Configuration
             case 7:
                 return "UI_MODE_TYPE_VR_HEADSET";
             default:
-                return Integer.toString(uiMode2);
+                return Integer.toString(uiMode);
         }
     }
 
@@ -881,8 +882,8 @@ public final class Configuration implements Parcelable, Comparable<Configuration
         this.fontScale = 0.0f;
     }
 
-    @Deprecated
     @UnsupportedAppUsage
+    @Deprecated
     public void makeDefault() {
         setToDefaults();
     }
@@ -893,11 +894,11 @@ public final class Configuration implements Parcelable, Comparable<Configuration
             changed = 0 | 1073741824;
             this.fontScale = delta.fontScale;
         }
-        if (!(delta.mcc == 0 || this.mcc == delta.mcc)) {
+        if (delta.mcc != 0 && this.mcc != delta.mcc) {
             changed |= 1;
             this.mcc = delta.mcc;
         }
-        if (!(delta.mnc == 0 || this.mnc == delta.mnc)) {
+        if (delta.mnc != 0 && this.mnc != delta.mnc) {
             changed |= 2;
             this.mnc = delta.mnc;
         }
@@ -913,88 +914,88 @@ public final class Configuration implements Parcelable, Comparable<Configuration
             }
         }
         int deltaScreenLayoutDir = delta.screenLayout & 192;
-        if (!(deltaScreenLayoutDir == 0 || deltaScreenLayoutDir == (this.screenLayout & 192))) {
-            this.screenLayout = (this.screenLayout & -193) | deltaScreenLayoutDir;
+        if (deltaScreenLayoutDir != 0 && deltaScreenLayoutDir != (this.screenLayout & 192)) {
+            this.screenLayout = (this.screenLayout & (-193)) | deltaScreenLayoutDir;
             changed |= 8192;
         }
         if (delta.userSetLocale && (!this.userSetLocale || (changed & 4) != 0)) {
             changed |= 4;
             this.userSetLocale = true;
         }
-        if (!(delta.touchscreen == 0 || this.touchscreen == delta.touchscreen)) {
+        if (delta.touchscreen != 0 && this.touchscreen != delta.touchscreen) {
             changed |= 8;
             this.touchscreen = delta.touchscreen;
         }
-        if (!(delta.keyboard == 0 || this.keyboard == delta.keyboard)) {
+        if (delta.keyboard != 0 && this.keyboard != delta.keyboard) {
             changed |= 16;
             this.keyboard = delta.keyboard;
         }
-        if (!(delta.keyboardHidden == 0 || this.keyboardHidden == delta.keyboardHidden)) {
+        if (delta.keyboardHidden != 0 && this.keyboardHidden != delta.keyboardHidden) {
             changed |= 32;
             this.keyboardHidden = delta.keyboardHidden;
         }
-        if (!(delta.hardKeyboardHidden == 0 || this.hardKeyboardHidden == delta.hardKeyboardHidden)) {
+        if (delta.hardKeyboardHidden != 0 && this.hardKeyboardHidden != delta.hardKeyboardHidden) {
             changed |= 32;
             this.hardKeyboardHidden = delta.hardKeyboardHidden;
         }
-        if (!(delta.navigation == 0 || this.navigation == delta.navigation)) {
+        if (delta.navigation != 0 && this.navigation != delta.navigation) {
             changed |= 64;
             this.navigation = delta.navigation;
         }
-        if (!(delta.navigationHidden == 0 || this.navigationHidden == delta.navigationHidden)) {
+        if (delta.navigationHidden != 0 && this.navigationHidden != delta.navigationHidden) {
             changed |= 32;
             this.navigationHidden = delta.navigationHidden;
         }
-        if (!(delta.orientation == 0 || this.orientation == delta.orientation)) {
+        if (delta.orientation != 0 && this.orientation != delta.orientation) {
             changed |= 128;
             this.orientation = delta.orientation;
         }
-        if (!((delta.screenLayout & 15) == 0 || (delta.screenLayout & 15) == (this.screenLayout & 15))) {
+        if ((delta.screenLayout & 15) != 0 && (delta.screenLayout & 15) != (this.screenLayout & 15)) {
             changed |= 256;
-            this.screenLayout = (this.screenLayout & -16) | (delta.screenLayout & 15);
+            this.screenLayout = (this.screenLayout & (-16)) | (delta.screenLayout & 15);
         }
-        if (!((delta.screenLayout & 48) == 0 || (delta.screenLayout & 48) == (this.screenLayout & 48))) {
+        if ((delta.screenLayout & 48) != 0 && (delta.screenLayout & 48) != (this.screenLayout & 48)) {
             changed |= 256;
-            this.screenLayout = (this.screenLayout & -49) | (delta.screenLayout & 48);
+            this.screenLayout = (this.screenLayout & (-49)) | (delta.screenLayout & 48);
         }
-        if (!((delta.screenLayout & 768) == 0 || (delta.screenLayout & 768) == (this.screenLayout & 768))) {
+        if ((delta.screenLayout & 768) != 0 && (delta.screenLayout & 768) != (this.screenLayout & 768)) {
             changed |= 256;
-            this.screenLayout = (this.screenLayout & -769) | (delta.screenLayout & 768);
+            this.screenLayout = (this.screenLayout & (-769)) | (delta.screenLayout & 768);
         }
-        if (!((delta.screenLayout & 268435456) == (this.screenLayout & 268435456) || delta.screenLayout == 0)) {
+        if ((delta.screenLayout & 268435456) != (this.screenLayout & 268435456) && delta.screenLayout != 0) {
             changed |= 256;
-            this.screenLayout = (this.screenLayout & -268435457) | (268435456 & delta.screenLayout);
+            this.screenLayout = (this.screenLayout & (-268435457)) | (268435456 & delta.screenLayout);
         }
-        if (!((delta.colorMode & 3) == 0 || (delta.colorMode & 3) == (this.colorMode & 3))) {
+        if ((delta.colorMode & 3) != 0 && (delta.colorMode & 3) != (this.colorMode & 3)) {
             changed |= 16384;
-            this.colorMode = (this.colorMode & -4) | (delta.colorMode & 3);
+            this.colorMode = (this.colorMode & (-4)) | (delta.colorMode & 3);
         }
-        if (!((delta.colorMode & 12) == 0 || (delta.colorMode & 12) == (this.colorMode & 12))) {
+        if ((delta.colorMode & 12) != 0 && (delta.colorMode & 12) != (this.colorMode & 12)) {
             changed |= 16384;
-            this.colorMode = (this.colorMode & -13) | (delta.colorMode & 12);
+            this.colorMode = (this.colorMode & (-13)) | (delta.colorMode & 12);
         }
-        if (!(delta.uiMode == 0 || this.uiMode == delta.uiMode)) {
+        if (delta.uiMode != 0 && this.uiMode != delta.uiMode) {
             changed |= 512;
             if ((delta.uiMode & 15) != 0) {
-                this.uiMode = (this.uiMode & -16) | (delta.uiMode & 15);
+                this.uiMode = (this.uiMode & (-16)) | (delta.uiMode & 15);
             }
             if ((delta.uiMode & 48) != 0) {
-                this.uiMode = (this.uiMode & -49) | (delta.uiMode & 48);
+                this.uiMode = (this.uiMode & (-49)) | (delta.uiMode & 48);
             }
         }
-        if (!(delta.screenWidthDp == 0 || this.screenWidthDp == delta.screenWidthDp)) {
+        if (delta.screenWidthDp != 0 && this.screenWidthDp != delta.screenWidthDp) {
             changed |= 1024;
             this.screenWidthDp = delta.screenWidthDp;
         }
-        if (!(delta.screenHeightDp == 0 || this.screenHeightDp == delta.screenHeightDp)) {
+        if (delta.screenHeightDp != 0 && this.screenHeightDp != delta.screenHeightDp) {
             changed |= 1024;
             this.screenHeightDp = delta.screenHeightDp;
         }
-        if (!(delta.smallestScreenWidthDp == 0 || this.smallestScreenWidthDp == delta.smallestScreenWidthDp)) {
+        if (delta.smallestScreenWidthDp != 0 && this.smallestScreenWidthDp != delta.smallestScreenWidthDp) {
             changed |= 2048;
             this.smallestScreenWidthDp = delta.smallestScreenWidthDp;
         }
-        if (!(delta.densityDpi == 0 || this.densityDpi == delta.densityDpi)) {
+        if (delta.densityDpi != 0 && this.densityDpi != delta.densityDpi) {
             changed |= 4096;
             this.densityDpi = delta.densityDpi;
         }
@@ -1007,7 +1008,7 @@ public final class Configuration implements Parcelable, Comparable<Configuration
         if (delta.compatSmallestScreenWidthDp != 0) {
             this.compatSmallestScreenWidthDp = delta.compatSmallestScreenWidthDp;
         }
-        if (!(delta.assetsSeq == 0 || delta.assetsSeq == this.assetsSeq)) {
+        if (delta.assetsSeq != 0 && delta.assetsSeq != this.assetsSeq) {
             changed |= Integer.MIN_VALUE;
             this.assetsSeq = delta.assetsSeq;
         }
@@ -1096,10 +1097,10 @@ public final class Configuration implements Parcelable, Comparable<Configuration
         if ((compareUndefined || delta.assetsSeq != 0) && this.assetsSeq != delta.assetsSeq) {
             changed |= Integer.MIN_VALUE;
         }
-        if (publicOnly || this.windowConfiguration.diff(delta.windowConfiguration, compareUndefined) == 0) {
-            return changed;
+        if (!publicOnly && this.windowConfiguration.diff(delta.windowConfiguration, compareUndefined) != 0) {
+            return changed | 536870912;
         }
-        return changed | 536870912;
+        return changed;
     }
 
     public static boolean needNewResources(int configChanges, int interestingChanges) {
@@ -1114,16 +1115,15 @@ public final class Configuration implements Parcelable, Comparable<Configuration
             return true;
         }
         int diff = other.seq - this.seq;
-        if (diff <= 65536 && diff > 0) {
-            return true;
-        }
-        return false;
+        return diff <= 65536 && diff > 0;
     }
 
+    @Override // android.p007os.Parcelable
     public int describeContents() {
         return 0;
     }
 
+    @Override // android.p007os.Parcelable
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeFloat(this.fontScale);
         dest.writeInt(this.mcc);
@@ -1162,12 +1162,8 @@ public final class Configuration implements Parcelable, Comparable<Configuration
         this.mcc = source.readInt();
         this.mnc = source.readInt();
         this.mLocaleList = (LocaleList) source.readParcelable(LocaleList.class.getClassLoader());
-        boolean z = false;
         this.locale = this.mLocaleList.get(0);
-        if (source.readInt() == 1) {
-            z = true;
-        }
-        this.userSetLocale = z;
+        this.userSetLocale = source.readInt() == 1;
         this.touchscreen = source.readInt();
         this.keyboard = source.readInt();
         this.keyboardHidden = source.readInt();
@@ -1185,7 +1181,7 @@ public final class Configuration implements Parcelable, Comparable<Configuration
         this.compatScreenWidthDp = source.readInt();
         this.compatScreenHeightDp = source.readInt();
         this.compatSmallestScreenWidthDp = source.readInt();
-        this.windowConfiguration.setTo((WindowConfiguration) source.readValue((ClassLoader) null));
+        this.windowConfiguration.setTo((WindowConfiguration) source.readValue(null));
         this.assetsSeq = source.readInt();
         this.seq = source.readInt();
     }
@@ -1195,6 +1191,7 @@ public final class Configuration implements Parcelable, Comparable<Configuration
         readFromParcel(source);
     }
 
+    @Override // java.lang.Comparable
     public int compareTo(Configuration that) {
         float a = this.fontScale;
         float b = that.fontScale;
@@ -1247,7 +1244,8 @@ public final class Configuration implements Parcelable, Comparable<Configuration
                 return n7;
             }
         }
-        int n8 = this.touchscreen - that.touchscreen;
+        int minSize2 = this.touchscreen;
+        int n8 = minSize2 - that.touchscreen;
         if (n8 != 0) {
             return n8;
         }
@@ -1308,23 +1306,17 @@ public final class Configuration implements Parcelable, Comparable<Configuration
             return n22;
         }
         int n23 = this.windowConfiguration.compareTo(that.windowConfiguration);
-        if (n23 != 0) {
-            return n23;
-        }
-        return n23;
+        return n23 != 0 ? n23 : n23;
     }
 
     public boolean equals(Configuration that) {
         if (that == null) {
             return false;
         }
-        if (that == this) {
-            return true;
+        if (that != this && compareTo(that) != 0) {
+            return false;
         }
-        if (compareTo(that) == 0) {
-            return true;
-        }
-        return false;
+        return true;
     }
 
     public boolean equals(Object that) {
@@ -1336,7 +1328,8 @@ public final class Configuration implements Parcelable, Comparable<Configuration
     }
 
     public int hashCode() {
-        return (((((((((((((((((((((((((((((((((((((17 * 31) + Float.floatToIntBits(this.fontScale)) * 31) + this.mcc) * 31) + this.mnc) * 31) + this.mLocaleList.hashCode()) * 31) + this.touchscreen) * 31) + this.keyboard) * 31) + this.keyboardHidden) * 31) + this.hardKeyboardHidden) * 31) + this.navigation) * 31) + this.navigationHidden) * 31) + this.orientation) * 31) + this.screenLayout) * 31) + this.colorMode) * 31) + this.uiMode) * 31) + this.screenWidthDp) * 31) + this.screenHeightDp) * 31) + this.smallestScreenWidthDp) * 31) + this.densityDpi) * 31) + this.assetsSeq;
+        int result = (17 * 31) + Float.floatToIntBits(this.fontScale);
+        return (((((((((((((((((((((((((((((((((((result * 31) + this.mcc) * 31) + this.mnc) * 31) + this.mLocaleList.hashCode()) * 31) + this.touchscreen) * 31) + this.keyboard) * 31) + this.keyboardHidden) * 31) + this.hardKeyboardHidden) * 31) + this.navigation) * 31) + this.navigationHidden) * 31) + this.orientation) * 31) + this.screenLayout) * 31) + this.colorMode) * 31) + this.uiMode) * 31) + this.screenWidthDp) * 31) + this.screenHeightDp) * 31) + this.smallestScreenWidthDp) * 31) + this.densityDpi) * 31) + this.assetsSeq;
     }
 
     public LocaleList getLocales() {
@@ -1351,13 +1344,7 @@ public final class Configuration implements Parcelable, Comparable<Configuration
     }
 
     public void setLocale(Locale loc) {
-        LocaleList localeList;
-        if (loc == null) {
-            localeList = LocaleList.getEmptyLocaleList();
-        } else {
-            localeList = new LocaleList(loc);
-        }
-        setLocales(localeList);
+        setLocales(loc == null ? LocaleList.getEmptyLocaleList() : new LocaleList(loc));
     }
 
     public void clearLocales() {
@@ -1370,11 +1357,12 @@ public final class Configuration implements Parcelable, Comparable<Configuration
     }
 
     public void setLayoutDirection(Locale loc) {
-        this.screenLayout = (this.screenLayout & -193) | ((TextUtils.getLayoutDirectionFromLocale(loc) + 1) << 6);
+        int layoutDirection = TextUtils.getLayoutDirectionFromLocale(loc) + 1;
+        this.screenLayout = (this.screenLayout & (-193)) | (layoutDirection << 6);
     }
 
-    private static int getScreenLayoutNoDirection(int screenLayout2) {
-        return screenLayout2 & -193;
+    private static int getScreenLayoutNoDirection(int screenLayout) {
+        return screenLayout & (-193);
     }
 
     public boolean isScreenRound() {
@@ -1430,12 +1418,12 @@ public final class Configuration implements Parcelable, Comparable<Configuration
 
     @UnsupportedAppUsage
     public static String resourceQualifierString(Configuration config) {
-        return resourceQualifierString(config, (DisplayMetrics) null);
+        return resourceQualifierString(config, null);
     }
 
     public static String resourceQualifierString(Configuration config, DisplayMetrics metrics) {
-        int height;
         int width;
+        int height;
         ArrayList<String> parts = new ArrayList<>();
         if (config.mcc != 0) {
             parts.add("mcc" + config.mcc);
@@ -1552,9 +1540,11 @@ public final class Configuration implements Parcelable, Comparable<Configuration
                 parts.add("xhdpi");
             } else if (i6 == 480) {
                 parts.add("xxhdpi");
-            } else if (i6 != 640) {
+            } else if (i6 == 640) {
+                parts.add("xxxhdpi");
+            } else {
                 switch (i6) {
-                    case DENSITY_DPI_ANY /*65534*/:
+                    case DENSITY_DPI_ANY /* 65534 */:
                         parts.add("anydpi");
                         break;
                     case 65535:
@@ -1564,8 +1554,6 @@ public final class Configuration implements Parcelable, Comparable<Configuration
                         parts.add(config.densityDpi + "dpi");
                         break;
                 }
-            } else {
-                parts.add("xxxhdpi");
             }
         }
         int i7 = config.touchscreen;
@@ -1629,7 +1617,7 @@ public final class Configuration implements Parcelable, Comparable<Configuration
             parts.add(width + "x" + height);
         }
         parts.add("v" + Build.VERSION.RESOURCES_SDK_INT);
-        return TextUtils.join((CharSequence) NativeLibraryHelper.CLEAR_ABI_OVERRIDE, (Iterable) parts);
+        return TextUtils.join(NativeLibraryHelper.CLEAR_ABI_OVERRIDE, parts);
     }
 
     @UnsupportedAppUsage
@@ -1717,7 +1705,8 @@ public final class Configuration implements Parcelable, Comparable<Configuration
         configOut.fontScale = Float.intBitsToFloat(XmlUtils.readIntAttribute(parser, XML_ATTR_FONT_SCALE, 0));
         configOut.mcc = XmlUtils.readIntAttribute(parser, "mcc", 0);
         configOut.mnc = XmlUtils.readIntAttribute(parser, "mnc", 0);
-        configOut.mLocaleList = LocaleList.forLanguageTags(XmlUtils.readStringAttribute(parser, XML_ATTR_LOCALES));
+        String localesStr = XmlUtils.readStringAttribute(parser, XML_ATTR_LOCALES);
+        configOut.mLocaleList = LocaleList.forLanguageTags(localesStr);
         configOut.locale = configOut.mLocaleList.get(0);
         configOut.touchscreen = XmlUtils.readIntAttribute(parser, XML_ATTR_TOUCHSCREEN, 0);
         configOut.keyboard = XmlUtils.readIntAttribute(parser, "key", 0);

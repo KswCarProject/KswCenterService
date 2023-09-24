@@ -3,6 +3,7 @@ package android.view;
 import android.animation.Animator;
 import android.animation.RevealAnimator;
 
+/* loaded from: classes4.dex */
 public final class ViewAnimationUtils {
     private ViewAnimationUtils() {
     }

@@ -1,5 +1,6 @@
 package android.bluetooth;
 
+/* loaded from: classes.dex */
 public abstract class BluetoothGattCallback {
     public void onPhyUpdate(BluetoothGatt gatt, int txPhy, int rxPhy, int status) {
     }

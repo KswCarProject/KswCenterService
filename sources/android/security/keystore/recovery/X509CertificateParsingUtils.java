@@ -7,6 +7,7 @@ import java.security.cert.CertificateFactory;
 import java.security.cert.X509Certificate;
 import java.util.Base64;
 
+/* loaded from: classes3.dex */
 public class X509CertificateParsingUtils {
     private static final String CERT_FORMAT = "X.509";
 
@@ -23,12 +24,13 @@ public class X509CertificateParsingUtils {
     }
 
     private static X509Certificate decodeCert(byte[] certBytes) throws CertificateException {
-        return decodeCert((InputStream) new ByteArrayInputStream(certBytes));
+        return decodeCert(new ByteArrayInputStream(certBytes));
     }
 
     private static X509Certificate decodeCert(InputStream inStream) throws CertificateException {
         try {
-            return (X509Certificate) CertificateFactory.getInstance(CERT_FORMAT).generateCertificate(inStream);
+            CertificateFactory certFactory = CertificateFactory.getInstance(CERT_FORMAT);
+            return (X509Certificate) certFactory.generateCertificate(inStream);
         } catch (CertificateException e) {
             throw new RuntimeException(e);
         }

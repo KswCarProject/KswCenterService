@@ -12,24 +12,30 @@ import android.filterfw.format.ImageFormat;
 import android.filterfw.geometry.Point;
 import android.filterfw.geometry.Quad;
 
+/* loaded from: classes.dex */
 public class FixedRotationFilter extends Filter {
-    private ShaderProgram mProgram = null;
+    private ShaderProgram mProgram;
     @GenerateFieldPort(hasDefault = true, name = "rotation")
-    private int mRotation = 0;
+    private int mRotation;
 
     public FixedRotationFilter(String name) {
         super(name);
+        this.mRotation = 0;
+        this.mProgram = null;
     }
 
+    @Override // android.filterfw.core.Filter
     public void setupPorts() {
         addMaskedInputPort(SliceItem.FORMAT_IMAGE, ImageFormat.create(3, 3));
         addOutputBasedOnInput(SliceItem.FORMAT_IMAGE, SliceItem.FORMAT_IMAGE);
     }
 
+    @Override // android.filterfw.core.Filter
     public FrameFormat getOutputFormat(String portName, FrameFormat inputFormat) {
         return inputFormat;
     }
 
+    @Override // android.filterfw.core.Filter
     public void process(FilterContext context) {
         Quad sourceRegion;
         Frame input = pullInput(SliceItem.FORMAT_IMAGE);
@@ -48,7 +54,7 @@ public class FixedRotationFilter extends Filter {
         Point p2 = new Point(1.0f, 0.0f);
         Point p3 = new Point(0.0f, 1.0f);
         Point p4 = new Point(1.0f, 1.0f);
-        switch (Math.round(((float) this.mRotation) / 90.0f) % 4) {
+        switch (Math.round(this.mRotation / 90.0f) % 4) {
             case 1:
                 sourceRegion = new Quad(p3, p1, p4, p2);
                 outputFormat.setDimensions(height, width);

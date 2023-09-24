@@ -2,8 +2,8 @@ package android.view;
 
 import android.graphics.Insets;
 import android.graphics.Rect;
-import android.os.Parcel;
-import android.os.Parcelable;
+import android.p007os.Parcel;
+import android.p007os.Parcelable;
 import android.util.ArrayMap;
 import android.util.ArraySet;
 import android.util.SparseIntArray;
@@ -12,13 +12,19 @@ import java.io.PrintWriter;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.util.Objects;
+import java.util.function.Function;
 
+/* loaded from: classes4.dex */
 public class InsetsState implements Parcelable {
-    public static final Parcelable.Creator<InsetsState> CREATOR = new Parcelable.Creator<InsetsState>() {
+    public static final Parcelable.Creator<InsetsState> CREATOR = new Parcelable.Creator<InsetsState>() { // from class: android.view.InsetsState.1
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public InsetsState createFromParcel(Parcel in) {
             return new InsetsState(in);
         }
 
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public InsetsState[] newArray(int size) {
             return new InsetsState[size];
         }
@@ -43,14 +49,16 @@ public class InsetsState implements Parcelable {
     public static final int TYPE_TOP_BAR = 0;
     public static final int TYPE_TOP_GESTURES = 4;
     public static final int TYPE_TOP_TAPPABLE_ELEMENT = 8;
-    private final Rect mDisplayFrame = new Rect();
     private final ArrayMap<Integer, InsetsSource> mSources = new ArrayMap<>();
+    private final Rect mDisplayFrame = new Rect();
 
     @Retention(RetentionPolicy.SOURCE)
+    /* loaded from: classes4.dex */
     public @interface InsetSide {
     }
 
     @Retention(RetentionPolicy.SOURCE)
+    /* loaded from: classes4.dex */
     public @interface InternalInsetType {
     }
 
@@ -67,55 +75,50 @@ public class InsetsState implements Parcelable {
 
     public WindowInsets calculateInsets(Rect frame, boolean isScreenRound, boolean alwaysConsumeSystemBars, DisplayCutout cutout, Rect legacyContentInsets, Rect legacyStableInsets, int legacySoftInputMode, SparseIntArray typeSideMap) {
         int type;
-        Rect rect = frame;
-        Rect rect2 = legacyContentInsets;
-        Rect rect3 = legacyStableInsets;
         Insets[] typeInsetsMap = new Insets[7];
         Insets[] typeMaxInsetsMap = new Insets[7];
         boolean[] typeVisibilityMap = new boolean[7];
-        Rect relativeFrame = new Rect(rect);
-        Rect relativeFrameMax = new Rect(rect);
+        Rect relativeFrame = new Rect(frame);
+        Rect relativeFrameMax = new Rect(frame);
         int i = 2;
-        if (!(ViewRootImpl.sNewInsetsMode == 2 || rect2 == null || rect3 == null)) {
-            WindowInsets.assignCompatInsets(typeInsetsMap, rect2);
-            WindowInsets.assignCompatInsets(typeMaxInsetsMap, rect3);
+        if (ViewRootImpl.sNewInsetsMode != 2 && legacyContentInsets != null && legacyStableInsets != null) {
+            WindowInsets.assignCompatInsets(typeInsetsMap, legacyContentInsets);
+            WindowInsets.assignCompatInsets(typeMaxInsetsMap, legacyStableInsets);
         }
         int type2 = 0;
         while (true) {
             int type3 = type2;
-            if (type3 <= 10) {
-                InsetsSource source = this.mSources.get(Integer.valueOf(type3));
-                if (source == null) {
-                    type = type3;
-                } else {
-                    boolean z = true;
-                    boolean skipSystemBars = ViewRootImpl.sNewInsetsMode != i && (type3 == 0 || type3 == 1);
-                    boolean skipIme = source.getType() == 10 && (legacySoftInputMode & 16) == 0;
-                    if (ViewRootImpl.sNewInsetsMode != 0 || (toPublicType(type3) & WindowInsets.Type.compatSystemInsets()) == 0) {
-                        z = false;
-                    }
-                    boolean skipLegacyTypes = z;
-                    if (skipSystemBars || skipIme) {
-                        type = type3;
-                    } else if (skipLegacyTypes) {
-                        type = type3;
-                    } else {
-                        processSource(source, relativeFrame, false, typeInsetsMap, typeSideMap, typeVisibilityMap);
-                        if (source.getType() != 10) {
-                            type = type3;
-                            processSource(source, relativeFrameMax, true, typeMaxInsetsMap, (SparseIntArray) null, (boolean[]) null);
-                        } else {
-                            type = type3;
-                        }
-                    }
-                    typeVisibilityMap[WindowInsets.Type.indexOf(toPublicType(type))] = source.isVisible();
-                }
-                type2 = type + 1;
-                i = 2;
-            } else {
-                Insets[] insetsArr = typeMaxInsetsMap;
+            if (type3 > 10) {
                 return new WindowInsets(typeInsetsMap, typeMaxInsetsMap, typeVisibilityMap, isScreenRound, alwaysConsumeSystemBars, cutout);
             }
+            InsetsSource source = this.mSources.get(Integer.valueOf(type3));
+            if (source == null) {
+                type = type3;
+            } else {
+                boolean z = true;
+                boolean skipSystemBars = ViewRootImpl.sNewInsetsMode != i && (type3 == 0 || type3 == 1);
+                boolean skipIme = source.getType() == 10 && (legacySoftInputMode & 16) == 0;
+                if (ViewRootImpl.sNewInsetsMode != 0 || (toPublicType(type3) & WindowInsets.Type.compatSystemInsets()) == 0) {
+                    z = false;
+                }
+                boolean skipLegacyTypes = z;
+                if (skipSystemBars || skipIme) {
+                    type = type3;
+                } else if (skipLegacyTypes) {
+                    type = type3;
+                } else {
+                    processSource(source, relativeFrame, false, typeInsetsMap, typeSideMap, typeVisibilityMap);
+                    if (source.getType() != 10) {
+                        type = type3;
+                        processSource(source, relativeFrameMax, true, typeMaxInsetsMap, null, null);
+                    } else {
+                        type = type3;
+                    }
+                }
+                typeVisibilityMap[WindowInsets.Type.indexOf(toPublicType(type))] = source.isVisible();
+            }
+            type2 = type + 1;
+            i = 2;
         }
     }
 
@@ -139,8 +142,11 @@ public class InsetsState implements Parcelable {
         if (typeVisibilityMap != null) {
             typeVisibilityMap[index] = source.isVisible();
         }
-        if (typeSideMap != null && !Insets.NONE.equals(insets) && getInsetSide(insets) != 4) {
-            typeSideMap.put(source.getType(), getInsetSide(insets));
+        if (typeSideMap != null && !Insets.NONE.equals(insets)) {
+            int insetSide = getInsetSide(insets);
+            if (insetSide != 4) {
+                typeSideMap.put(source.getType(), getInsetSide(insets));
+            }
         }
     }
 
@@ -161,7 +167,12 @@ public class InsetsState implements Parcelable {
     }
 
     public InsetsSource getSource(int type) {
-        return (InsetsSource) this.mSources.computeIfAbsent(Integer.valueOf(type), $$Lambda$cZhmLzK8aetUdx4VlP9w5jR7En0.INSTANCE);
+        return this.mSources.computeIfAbsent(Integer.valueOf(type), new Function() { // from class: android.view.-$$Lambda$cZhmLzK8aetUdx4VlP9w5jR7En0
+            @Override // java.util.function.Function
+            public final Object apply(Object obj) {
+                return new InsetsSource(((Integer) obj).intValue());
+            }
+        });
     }
 
     public void setDisplayFrame(Rect frame) {
@@ -190,7 +201,7 @@ public class InsetsState implements Parcelable {
             }
             return;
         }
-        this.mSources.putAll(other.mSources);
+        this.mSources.putAll((ArrayMap<? extends Integer, ? extends InsetsSource>) other.mSources);
     }
 
     public void addSource(InsetsSource source) {
@@ -246,23 +257,23 @@ public class InsetsState implements Parcelable {
     }
 
     public static boolean getDefaultVisibility(int type) {
-        if (type == 10) {
-            return false;
+        if (type != 10) {
+            switch (type) {
+                case 0:
+                case 1:
+                case 2:
+                case 3:
+                    return true;
+                default:
+                    return true;
+            }
         }
-        switch (type) {
-            case 0:
-            case 1:
-            case 2:
-            case 3:
-                return true;
-            default:
-                return true;
-        }
+        return false;
     }
 
     public void dump(String prefix, PrintWriter pw) {
         pw.println(prefix + "InsetsState");
-        for (int i = this.mSources.size() + -1; i >= 0; i += -1) {
+        for (int i = this.mSources.size() + (-1); i >= 0; i += -1) {
             this.mSources.valueAt(i).dump(prefix + "  ", pw);
         }
     }
@@ -302,31 +313,33 @@ public class InsetsState implements Parcelable {
             return false;
         }
         InsetsState state = (InsetsState) o;
-        if (!this.mDisplayFrame.equals(state.mDisplayFrame) || this.mSources.size() != state.mSources.size()) {
-            return false;
-        }
-        for (int i = this.mSources.size() - 1; i >= 0; i--) {
-            InsetsSource source = this.mSources.valueAt(i);
-            InsetsSource otherSource = state.mSources.get(Integer.valueOf(source.getType()));
-            if (otherSource == null || !otherSource.equals(source)) {
-                return false;
+        if (this.mDisplayFrame.equals(state.mDisplayFrame) && this.mSources.size() == state.mSources.size()) {
+            for (int i = this.mSources.size() - 1; i >= 0; i--) {
+                InsetsSource source = this.mSources.valueAt(i);
+                InsetsSource otherSource = state.mSources.get(Integer.valueOf(source.getType()));
+                if (otherSource == null || !otherSource.equals(source)) {
+                    return false;
+                }
             }
+            return true;
         }
-        return true;
+        return false;
     }
 
     public int hashCode() {
-        return Objects.hash(new Object[]{this.mDisplayFrame, this.mSources});
+        return Objects.hash(this.mDisplayFrame, this.mSources);
     }
 
     public InsetsState(Parcel in) {
         readFromParcel(in);
     }
 
+    @Override // android.p007os.Parcelable
     public int describeContents() {
         return 0;
     }
 
+    @Override // android.p007os.Parcelable
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeParcelable(this.mDisplayFrame, flags);
         dest.writeInt(this.mSources.size());
@@ -337,10 +350,10 @@ public class InsetsState implements Parcelable {
 
     public void readFromParcel(Parcel in) {
         this.mSources.clear();
-        this.mDisplayFrame.set((Rect) in.readParcelable((ClassLoader) null));
+        this.mDisplayFrame.set((Rect) in.readParcelable(null));
         int size = in.readInt();
         for (int i = 0; i < size; i++) {
-            InsetsSource source = (InsetsSource) in.readParcelable((ClassLoader) null);
+            InsetsSource source = (InsetsSource) in.readParcelable(null);
             this.mSources.put(Integer.valueOf(source.getType()), source);
         }
     }

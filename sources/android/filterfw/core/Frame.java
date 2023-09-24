@@ -4,18 +4,19 @@ import android.annotation.UnsupportedAppUsage;
 import android.graphics.Bitmap;
 import java.nio.ByteBuffer;
 
+/* loaded from: classes.dex */
 public abstract class Frame {
     public static final int NO_BINDING = 0;
     public static final long TIMESTAMP_NOT_SET = -2;
     public static final long TIMESTAMP_UNKNOWN = -1;
-    private long mBindingId = 0;
-    private int mBindingType = 0;
+    private long mBindingId;
+    private int mBindingType;
     private FrameFormat mFormat;
     private FrameManager mFrameManager;
-    private boolean mReadOnly = false;
-    private int mRefCount = 1;
-    private boolean mReusable = false;
-    private long mTimestamp = -2;
+    private boolean mReadOnly;
+    private int mRefCount;
+    private boolean mReusable;
+    private long mTimestamp;
 
     @UnsupportedAppUsage
     public abstract Bitmap getBitmap();
@@ -28,11 +29,9 @@ public abstract class Frame {
 
     public abstract Object getObjectValue();
 
-    /* access modifiers changed from: protected */
-    public abstract boolean hasNativeAllocation();
+    protected abstract boolean hasNativeAllocation();
 
-    /* access modifiers changed from: protected */
-    public abstract void releaseNativeAllocation();
+    protected abstract void releaseNativeAllocation();
 
     public abstract void setBitmap(Bitmap bitmap);
 
@@ -44,11 +43,23 @@ public abstract class Frame {
     public abstract void setInts(int[] iArr);
 
     Frame(FrameFormat format, FrameManager frameManager) {
+        this.mReadOnly = false;
+        this.mReusable = false;
+        this.mRefCount = 1;
+        this.mBindingType = 0;
+        this.mBindingId = 0L;
+        this.mTimestamp = -2L;
         this.mFormat = format.mutableCopy();
         this.mFrameManager = frameManager;
     }
 
     Frame(FrameFormat format, FrameManager frameManager, int bindingType, long bindingId) {
+        this.mReadOnly = false;
+        this.mReusable = false;
+        this.mRefCount = 1;
+        this.mBindingType = 0;
+        this.mBindingId = 0L;
+        this.mTimestamp = -2L;
         this.mFormat = format.mutableCopy();
         this.mFrameManager = frameManager;
         this.mBindingType = bindingType;
@@ -113,8 +124,7 @@ public abstract class Frame {
         setData(frame.getData());
     }
 
-    /* access modifiers changed from: protected */
-    public boolean requestResize(int[] newDimensions) {
+    protected boolean requestResize(int[] newDimensions) {
         return false;
     }
 
@@ -141,25 +151,21 @@ public abstract class Frame {
         return this.mFrameManager;
     }
 
-    /* access modifiers changed from: protected */
-    public void assertFrameMutable() {
+    protected void assertFrameMutable() {
         if (isReadOnly()) {
             throw new RuntimeException("Attempting to modify read-only frame!");
         }
     }
 
-    /* access modifiers changed from: protected */
-    public void setReusable(boolean reusable) {
+    protected void setReusable(boolean reusable) {
         this.mReusable = reusable;
     }
 
-    /* access modifiers changed from: protected */
-    public void setFormat(FrameFormat format) {
+    protected void setFormat(FrameFormat format) {
         this.mFormat = format.mutableCopy();
     }
 
-    /* access modifiers changed from: protected */
-    public void setGenericObjectValue(Object value) {
+    protected void setGenericObjectValue(Object value) {
         throw new RuntimeException("Cannot set object value of unsupported type: " + value.getClass());
     }
 
@@ -170,47 +176,40 @@ public abstract class Frame {
         Bitmap result = bitmap.copy(Bitmap.Config.ARGB_8888, false);
         if (result == null) {
             throw new RuntimeException("Error converting bitmap to RGBA!");
-        } else if (result.getRowBytes() == result.getWidth() * 4) {
-            return result;
-        } else {
+        }
+        if (result.getRowBytes() != result.getWidth() * 4) {
             throw new RuntimeException("Unsupported row byte count in bitmap!");
         }
+        return result;
     }
 
-    /* access modifiers changed from: protected */
-    public void reset(FrameFormat newFormat) {
+    protected void reset(FrameFormat newFormat) {
         this.mFormat = newFormat.mutableCopy();
         this.mReadOnly = false;
         this.mRefCount = 1;
     }
 
-    /* access modifiers changed from: protected */
-    public void onFrameStore() {
+    protected void onFrameStore() {
     }
 
-    /* access modifiers changed from: protected */
-    public void onFrameFetch() {
+    protected void onFrameFetch() {
     }
 
-    /* access modifiers changed from: package-private */
-    public final int incRefCount() {
+    final int incRefCount() {
         this.mRefCount++;
         return this.mRefCount;
     }
 
-    /* access modifiers changed from: package-private */
-    public final int decRefCount() {
+    final int decRefCount() {
         this.mRefCount--;
         return this.mRefCount;
     }
 
-    /* access modifiers changed from: package-private */
-    public final boolean isReusable() {
+    final boolean isReusable() {
         return this.mReusable;
     }
 
-    /* access modifiers changed from: package-private */
-    public final void markReadOnly() {
+    final void markReadOnly() {
         this.mReadOnly = true;
     }
 }

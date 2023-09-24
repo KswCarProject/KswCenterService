@@ -2,49 +2,59 @@ package android.database;
 
 import android.annotation.UnsupportedAppUsage;
 
+/* loaded from: classes.dex */
 public abstract class AbstractWindowedCursor extends AbstractCursor {
     protected CursorWindow mWindow;
 
+    @Override // android.database.AbstractCursor, android.database.Cursor
     public byte[] getBlob(int columnIndex) {
         checkPosition();
         return this.mWindow.getBlob(this.mPos, columnIndex);
     }
 
+    @Override // android.database.AbstractCursor, android.database.Cursor
     public String getString(int columnIndex) {
         checkPosition();
         return this.mWindow.getString(this.mPos, columnIndex);
     }
 
+    @Override // android.database.AbstractCursor, android.database.Cursor
     public void copyStringToBuffer(int columnIndex, CharArrayBuffer buffer) {
         checkPosition();
         this.mWindow.copyStringToBuffer(this.mPos, columnIndex, buffer);
     }
 
+    @Override // android.database.AbstractCursor, android.database.Cursor
     public short getShort(int columnIndex) {
         checkPosition();
         return this.mWindow.getShort(this.mPos, columnIndex);
     }
 
+    @Override // android.database.AbstractCursor, android.database.Cursor
     public int getInt(int columnIndex) {
         checkPosition();
         return this.mWindow.getInt(this.mPos, columnIndex);
     }
 
+    @Override // android.database.AbstractCursor, android.database.Cursor
     public long getLong(int columnIndex) {
         checkPosition();
         return this.mWindow.getLong(this.mPos, columnIndex);
     }
 
+    @Override // android.database.AbstractCursor, android.database.Cursor
     public float getFloat(int columnIndex) {
         checkPosition();
         return this.mWindow.getFloat(this.mPos, columnIndex);
     }
 
+    @Override // android.database.AbstractCursor, android.database.Cursor
     public double getDouble(int columnIndex) {
         checkPosition();
         return this.mWindow.getDouble(this.mPos, columnIndex);
     }
 
+    @Override // android.database.AbstractCursor, android.database.Cursor
     public boolean isNull(int columnIndex) {
         checkPosition();
         return this.mWindow.getType(this.mPos, columnIndex) == 0;
@@ -70,19 +80,21 @@ public abstract class AbstractWindowedCursor extends AbstractCursor {
         return getType(columnIndex) == 2;
     }
 
+    @Override // android.database.AbstractCursor, android.database.Cursor
     public int getType(int columnIndex) {
         checkPosition();
         return this.mWindow.getType(this.mPos, columnIndex);
     }
 
-    /* access modifiers changed from: protected */
-    public void checkPosition() {
+    @Override // android.database.AbstractCursor
+    protected void checkPosition() {
         super.checkPosition();
         if (this.mWindow == null) {
             throw new StaleDataException("Attempting to access a closed CursorWindow.Most probable cause: cursor is deactivated prior to calling this method.");
         }
     }
 
+    @Override // android.database.AbstractCursor, android.database.CrossProcessCursor
     public CursorWindow getWindow() {
         return this.mWindow;
     }
@@ -98,18 +110,16 @@ public abstract class AbstractWindowedCursor extends AbstractCursor {
         return this.mWindow != null;
     }
 
-    /* access modifiers changed from: protected */
     @UnsupportedAppUsage
-    public void closeWindow() {
+    protected void closeWindow() {
         if (this.mWindow != null) {
             this.mWindow.close();
             this.mWindow = null;
         }
     }
 
-    /* access modifiers changed from: protected */
     @UnsupportedAppUsage
-    public void clearOrCreateWindow(String name) {
+    protected void clearOrCreateWindow(String name) {
         if (this.mWindow == null) {
             this.mWindow = new CursorWindow(name);
         } else {
@@ -117,9 +127,9 @@ public abstract class AbstractWindowedCursor extends AbstractCursor {
         }
     }
 
-    /* access modifiers changed from: protected */
+    @Override // android.database.AbstractCursor
     @UnsupportedAppUsage
-    public void onDeactivateOrClose() {
+    protected void onDeactivateOrClose() {
         super.onDeactivateOrClose();
         closeWindow();
     }

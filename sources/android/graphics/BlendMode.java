@@ -2,6 +2,7 @@ package android.graphics;
 
 import android.graphics.PorterDuff;
 
+/* loaded from: classes.dex */
 public enum BlendMode {
     CLEAR(0),
     SRC(1),
@@ -33,14 +34,11 @@ public enum BlendMode {
     COLOR(27),
     LUMINOSITY(28);
     
-    private static final BlendMode[] BLEND_MODES = null;
-    private final Xfermode mXfermode;
-
-    static {
-        BLEND_MODES = values();
-    }
+    private static final BlendMode[] BLEND_MODES = values();
+    private final Xfermode mXfermode = new Xfermode();
 
     public static BlendMode fromValue(int value) {
+        BlendMode[] blendModeArr;
         for (BlendMode mode : BLEND_MODES) {
             if (mode.mXfermode.porterDuffMode == value) {
                 return mode;
@@ -99,8 +97,7 @@ public enum BlendMode {
         }
     }
 
-    private BlendMode(int mode) {
-        this.mXfermode = new Xfermode();
+    BlendMode(int mode) {
         this.mXfermode.porterDuffMode = mode;
     }
 

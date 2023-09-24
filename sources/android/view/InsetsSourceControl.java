@@ -1,15 +1,20 @@
 package android.view;
 
 import android.graphics.Point;
-import android.os.Parcel;
-import android.os.Parcelable;
+import android.p007os.Parcel;
+import android.p007os.Parcelable;
 
+/* loaded from: classes4.dex */
 public class InsetsSourceControl implements Parcelable {
-    public static final Parcelable.Creator<InsetsSourceControl> CREATOR = new Parcelable.Creator<InsetsSourceControl>() {
+    public static final Parcelable.Creator<InsetsSourceControl> CREATOR = new Parcelable.Creator<InsetsSourceControl>() { // from class: android.view.InsetsSourceControl.1
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public InsetsSourceControl createFromParcel(Parcel in) {
             return new InsetsSourceControl(in);
         }
 
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public InsetsSourceControl[] newArray(int size) {
             return new InsetsSourceControl[size];
         }
@@ -34,8 +39,8 @@ public class InsetsSourceControl implements Parcelable {
 
     public InsetsSourceControl(Parcel in) {
         this.mType = in.readInt();
-        this.mLeash = (SurfaceControl) in.readParcelable((ClassLoader) null);
-        this.mSurfacePosition = (Point) in.readParcelable((ClassLoader) null);
+        this.mLeash = (SurfaceControl) in.readParcelable(null);
+        this.mSurfacePosition = (Point) in.readParcelable(null);
     }
 
     public boolean setSurfacePosition(int left, int top) {
@@ -50,10 +55,12 @@ public class InsetsSourceControl implements Parcelable {
         return this.mSurfacePosition;
     }
 
+    @Override // android.p007os.Parcelable
     public int describeContents() {
         return 0;
     }
 
+    @Override // android.p007os.Parcelable
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeInt(this.mType);
         dest.writeParcelable(this.mLeash, 0);

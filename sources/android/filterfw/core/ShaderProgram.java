@@ -5,6 +5,7 @@ import android.filterfw.geometry.Quad;
 import android.opengl.GLES20;
 import android.telephony.SmsManager;
 
+/* loaded from: classes.dex */
 public class ShaderProgram extends Program {
     private GLEnvironment mGLEnvironment;
     private int mMaxTileSize = 0;
@@ -62,22 +63,20 @@ public class ShaderProgram extends Program {
     @UnsupportedAppUsage
     public ShaderProgram(FilterContext context, String fragmentShader) {
         this.mGLEnvironment = getGLEnvironment(context);
-        allocate(this.mGLEnvironment, (String) null, fragmentShader);
-        if (compileAndLink()) {
-            setTimer();
-            return;
+        allocate(this.mGLEnvironment, null, fragmentShader);
+        if (!compileAndLink()) {
+            throw new RuntimeException("Could not compile and link shader!");
         }
-        throw new RuntimeException("Could not compile and link shader!");
+        setTimer();
     }
 
     public ShaderProgram(FilterContext context, String vertexShader, String fragmentShader) {
         this.mGLEnvironment = getGLEnvironment(context);
         allocate(this.mGLEnvironment, vertexShader, fragmentShader);
-        if (compileAndLink()) {
-            setTimer();
-            return;
+        if (!compileAndLink()) {
+            throw new RuntimeException("Could not compile and link shader!");
         }
-        throw new RuntimeException("Could not compile and link shader!");
+        setTimer();
     }
 
     @UnsupportedAppUsage
@@ -87,8 +86,7 @@ public class ShaderProgram extends Program {
         return program;
     }
 
-    /* access modifiers changed from: protected */
-    public void finalize() throws Throwable {
+    protected void finalize() throws Throwable {
         deallocate();
     }
 
@@ -96,6 +94,7 @@ public class ShaderProgram extends Program {
         return this.mGLEnvironment;
     }
 
+    @Override // android.filterfw.core.Program
     @UnsupportedAppUsage
     public void process(Frame[] inputs, Frame output) {
         if (this.mTimer.LOG_MFF_RUNNING_TIMES) {
@@ -104,11 +103,9 @@ public class ShaderProgram extends Program {
             this.mTimer.stop("glFinish");
         }
         GLFrame[] glInputs = new GLFrame[inputs.length];
-        int i = 0;
-        while (i < inputs.length) {
+        for (int i = 0; i < inputs.length; i++) {
             if (inputs[i] instanceof GLFrame) {
-                glInputs[i] = inputs[i];
-                i++;
+                glInputs[i] = (GLFrame) inputs[i];
             } else {
                 throw new RuntimeException("ShaderProgram got non-GL frame as input " + i + "!");
             }
@@ -116,18 +113,23 @@ public class ShaderProgram extends Program {
         if (output instanceof GLFrame) {
             GLFrame glOutput = (GLFrame) output;
             if (this.mMaxTileSize > 0) {
-                setShaderTileCounts(((output.getFormat().getWidth() + this.mMaxTileSize) - 1) / this.mMaxTileSize, ((output.getFormat().getHeight() + this.mMaxTileSize) - 1) / this.mMaxTileSize);
+                int xTiles = ((output.getFormat().getWidth() + this.mMaxTileSize) - 1) / this.mMaxTileSize;
+                int yTiles = ((output.getFormat().getHeight() + this.mMaxTileSize) - 1) / this.mMaxTileSize;
+                setShaderTileCounts(xTiles, yTiles);
             }
-            if (shaderProcess(glInputs, glOutput) == 0) {
+            if (!shaderProcess(glInputs, glOutput)) {
                 throw new RuntimeException("Error executing ShaderProgram!");
-            } else if (this.mTimer.LOG_MFF_RUNNING_TIMES) {
-                GLES20.glFinish();
             }
-        } else {
-            throw new RuntimeException("ShaderProgram got non-GL output frame!");
+            if (this.mTimer.LOG_MFF_RUNNING_TIMES) {
+                GLES20.glFinish();
+                return;
+            }
+            return;
         }
+        throw new RuntimeException("ShaderProgram got non-GL output frame!");
     }
 
+    @Override // android.filterfw.core.Program
     @UnsupportedAppUsage
     public void setHostValue(String variableName, Object value) {
         if (!setUniformValue(variableName, value)) {
@@ -135,6 +137,7 @@ public class ShaderProgram extends Program {
         }
     }
 
+    @Override // android.filterfw.core.Program
     public Object getHostValue(String variableName) {
         return getUniformValue(variableName);
     }
@@ -153,11 +156,11 @@ public class ShaderProgram extends Program {
 
     @UnsupportedAppUsage
     public void setSourceRegion(Quad region) {
-        setSourceRegion(region.p0.x, region.p0.y, region.p1.x, region.p1.y, region.p2.x, region.p2.y, region.p3.x, region.p3.y);
+        setSourceRegion(region.f34p0.f32x, region.f34p0.f33y, region.f35p1.f32x, region.f35p1.f33y, region.f36p2.f32x, region.f36p2.f33y, region.f37p3.f32x, region.f37p3.f33y);
     }
 
     public void setTargetRegion(Quad region) {
-        setTargetRegion(region.p0.x, region.p0.y, region.p1.x, region.p1.y, region.p2.x, region.p2.y, region.p3.x, region.p3.y);
+        setTargetRegion(region.f34p0.f32x, region.f34p0.f33y, region.f35p1.f32x, region.f35p1.f33y, region.f36p2.f32x, region.f36p2.f33y, region.f37p3.f32x, region.f37p3.f33y);
     }
 
     @UnsupportedAppUsage
@@ -218,10 +221,10 @@ public class ShaderProgram extends Program {
 
     private static GLEnvironment getGLEnvironment(FilterContext context) {
         GLEnvironment result = context != null ? context.getGLEnvironment() : null;
-        if (result != null) {
-            return result;
+        if (result == null) {
+            throw new NullPointerException("Attempting to create ShaderProgram with no GL environment in place!");
         }
-        throw new NullPointerException("Attempting to create ShaderProgram with no GL environment in place!");
+        return result;
     }
 
     static {

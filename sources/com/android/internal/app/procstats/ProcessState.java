@@ -1,11 +1,10 @@
 package com.android.internal.app.procstats;
 
 import android.app.job.JobInfo;
-import android.bluetooth.BluetoothHidDevice;
 import android.net.wifi.WifiEnterpriseConfig;
-import android.os.Parcel;
-import android.os.SystemClock;
-import android.os.UserHandle;
+import android.p007os.Parcel;
+import android.p007os.SystemClock;
+import android.p007os.UserHandle;
 import android.provider.SettingsStringUtil;
 import android.telephony.SmsManager;
 import android.util.ArrayMap;
@@ -23,29 +22,18 @@ import com.ibm.icu.text.PluralRules;
 import java.io.PrintWriter;
 import java.util.Comparator;
 
+/* loaded from: classes4.dex */
 public final class ProcessState {
-    public static final Comparator<ProcessState> COMPARATOR = new Comparator<ProcessState>() {
-        public int compare(ProcessState lhs, ProcessState rhs) {
-            if (lhs.mTmpTotalTime < rhs.mTmpTotalTime) {
-                return -1;
-            }
-            if (lhs.mTmpTotalTime > rhs.mTmpTotalTime) {
-                return 1;
-            }
-            return 0;
-        }
-    };
     private static final boolean DEBUG = false;
     private static final boolean DEBUG_PARCEL = false;
-    static final int[] PROCESS_STATE_TO_STATE = {0, 0, 1, 2, 2, 2, 2, 2, 3, 3, 4, 5, 7, 1, 8, 9, 10, 11, 12, 11, 13};
     private static final String TAG = "ProcessStats";
     private boolean mActive;
     private long mAvgCachedKillPss;
     private ProcessState mCommonProcess;
-    private int mCurCombinedState = -1;
+    private int mCurCombinedState;
     private boolean mDead;
     private final DurationsTable mDurations;
-    private int mLastPssState = -1;
+    private int mLastPssState;
     private long mLastPssTime;
     private long mMaxCachedKillPss;
     private long mMinCachedKillPss;
@@ -59,16 +47,29 @@ public final class ProcessState {
     private final PssTable mPssTable;
     private long mStartTime;
     private final ProcessStats mStats;
-    /* access modifiers changed from: private */
-    public long mTmpTotalTime;
+    private long mTmpTotalTime;
     private long mTotalRunningDuration;
-    private final long[] mTotalRunningPss = new long[10];
+    private final long[] mTotalRunningPss;
     private long mTotalRunningStartTime;
     private final int mUid;
     private final long mVersion;
     public ProcessState tmpFoundSubProc;
     public int tmpNumInUse;
+    static final int[] PROCESS_STATE_TO_STATE = {0, 0, 1, 2, 2, 2, 2, 2, 3, 3, 4, 5, 7, 1, 8, 9, 10, 11, 12, 11, 13};
+    public static final Comparator<ProcessState> COMPARATOR = new Comparator<ProcessState>() { // from class: com.android.internal.app.procstats.ProcessState.1
+        @Override // java.util.Comparator
+        public int compare(ProcessState lhs, ProcessState rhs) {
+            if (lhs.mTmpTotalTime >= rhs.mTmpTotalTime) {
+                if (lhs.mTmpTotalTime > rhs.mTmpTotalTime) {
+                    return 1;
+                }
+                return 0;
+            }
+            return -1;
+        }
+    };
 
+    /* loaded from: classes4.dex */
     static class PssAggr {
         long pss = 0;
         long samples = 0;
@@ -76,14 +77,16 @@ public final class ProcessState {
         PssAggr() {
         }
 
-        /* access modifiers changed from: package-private */
-        public void add(long newPss, long newSamples) {
-            this.pss = ((long) ((((double) this.pss) * ((double) this.samples)) + (((double) newPss) * ((double) newSamples)))) / (this.samples + newSamples);
+        void add(long newPss, long newSamples) {
+            this.pss = ((long) ((this.pss * this.samples) + (newPss * newSamples))) / (this.samples + newSamples);
             this.samples += newSamples;
         }
     }
 
     public ProcessState(ProcessStats processStats, String pkg, int uid, long vers, String name) {
+        this.mTotalRunningPss = new long[10];
+        this.mCurCombinedState = -1;
+        this.mLastPssState = -1;
         this.mStats = processStats;
         this.mName = name;
         this.mCommonProcess = this;
@@ -95,6 +98,9 @@ public final class ProcessState {
     }
 
     public ProcessState(ProcessState commonProcess, String pkg, int uid, long vers, String name, long now) {
+        this.mTotalRunningPss = new long[10];
+        this.mCurCombinedState = -1;
+        this.mLastPssState = -1;
         this.mStats = commonProcess.mStats;
         this.mName = name;
         this.mCommonProcess = commonProcess;
@@ -177,12 +183,12 @@ public final class ProcessState {
         this.mPssTable.resetTable();
         this.mStartTime = now;
         this.mLastPssState = -1;
-        this.mLastPssTime = 0;
+        this.mLastPssTime = 0L;
         this.mNumExcessiveCpu = 0;
         this.mNumCachedKill = 0;
-        this.mMaxCachedKillPss = 0;
-        this.mAvgCachedKillPss = 0;
-        this.mMinCachedKillPss = 0;
+        this.mMaxCachedKillPss = 0L;
+        this.mAvgCachedKillPss = 0L;
+        this.mMinCachedKillPss = 0L;
     }
 
     public void makeDead() {
@@ -190,9 +196,10 @@ public final class ProcessState {
     }
 
     private void ensureNotDead() {
-        if (this.mDead) {
-            Slog.w("ProcessStats", "ProcessState dead: name=" + this.mName + " pkg=" + this.mPackage + " uid=" + this.mUid + " common.name=" + this.mCommonProcess.mName);
+        if (!this.mDead) {
+            return;
         }
+        Slog.m50w("ProcessStats", "ProcessState dead: name=" + this.mName + " pkg=" + this.mPackage + " uid=" + this.mUid + " common.name=" + this.mCommonProcess.mName);
     }
 
     public void writeToParcel(Parcel out, long now) {
@@ -218,26 +225,26 @@ public final class ProcessState {
         if (fully) {
             this.mMultiPackage = multiPackage;
         }
-        if (!this.mDurations.readFromParcel(in) || !this.mPssTable.readFromParcel(in)) {
-            return false;
+        if (this.mDurations.readFromParcel(in) && this.mPssTable.readFromParcel(in)) {
+            for (int i = 0; i < 10; i++) {
+                this.mTotalRunningPss[i] = in.readLong();
+            }
+            this.mTotalRunningDuration = in.readLong();
+            in.readInt();
+            this.mNumExcessiveCpu = in.readInt();
+            this.mNumCachedKill = in.readInt();
+            if (this.mNumCachedKill > 0) {
+                this.mMinCachedKillPss = in.readLong();
+                this.mAvgCachedKillPss = in.readLong();
+                this.mMaxCachedKillPss = in.readLong();
+            } else {
+                this.mMaxCachedKillPss = 0L;
+                this.mAvgCachedKillPss = 0L;
+                this.mMinCachedKillPss = 0L;
+            }
+            return true;
         }
-        for (int i = 0; i < 10; i++) {
-            this.mTotalRunningPss[i] = in.readLong();
-        }
-        this.mTotalRunningDuration = in.readLong();
-        in.readInt();
-        this.mNumExcessiveCpu = in.readInt();
-        this.mNumCachedKill = in.readInt();
-        if (this.mNumCachedKill > 0) {
-            this.mMinCachedKillPss = in.readLong();
-            this.mAvgCachedKillPss = in.readLong();
-            this.mMaxCachedKillPss = in.readLong();
-        } else {
-            this.mMaxCachedKillPss = 0;
-            this.mAvgCachedKillPss = 0;
-            this.mMinCachedKillPss = 0;
-        }
-        return true;
+        return false;
     }
 
     public void makeActive() {
@@ -258,10 +265,7 @@ public final class ProcessState {
     }
 
     public boolean hasAnyData() {
-        if (this.mDurations.getKeyCount() == 0 && this.mCurCombinedState == -1 && this.mPssTable.getKeyCount() == 0 && this.mTotalRunningPss[0] == 0) {
-            return false;
-        }
-        return true;
+        return (this.mDurations.getKeyCount() == 0 && this.mCurCombinedState == -1 && this.mPssTable.getKeyCount() == 0 && this.mTotalRunningPss[0] == 0) ? false : true;
     }
 
     public void setState(int state, int memFactor, long now, ArrayMap<String, ProcessStats.ProcessStateHolder> pkgList) {
@@ -285,9 +289,9 @@ public final class ProcessState {
             commitStateTime(now);
             if (state == -1) {
                 this.mTotalRunningDuration += now - this.mTotalRunningStartTime;
-                this.mTotalRunningStartTime = 0;
+                this.mTotalRunningStartTime = 0L;
             } else if (this.mCurCombinedState == -1) {
-                this.mTotalRunningDuration = 0;
+                this.mTotalRunningDuration = 0L;
                 this.mTotalRunningStartTime = now;
                 for (int i = 9; i >= 0; i--) {
                     this.mTotalRunningPss[i] = 0;
@@ -355,7 +359,6 @@ public final class ProcessState {
     }
 
     public void addPss(long pss, long uss, long rss, boolean always, int type, long duration, ArrayMap<String, ProcessStats.ProcessStateHolder> pkgList) {
-        ArrayMap<String, ProcessStats.ProcessStateHolder> arrayMap = pkgList;
         ensureNotDead();
         switch (type) {
             case 0:
@@ -383,20 +386,11 @@ public final class ProcessState {
             this.mLastPssState = this.mCurCombinedState;
             this.mLastPssTime = SystemClock.uptimeMillis();
             if (this.mCurCombinedState != -1) {
-                long j = pss;
-                long j2 = pss;
-                long j3 = pss;
-                long j4 = uss;
-                long j5 = uss;
-                long j6 = uss;
-                long j7 = rss;
-                long j8 = rss;
-                long j9 = rss;
-                this.mCommonProcess.mPssTable.mergeStats(this.mCurCombinedState, 1, j, j2, j3, j4, j5, j6, j7, j8, j9);
-                PssTable.mergeStats(this.mCommonProcess.mTotalRunningPss, 0, 1, j, j2, j3, j4, j5, j6, j7, j8, j9);
-                if (this.mCommonProcess.mMultiPackage && arrayMap != null) {
+                this.mCommonProcess.mPssTable.mergeStats(this.mCurCombinedState, 1, pss, pss, pss, uss, uss, uss, rss, rss, rss);
+                PssTable.mergeStats(this.mCommonProcess.mTotalRunningPss, 0, 1, pss, pss, pss, uss, uss, uss, rss, rss, rss);
+                if (this.mCommonProcess.mMultiPackage && pkgList != null) {
                     for (int ip = pkgList.size() - 1; ip >= 0; ip--) {
-                        ProcessState fixedProc = pullFixedProc(arrayMap, ip);
+                        ProcessState fixedProc = pullFixedProc(pkgList, ip);
                         fixedProc.mPssTable.mergeStats(this.mCurCombinedState, 1, pss, pss, pss, uss, uss, uss, rss, rss, rss);
                         PssTable.mergeStats(fixedProc.mTotalRunningPss, 0, 1, pss, pss, pss, uss, uss, uss, rss, rss, rss);
                     }
@@ -408,10 +402,11 @@ public final class ProcessState {
     public void reportExcessiveCpu(ArrayMap<String, ProcessStats.ProcessStateHolder> pkgList) {
         ensureNotDead();
         this.mCommonProcess.mNumExcessiveCpu++;
-        if (this.mCommonProcess.mMultiPackage) {
-            for (int ip = pkgList.size() - 1; ip >= 0; ip--) {
-                pullFixedProc(pkgList, ip).mNumExcessiveCpu++;
-            }
+        if (!this.mCommonProcess.mMultiPackage) {
+            return;
+        }
+        for (int ip = pkgList.size() - 1; ip >= 0; ip--) {
+            pullFixedProc(pkgList, ip).mNumExcessiveCpu++;
         }
     }
 
@@ -429,37 +424,38 @@ public final class ProcessState {
         if (maxPss > this.mMaxCachedKillPss) {
             this.mMaxCachedKillPss = maxPss;
         }
-        this.mAvgCachedKillPss = (long) (((((double) this.mAvgCachedKillPss) * ((double) this.mNumCachedKill)) + ((double) avgPss)) / ((double) (this.mNumCachedKill + num)));
+        this.mAvgCachedKillPss = (long) (((this.mAvgCachedKillPss * this.mNumCachedKill) + avgPss) / (this.mNumCachedKill + num));
         this.mNumCachedKill += num;
     }
 
     public void reportCachedKill(ArrayMap<String, ProcessStats.ProcessStateHolder> pkgList, long pss) {
         ensureNotDead();
         this.mCommonProcess.addCachedKill(1, pss, pss, pss);
-        if (this.mCommonProcess.mMultiPackage) {
-            for (int ip = pkgList.size() - 1; ip >= 0; ip--) {
-                pullFixedProc(pkgList, ip).addCachedKill(1, pss, pss, pss);
-            }
+        if (!this.mCommonProcess.mMultiPackage) {
+            return;
+        }
+        for (int ip = pkgList.size() - 1; ip >= 0; ip--) {
+            pullFixedProc(pkgList, ip).addCachedKill(1, pss, pss, pss);
         }
     }
 
     public ProcessState pullFixedProc(String pkgName) {
-        if (!this.mMultiPackage) {
-            return this;
-        }
-        LongSparseArray<ProcessStats.PackageState> vpkg = this.mStats.mPackages.get(pkgName, this.mUid);
-        if (vpkg != null) {
+        if (this.mMultiPackage) {
+            LongSparseArray<ProcessStats.PackageState> vpkg = this.mStats.mPackages.get(pkgName, this.mUid);
+            if (vpkg == null) {
+                throw new IllegalStateException("Didn't find package " + pkgName + " / " + this.mUid);
+            }
             ProcessStats.PackageState pkg = vpkg.get(this.mVersion);
-            if (pkg != null) {
-                ProcessState proc = pkg.mProcesses.get(this.mName);
-                if (proc != null) {
-                    return proc;
-                }
+            if (pkg == null) {
+                throw new IllegalStateException("Didn't find package " + pkgName + " / " + this.mUid + " vers " + this.mVersion);
+            }
+            ProcessState proc = pkg.mProcesses.get(this.mName);
+            if (proc == null) {
                 throw new IllegalStateException("Didn't create per-package process " + this.mName + " in pkg " + pkgName + " / " + this.mUid + " vers " + this.mVersion);
             }
-            throw new IllegalStateException("Didn't find package " + pkgName + " / " + this.mUid + " vers " + this.mVersion);
+            return proc;
         }
-        throw new IllegalStateException("Didn't find package " + pkgName + " / " + this.mUid);
+        return this;
     }
 
     private ProcessState pullFixedProc(ArrayMap<String, ProcessStats.ProcessStateHolder> pkgList, int index) {
@@ -471,33 +467,25 @@ public final class ProcessState {
         }
         if (proc.mMultiPackage) {
             LongSparseArray<ProcessStats.PackageState> vpkg = this.mStats.mPackages.get(pkgList.keyAt(index), proc.mUid);
-            if (vpkg != null) {
-                ProcessStats.PackageState expkg = vpkg.get(proc.mVersion);
-                if (expkg != null) {
-                    String savedName = proc.mName;
-                    proc = expkg.mProcesses.get(proc.mName);
-                    if (proc != null) {
-                        holder.state = proc;
-                    } else {
-                        throw new IllegalStateException("Didn't create per-package process " + savedName + " in pkg " + expkg.mPackageName + "/" + expkg.mUid);
-                    }
-                } else {
-                    throw new IllegalStateException("No existing package " + pkgList.keyAt(index) + "/" + proc.mUid + " for multi-proc " + proc.mName + " version " + proc.mVersion);
-                }
-            } else {
+            if (vpkg == null) {
                 throw new IllegalStateException("No existing package " + pkgList.keyAt(index) + "/" + proc.mUid + " for multi-proc " + proc.mName);
             }
+            ProcessStats.PackageState expkg = vpkg.get(proc.mVersion);
+            if (expkg == null) {
+                throw new IllegalStateException("No existing package " + pkgList.keyAt(index) + "/" + proc.mUid + " for multi-proc " + proc.mName + " version " + proc.mVersion);
+            }
+            String savedName = proc.mName;
+            proc = expkg.mProcesses.get(proc.mName);
+            if (proc == null) {
+                throw new IllegalStateException("Didn't create per-package process " + savedName + " in pkg " + expkg.mPackageName + "/" + expkg.mUid);
+            }
+            holder.state = proc;
         }
         return proc;
     }
 
     public long getTotalRunningDuration(long now) {
-        long j = this.mTotalRunningDuration;
-        long j2 = 0;
-        if (this.mTotalRunningStartTime != 0) {
-            j2 = now - this.mTotalRunningStartTime;
-        }
-        return j + j2;
+        return this.mTotalRunningDuration + (this.mTotalRunningStartTime != 0 ? now - this.mTotalRunningStartTime : 0L);
     }
 
     public long getDuration(int state, long now) {
@@ -550,8 +538,9 @@ public final class ProcessState {
 
     public void aggregatePss(ProcessStats.TotalMemoryUseCollection data, long now) {
         long time;
-        long avg;
         long samples;
+        long avg;
+        int[] iArr;
         ProcessState processState = this;
         ProcessStats.TotalMemoryUseCollection totalMemoryUseCollection = data;
         PssAggr fgPss = new PssAggr();
@@ -576,102 +565,97 @@ public final class ProcessState {
             }
             havePss = havePss2;
         }
-        if (havePss) {
-            boolean fgHasBg = false;
-            boolean fgHasCached = false;
-            boolean bgHasCached = false;
-            if (fgPss.samples < 3 && bgPss.samples > 0) {
-                fgHasBg = true;
-                fgPss.add(bgPss.pss, bgPss.samples);
+        if (!havePss) {
+            return;
+        }
+        boolean fgHasBg = false;
+        boolean fgHasCached = false;
+        boolean bgHasCached = false;
+        if (fgPss.samples < 3 && bgPss.samples > 0) {
+            fgHasBg = true;
+            fgPss.add(bgPss.pss, bgPss.samples);
+        }
+        if (fgPss.samples < 3 && cachedPss.samples > 0) {
+            fgHasCached = true;
+            fgPss.add(cachedPss.pss, cachedPss.samples);
+        }
+        if (bgPss.samples < 3 && cachedPss.samples > 0) {
+            bgHasCached = true;
+            bgPss.add(cachedPss.pss, cachedPss.samples);
+        }
+        if (bgPss.samples < 3 && !fgHasBg && fgPss.samples > 0) {
+            bgPss.add(fgPss.pss, fgPss.samples);
+        }
+        if (cachedPss.samples < 3 && !bgHasCached && bgPss.samples > 0) {
+            cachedPss.add(bgPss.pss, bgPss.samples);
+        }
+        if (cachedPss.samples < 3 && !fgHasCached && fgPss.samples > 0) {
+            cachedPss.add(fgPss.pss, fgPss.samples);
+        }
+        int i2 = 0;
+        while (true) {
+            int i3 = i2;
+            if (i3 >= processState.mDurations.getKeyCount()) {
+                return;
             }
-            if (fgPss.samples < 3 && cachedPss.samples > 0) {
-                fgHasCached = true;
-                fgPss.add(cachedPss.pss, cachedPss.samples);
+            int key = processState.mDurations.getKeyAt(i3);
+            int type2 = SparseMappingTable.getIdFromKey(key);
+            long time2 = processState.mDurations.getValue(key);
+            if (processState.mCurCombinedState == type2) {
+                time2 += now - processState.mStartTime;
             }
-            if (bgPss.samples < 3 && cachedPss.samples > 0) {
-                bgHasCached = true;
-                bgPss.add(cachedPss.pss, cachedPss.samples);
-            }
-            if (bgPss.samples < 3 && !fgHasBg && fgPss.samples > 0) {
-                bgPss.add(fgPss.pss, fgPss.samples);
-            }
-            if (cachedPss.samples < 3 && !bgHasCached && bgPss.samples > 0) {
-                cachedPss.add(bgPss.pss, bgPss.samples);
-            }
-            if (cachedPss.samples < 3 && !fgHasCached && fgPss.samples > 0) {
-                cachedPss.add(fgPss.pss, fgPss.samples);
-            }
-            int i2 = 0;
-            while (true) {
-                int i3 = i2;
-                if (i3 < processState.mDurations.getKeyCount()) {
-                    int key = processState.mDurations.getKeyAt(i3);
-                    byte idFromKey = SparseMappingTable.getIdFromKey(key);
-                    long time2 = processState.mDurations.getValue(key);
-                    if (processState.mCurCombinedState == idFromKey) {
-                        time2 += now - processState.mStartTime;
-                    }
-                    int procState2 = idFromKey % BluetoothHidDevice.ERROR_RSP_UNKNOWN;
-                    long[] jArr = totalMemoryUseCollection.processStateTime;
-                    jArr[procState2] = jArr[procState2] + time2;
-                    long samples3 = processState.getPssSampleCount(idFromKey);
-                    if (samples3 > 0) {
-                        time = time2;
-                        samples = samples3;
-                        avg = processState.getPssAverage(idFromKey);
-                    } else if (procState2 <= 2) {
-                        time = time2;
-                        samples = fgPss.samples;
-                        avg = fgPss.pss;
-                    } else {
-                        time = time2;
-                        if (procState2 <= 7) {
-                            avg = bgPss.pss;
-                            samples = bgPss.samples;
-                        } else {
-                            samples = cachedPss.samples;
-                            avg = cachedPss.pss;
-                        }
-                    }
-                    PssAggr fgPss2 = fgPss;
-                    double newAvg = ((((double) totalMemoryUseCollection.processStatePss[procState2]) * ((double) totalMemoryUseCollection.processStateSamples[procState2])) + (((double) avg) * ((double) samples))) / ((double) (((long) totalMemoryUseCollection.processStateSamples[procState2]) + samples));
-                    totalMemoryUseCollection.processStatePss[procState2] = (long) newAvg;
-                    int[] iArr = totalMemoryUseCollection.processStateSamples;
-                    iArr[procState2] = (int) (((long) iArr[procState2]) + samples);
-                    double[] dArr = totalMemoryUseCollection.processStateWeight;
-                    double d = newAvg;
-                    int i4 = key;
-                    byte b = idFromKey;
-                    dArr[procState2] = dArr[procState2] + (((double) avg) * ((double) time));
-                    i2 = i3 + 1;
-                    fgPss = fgPss2;
-                    bgPss = bgPss;
-                    cachedPss = cachedPss;
-                    fgHasBg = fgHasBg;
-                    fgHasCached = fgHasCached;
-                    bgHasCached = bgHasCached;
-                    processState = this;
-                    totalMemoryUseCollection = data;
+            int procState2 = type2 % 14;
+            long[] jArr = totalMemoryUseCollection.processStateTime;
+            jArr[procState2] = jArr[procState2] + time2;
+            long samples3 = processState.getPssSampleCount(type2);
+            if (samples3 <= 0) {
+                if (procState2 <= 2) {
+                    time = time2;
+                    samples = fgPss.samples;
+                    avg = fgPss.pss;
                 } else {
-                    PssAggr pssAggr = bgPss;
-                    PssAggr pssAggr2 = cachedPss;
-                    boolean z = fgHasBg;
-                    boolean z2 = fgHasCached;
-                    boolean z3 = bgHasCached;
-                    return;
+                    time = time2;
+                    if (procState2 <= 7) {
+                        long samples4 = bgPss.samples;
+                        avg = bgPss.pss;
+                        samples = samples4;
+                    } else {
+                        samples = cachedPss.samples;
+                        avg = cachedPss.pss;
+                    }
                 }
+            } else {
+                time = time2;
+                samples = samples3;
+                avg = processState.getPssAverage(type2);
             }
+            PssAggr fgPss2 = fgPss;
+            double newAvg = ((totalMemoryUseCollection.processStatePss[procState2] * totalMemoryUseCollection.processStateSamples[procState2]) + (avg * samples)) / (totalMemoryUseCollection.processStateSamples[procState2] + samples);
+            totalMemoryUseCollection.processStatePss[procState2] = (long) newAvg;
+            totalMemoryUseCollection.processStateSamples[procState2] = (int) (iArr[procState2] + samples);
+            double[] dArr = totalMemoryUseCollection.processStateWeight;
+            dArr[procState2] = dArr[procState2] + (avg * time);
+            i2 = i3 + 1;
+            fgPss = fgPss2;
+            bgPss = bgPss;
+            cachedPss = cachedPss;
+            fgHasBg = fgHasBg;
+            fgHasCached = fgHasCached;
+            bgHasCached = bgHasCached;
+            processState = this;
+            totalMemoryUseCollection = data;
         }
     }
 
     public long computeProcessTimeLocked(int[] screenStates, int[] memStates, int[] procStates, long now) {
         long totalTime = 0;
-        for (int is = 0; is < screenStates.length; is++) {
+        for (int i : screenStates) {
             int im = 0;
             while (im < memStates.length) {
                 long totalTime2 = totalTime;
-                for (int i : procStates) {
-                    totalTime2 += getDuration(((screenStates[is] + memStates[im]) * 14) + i, now);
+                for (int i2 : procStates) {
+                    int bucket = ((i + memStates[im]) * 14) + i2;
+                    totalTime2 += getDuration(bucket, now);
                 }
                 im++;
                 totalTime = totalTime2;
@@ -682,66 +666,51 @@ public final class ProcessState {
     }
 
     public void dumpSummary(PrintWriter pw, String prefix, String header, int[] screenStates, int[] memStates, int[] procStates, long now, long totalTime) {
-        PrintWriter printWriter = pw;
-        String str = header;
         pw.print(prefix);
-        printWriter.print("* ");
-        if (str != null) {
-            printWriter.print(str);
+        pw.print("* ");
+        if (header != null) {
+            pw.print(header);
         }
-        printWriter.print(this.mName);
-        printWriter.print(" / ");
-        UserHandle.formatUid(printWriter, this.mUid);
-        printWriter.print(" / v");
-        printWriter.print(this.mVersion);
-        printWriter.println(SettingsStringUtil.DELIMITER);
-        PrintWriter printWriter2 = pw;
-        String str2 = prefix;
-        int[] iArr = screenStates;
-        int[] iArr2 = memStates;
-        long j = now;
-        long j2 = totalTime;
-        dumpProcessSummaryDetails(printWriter2, str2, DumpUtils.STATE_LABEL_TOTAL, iArr, iArr2, procStates, j, j2, true);
-        dumpProcessSummaryDetails(printWriter2, str2, DumpUtils.STATE_LABELS[0], iArr, iArr2, new int[]{0}, j, j2, true);
-        dumpProcessSummaryDetails(printWriter2, str2, DumpUtils.STATE_LABELS[1], iArr, iArr2, new int[]{1}, j, j2, true);
-        PrintWriter printWriter3 = pw;
-        dumpProcessSummaryDetails(printWriter3, str2, DumpUtils.STATE_LABELS[2], iArr, iArr2, new int[]{2}, j, j2, true);
-        dumpProcessSummaryDetails(printWriter3, str2, DumpUtils.STATE_LABELS[3], iArr, iArr2, new int[]{3}, j, j2, true);
-        dumpProcessSummaryDetails(pw, str2, DumpUtils.STATE_LABELS[4], iArr, iArr2, new int[]{4}, j, j2, true);
-        dumpProcessSummaryDetails(pw, str2, DumpUtils.STATE_LABELS[5], iArr, iArr2, new int[]{5}, j, j2, true);
-        dumpProcessSummaryDetails(pw, str2, DumpUtils.STATE_LABELS[6], iArr, iArr2, new int[]{6}, j, j2, true);
-        dumpProcessSummaryDetails(pw, str2, DumpUtils.STATE_LABELS[7], iArr, iArr2, new int[]{7}, j, j2, true);
-        dumpProcessSummaryDetails(pw, str2, DumpUtils.STATE_LABELS[8], iArr, iArr2, new int[]{8}, j, j2, true);
-        dumpProcessSummaryDetails(pw, str2, DumpUtils.STATE_LABELS[9], iArr, iArr2, new int[]{9}, j, j2, true);
-        PrintWriter printWriter4 = pw;
-        dumpProcessSummaryDetails(printWriter4, str2, DumpUtils.STATE_LABELS[10], iArr, iArr2, new int[]{10}, j, j2, true);
-        dumpProcessSummaryDetails(printWriter4, str2, DumpUtils.STATE_LABEL_CACHED, iArr, iArr2, new int[]{11, 12, 13}, j, j2, true);
+        pw.print(this.mName);
+        pw.print(" / ");
+        UserHandle.formatUid(pw, this.mUid);
+        pw.print(" / v");
+        pw.print(this.mVersion);
+        pw.println(SettingsStringUtil.DELIMITER);
+        dumpProcessSummaryDetails(pw, prefix, DumpUtils.STATE_LABEL_TOTAL, screenStates, memStates, procStates, now, totalTime, true);
+        dumpProcessSummaryDetails(pw, prefix, DumpUtils.STATE_LABELS[0], screenStates, memStates, new int[]{0}, now, totalTime, true);
+        dumpProcessSummaryDetails(pw, prefix, DumpUtils.STATE_LABELS[1], screenStates, memStates, new int[]{1}, now, totalTime, true);
+        dumpProcessSummaryDetails(pw, prefix, DumpUtils.STATE_LABELS[2], screenStates, memStates, new int[]{2}, now, totalTime, true);
+        dumpProcessSummaryDetails(pw, prefix, DumpUtils.STATE_LABELS[3], screenStates, memStates, new int[]{3}, now, totalTime, true);
+        dumpProcessSummaryDetails(pw, prefix, DumpUtils.STATE_LABELS[4], screenStates, memStates, new int[]{4}, now, totalTime, true);
+        dumpProcessSummaryDetails(pw, prefix, DumpUtils.STATE_LABELS[5], screenStates, memStates, new int[]{5}, now, totalTime, true);
+        dumpProcessSummaryDetails(pw, prefix, DumpUtils.STATE_LABELS[6], screenStates, memStates, new int[]{6}, now, totalTime, true);
+        dumpProcessSummaryDetails(pw, prefix, DumpUtils.STATE_LABELS[7], screenStates, memStates, new int[]{7}, now, totalTime, true);
+        dumpProcessSummaryDetails(pw, prefix, DumpUtils.STATE_LABELS[8], screenStates, memStates, new int[]{8}, now, totalTime, true);
+        dumpProcessSummaryDetails(pw, prefix, DumpUtils.STATE_LABELS[9], screenStates, memStates, new int[]{9}, now, totalTime, true);
+        dumpProcessSummaryDetails(pw, prefix, DumpUtils.STATE_LABELS[10], screenStates, memStates, new int[]{10}, now, totalTime, true);
+        dumpProcessSummaryDetails(pw, prefix, DumpUtils.STATE_LABEL_CACHED, screenStates, memStates, new int[]{11, 12, 13}, now, totalTime, true);
     }
 
     public void dumpProcessState(PrintWriter pw, String prefix, int[] screenStates, int[] memStates, int[] procStates, long now) {
         int i;
-        int im;
         int is;
+        int im;
         String running;
-        PrintWriter printWriter = pw;
-        int[] iArr = screenStates;
-        int[] iArr2 = memStates;
-        int[] iArr3 = procStates;
         int printedScreen = -1;
         long totalTime = 0;
         int is2 = 0;
-        while (is2 < iArr.length) {
+        while (is2 < screenStates.length) {
             int printedMem = -1;
             long totalTime2 = totalTime;
             int im2 = 0;
-            while (im2 < iArr2.length) {
+            while (im2 < memStates.length) {
                 int ip = 0;
-                while (ip < iArr3.length) {
-                    int iscreen = iArr[is2];
-                    int imem = iArr2[im2];
-                    int bucket = ((iscreen + imem) * 14) + iArr3[ip];
+                while (ip < procStates.length) {
+                    int iscreen = screenStates[is2];
+                    int imem = memStates[im2];
+                    int bucket = ((iscreen + imem) * 14) + procStates[ip];
                     long time = this.mDurations.getValueForId((byte) bucket);
-                    String running2 = "";
                     if (this.mCurCombinedState == bucket) {
                         running = " (running)";
                         is = is2;
@@ -750,22 +719,22 @@ public final class ProcessState {
                     } else {
                         is = is2;
                         im = im2;
-                        running = running2;
+                        running = "";
                     }
                     if (time != 0) {
                         pw.print(prefix);
-                        if (iArr.length > 1) {
-                            DumpUtils.printScreenLabel(printWriter, printedScreen != iscreen ? iscreen : -1);
+                        if (screenStates.length > 1) {
+                            DumpUtils.printScreenLabel(pw, printedScreen != iscreen ? iscreen : -1);
                             printedScreen = iscreen;
                         }
-                        if (iArr2.length > 1) {
-                            DumpUtils.printMemLabel(printWriter, printedMem != imem ? imem : -1, '/');
+                        if (memStates.length > 1) {
+                            DumpUtils.printMemLabel(pw, printedMem != imem ? imem : -1, '/');
                             printedMem = imem;
                         }
-                        printWriter.print(DumpUtils.STATE_LABELS[iArr3[ip]]);
-                        printWriter.print(PluralRules.KEYWORD_RULE_SEPARATOR);
-                        TimeUtils.formatDuration(time, printWriter);
-                        printWriter.println(running);
+                        pw.print(DumpUtils.STATE_LABELS[procStates[ip]]);
+                        pw.print(PluralRules.KEYWORD_RULE_SEPARATOR);
+                        TimeUtils.formatDuration(time, pw);
+                        pw.println(running);
                         totalTime2 += time;
                     }
                     ip++;
@@ -779,27 +748,24 @@ public final class ProcessState {
         }
         if (totalTime != 0) {
             pw.print(prefix);
-            if (iArr.length > 1) {
+            if (screenStates.length > 1) {
                 i = -1;
-                DumpUtils.printScreenLabel(printWriter, -1);
+                DumpUtils.printScreenLabel(pw, -1);
             } else {
                 i = -1;
             }
-            if (iArr2.length > 1) {
-                DumpUtils.printMemLabel(printWriter, i, '/');
+            if (memStates.length > 1) {
+                DumpUtils.printMemLabel(pw, i, '/');
             }
-            printWriter.print(DumpUtils.STATE_LABEL_TOTAL);
-            printWriter.print(PluralRules.KEYWORD_RULE_SEPARATOR);
-            TimeUtils.formatDuration(totalTime, printWriter);
+            pw.print(DumpUtils.STATE_LABEL_TOTAL);
+            pw.print(PluralRules.KEYWORD_RULE_SEPARATOR);
+            TimeUtils.formatDuration(totalTime, pw);
             pw.println();
         }
     }
 
     public void dumpPss(PrintWriter pw, String prefix, int[] screenStates, int[] memStates, int[] procStates, long now) {
-        PrintWriter printWriter = pw;
         int[] iArr = screenStates;
-        int[] iArr2 = memStates;
-        int[] iArr3 = procStates;
         int printedScreen = -1;
         boolean printedScreen2 = false;
         int is = 0;
@@ -808,40 +774,38 @@ public final class ProcessState {
             int printedScreen3 = printedScreen;
             boolean printedScreen4 = printedScreen2;
             int im = 0;
-            while (im < iArr2.length) {
+            while (im < memStates.length) {
                 int printedScreen5 = printedScreen3;
                 boolean printedHeader = printedScreen4;
                 int ip = 0;
-                while (ip < iArr3.length) {
+                while (ip < procStates.length) {
                     int iscreen = iArr[is];
-                    int imem = iArr2[im];
-                    int bucket = ((iscreen + imem) * 14) + iArr3[ip];
+                    int imem = memStates[im];
+                    int bucket = ((iscreen + imem) * 14) + procStates[ip];
                     int key = this.mPssTable.getKey((byte) bucket);
                     if (key != -1) {
                         long[] table = this.mPssTable.getArrayForKey(key);
-                        int i = bucket;
                         int tableOffset = SparseMappingTable.getIndexFromKey(key);
                         if (!printedHeader) {
                             pw.print(prefix);
-                            int i2 = key;
-                            printWriter.print("PSS/USS (");
-                            printWriter.print(this.mPssTable.getKeyCount());
-                            printWriter.println(" entries):");
+                            pw.print("PSS/USS (");
+                            pw.print(this.mPssTable.getKeyCount());
+                            pw.println(" entries):");
                             printedHeader = true;
                         }
                         pw.print(prefix);
-                        printWriter.print("  ");
+                        pw.print("  ");
                         if (iArr.length > 1) {
-                            DumpUtils.printScreenLabel(printWriter, printedScreen5 != iscreen ? iscreen : -1);
+                            DumpUtils.printScreenLabel(pw, printedScreen5 != iscreen ? iscreen : -1);
                             printedScreen5 = iscreen;
                         }
-                        if (iArr2.length > 1) {
-                            DumpUtils.printMemLabel(printWriter, printedMem != imem ? imem : -1, '/');
+                        if (memStates.length > 1) {
+                            DumpUtils.printMemLabel(pw, printedMem != imem ? imem : -1, '/');
                             printedMem = imem;
                         }
-                        printWriter.print(DumpUtils.STATE_LABELS[iArr3[ip]]);
-                        printWriter.print(PluralRules.KEYWORD_RULE_SEPARATOR);
-                        dumpPssSamples(printWriter, table, tableOffset);
+                        pw.print(DumpUtils.STATE_LABELS[procStates[ip]]);
+                        pw.print(PluralRules.KEYWORD_RULE_SEPARATOR);
+                        dumpPssSamples(pw, table, tableOffset);
                         pw.println();
                     }
                     ip++;
@@ -860,33 +824,33 @@ public final class ProcessState {
         long totalRunningDuration = getTotalRunningDuration(now);
         if (totalRunningDuration != 0) {
             pw.print(prefix);
-            printWriter.print("Cur time ");
-            TimeUtils.formatDuration(totalRunningDuration, printWriter);
+            pw.print("Cur time ");
+            TimeUtils.formatDuration(totalRunningDuration, pw);
             if (this.mTotalRunningStartTime != 0) {
-                printWriter.print(" (running)");
+                pw.print(" (running)");
             }
             if (this.mTotalRunningPss[0] != 0) {
-                printWriter.print(PluralRules.KEYWORD_RULE_SEPARATOR);
-                dumpPssSamples(printWriter, this.mTotalRunningPss, 0);
+                pw.print(PluralRules.KEYWORD_RULE_SEPARATOR);
+                dumpPssSamples(pw, this.mTotalRunningPss, 0);
             }
             pw.println();
         }
         if (this.mNumExcessiveCpu != 0) {
             pw.print(prefix);
-            printWriter.print("Killed for excessive CPU use: ");
-            printWriter.print(this.mNumExcessiveCpu);
-            printWriter.println(" times");
+            pw.print("Killed for excessive CPU use: ");
+            pw.print(this.mNumExcessiveCpu);
+            pw.println(" times");
         }
         if (this.mNumCachedKill != 0) {
             pw.print(prefix);
-            printWriter.print("Killed from cached state: ");
-            printWriter.print(this.mNumCachedKill);
-            printWriter.print(" times from pss ");
-            DebugUtils.printSizeValue(printWriter, this.mMinCachedKillPss * 1024);
-            printWriter.print(NativeLibraryHelper.CLEAR_ABI_OVERRIDE);
-            DebugUtils.printSizeValue(printWriter, this.mAvgCachedKillPss * 1024);
-            printWriter.print(NativeLibraryHelper.CLEAR_ABI_OVERRIDE);
-            DebugUtils.printSizeValue(printWriter, this.mMaxCachedKillPss * 1024);
+            pw.print("Killed from cached state: ");
+            pw.print(this.mNumCachedKill);
+            pw.print(" times from pss ");
+            DebugUtils.printSizeValue(pw, this.mMinCachedKillPss * 1024);
+            pw.print(NativeLibraryHelper.CLEAR_ABI_OVERRIDE);
+            DebugUtils.printSizeValue(pw, this.mAvgCachedKillPss * 1024);
+            pw.print(NativeLibraryHelper.CLEAR_ABI_OVERRIDE);
+            DebugUtils.printSizeValue(pw, this.mMaxCachedKillPss * 1024);
             pw.println();
         }
     }
@@ -914,28 +878,23 @@ public final class ProcessState {
     }
 
     private void dumpProcessSummaryDetails(PrintWriter pw, String prefix, String label, int[] screenStates, int[] memStates, int[] procStates, long now, long totalTime, boolean full) {
-        PrintWriter printWriter = pw;
-        String str = label;
-        long j = totalTime;
         ProcessStats.ProcessDataCollection totals = new ProcessStats.ProcessDataCollection(screenStates, memStates, procStates);
         computeProcessData(totals, now);
-        if ((((double) totals.totalTime) / ((double) j)) * 100.0d >= 0.005d || totals.numPss != 0) {
+        double percentage = (totals.totalTime / totalTime) * 100.0d;
+        if (percentage >= 0.005d || totals.numPss != 0) {
             if (prefix != null) {
                 pw.print(prefix);
             }
-            if (str != null) {
-                printWriter.print("  ");
-                printWriter.print(str);
-                printWriter.print(PluralRules.KEYWORD_RULE_SEPARATOR);
+            if (label != null) {
+                pw.print("  ");
+                pw.print(label);
+                pw.print(PluralRules.KEYWORD_RULE_SEPARATOR);
             }
-            totals.print(printWriter, j, full);
+            totals.print(pw, totalTime, full);
             if (prefix != null) {
                 pw.println();
-                return;
             }
-            return;
         }
-        boolean z = full;
     }
 
     public void dumpInternalLocked(PrintWriter pw, String prefix, boolean dumpAll) {
@@ -982,36 +941,40 @@ public final class ProcessState {
     }
 
     public void computeProcessData(ProcessStats.ProcessDataCollection data, long now) {
-        int ip;
-        int im;
         long j;
         int is;
+        int im;
+        int ip;
         long avgPss;
         long maxUss;
         long minRss;
-        ProcessStats.ProcessDataCollection processDataCollection = data;
         long maxRss = 0;
-        processDataCollection.totalTime = 0;
-        processDataCollection.maxRss = 0;
-        processDataCollection.avgRss = 0;
-        processDataCollection.minRss = 0;
-        processDataCollection.maxUss = 0;
-        processDataCollection.avgUss = 0;
-        processDataCollection.minUss = 0;
-        processDataCollection.maxPss = 0;
-        processDataCollection.avgPss = 0;
-        processDataCollection.minPss = 0;
-        processDataCollection.numPss = 0;
+        data.totalTime = 0L;
+        data.maxRss = 0L;
+        data.avgRss = 0L;
+        data.minRss = 0L;
+        data.maxUss = 0L;
+        data.avgUss = 0L;
+        data.minUss = 0L;
+        data.maxPss = 0L;
+        data.avgPss = 0L;
+        data.minPss = 0L;
+        data.numPss = 0L;
         int is2 = 0;
-        while (is2 < processDataCollection.screenStates.length) {
+        while (is2 < data.screenStates.length) {
             int im2 = 0;
-            while (im2 < processDataCollection.memStates.length) {
+            while (im2 < data.memStates.length) {
                 int ip2 = 0;
-                while (ip2 < processDataCollection.procStates.length) {
-                    int bucket = ((processDataCollection.screenStates[is2] + processDataCollection.memStates[im2]) * 14) + processDataCollection.procStates[ip2];
-                    processDataCollection.totalTime += getDuration(bucket, now);
+                while (ip2 < data.procStates.length) {
+                    int bucket = ((data.screenStates[is2] + data.memStates[im2]) * 14) + data.procStates[ip2];
+                    data.totalTime += getDuration(bucket, now);
                     long samples = getPssSampleCount(bucket);
-                    if (samples > maxRss) {
+                    if (samples <= maxRss) {
+                        j = maxRss;
+                        is = is2;
+                        im = im2;
+                        ip = ip2;
+                    } else {
                         long minPss = getPssMinimum(bucket);
                         is = is2;
                         long avgPss2 = getPssAverage(bucket);
@@ -1020,99 +983,63 @@ public final class ProcessState {
                         im = im2;
                         ip = ip2;
                         long avgUss = getPssUssAverage(bucket);
-                        long samples2 = samples;
                         long maxUss2 = getPssUssMaximum(bucket);
                         long minRss2 = getPssRssMinimum(bucket);
                         long avgRss = getPssRssAverage(bucket);
-                        int i = bucket;
                         long maxRss2 = getPssRssMaximum(bucket);
                         j = 0;
-                        if (processDataCollection.numPss == 0) {
-                            processDataCollection.minPss = minPss;
-                            processDataCollection.avgPss = avgPss2;
-                            processDataCollection.maxPss = maxPss;
-                            processDataCollection.minUss = minUss;
-                            processDataCollection.avgUss = avgUss;
-                            long maxUss3 = maxUss2;
-                            processDataCollection.maxUss = maxUss3;
-                            long maxUss4 = maxUss3;
-                            long maxUss5 = minRss2;
-                            processDataCollection.minRss = maxUss5;
-                            long minRss3 = maxUss5;
-                            long avgRss2 = avgRss;
-                            processDataCollection.avgRss = avgRss2;
-                            long avgRss3 = avgRss2;
-                            long maxRss3 = maxRss2;
-                            processDataCollection.maxRss = maxRss3;
-                            long j2 = maxPss;
-                            long j3 = avgPss2;
-                            long maxPss2 = maxRss3;
-                            long j4 = minPss;
-                            avgPss = samples2;
-                            long j5 = maxUss4;
-                            long j6 = minRss3;
-                            long j7 = avgRss3;
-                            long maxRss4 = avgUss;
+                        if (data.numPss == 0) {
+                            data.minPss = minPss;
+                            data.avgPss = avgPss2;
+                            data.maxPss = maxPss;
+                            data.minUss = minUss;
+                            data.avgUss = avgUss;
+                            data.maxUss = maxUss2;
+                            data.minRss = minRss2;
+                            data.avgRss = avgRss;
+                            data.maxRss = maxRss2;
+                            avgPss = samples;
                         } else {
-                            long maxUss6 = maxUss2;
-                            long minRss4 = minRss2;
-                            long avgRss4 = avgRss;
-                            long maxRss5 = maxRss2;
-                            if (minPss < processDataCollection.minPss) {
-                                processDataCollection.minPss = minPss;
+                            long maxRss3 = data.minPss;
+                            if (minPss < maxRss3) {
+                                data.minPss = minPss;
                             }
-                            long j8 = minPss;
-                            double d = (double) avgPss2;
-                            long j9 = avgPss2;
-                            long avgUss2 = avgUss;
-                            avgPss = samples2;
-                            processDataCollection.avgPss = (long) (((((double) processDataCollection.avgPss) * ((double) processDataCollection.numPss)) + (d * ((double) avgPss))) / ((double) (processDataCollection.numPss + avgPss)));
-                            if (maxPss > processDataCollection.maxPss) {
-                                processDataCollection.maxPss = maxPss;
+                            double d = avgPss2;
+                            avgPss = samples;
+                            data.avgPss = (long) (((data.avgPss * data.numPss) + (d * avgPss)) / (data.numPss + avgPss));
+                            if (maxPss > data.maxPss) {
+                                data.maxPss = maxPss;
                             }
-                            if (minUss < processDataCollection.minUss) {
-                                processDataCollection.minUss = minUss;
+                            if (minUss < data.minUss) {
+                                data.minUss = minUss;
                             }
-                            long j10 = maxPss;
-                            processDataCollection.avgUss = (long) (((((double) processDataCollection.avgUss) * ((double) processDataCollection.numPss)) + (((double) avgUss2) * ((double) avgPss))) / ((double) (processDataCollection.numPss + avgPss)));
-                            if (maxUss6 > processDataCollection.maxUss) {
-                                maxUss = maxUss6;
-                                processDataCollection.maxUss = maxUss;
+                            data.avgUss = (long) (((data.avgUss * data.numPss) + (avgUss * avgPss)) / (data.numPss + avgPss));
+                            if (maxUss2 > data.maxUss) {
+                                maxUss = maxUss2;
+                                data.maxUss = maxUss;
                             } else {
-                                maxUss = maxUss6;
+                                maxUss = maxUss2;
                             }
-                            if (minRss4 < processDataCollection.minRss) {
-                                minRss = minRss4;
-                                processDataCollection.minRss = minRss;
+                            if (minRss2 < data.minRss) {
+                                minRss = minRss2;
+                                data.minRss = minRss;
                             } else {
-                                minRss = minRss4;
+                                minRss = minRss2;
                             }
-                            long j11 = maxUss;
-                            long j12 = minRss;
-                            long avgRss5 = avgRss4;
-                            long j13 = avgRss5;
-                            processDataCollection.avgRss = (long) (((((double) processDataCollection.avgRss) * ((double) processDataCollection.numPss)) + (((double) avgRss5) * ((double) avgPss))) / ((double) (processDataCollection.numPss + avgPss)));
-                            if (maxRss5 > processDataCollection.maxRss) {
-                                processDataCollection.maxRss = maxRss5;
+                            data.avgRss = (long) (((data.avgRss * data.numPss) + (avgRss * avgPss)) / (data.numPss + avgPss));
+                            if (maxRss2 > data.maxRss) {
+                                data.maxRss = maxRss2;
                             }
                         }
-                        processDataCollection.numPss += avgPss;
-                    } else {
-                        j = maxRss;
-                        is = is2;
-                        im = im2;
-                        ip = ip2;
+                        data.numPss += avgPss;
                     }
                     ip2 = ip + 1;
                     is2 = is;
                     maxRss = j;
                     im2 = im;
                 }
-                long j14 = maxRss;
-                int i2 = is2;
                 im2++;
             }
-            long j15 = maxRss;
             is2++;
         }
     }
@@ -1121,13 +1048,11 @@ public final class ProcessState {
         int NSS;
         int NSS2;
         int iss;
-        PrintWriter printWriter = pw;
         int[] iArr = screenStates;
         int[] iArr2 = memStates;
-        int[] iArr3 = procStates;
         int NSS3 = sepScreenStates ? iArr.length : 1;
         int NMS = sepMemStates ? iArr2.length : 1;
-        int NPS = sepProcStates ? iArr3.length : 1;
+        int NPS = sepProcStates ? procStates.length : 1;
         int isa = 0;
         while (isa < NSS3) {
             int ims = 0;
@@ -1136,7 +1061,7 @@ public final class ProcessState {
                 while (ips < NPS) {
                     int vsscreen = sepScreenStates ? iArr[isa] : 0;
                     int vsmem = sepMemStates ? iArr2[ims] : 0;
-                    int vsproc = sepProcStates ? iArr3[ips] : 0;
+                    int vsproc = sepProcStates ? procStates[ips] : 0;
                     int NSA = sepScreenStates ? 1 : iArr.length;
                     int NMA = sepMemStates ? 1 : iArr2.length;
                     if (sepProcStates) {
@@ -1144,44 +1069,43 @@ public final class ProcessState {
                         NSS2 = 1;
                     } else {
                         NSS = NSS3;
-                        NSS2 = iArr3.length;
+                        NSS2 = procStates.length;
                     }
                     int NMS2 = NMS;
                     int NPS2 = NPS;
                     long totalTime = 0;
                     int isa2 = 0;
                     while (true) {
+                        int isa3 = isa2;
                         iss = isa;
-                        int iss2 = isa2;
-                        if (iss2 >= NSA) {
-                            break;
-                        }
-                        long totalTime2 = totalTime;
-                        int ima = 0;
-                        while (ima < NMA) {
-                            int ipa = 0;
-                            while (ipa < NSS2) {
-                                totalTime2 += getDuration(((vsscreen + (sepScreenStates ? 0 : iArr[iss2]) + vsmem + (sepMemStates ? 0 : iArr2[ima])) * 14) + vsproc + (sepProcStates ? 0 : iArr3[ipa]), now);
-                                ipa++;
+                        if (isa3 < NSA) {
+                            long totalTime2 = totalTime;
+                            int ima = 0;
+                            while (ima < NMA) {
+                                int ipa = 0;
+                                while (ipa < NSS2) {
+                                    int vascreen = sepScreenStates ? 0 : iArr[isa3];
+                                    int vamem = sepMemStates ? 0 : iArr2[ima];
+                                    int vaproc = sepProcStates ? 0 : procStates[ipa];
+                                    int bucket = ((vsscreen + vascreen + vsmem + vamem) * 14) + vsproc + vaproc;
+                                    totalTime2 += getDuration(bucket, now);
+                                    ipa++;
+                                    iArr = screenStates;
+                                    iArr2 = memStates;
+                                }
+                                ima++;
                                 iArr = screenStates;
                                 iArr2 = memStates;
                             }
-                            long j = now;
-                            ima++;
+                            totalTime = totalTime2;
+                            isa = iss;
                             iArr = screenStates;
                             iArr2 = memStates;
+                            isa2 = isa3 + 1;
                         }
-                        long j2 = now;
-                        int i = iss2 + 1;
-                        totalTime = totalTime2;
-                        isa = iss;
-                        iArr = screenStates;
-                        iArr2 = memStates;
-                        isa2 = i;
                     }
-                    long j3 = now;
-                    printWriter.print("\t");
-                    printWriter.print(totalTime);
+                    pw.print("\t");
+                    pw.print(totalTime);
                     ips++;
                     NSS3 = NSS;
                     NMS = NMS2;
@@ -1190,27 +1114,14 @@ public final class ProcessState {
                     iArr = screenStates;
                     iArr2 = memStates;
                 }
-                long j4 = now;
-                int i2 = NSS3;
-                int i3 = NMS;
-                int i4 = NPS;
-                int i5 = isa;
                 ims++;
                 iArr = screenStates;
                 iArr2 = memStates;
             }
-            long j5 = now;
-            int i6 = NSS3;
-            int i7 = NMS;
-            int i8 = NPS;
             isa++;
             iArr = screenStates;
             iArr2 = memStates;
         }
-        long j6 = now;
-        int i9 = NSS3;
-        int i10 = NMS;
-        int i11 = NPS;
     }
 
     public void dumpPackageProcCheckin(PrintWriter pw, String pkgName, int uid, long vers, String itemName, long now) {
@@ -1401,17 +1312,15 @@ public final class ProcessState {
         long j2;
         int i;
         SparseLongArray durationByState;
-        ProtoOutputStream protoOutputStream = proto;
-        long j3 = now;
         long token = proto.start(fieldId);
-        protoOutputStream.write(1138166333441L, procName);
-        protoOutputStream.write(1120986464258L, uid);
+        proto.write(1138166333441L, procName);
+        proto.write(1120986464258L, uid);
         if (this.mNumExcessiveCpu > 0 || this.mNumCachedKill > 0) {
-            long killToken = protoOutputStream.start(1146756268035L);
-            protoOutputStream.write(1120986464257L, this.mNumExcessiveCpu);
-            protoOutputStream.write(1120986464258L, this.mNumCachedKill);
+            long killToken = proto.start(1146756268035L);
+            proto.write(1120986464257L, this.mNumExcessiveCpu);
+            proto.write(1120986464258L, this.mNumCachedKill);
             ProtoUtils.toAggStatsProto(proto, 1146756268035L, this.mMinCachedKillPss, this.mAvgCachedKillPss, this.mMaxCachedKillPss);
-            protoOutputStream.end(killToken);
+            proto.end(killToken);
         }
         SparseLongArray durationByState2 = new SparseLongArray();
         boolean didCurState = false;
@@ -1421,7 +1330,7 @@ public final class ProcessState {
             long time = this.mDurations.getValue(key);
             if (this.mCurCombinedState == type) {
                 durationByState = durationByState2;
-                time += j3 - this.mStartTime;
+                time += now - this.mStartTime;
                 didCurState = true;
             } else {
                 durationByState = durationByState2;
@@ -1430,7 +1339,7 @@ public final class ProcessState {
             durationByState2.put(type, time);
         }
         if (!didCurState && this.mCurCombinedState != -1) {
-            durationByState2.put(this.mCurCombinedState, j3 - this.mStartTime);
+            durationByState2.put(this.mCurCombinedState, now - this.mStartTime);
         }
         int type2 = 0;
         while (true) {
@@ -1441,49 +1350,46 @@ public final class ProcessState {
                 break;
             }
             int key2 = this.mPssTable.getKeyAt(i3);
-            int idFromKey = SparseMappingTable.getIdFromKey(key2);
-            if (durationByState2.indexOfKey(idFromKey) < 0) {
+            int type3 = SparseMappingTable.getIdFromKey(key2);
+            if (durationByState2.indexOfKey(type3) < 0) {
                 i = i3;
             } else {
-                int key3 = key2;
-                int type3 = idFromKey;
+                long stateToken = proto.start(2246267895813L);
                 i = i3;
                 DumpUtils.printProcStateTagProto(proto, 1159641169921L, 1159641169922L, 1159641169923L, type3);
-                int type4 = type3;
-                long duration = durationByState2.get(type4);
-                durationByState2.delete(type4);
-                protoOutputStream.write(1112396529668L, duration);
-                this.mPssTable.writeStatsToProtoForKey(protoOutputStream, key3);
-                protoOutputStream.end(protoOutputStream.start(2246267895813L));
+                long duration = durationByState2.get(type3);
+                durationByState2.delete(type3);
+                proto.write(1112396529668L, duration);
+                this.mPssTable.writeStatsToProtoForKey(proto, key2);
+                proto.end(stateToken);
             }
             type2 = i + 1;
-            String str = procName;
         }
         int i4 = 0;
         while (true) {
             int i5 = i4;
-            if (i5 >= durationByState2.size()) {
+            int i6 = durationByState2.size();
+            if (i5 >= i6) {
                 break;
             }
-            long stateToken = protoOutputStream.start(j);
-            int i6 = i5;
+            long stateToken2 = proto.start(j);
             DumpUtils.printProcStateTagProto(proto, 1159641169921L, 1159641169922L, 1159641169923L, durationByState2.keyAt(i5));
-            protoOutputStream.write(1112396529668L, durationByState2.valueAt(i6));
-            protoOutputStream.end(stateToken);
-            i4 = i6 + 1;
+            proto.write(1112396529668L, durationByState2.valueAt(i5));
+            proto.end(stateToken2);
+            i4 = i5 + 1;
             j2 = 1112396529668L;
             j = j;
         }
-        long j4 = j2;
-        long totalRunningDuration = getTotalRunningDuration(j3);
+        long j3 = j2;
+        long totalRunningDuration = getTotalRunningDuration(now);
         if (totalRunningDuration > 0) {
-            long stateToken2 = protoOutputStream.start(1146756268038L);
-            protoOutputStream.write(j4, totalRunningDuration);
+            long stateToken3 = proto.start(1146756268038L);
+            proto.write(j3, totalRunningDuration);
             if (this.mTotalRunningPss[0] != 0) {
-                PssTable.writeStatsToProto(protoOutputStream, this.mTotalRunningPss, 0);
+                PssTable.writeStatsToProto(proto, this.mTotalRunningPss, 0);
             }
-            protoOutputStream.end(stateToken2);
+            proto.end(stateToken3);
         }
-        protoOutputStream.end(token);
+        proto.end(token);
     }
 }

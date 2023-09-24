@@ -7,6 +7,7 @@ import java.lang.annotation.Target;
 
 @Target({ElementType.TYPE, ElementType.FIELD, ElementType.METHOD, ElementType.PARAMETER, ElementType.CONSTRUCTOR, ElementType.LOCAL_VARIABLE})
 @Retention(RetentionPolicy.CLASS)
+/* loaded from: classes.dex */
 public @interface SuppressLint {
     String[] value();
 }

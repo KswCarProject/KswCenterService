@@ -1,14 +1,15 @@
 package android.telephony;
 
-import android.os.Binder;
-import android.os.Handler;
-import android.os.HandlerThread;
-import android.os.Looper;
-import android.os.Message;
-import android.os.Messenger;
-import android.os.Parcelable;
-import android.os.RemoteException;
-import android.os.ServiceManager;
+import android.p007os.Binder;
+import android.p007os.Bundle;
+import android.p007os.Handler;
+import android.p007os.HandlerThread;
+import android.p007os.Looper;
+import android.p007os.Message;
+import android.p007os.Messenger;
+import android.p007os.Parcelable;
+import android.p007os.RemoteException;
+import android.p007os.ServiceManager;
 import android.telephony.TelephonyScanManager;
 import android.util.SparseArray;
 import com.android.internal.telephony.ITelephony;
@@ -17,6 +18,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.Executor;
 
+/* loaded from: classes.dex */
 public final class TelephonyScanManager {
     public static final int CALLBACK_RESTRICTED_SCAN_RESULTS = 4;
     public static final int CALLBACK_SCAN_COMPLETE = 3;
@@ -27,11 +29,11 @@ public final class TelephonyScanManager {
     private static final String TAG = "TelephonyScanManager";
     private final Looper mLooper;
     private final Messenger mMessenger;
-    /* access modifiers changed from: private */
-    public SparseArray<NetworkScanInfo> mScanInfo = new SparseArray<>();
+    private SparseArray<NetworkScanInfo> mScanInfo = new SparseArray<>();
 
+    /* loaded from: classes.dex */
     public static abstract class NetworkScanCallback {
-        public void onResults(List<CellInfo> list) {
+        public void onResults(List<CellInfo> results) {
         }
 
         public void onComplete() {
@@ -41,11 +43,10 @@ public final class TelephonyScanManager {
         }
     }
 
+    /* loaded from: classes.dex */
     private static class NetworkScanInfo {
-        /* access modifiers changed from: private */
-        public final NetworkScanCallback mCallback;
-        /* access modifiers changed from: private */
-        public final Executor mExecutor;
+        private final NetworkScanCallback mCallback;
+        private final Executor mExecutor;
         private final NetworkScanRequest mRequest;
 
         NetworkScanInfo(NetworkScanRequest request, Executor executor, NetworkScanCallback callback) {
@@ -59,106 +60,103 @@ public final class TelephonyScanManager {
         HandlerThread thread = new HandlerThread(TAG);
         thread.start();
         this.mLooper = thread.getLooper();
-        this.mMessenger = new Messenger((Handler) new Handler(this.mLooper) {
-            public void handleMessage(Message message) {
-                NetworkScanInfo nsi;
-                Preconditions.checkNotNull(message, "message cannot be null");
-                synchronized (TelephonyScanManager.this.mScanInfo) {
-                    nsi = (NetworkScanInfo) TelephonyScanManager.this.mScanInfo.get(message.arg2);
-                }
-                if (nsi != null) {
-                    NetworkScanCallback callback = nsi.mCallback;
-                    Executor executor = nsi.mExecutor;
-                    if (callback == null) {
-                        throw new RuntimeException("Failed to find NetworkScanCallback with id " + message.arg2);
-                    } else if (executor != null) {
-                        switch (message.what) {
-                            case 1:
-                            case 4:
-                                try {
-                                    Parcelable[] parcelables = message.getData().getParcelableArray(TelephonyScanManager.SCAN_RESULT_KEY);
-                                    CellInfo[] ci = new CellInfo[parcelables.length];
-                                    for (int i = 0; i < parcelables.length; i++) {
-                                        ci[i] = (CellInfo) parcelables[i];
-                                    }
-                                    executor.execute(new Runnable(ci, callback) {
-                                        private final /* synthetic */ CellInfo[] f$0;
-                                        private final /* synthetic */ TelephonyScanManager.NetworkScanCallback f$1;
+        this.mMessenger = new Messenger(new HandlerC24281(this.mLooper));
+    }
 
-                                        {
-                                            this.f$0 = r1;
-                                            this.f$1 = r2;
-                                        }
+    /* renamed from: android.telephony.TelephonyScanManager$1 */
+    /* loaded from: classes.dex */
+    class HandlerC24281 extends Handler {
+        HandlerC24281(Looper x0) {
+            super(x0);
+        }
 
-                                        public final void run() {
-                                            TelephonyScanManager.AnonymousClass1.lambda$handleMessage$0(this.f$0, this.f$1);
-                                        }
-                                    });
-                                    return;
-                                } catch (Exception e) {
-                                    Rlog.e(TelephonyScanManager.TAG, "Exception in networkscan callback onResults", e);
-                                    return;
-                                }
-                            case 2:
-                                try {
-                                    executor.execute(new Runnable(message.arg1, callback) {
-                                        private final /* synthetic */ int f$0;
-                                        private final /* synthetic */ TelephonyScanManager.NetworkScanCallback f$1;
-
-                                        {
-                                            this.f$0 = r1;
-                                            this.f$1 = r2;
-                                        }
-
-                                        public final void run() {
-                                            TelephonyScanManager.AnonymousClass1.lambda$handleMessage$1(this.f$0, this.f$1);
-                                        }
-                                    });
-                                    return;
-                                } catch (Exception e2) {
-                                    Rlog.e(TelephonyScanManager.TAG, "Exception in networkscan callback onError", e2);
-                                    return;
-                                }
-                            case 3:
-                                try {
-                                    executor.execute(new Runnable() {
-                                        public final void run() {
-                                            TelephonyScanManager.AnonymousClass1.lambda$handleMessage$2(TelephonyScanManager.NetworkScanCallback.this);
-                                        }
-                                    });
-                                    TelephonyScanManager.this.mScanInfo.remove(message.arg2);
-                                    return;
-                                } catch (Exception e3) {
-                                    Rlog.e(TelephonyScanManager.TAG, "Exception in networkscan callback onComplete", e3);
-                                    return;
-                                }
-                            default:
-                                Rlog.e(TelephonyScanManager.TAG, "Unhandled message " + Integer.toHexString(message.what));
-                                return;
-                        }
-                    } else {
-                        throw new RuntimeException("Failed to find Executor with id " + message.arg2);
-                    }
+        @Override // android.p007os.Handler
+        public void handleMessage(Message message) {
+            NetworkScanInfo nsi;
+            Preconditions.checkNotNull(message, "message cannot be null");
+            synchronized (TelephonyScanManager.this.mScanInfo) {
+                nsi = (NetworkScanInfo) TelephonyScanManager.this.mScanInfo.get(message.arg2);
+            }
+            if (nsi != null) {
+                final NetworkScanCallback callback = nsi.mCallback;
+                Executor executor = nsi.mExecutor;
+                if (callback == null) {
+                    throw new RuntimeException("Failed to find NetworkScanCallback with id " + message.arg2);
+                } else if (executor == null) {
+                    throw new RuntimeException("Failed to find Executor with id " + message.arg2);
                 } else {
-                    throw new RuntimeException("Failed to find NetworkScanInfo with id " + message.arg2);
+                    switch (message.what) {
+                        case 1:
+                        case 4:
+                            try {
+                                Bundle b = message.getData();
+                                Parcelable[] parcelables = b.getParcelableArray(TelephonyScanManager.SCAN_RESULT_KEY);
+                                final CellInfo[] ci = new CellInfo[parcelables.length];
+                                for (int i = 0; i < parcelables.length; i++) {
+                                    ci[i] = (CellInfo) parcelables[i];
+                                }
+                                executor.execute(new Runnable() { // from class: android.telephony.-$$Lambda$TelephonyScanManager$1$jmXulbd8FzO5Qb8_Hi-Z6s_nJWI
+                                    @Override // java.lang.Runnable
+                                    public final void run() {
+                                        TelephonyScanManager.HandlerC24281.lambda$handleMessage$0(ci, callback);
+                                    }
+                                });
+                                return;
+                            } catch (Exception e) {
+                                Rlog.m85e(TelephonyScanManager.TAG, "Exception in networkscan callback onResults", e);
+                                return;
+                            }
+                        case 2:
+                            try {
+                                final int errorCode = message.arg1;
+                                executor.execute(new Runnable() { // from class: android.telephony.-$$Lambda$TelephonyScanManager$1$X9SMshZoHjJ6SzCbmgVMwQip2Q0
+                                    @Override // java.lang.Runnable
+                                    public final void run() {
+                                        TelephonyScanManager.HandlerC24281.lambda$handleMessage$1(errorCode, callback);
+                                    }
+                                });
+                                return;
+                            } catch (Exception e2) {
+                                Rlog.m85e(TelephonyScanManager.TAG, "Exception in networkscan callback onError", e2);
+                                return;
+                            }
+                        case 3:
+                            try {
+                                executor.execute(new Runnable() { // from class: android.telephony.-$$Lambda$TelephonyScanManager$1$tGSpVQaVhc4GKIxjcECV-jCGYw4
+                                    @Override // java.lang.Runnable
+                                    public final void run() {
+                                        TelephonyScanManager.HandlerC24281.lambda$handleMessage$2(TelephonyScanManager.NetworkScanCallback.this);
+                                    }
+                                });
+                                TelephonyScanManager.this.mScanInfo.remove(message.arg2);
+                                return;
+                            } catch (Exception e3) {
+                                Rlog.m85e(TelephonyScanManager.TAG, "Exception in networkscan callback onComplete", e3);
+                                return;
+                            }
+                        default:
+                            Rlog.m86e(TelephonyScanManager.TAG, "Unhandled message " + Integer.toHexString(message.what));
+                            return;
+                    }
                 }
             }
+            throw new RuntimeException("Failed to find NetworkScanInfo with id " + message.arg2);
+        }
 
-            static /* synthetic */ void lambda$handleMessage$0(CellInfo[] ci, NetworkScanCallback callback) {
-                Rlog.d(TelephonyScanManager.TAG, "onResults: " + ci.toString());
-                callback.onResults(Arrays.asList(ci));
-            }
+        static /* synthetic */ void lambda$handleMessage$0(CellInfo[] ci, NetworkScanCallback callback) {
+            Rlog.m88d(TelephonyScanManager.TAG, "onResults: " + ci.toString());
+            callback.onResults(Arrays.asList(ci));
+        }
 
-            static /* synthetic */ void lambda$handleMessage$1(int errorCode, NetworkScanCallback callback) {
-                Rlog.d(TelephonyScanManager.TAG, "onError: " + errorCode);
-                callback.onError(errorCode);
-            }
+        static /* synthetic */ void lambda$handleMessage$1(int errorCode, NetworkScanCallback callback) {
+            Rlog.m88d(TelephonyScanManager.TAG, "onError: " + errorCode);
+            callback.onError(errorCode);
+        }
 
-            static /* synthetic */ void lambda$handleMessage$2(NetworkScanCallback callback) {
-                Rlog.d(TelephonyScanManager.TAG, "onComplete");
-                callback.onComplete();
-            }
-        });
+        static /* synthetic */ void lambda$handleMessage$2(NetworkScanCallback callback) {
+            Rlog.m88d(TelephonyScanManager.TAG, "onComplete");
+            callback.onComplete();
+        }
     }
 
     public NetworkScan requestNetworkScan(int subId, NetworkScanRequest request, Executor executor, NetworkScanCallback callback, String callingPackage) {
@@ -167,16 +165,16 @@ public final class TelephonyScanManager {
             if (telephony != null) {
                 int scanId = telephony.requestNetworkScan(subId, request, this.mMessenger, new Binder(), callingPackage);
                 if (scanId == -1) {
-                    Rlog.e(TAG, "Failed to initiate network scan");
+                    Rlog.m86e(TAG, "Failed to initiate network scan");
                     return null;
                 }
                 saveScanInfo(scanId, request, executor, callback);
                 return new NetworkScan(scanId, subId);
             }
         } catch (RemoteException ex) {
-            Rlog.e(TAG, "requestNetworkScan RemoteException", ex);
+            Rlog.m85e(TAG, "requestNetworkScan RemoteException", ex);
         } catch (NullPointerException ex2) {
-            Rlog.e(TAG, "requestNetworkScan NPE", ex2);
+            Rlog.m85e(TAG, "requestNetworkScan NPE", ex2);
         }
         return null;
     }

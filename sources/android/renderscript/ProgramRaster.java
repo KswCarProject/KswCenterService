@@ -2,10 +2,12 @@ package android.renderscript;
 
 import android.annotation.UnsupportedAppUsage;
 
+/* loaded from: classes3.dex */
 public class ProgramRaster extends BaseObj {
-    CullMode mCullMode = CullMode.BACK;
-    boolean mPointSprite = false;
+    CullMode mCullMode;
+    boolean mPointSprite;
 
+    /* loaded from: classes3.dex */
     public enum CullMode {
         BACK(0),
         FRONT(1),
@@ -13,13 +15,15 @@ public class ProgramRaster extends BaseObj {
         
         int mID;
 
-        private CullMode(int id) {
+        CullMode(int id) {
             this.mID = id;
         }
     }
 
     ProgramRaster(long id, RenderScript rs) {
         super(id, rs);
+        this.mPointSprite = false;
+        this.mCullMode = CullMode.BACK;
     }
 
     public boolean isPointSpriteEnabled() {
@@ -57,10 +61,11 @@ public class ProgramRaster extends BaseObj {
         return rs.mProgramRaster_CULL_NONE;
     }
 
+    /* loaded from: classes3.dex */
     public static class Builder {
-        CullMode mCullMode = CullMode.BACK;
-        boolean mPointSprite = false;
         RenderScript mRS;
+        boolean mPointSprite = false;
+        CullMode mCullMode = CullMode.BACK;
 
         @UnsupportedAppUsage
         public Builder(RenderScript rs) {
@@ -81,7 +86,8 @@ public class ProgramRaster extends BaseObj {
         @UnsupportedAppUsage
         public ProgramRaster create() {
             this.mRS.validate();
-            ProgramRaster programRaster = new ProgramRaster(this.mRS.nProgramRasterCreate(this.mPointSprite, this.mCullMode.mID), this.mRS);
+            long id = this.mRS.nProgramRasterCreate(this.mPointSprite, this.mCullMode.mID);
+            ProgramRaster programRaster = new ProgramRaster(id, this.mRS);
             programRaster.mPointSprite = this.mPointSprite;
             programRaster.mCullMode = this.mCullMode;
             return programRaster;

@@ -1,18 +1,21 @@
 package android.view.inputmethod;
 
-import android.os.Bundle;
+import android.p007os.Bundle;
 import android.telephony.SmsManager;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
+import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.util.Collections;
 import java.util.Map;
 import java.util.WeakHashMap;
 
+/* loaded from: classes4.dex */
 public final class InputConnectionInspector {
     private static final Map<Class, Integer> sMissingMethodsMap = Collections.synchronizedMap(new WeakHashMap());
 
     @Retention(RetentionPolicy.SOURCE)
+    /* loaded from: classes4.dex */
     public @interface MissingMethodFlags {
         public static final int CLOSE_CONNECTION = 64;
         public static final int COMMIT_CONTENT = 128;
@@ -70,7 +73,8 @@ public final class InputConnectionInspector {
 
     private static boolean hasGetSelectedText(Class clazz) {
         try {
-            return !Modifier.isAbstract(clazz.getMethod("getSelectedText", new Class[]{Integer.TYPE}).getModifiers());
+            Method method = clazz.getMethod("getSelectedText", Integer.TYPE);
+            return !Modifier.isAbstract(method.getModifiers());
         } catch (NoSuchMethodException e) {
             return false;
         }
@@ -78,7 +82,8 @@ public final class InputConnectionInspector {
 
     private static boolean hasSetComposingRegion(Class clazz) {
         try {
-            return !Modifier.isAbstract(clazz.getMethod("setComposingRegion", new Class[]{Integer.TYPE, Integer.TYPE}).getModifiers());
+            Method method = clazz.getMethod("setComposingRegion", Integer.TYPE, Integer.TYPE);
+            return !Modifier.isAbstract(method.getModifiers());
         } catch (NoSuchMethodException e) {
             return false;
         }
@@ -86,7 +91,8 @@ public final class InputConnectionInspector {
 
     private static boolean hasCommitCorrection(Class clazz) {
         try {
-            return !Modifier.isAbstract(clazz.getMethod("commitCorrection", new Class[]{CorrectionInfo.class}).getModifiers());
+            Method method = clazz.getMethod("commitCorrection", CorrectionInfo.class);
+            return !Modifier.isAbstract(method.getModifiers());
         } catch (NoSuchMethodException e) {
             return false;
         }
@@ -94,7 +100,8 @@ public final class InputConnectionInspector {
 
     private static boolean hasRequestCursorUpdate(Class clazz) {
         try {
-            return !Modifier.isAbstract(clazz.getMethod("requestCursorUpdates", new Class[]{Integer.TYPE}).getModifiers());
+            Method method = clazz.getMethod("requestCursorUpdates", Integer.TYPE);
+            return !Modifier.isAbstract(method.getModifiers());
         } catch (NoSuchMethodException e) {
             return false;
         }
@@ -102,7 +109,8 @@ public final class InputConnectionInspector {
 
     private static boolean hasDeleteSurroundingTextInCodePoints(Class clazz) {
         try {
-            return !Modifier.isAbstract(clazz.getMethod("deleteSurroundingTextInCodePoints", new Class[]{Integer.TYPE, Integer.TYPE}).getModifiers());
+            Method method = clazz.getMethod("deleteSurroundingTextInCodePoints", Integer.TYPE, Integer.TYPE);
+            return !Modifier.isAbstract(method.getModifiers());
         } catch (NoSuchMethodException e) {
             return false;
         }
@@ -110,7 +118,8 @@ public final class InputConnectionInspector {
 
     private static boolean hasGetHandler(Class clazz) {
         try {
-            return !Modifier.isAbstract(clazz.getMethod("getHandler", new Class[0]).getModifiers());
+            Method method = clazz.getMethod("getHandler", new Class[0]);
+            return !Modifier.isAbstract(method.getModifiers());
         } catch (NoSuchMethodException e) {
             return false;
         }
@@ -118,7 +127,8 @@ public final class InputConnectionInspector {
 
     private static boolean hasCloseConnection(Class clazz) {
         try {
-            return !Modifier.isAbstract(clazz.getMethod("closeConnection", new Class[0]).getModifiers());
+            Method method = clazz.getMethod("closeConnection", new Class[0]);
+            return !Modifier.isAbstract(method.getModifiers());
         } catch (NoSuchMethodException e) {
             return false;
         }
@@ -126,7 +136,8 @@ public final class InputConnectionInspector {
 
     private static boolean hasCommitContent(Class clazz) {
         try {
-            return !Modifier.isAbstract(clazz.getMethod("commitContent", new Class[]{InputContentInfo.class, Integer.TYPE, Bundle.class}).getModifiers());
+            Method method = clazz.getMethod("commitContent", InputContentInfo.class, Integer.TYPE, Bundle.class);
+            return !Modifier.isAbstract(method.getModifiers());
         } catch (NoSuchMethodException e) {
             return false;
         }

@@ -4,9 +4,9 @@ import android.net.wifi.hotspot2.pps.Credential;
 import android.net.wifi.hotspot2.pps.HomeSp;
 import android.net.wifi.hotspot2.pps.Policy;
 import android.net.wifi.hotspot2.pps.UpdateParameter;
-import android.os.Bundle;
-import android.os.Parcel;
-import android.os.Parcelable;
+import android.p007os.Bundle;
+import android.p007os.Parcel;
+import android.p007os.Parcelable;
 import android.text.TextUtils;
 import android.util.Log;
 import java.nio.charset.StandardCharsets;
@@ -18,15 +18,18 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Objects;
 
+/* loaded from: classes3.dex */
 public final class PasspointConfiguration implements Parcelable {
     private static final int CERTIFICATE_SHA256_BYTES = 32;
-    public static final Parcelable.Creator<PasspointConfiguration> CREATOR = new Parcelable.Creator<PasspointConfiguration>() {
+    public static final Parcelable.Creator<PasspointConfiguration> CREATOR = new Parcelable.Creator<PasspointConfiguration>() { // from class: android.net.wifi.hotspot2.PasspointConfiguration.1
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public PasspointConfiguration createFromParcel(Parcel in) {
             PasspointConfiguration config = new PasspointConfiguration();
-            config.setHomeSp((HomeSp) in.readParcelable((ClassLoader) null));
-            config.setCredential((Credential) in.readParcelable((ClassLoader) null));
-            config.setPolicy((Policy) in.readParcelable((ClassLoader) null));
-            config.setSubscriptionUpdate((UpdateParameter) in.readParcelable((ClassLoader) null));
+            config.setHomeSp((HomeSp) in.readParcelable(null));
+            config.setCredential((Credential) in.readParcelable(null));
+            config.setPolicy((Policy) in.readParcelable(null));
+            config.setSubscriptionUpdate((UpdateParameter) in.readParcelable(null));
             config.setTrustRootCertList(readTrustRootCerts(in));
             config.setUpdateIdentifier(in.readInt());
             config.setCredentialPriority(in.readInt());
@@ -37,10 +40,14 @@ public final class PasspointConfiguration implements Parcelable {
             config.setUsageLimitStartTimeInMillis(in.readLong());
             config.setUsageLimitDataLimit(in.readLong());
             config.setUsageLimitTimeLimitInMinutes(in.readLong());
-            config.setServiceFriendlyNames((HashMap) in.readBundle().getSerializable("serviceFriendlyNames"));
+            Bundle bundle = in.readBundle();
+            Map<String, String> friendlyNamesMap = (HashMap) bundle.getSerializable("serviceFriendlyNames");
+            config.setServiceFriendlyNames(friendlyNamesMap);
             return config;
         }
 
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public PasspointConfiguration[] newArray(int size) {
             return new PasspointConfiguration[size];
         }
@@ -52,7 +59,9 @@ public final class PasspointConfiguration implements Parcelable {
             }
             Map<String, byte[]> trustRootCerts = new HashMap<>(size);
             for (int i = 0; i < size; i++) {
-                trustRootCerts.put(in.readString(), in.createByteArray());
+                String key = in.readString();
+                byte[] value = in.createByteArray();
+                trustRootCerts.put(key, value);
             }
             return trustRootCerts;
         }
@@ -60,21 +69,21 @@ public final class PasspointConfiguration implements Parcelable {
     private static final int MAX_URL_BYTES = 1023;
     private static final int NULL_VALUE = -1;
     private static final String TAG = "PasspointConfiguration";
-    private Credential mCredential = null;
-    private int mCredentialPriority = Integer.MIN_VALUE;
-    private HomeSp mHomeSp = null;
-    private Policy mPolicy = null;
-    private Map<String, String> mServiceFriendlyNames = null;
-    private long mSubscriptionCreationTimeInMillis = Long.MIN_VALUE;
-    private long mSubscriptionExpirationTimeInMillis = Long.MIN_VALUE;
-    private String mSubscriptionType = null;
-    private UpdateParameter mSubscriptionUpdate = null;
-    private Map<String, byte[]> mTrustRootCertList = null;
-    private int mUpdateIdentifier = Integer.MIN_VALUE;
-    private long mUsageLimitDataLimit = Long.MIN_VALUE;
-    private long mUsageLimitStartTimeInMillis = Long.MIN_VALUE;
-    private long mUsageLimitTimeLimitInMinutes = Long.MIN_VALUE;
-    private long mUsageLimitUsageTimePeriodInMinutes = Long.MIN_VALUE;
+    private Credential mCredential;
+    private int mCredentialPriority;
+    private HomeSp mHomeSp;
+    private Policy mPolicy;
+    private Map<String, String> mServiceFriendlyNames;
+    private long mSubscriptionCreationTimeInMillis;
+    private long mSubscriptionExpirationTimeInMillis;
+    private String mSubscriptionType;
+    private UpdateParameter mSubscriptionUpdate;
+    private Map<String, byte[]> mTrustRootCertList;
+    private int mUpdateIdentifier;
+    private long mUsageLimitDataLimit;
+    private long mUsageLimitStartTimeInMillis;
+    private long mUsageLimitTimeLimitInMinutes;
+    private long mUsageLimitUsageTimePeriodInMinutes;
 
     public void setHomeSp(HomeSp homeSp) {
         this.mHomeSp = homeSp;
@@ -200,7 +209,8 @@ public final class PasspointConfiguration implements Parcelable {
         if (this.mServiceFriendlyNames == null || this.mServiceFriendlyNames.isEmpty()) {
             return null;
         }
-        String friendlyName = this.mServiceFriendlyNames.get(Locale.getDefault().getLanguage());
+        String lang = Locale.getDefault().getLanguage();
+        String friendlyName = this.mServiceFriendlyNames.get(lang);
         if (friendlyName != null) {
             return friendlyName;
         }
@@ -212,42 +222,75 @@ public final class PasspointConfiguration implements Parcelable {
     }
 
     public PasspointConfiguration() {
+        this.mHomeSp = null;
+        this.mCredential = null;
+        this.mPolicy = null;
+        this.mSubscriptionUpdate = null;
+        this.mTrustRootCertList = null;
+        this.mUpdateIdentifier = Integer.MIN_VALUE;
+        this.mCredentialPriority = Integer.MIN_VALUE;
+        this.mSubscriptionCreationTimeInMillis = Long.MIN_VALUE;
+        this.mSubscriptionExpirationTimeInMillis = Long.MIN_VALUE;
+        this.mSubscriptionType = null;
+        this.mUsageLimitUsageTimePeriodInMinutes = Long.MIN_VALUE;
+        this.mUsageLimitStartTimeInMillis = Long.MIN_VALUE;
+        this.mUsageLimitDataLimit = Long.MIN_VALUE;
+        this.mUsageLimitTimeLimitInMinutes = Long.MIN_VALUE;
+        this.mServiceFriendlyNames = null;
     }
 
     public PasspointConfiguration(PasspointConfiguration source) {
-        if (source != null) {
-            if (source.mHomeSp != null) {
-                this.mHomeSp = new HomeSp(source.mHomeSp);
-            }
-            if (source.mCredential != null) {
-                this.mCredential = new Credential(source.mCredential);
-            }
-            if (source.mPolicy != null) {
-                this.mPolicy = new Policy(source.mPolicy);
-            }
-            if (source.mTrustRootCertList != null) {
-                this.mTrustRootCertList = Collections.unmodifiableMap(source.mTrustRootCertList);
-            }
-            if (source.mSubscriptionUpdate != null) {
-                this.mSubscriptionUpdate = new UpdateParameter(source.mSubscriptionUpdate);
-            }
-            this.mUpdateIdentifier = source.mUpdateIdentifier;
-            this.mCredentialPriority = source.mCredentialPriority;
-            this.mSubscriptionCreationTimeInMillis = source.mSubscriptionCreationTimeInMillis;
-            this.mSubscriptionExpirationTimeInMillis = source.mSubscriptionExpirationTimeInMillis;
-            this.mSubscriptionType = source.mSubscriptionType;
-            this.mUsageLimitDataLimit = source.mUsageLimitDataLimit;
-            this.mUsageLimitStartTimeInMillis = source.mUsageLimitStartTimeInMillis;
-            this.mUsageLimitTimeLimitInMinutes = source.mUsageLimitTimeLimitInMinutes;
-            this.mUsageLimitUsageTimePeriodInMinutes = source.mUsageLimitUsageTimePeriodInMinutes;
-            this.mServiceFriendlyNames = source.mServiceFriendlyNames;
+        this.mHomeSp = null;
+        this.mCredential = null;
+        this.mPolicy = null;
+        this.mSubscriptionUpdate = null;
+        this.mTrustRootCertList = null;
+        this.mUpdateIdentifier = Integer.MIN_VALUE;
+        this.mCredentialPriority = Integer.MIN_VALUE;
+        this.mSubscriptionCreationTimeInMillis = Long.MIN_VALUE;
+        this.mSubscriptionExpirationTimeInMillis = Long.MIN_VALUE;
+        this.mSubscriptionType = null;
+        this.mUsageLimitUsageTimePeriodInMinutes = Long.MIN_VALUE;
+        this.mUsageLimitStartTimeInMillis = Long.MIN_VALUE;
+        this.mUsageLimitDataLimit = Long.MIN_VALUE;
+        this.mUsageLimitTimeLimitInMinutes = Long.MIN_VALUE;
+        this.mServiceFriendlyNames = null;
+        if (source == null) {
+            return;
         }
+        if (source.mHomeSp != null) {
+            this.mHomeSp = new HomeSp(source.mHomeSp);
+        }
+        if (source.mCredential != null) {
+            this.mCredential = new Credential(source.mCredential);
+        }
+        if (source.mPolicy != null) {
+            this.mPolicy = new Policy(source.mPolicy);
+        }
+        if (source.mTrustRootCertList != null) {
+            this.mTrustRootCertList = Collections.unmodifiableMap(source.mTrustRootCertList);
+        }
+        if (source.mSubscriptionUpdate != null) {
+            this.mSubscriptionUpdate = new UpdateParameter(source.mSubscriptionUpdate);
+        }
+        this.mUpdateIdentifier = source.mUpdateIdentifier;
+        this.mCredentialPriority = source.mCredentialPriority;
+        this.mSubscriptionCreationTimeInMillis = source.mSubscriptionCreationTimeInMillis;
+        this.mSubscriptionExpirationTimeInMillis = source.mSubscriptionExpirationTimeInMillis;
+        this.mSubscriptionType = source.mSubscriptionType;
+        this.mUsageLimitDataLimit = source.mUsageLimitDataLimit;
+        this.mUsageLimitStartTimeInMillis = source.mUsageLimitStartTimeInMillis;
+        this.mUsageLimitTimeLimitInMinutes = source.mUsageLimitTimeLimitInMinutes;
+        this.mUsageLimitUsageTimePeriodInMinutes = source.mUsageLimitUsageTimePeriodInMinutes;
+        this.mServiceFriendlyNames = source.mServiceFriendlyNames;
     }
 
+    @Override // android.p007os.Parcelable
     public int describeContents() {
         return 0;
     }
 
+    @Override // android.p007os.Parcelable
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeParcelable(this.mHomeSp, flags);
         dest.writeParcelable(this.mCredential, flags);
@@ -272,32 +315,32 @@ public final class PasspointConfiguration implements Parcelable {
         if (this == thatObject) {
             return true;
         }
-        if (!(thatObject instanceof PasspointConfiguration)) {
-            return false;
-        }
-        PasspointConfiguration that = (PasspointConfiguration) thatObject;
-        if (this.mHomeSp != null ? this.mHomeSp.equals(that.mHomeSp) : that.mHomeSp == null) {
-            if (this.mCredential != null ? this.mCredential.equals(that.mCredential) : that.mCredential == null) {
-                if (this.mPolicy != null ? this.mPolicy.equals(that.mPolicy) : that.mPolicy == null) {
-                    if (this.mSubscriptionUpdate != null ? this.mSubscriptionUpdate.equals(that.mSubscriptionUpdate) : that.mSubscriptionUpdate == null) {
-                        if (isTrustRootCertListEquals(this.mTrustRootCertList, that.mTrustRootCertList) && this.mUpdateIdentifier == that.mUpdateIdentifier && this.mCredentialPriority == that.mCredentialPriority && this.mSubscriptionCreationTimeInMillis == that.mSubscriptionCreationTimeInMillis && this.mSubscriptionExpirationTimeInMillis == that.mSubscriptionExpirationTimeInMillis && TextUtils.equals(this.mSubscriptionType, that.mSubscriptionType) && this.mUsageLimitUsageTimePeriodInMinutes == that.mUsageLimitUsageTimePeriodInMinutes && this.mUsageLimitStartTimeInMillis == that.mUsageLimitStartTimeInMillis && this.mUsageLimitDataLimit == that.mUsageLimitDataLimit && this.mUsageLimitTimeLimitInMinutes == that.mUsageLimitTimeLimitInMinutes) {
-                            if (this.mServiceFriendlyNames == null) {
-                                if (that.mServiceFriendlyNames == null) {
+        if (thatObject instanceof PasspointConfiguration) {
+            PasspointConfiguration that = (PasspointConfiguration) thatObject;
+            if (this.mHomeSp != null ? this.mHomeSp.equals(that.mHomeSp) : that.mHomeSp == null) {
+                if (this.mCredential != null ? this.mCredential.equals(that.mCredential) : that.mCredential == null) {
+                    if (this.mPolicy != null ? this.mPolicy.equals(that.mPolicy) : that.mPolicy == null) {
+                        if (this.mSubscriptionUpdate != null ? this.mSubscriptionUpdate.equals(that.mSubscriptionUpdate) : that.mSubscriptionUpdate == null) {
+                            if (isTrustRootCertListEquals(this.mTrustRootCertList, that.mTrustRootCertList) && this.mUpdateIdentifier == that.mUpdateIdentifier && this.mCredentialPriority == that.mCredentialPriority && this.mSubscriptionCreationTimeInMillis == that.mSubscriptionCreationTimeInMillis && this.mSubscriptionExpirationTimeInMillis == that.mSubscriptionExpirationTimeInMillis && TextUtils.equals(this.mSubscriptionType, that.mSubscriptionType) && this.mUsageLimitUsageTimePeriodInMinutes == that.mUsageLimitUsageTimePeriodInMinutes && this.mUsageLimitStartTimeInMillis == that.mUsageLimitStartTimeInMillis && this.mUsageLimitDataLimit == that.mUsageLimitDataLimit && this.mUsageLimitTimeLimitInMinutes == that.mUsageLimitTimeLimitInMinutes) {
+                                if (this.mServiceFriendlyNames == null) {
+                                    if (that.mServiceFriendlyNames == null) {
+                                        return true;
+                                    }
+                                } else if (this.mServiceFriendlyNames.equals(that.mServiceFriendlyNames)) {
                                     return true;
                                 }
-                            } else if (this.mServiceFriendlyNames.equals(that.mServiceFriendlyNames)) {
-                                return true;
                             }
                         }
                     }
                 }
             }
+            return false;
         }
         return false;
     }
 
     public int hashCode() {
-        return Objects.hash(new Object[]{this.mHomeSp, this.mCredential, this.mPolicy, this.mSubscriptionUpdate, this.mTrustRootCertList, Integer.valueOf(this.mUpdateIdentifier), Integer.valueOf(this.mCredentialPriority), Long.valueOf(this.mSubscriptionCreationTimeInMillis), Long.valueOf(this.mSubscriptionExpirationTimeInMillis), Long.valueOf(this.mUsageLimitUsageTimePeriodInMinutes), Long.valueOf(this.mUsageLimitStartTimeInMillis), Long.valueOf(this.mUsageLimitDataLimit), Long.valueOf(this.mUsageLimitTimeLimitInMinutes), this.mServiceFriendlyNames});
+        return Objects.hash(this.mHomeSp, this.mCredential, this.mPolicy, this.mSubscriptionUpdate, this.mTrustRootCertList, Integer.valueOf(this.mUpdateIdentifier), Integer.valueOf(this.mCredentialPriority), Long.valueOf(this.mSubscriptionCreationTimeInMillis), Long.valueOf(this.mSubscriptionExpirationTimeInMillis), Long.valueOf(this.mUsageLimitUsageTimePeriodInMinutes), Long.valueOf(this.mUsageLimitStartTimeInMillis), Long.valueOf(this.mUsageLimitDataLimit), Long.valueOf(this.mUsageLimitTimeLimitInMinutes), this.mServiceFriendlyNames);
     }
 
     public String toString() {
@@ -359,10 +402,10 @@ public final class PasspointConfiguration implements Parcelable {
     }
 
     public boolean validate() {
-        if (this.mSubscriptionUpdate == null || this.mSubscriptionUpdate.validate()) {
-            return validateForCommonR1andR2(true);
+        if (this.mSubscriptionUpdate != null && !this.mSubscriptionUpdate.validate()) {
+            return false;
         }
-        return false;
+        return validateForCommonR1andR2(true);
     }
 
     public boolean validateForR2() {
@@ -376,30 +419,30 @@ public final class PasspointConfiguration implements Parcelable {
         if (this.mHomeSp == null || !this.mHomeSp.validate() || this.mCredential == null || !this.mCredential.validate(isR1)) {
             return false;
         }
-        if (this.mPolicy != null && !this.mPolicy.validate()) {
-            return false;
-        }
-        if (this.mTrustRootCertList == null) {
+        if (this.mPolicy == null || this.mPolicy.validate()) {
+            if (this.mTrustRootCertList != null) {
+                for (Map.Entry<String, byte[]> entry : this.mTrustRootCertList.entrySet()) {
+                    String url = entry.getKey();
+                    byte[] certFingerprint = entry.getValue();
+                    if (TextUtils.isEmpty(url)) {
+                        Log.m72d(TAG, "Empty URL");
+                        return false;
+                    } else if (url.getBytes(StandardCharsets.UTF_8).length > 1023) {
+                        Log.m72d(TAG, "URL bytes exceeded the max: " + url.getBytes(StandardCharsets.UTF_8).length);
+                        return false;
+                    } else if (certFingerprint == null) {
+                        Log.m72d(TAG, "Fingerprint not specified");
+                        return false;
+                    } else if (certFingerprint.length != 32) {
+                        Log.m72d(TAG, "Incorrect size of trust root certificate SHA-256 fingerprint: " + certFingerprint.length);
+                        return false;
+                    }
+                }
+                return true;
+            }
             return true;
         }
-        for (Map.Entry<String, byte[]> entry : this.mTrustRootCertList.entrySet()) {
-            String url = entry.getKey();
-            byte[] certFingerprint = entry.getValue();
-            if (TextUtils.isEmpty(url)) {
-                Log.d(TAG, "Empty URL");
-                return false;
-            } else if (url.getBytes(StandardCharsets.UTF_8).length > 1023) {
-                Log.d(TAG, "URL bytes exceeded the max: " + url.getBytes(StandardCharsets.UTF_8).length);
-                return false;
-            } else if (certFingerprint == null) {
-                Log.d(TAG, "Fingerprint not specified");
-                return false;
-            } else if (certFingerprint.length != 32) {
-                Log.d(TAG, "Incorrect size of trust root certificate SHA-256 fingerprint: " + certFingerprint.length);
-                return false;
-            }
-        }
-        return true;
+        return false;
     }
 
     private static void writeTrustRootCerts(Parcel dest, Map<String, byte[]> trustRootCerts) {
@@ -416,10 +459,7 @@ public final class PasspointConfiguration implements Parcelable {
 
     private static boolean isTrustRootCertListEquals(Map<String, byte[]> list1, Map<String, byte[]> list2) {
         if (list1 == null || list2 == null) {
-            if (list1 == list2) {
-                return true;
-            }
-            return false;
+            return list1 == list2;
         } else if (list1.size() != list2.size()) {
             return false;
         } else {

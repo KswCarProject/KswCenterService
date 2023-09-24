@@ -4,6 +4,7 @@ import com.ibm.icu.impl.Utility;
 import com.ibm.icu.text.RuleBasedTransliterator;
 import com.ibm.icu.text.Transliterator;
 
+/* loaded from: classes5.dex */
 class TransliterationRule {
     static final int ANCHOR_END = 2;
     static final int ANCHOR_START = 1;
@@ -18,42 +19,31 @@ class TransliterationRule {
     private StringMatcher postContext;
     UnicodeMatcher[] segments;
 
-    public TransliterationRule(String input, int anteContextPos, int postContextPos, String output2, int cursorPos, int cursorOffset, UnicodeMatcher[] segs, boolean anchorStart, boolean anchorEnd, RuleBasedTransliterator.Data theData) {
-        int i = anteContextPos;
-        int i2 = postContextPos;
+    public TransliterationRule(String input, int anteContextPos, int postContextPos, String output, int cursorPos, int cursorOffset, UnicodeMatcher[] segs, boolean anchorStart, boolean anchorEnd, RuleBasedTransliterator.Data theData) {
         int cursorPos2 = cursorPos;
         this.data = theData;
-        if (i < 0) {
+        if (anteContextPos < 0) {
             this.anteContextLength = 0;
-        } else if (i <= input.length()) {
-            this.anteContextLength = i;
-        } else {
-            String str = input;
-            String str2 = output2;
-            UnicodeMatcher[] unicodeMatcherArr = segs;
+        } else if (anteContextPos > input.length()) {
             throw new IllegalArgumentException("Invalid ante context");
+        } else {
+            this.anteContextLength = anteContextPos;
         }
-        if (i2 < 0) {
+        if (postContextPos < 0) {
             this.keyLength = input.length() - this.anteContextLength;
-        } else if (i2 < this.anteContextLength || i2 > input.length()) {
-            String str3 = input;
-            String str4 = output2;
-            UnicodeMatcher[] unicodeMatcherArr2 = segs;
+        } else if (postContextPos < this.anteContextLength || postContextPos > input.length()) {
             throw new IllegalArgumentException("Invalid post context");
         } else {
-            this.keyLength = i2 - this.anteContextLength;
+            this.keyLength = postContextPos - this.anteContextLength;
         }
         if (cursorPos2 < 0) {
-            cursorPos2 = output2.length();
-        } else if (cursorPos2 > output2.length()) {
-            String str5 = input;
-            String str6 = output2;
-            UnicodeMatcher[] unicodeMatcherArr3 = segs;
+            cursorPos2 = output.length();
+        } else if (cursorPos2 > output.length()) {
             throw new IllegalArgumentException("Invalid cursor position");
         }
         this.segments = segs;
         this.pattern = input;
-        this.flags = 0;
+        this.flags = (byte) 0;
         if (anchorStart) {
             this.flags = (byte) (this.flags | 1);
         }
@@ -73,20 +63,14 @@ class TransliterationRule {
         if (postContextLength > 0) {
             this.postContext = new StringMatcher(this.pattern.substring(this.anteContextLength + this.keyLength), 0, this.data);
         }
-        this.output = new StringReplacer(output2, cursorPos2 + cursorOffset, this.data);
+        this.output = new StringReplacer(output, cursorPos2 + cursorOffset, this.data);
     }
 
     public int getAnteContextLength() {
-        int i = this.anteContextLength;
-        int i2 = 1;
-        if ((this.flags & 1) == 0) {
-            i2 = 0;
-        }
-        return i + i2;
+        return this.anteContextLength + ((this.flags & 1) == 0 ? 0 : 1);
     }
 
-    /* access modifiers changed from: package-private */
-    public final int getIndexValue() {
+    final int getIndexValue() {
         if (this.anteContextLength == this.pattern.length()) {
             return -1;
         }
@@ -97,8 +81,7 @@ class TransliterationRule {
         return -1;
     }
 
-    /* access modifiers changed from: package-private */
-    public final boolean matchesIndexValue(int v) {
+    final boolean matchesIndexValue(int v) {
         UnicodeMatcher m = this.key != null ? this.key : this.postContext;
         if (m != null) {
             return m.matchesIndexValue(v);
@@ -113,19 +96,13 @@ class TransliterationRule {
         int right = this.pattern.length() - left;
         int right2 = r2.pattern.length() - left2;
         if (left != left2 || right != right2 || this.keyLength > r2.keyLength || !r2.pattern.regionMatches(0, this.pattern, 0, len)) {
-            if (left > left2 || ((right >= right2 && (right != right2 || this.keyLength > r2.keyLength)) || !r2.pattern.regionMatches(left2 - left, this.pattern, 0, len))) {
-                return false;
-            }
-            return true;
-        } else if (this.flags == r2.flags) {
-            return true;
-        } else {
+            return left <= left2 && (right < right2 || (right == right2 && this.keyLength <= r2.keyLength)) && r2.pattern.regionMatches(left2 - left, this.pattern, 0, len);
+        } else if (this.flags != r2.flags) {
             if ((this.flags & 1) == 0 && (this.flags & 2) == 0) {
                 return true;
             }
-            if ((r2.flags & 1) == 0 || (r2.flags & 2) == 0) {
-                return false;
-            }
+            return ((r2.flags & 1) == 0 || (r2.flags & 2) == 0) ? false : true;
+        } else {
             return true;
         }
     }
@@ -141,49 +118,50 @@ class TransliterationRule {
     public int matchAndReplace(Replaceable text, Transliterator.Position pos, boolean incremental) {
         int match;
         if (this.segments != null) {
-            for (UnicodeMatcher unicodeMatcher : this.segments) {
-                ((StringMatcher) unicodeMatcher).resetMatch();
+            for (int i = 0; i < this.segments.length; i++) {
+                ((StringMatcher) this.segments[i]).resetMatch();
             }
         }
         int anteLimit = posBefore(text, pos.contextStart);
         int[] intRef = {posBefore(text, pos.start)};
-        if (this.anteContext != null && this.anteContext.matches(text, intRef, anteLimit, false) != 2) {
+        if (this.anteContext == null || this.anteContext.matches(text, intRef, anteLimit, false) == 2) {
+            int match2 = intRef[0];
+            int minOText = posAfter(text, match2);
+            if ((this.flags & 1) == 0 || match2 == anteLimit) {
+                intRef[0] = pos.start;
+                if (this.key != null && (match = this.key.matches(text, intRef, pos.limit, incremental)) != 2) {
+                    return match;
+                }
+                int match3 = intRef[0];
+                if (this.postContext != null) {
+                    if (incremental && match3 == pos.limit) {
+                        return 1;
+                    }
+                    int match4 = this.postContext.matches(text, intRef, pos.contextLimit, incremental);
+                    if (match4 != 2) {
+                        return match4;
+                    }
+                }
+                int oText = intRef[0];
+                if ((this.flags & 2) != 0) {
+                    if (oText != pos.contextLimit) {
+                        return 0;
+                    }
+                    if (incremental) {
+                        return 1;
+                    }
+                }
+                int newLength = this.output.replace(text, pos.start, match3, intRef);
+                int lenDelta = newLength - (match3 - pos.start);
+                int newStart = intRef[0];
+                pos.limit += lenDelta;
+                pos.contextLimit += lenDelta;
+                pos.start = Math.max(minOText, Math.min(Math.min(oText + lenDelta, pos.limit), newStart));
+                return 2;
+            }
             return 0;
         }
-        int match2 = intRef[0];
-        int minOText = posAfter(text, match2);
-        if ((this.flags & 1) != 0 && match2 != anteLimit) {
-            return 0;
-        }
-        intRef[0] = pos.start;
-        if (this.key != null && (match = this.key.matches(text, intRef, pos.limit, incremental)) != 2) {
-            return match;
-        }
-        int match3 = intRef[0];
-        if (this.postContext != null) {
-            if (incremental && match3 == pos.limit) {
-                return 1;
-            }
-            int match4 = this.postContext.matches(text, intRef, pos.contextLimit, incremental);
-            if (match4 != 2) {
-                return match4;
-            }
-        }
-        int oText = intRef[0];
-        if ((this.flags & 2) != 0) {
-            if (oText != pos.contextLimit) {
-                return 0;
-            }
-            if (incremental) {
-                return 1;
-            }
-        }
-        int lenDelta = this.output.replace(text, pos.start, match3, intRef) - (match3 - pos.start);
-        int newStart = intRef[0];
-        pos.limit += lenDelta;
-        pos.contextLimit += lenDelta;
-        pos.start = Math.max(minOText, Math.min(Math.min(oText + lenDelta, pos.limit), newStart));
-        return 2;
+        return 0;
     }
 
     public String toRule(boolean escapeUnprintable) {
@@ -215,8 +193,7 @@ class TransliterationRule {
         return '{' + toRule(true) + '}';
     }
 
-    /* access modifiers changed from: package-private */
-    public void addSourceTargetSet(UnicodeSet filter, UnicodeSet sourceSet, UnicodeSet targetSet, UnicodeSet revisiting) {
+    void addSourceTargetSet(UnicodeSet filter, UnicodeSet sourceSet, UnicodeSet targetSet, UnicodeSet revisiting) {
         int limit = this.anteContextLength + this.keyLength;
         UnicodeSet tempSource = new UnicodeSet();
         UnicodeSet temp = new UnicodeSet();
@@ -225,26 +202,25 @@ class TransliterationRule {
             int ch = UTF16.charAt(this.pattern, i);
             i += UTF16.getCharCount(ch);
             UnicodeMatcher matcher = this.data.lookupMatcher(ch);
-            if (matcher != null) {
+            if (matcher == null) {
+                if (!filter.contains(ch)) {
+                    return;
+                }
+                tempSource.add(ch);
+            } else {
                 try {
-                    if (filter.containsSome((UnicodeSet) matcher)) {
-                        matcher.addMatchSetTo(tempSource);
-                    } else {
+                    if (!filter.containsSome((UnicodeSet) matcher)) {
                         return;
                     }
+                    matcher.addMatchSetTo(tempSource);
                 } catch (ClassCastException e) {
                     temp.clear();
                     matcher.addMatchSetTo(temp);
-                    if (filter.containsSome(temp)) {
-                        tempSource.addAll(temp);
-                    } else {
+                    if (!filter.containsSome(temp)) {
                         return;
                     }
+                    tempSource.addAll(temp);
                 }
-            } else if (filter.contains(ch)) {
-                tempSource.add(ch);
-            } else {
-                return;
             }
         }
         sourceSet.addAll(tempSource);

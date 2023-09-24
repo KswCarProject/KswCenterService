@@ -11,14 +11,11 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+/* loaded from: classes3.dex */
 public final class Proxy {
-    private static final Pattern EXCLLIST_PATTERN = Pattern.compile(EXCLLIST_REGEXP);
-    private static final String EXCLLIST_REGEXP = "^$|^[a-zA-Z0-9*]+(\\-[a-zA-Z0-9*]+)*(\\.[a-zA-Z0-9*]+(\\-[a-zA-Z0-9*]+)*)*(,[a-zA-Z0-9*]+(\\-[a-zA-Z0-9*]+)*(\\.[a-zA-Z0-9*]+(\\-[a-zA-Z0-9*]+)*)*)*$";
     private static final String EXCL_REGEX = "[a-zA-Z0-9*]+(\\-[a-zA-Z0-9*]+)*(\\.[a-zA-Z0-9*]+(\\-[a-zA-Z0-9*]+)*)*";
     @Deprecated
     public static final String EXTRA_PROXY_INFO = "android.intent.extra.PROXY_INFO";
-    private static final Pattern HOSTNAME_PATTERN = Pattern.compile(HOSTNAME_REGEXP);
-    private static final String HOSTNAME_REGEXP = "^$|^[a-zA-Z0-9]+(\\-[a-zA-Z0-9]+)*(\\.[a-zA-Z0-9]+(\\-[a-zA-Z0-9]+)*)*$";
     private static final String NAME_IP_REGEX = "[a-zA-Z0-9]+(\\-[a-zA-Z0-9]+)*(\\.[a-zA-Z0-9]+(\\-[a-zA-Z0-9]+)*)*";
     public static final String PROXY_CHANGE_ACTION = "android.intent.action.PROXY_CHANGE";
     public static final int PROXY_EXCLLIST_INVALID = 5;
@@ -29,12 +26,18 @@ public final class Proxy {
     public static final int PROXY_VALID = 0;
     private static final String TAG = "Proxy";
     private static ConnectivityManager sConnectivityManager = null;
+    private static final String HOSTNAME_REGEXP = "^$|^[a-zA-Z0-9]+(\\-[a-zA-Z0-9]+)*(\\.[a-zA-Z0-9]+(\\-[a-zA-Z0-9]+)*)*$";
+    private static final Pattern HOSTNAME_PATTERN = Pattern.compile(HOSTNAME_REGEXP);
+    private static final String EXCLLIST_REGEXP = "^$|^[a-zA-Z0-9*]+(\\-[a-zA-Z0-9*]+)*(\\.[a-zA-Z0-9*]+(\\-[a-zA-Z0-9*]+)*)*(,[a-zA-Z0-9*]+(\\-[a-zA-Z0-9*]+)*(\\.[a-zA-Z0-9*]+(\\-[a-zA-Z0-9*]+)*)*)*$";
+    private static final Pattern EXCLLIST_PATTERN = Pattern.compile(EXCLLIST_REGEXP);
     private static final ProxySelector sDefaultProxySelector = ProxySelector.getDefault();
 
     @UnsupportedAppUsage
     public static final java.net.Proxy getProxy(Context ctx, String url) {
         if (url != null && !isLocalHost("")) {
-            List<java.net.Proxy> proxyList = ProxySelector.getDefault().select(URI.create(url));
+            URI uri = URI.create(url);
+            ProxySelector proxySelector = ProxySelector.getDefault();
+            List<java.net.Proxy> proxyList = proxySelector.select(uri);
             if (proxyList.size() > 0) {
                 return proxyList.get(0);
             }
@@ -44,7 +47,7 @@ public final class Proxy {
 
     @Deprecated
     public static final String getHost(Context ctx) {
-        java.net.Proxy proxy = getProxy(ctx, (String) null);
+        java.net.Proxy proxy = getProxy(ctx, null);
         if (proxy == java.net.Proxy.NO_PROXY) {
             return null;
         }
@@ -57,7 +60,7 @@ public final class Proxy {
 
     @Deprecated
     public static final int getPort(Context ctx) {
-        java.net.Proxy proxy = getProxy(ctx, (String) null);
+        java.net.Proxy proxy = getProxy(ctx, null);
         if (proxy == java.net.Proxy.NO_PROXY) {
             return -1;
         }
@@ -90,12 +93,14 @@ public final class Proxy {
     }
 
     private static final boolean isLocalHost(String host) {
-        if (!(host == null || host == null)) {
+        if (host != null && host != null) {
             try {
-                if (!host.equalsIgnoreCase(ProxyInfo.LOCAL_HOST) && !NetworkUtils.numericToInetAddress(host).isLoopbackAddress()) {
-                    return false;
+                if (host.equalsIgnoreCase(ProxyInfo.LOCAL_HOST)) {
+                    return true;
                 }
-                return true;
+                if (NetworkUtils.numericToInetAddress(host).isLoopbackAddress()) {
+                    return true;
+                }
             } catch (IllegalArgumentException e) {
             }
         }
@@ -105,30 +110,30 @@ public final class Proxy {
     public static int validate(String hostname, String port, String exclList) {
         Matcher match = HOSTNAME_PATTERN.matcher(hostname);
         Matcher listMatch = EXCLLIST_PATTERN.matcher(exclList);
-        if (!match.matches()) {
-            return 2;
-        }
-        if (!listMatch.matches()) {
+        if (match.matches()) {
+            if (listMatch.matches()) {
+                if (hostname.length() <= 0 || port.length() != 0) {
+                    if (port.length() > 0) {
+                        if (hostname.length() == 0) {
+                            return 1;
+                        }
+                        try {
+                            int portVal = Integer.parseInt(port);
+                            if (portVal <= 0 || portVal > 65535) {
+                                return 4;
+                            }
+                            return 0;
+                        } catch (NumberFormatException e) {
+                            return 4;
+                        }
+                    }
+                    return 0;
+                }
+                return 3;
+            }
             return 5;
         }
-        if (hostname.length() > 0 && port.length() == 0) {
-            return 3;
-        }
-        if (port.length() <= 0) {
-            return 0;
-        }
-        if (hostname.length() == 0) {
-            return 1;
-        }
-        try {
-            int portVal = Integer.parseInt(port);
-            if (portVal <= 0 || portVal > 65535) {
-                return 4;
-            }
-            return 0;
-        } catch (NumberFormatException e) {
-            return 4;
-        }
+        return 2;
     }
 
     @UnsupportedAppUsage

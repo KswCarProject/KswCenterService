@@ -1,5 +1,6 @@
 package android.service;
 
+/* loaded from: classes3.dex */
 public final class ServiceProtoEnums {
     public static final int USB_CONNECTION_RECORD_MODE_CONNECT = 0;
     public static final int USB_CONNECTION_RECORD_MODE_CONNECT_BADDEVICE = 2;

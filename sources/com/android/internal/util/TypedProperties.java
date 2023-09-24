@@ -8,6 +8,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.regex.Pattern;
 
+/* loaded from: classes4.dex */
 public class TypedProperties extends HashMap<String, Object> {
     static final String NULL_STRING = new String("<TypedProperties:NULL_STRING>");
     public static final int STRING_NOT_SET = -1;
@@ -47,6 +48,7 @@ public class TypedProperties extends HashMap<String, Object> {
         return st;
     }
 
+    /* loaded from: classes4.dex */
     public static class ParseException extends IllegalArgumentException {
         ParseException(StreamTokenizer state, String expected) {
             super("expected " + expected + ", saw " + state.toString());
@@ -90,44 +92,39 @@ public class TypedProperties extends HashMap<String, Object> {
         do {
             int token = st.nextToken();
             if (token != -1) {
-                if (token == -3) {
-                    int type = interpretType(st.sval);
-                    if (type != -1) {
-                        st.sval = null;
-                        if (type == 120 && st.nextToken() != 40) {
-                            throw new ParseException(st, "'('");
-                        } else if (st.nextToken() == -3) {
-                            String propertyName = st.sval;
-                            if (propertyNamePattern.matcher(propertyName).matches()) {
-                                st.sval = null;
-                                if (type == 120) {
-                                    if (st.nextToken() == 41) {
-                                        map.remove(propertyName);
-                                    } else {
-                                        throw new ParseException(st, "')'");
-                                    }
-                                } else if (st.nextToken() == 61) {
-                                    Object value = parseValue(st, type);
-                                    Object oldValue = map.remove(propertyName);
-                                    if (oldValue == null || value.getClass() == oldValue.getClass()) {
-                                        map.put(propertyName, value);
-                                    } else {
-                                        throw new ParseException(st, "(property previously declared as a different type)");
-                                    }
-                                } else {
-                                    throw new ParseException(st, "'='");
-                                }
-                            } else {
-                                throw new ParseException(st, "valid property name");
-                            }
-                        } else {
-                            throw new ParseException(st, "property name");
-                        }
-                    } else {
-                        throw new ParseException(st, "valid type name");
-                    }
-                } else {
+                if (token != -3) {
                     throw new ParseException(st, "type name");
+                }
+                int type = interpretType(st.sval);
+                if (type == -1) {
+                    throw new ParseException(st, "valid type name");
+                }
+                st.sval = null;
+                if (type == 120 && st.nextToken() != 40) {
+                    throw new ParseException(st, "'('");
+                }
+                if (st.nextToken() != -3) {
+                    throw new ParseException(st, "property name");
+                }
+                String propertyName = st.sval;
+                if (!propertyNamePattern.matcher(propertyName).matches()) {
+                    throw new ParseException(st, "valid property name");
+                }
+                st.sval = null;
+                if (type == 120) {
+                    if (st.nextToken() != 41) {
+                        throw new ParseException(st, "')'");
+                    }
+                    map.remove(propertyName);
+                } else if (st.nextToken() != 61) {
+                    throw new ParseException(st, "'='");
+                } else {
+                    Object value = parseValue(st, type);
+                    Object oldValue = map.remove(propertyName);
+                    if (oldValue != null && value.getClass() != oldValue.getClass()) {
+                        throw new ParseException(st, "(property previously declared as a different type)");
+                    }
+                    map.put(propertyName, value);
                 }
             } else {
                 return;
@@ -141,78 +138,76 @@ public class TypedProperties extends HashMap<String, Object> {
         if (type == 90) {
             if (token != -3) {
                 throw new ParseException(st, "boolean constant");
-            } else if ("true".equals(st.sval)) {
-                return Boolean.TRUE;
-            } else {
-                if ("false".equals(st.sval)) {
-                    return Boolean.FALSE;
-                }
-                throw new ParseException(st, "boolean constant");
             }
+            if ("true".equals(st.sval)) {
+                return Boolean.TRUE;
+            }
+            if ("false".equals(st.sval)) {
+                return Boolean.FALSE;
+            }
+            throw new ParseException(st, "boolean constant");
         } else if ((type & 255) == 73) {
-            if (token == -3) {
-                try {
-                    long value = Long.decode(st.sval).longValue();
-                    int width = (type >> 8) & 255;
-                    if (width != 4) {
-                        if (width != 8) {
-                            switch (width) {
-                                case 1:
-                                    if (value >= -128 && value <= 127) {
-                                        return new Byte((byte) ((int) value));
-                                    }
-                                    throw new ParseException(st, "8-bit integer constant");
-                                case 2:
-                                    if (value >= -32768 && value <= 32767) {
-                                        return new Short((short) ((int) value));
-                                    }
-                                    throw new ParseException(st, "16-bit integer constant");
-                                default:
-                                    throw new IllegalStateException("Internal error; unexpected integer type width " + width);
-                            }
-                        } else if (value >= Long.MIN_VALUE && value <= Long.MAX_VALUE) {
-                            return new Long(value);
-                        } else {
-                            throw new ParseException(st, "64-bit integer constant");
-                        }
-                    } else if (value >= -2147483648L && value <= 2147483647L) {
-                        return new Integer((int) value);
-                    } else {
+            if (token != -3) {
+                throw new ParseException(st, "integer constant");
+            }
+            try {
+                long value = Long.decode(st.sval).longValue();
+                int width = (type >> 8) & 255;
+                if (width == 4) {
+                    if (value < -2147483648L || value > 2147483647L) {
                         throw new ParseException(st, "32-bit integer constant");
                     }
-                } catch (NumberFormatException e) {
-                    throw new ParseException(st, "integer constant");
+                    return new Integer((int) value);
+                } else if (width != 8) {
+                    switch (width) {
+                        case 1:
+                            if (value < -128 || value > 127) {
+                                throw new ParseException(st, "8-bit integer constant");
+                            }
+                            return new Byte((byte) value);
+                        case 2:
+                            if (value < -32768 || value > 32767) {
+                                throw new ParseException(st, "16-bit integer constant");
+                            }
+                            return new Short((short) value);
+                        default:
+                            throw new IllegalStateException("Internal error; unexpected integer type width " + width);
+                    }
+                } else if (value < Long.MIN_VALUE || value > Long.MAX_VALUE) {
+                    throw new ParseException(st, "64-bit integer constant");
+                } else {
+                    return new Long(value);
                 }
-            } else {
+            } catch (NumberFormatException e) {
                 throw new ParseException(st, "integer constant");
             }
         } else if ((type & 255) == 70) {
-            if (token == -3) {
-                try {
-                    double value2 = Double.parseDouble(st.sval);
-                    if (((type >> 8) & 255) != 4) {
-                        return new Double(value2);
-                    }
-                    double absValue = Math.abs(value2);
-                    if (absValue == 0.0d || Double.isInfinite(value2) || Double.isNaN(value2) || (absValue >= 1.401298464324817E-45d && absValue <= 3.4028234663852886E38d)) {
-                        return new Float((float) value2);
-                    }
-                    throw new ParseException(st, "32-bit float constant");
-                } catch (NumberFormatException e2) {
-                    throw new ParseException(st, "float constant");
-                }
-            } else {
+            if (token != -3) {
                 throw new ParseException(st, "float constant");
             }
-        } else if (type != TYPE_STRING) {
-            throw new IllegalStateException("Internal error; unknown type " + type);
-        } else if (token == 34) {
-            return st.sval;
-        } else {
+            try {
+                double value2 = Double.parseDouble(st.sval);
+                if (((type >> 8) & 255) == 4) {
+                    double absValue = Math.abs(value2);
+                    if (absValue != 0.0d && !Double.isInfinite(value2) && !Double.isNaN(value2) && (absValue < 1.401298464324817E-45d || absValue > 3.4028234663852886E38d)) {
+                        throw new ParseException(st, "32-bit float constant");
+                    }
+                    return new Float((float) value2);
+                }
+                return new Double(value2);
+            } catch (NumberFormatException e2) {
+                throw new ParseException(st, "float constant");
+            }
+        } else if (type == TYPE_STRING) {
+            if (token == 34) {
+                return st.sval;
+            }
             if (token == -3 && "null".equals(st.sval)) {
                 return NULL_STRING;
             }
             throw new ParseException(st, "double-quoted string or 'null'");
+        } else {
+            throw new IllegalStateException("Internal error; unknown type " + type);
         }
     }
 
@@ -220,6 +215,7 @@ public class TypedProperties extends HashMap<String, Object> {
         parse(r, this);
     }
 
+    @Override // java.util.HashMap, java.util.AbstractMap, java.util.Map
     public Object get(Object key) {
         Object value = super.get(key);
         if (value == NULL_STRING) {
@@ -228,6 +224,7 @@ public class TypedProperties extends HashMap<String, Object> {
         return value;
     }
 
+    /* loaded from: classes4.dex */
     public static class TypeException extends IllegalArgumentException {
         TypeException(String property, Object value, String requestedType) {
             super(property + " has type " + value.getClass().getName() + ", not " + requestedType);
@@ -334,7 +331,7 @@ public class TypedProperties extends HashMap<String, Object> {
     }
 
     public short getShort(String property) {
-        return getShort(property, 0);
+        return getShort(property, (short) 0);
     }
 
     public int getInt(String property) {
@@ -342,7 +339,7 @@ public class TypedProperties extends HashMap<String, Object> {
     }
 
     public long getLong(String property) {
-        return getLong(property, 0);
+        return getLong(property, 0L);
     }
 
     public float getFloat(String property) {

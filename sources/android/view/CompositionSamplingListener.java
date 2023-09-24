@@ -1,10 +1,11 @@
 package android.view;
 
 import android.graphics.Rect;
-import android.os.IBinder;
+import android.p007os.IBinder;
 import com.android.internal.util.Preconditions;
 import java.util.concurrent.Executor;
 
+/* loaded from: classes4.dex */
 public abstract class CompositionSamplingListener {
     private final Executor mExecutor;
     private final long mNativeListener = nativeCreate(this);
@@ -23,8 +24,7 @@ public abstract class CompositionSamplingListener {
         this.mExecutor = executor;
     }
 
-    /* access modifiers changed from: protected */
-    public void finalize() throws Throwable {
+    protected void finalize() throws Throwable {
         try {
             if (this.mNativeListener != 0) {
                 unregister(this);
@@ -44,16 +44,11 @@ public abstract class CompositionSamplingListener {
         nativeUnregister(listener.mNativeListener);
     }
 
-    private static void dispatchOnSampleCollected(CompositionSamplingListener listener, float medianLuma) {
-        listener.mExecutor.execute(new Runnable(medianLuma) {
-            private final /* synthetic */ float f$1;
-
-            {
-                this.f$1 = r2;
-            }
-
+    private static void dispatchOnSampleCollected(final CompositionSamplingListener listener, final float medianLuma) {
+        listener.mExecutor.execute(new Runnable() { // from class: android.view.-$$Lambda$CompositionSamplingListener$hrbPutjnKRv7VkkiY9eg32N6QA8
+            @Override // java.lang.Runnable
             public final void run() {
-                CompositionSamplingListener.this.onSampleCollected(this.f$1);
+                CompositionSamplingListener.this.onSampleCollected(medianLuma);
             }
         });
     }

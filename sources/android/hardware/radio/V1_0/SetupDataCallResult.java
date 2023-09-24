@@ -1,23 +1,24 @@
 package android.hardware.radio.V1_0;
 
-import android.os.HidlSupport;
-import android.os.HwBlob;
-import android.os.HwParcel;
+import android.p007os.HidlSupport;
+import android.p007os.HwBlob;
+import android.p007os.HwParcel;
 import java.util.ArrayList;
 import java.util.Objects;
 
+/* loaded from: classes.dex */
 public final class SetupDataCallResult {
     public int active;
-    public String addresses = new String();
     public int cid;
-    public String dnses = new String();
-    public String gateways = new String();
-    public String ifname = new String();
     public int mtu;
-    public String pcscf = new String();
     public int status;
     public int suggestedRetryTime;
     public String type = new String();
+    public String ifname = new String();
+    public String addresses = new String();
+    public String dnses = new String();
+    public String gateways = new String();
+    public String pcscf = new String();
 
     public final boolean equals(Object otherObject) {
         if (this == otherObject) {
@@ -34,68 +35,68 @@ public final class SetupDataCallResult {
     }
 
     public final int hashCode() {
-        return Objects.hash(new Object[]{Integer.valueOf(HidlSupport.deepHashCode(Integer.valueOf(this.status))), Integer.valueOf(HidlSupport.deepHashCode(Integer.valueOf(this.suggestedRetryTime))), Integer.valueOf(HidlSupport.deepHashCode(Integer.valueOf(this.cid))), Integer.valueOf(HidlSupport.deepHashCode(Integer.valueOf(this.active))), Integer.valueOf(HidlSupport.deepHashCode(this.type)), Integer.valueOf(HidlSupport.deepHashCode(this.ifname)), Integer.valueOf(HidlSupport.deepHashCode(this.addresses)), Integer.valueOf(HidlSupport.deepHashCode(this.dnses)), Integer.valueOf(HidlSupport.deepHashCode(this.gateways)), Integer.valueOf(HidlSupport.deepHashCode(this.pcscf)), Integer.valueOf(HidlSupport.deepHashCode(Integer.valueOf(this.mtu)))});
+        return Objects.hash(Integer.valueOf(HidlSupport.deepHashCode(Integer.valueOf(this.status))), Integer.valueOf(HidlSupport.deepHashCode(Integer.valueOf(this.suggestedRetryTime))), Integer.valueOf(HidlSupport.deepHashCode(Integer.valueOf(this.cid))), Integer.valueOf(HidlSupport.deepHashCode(Integer.valueOf(this.active))), Integer.valueOf(HidlSupport.deepHashCode(this.type)), Integer.valueOf(HidlSupport.deepHashCode(this.ifname)), Integer.valueOf(HidlSupport.deepHashCode(this.addresses)), Integer.valueOf(HidlSupport.deepHashCode(this.dnses)), Integer.valueOf(HidlSupport.deepHashCode(this.gateways)), Integer.valueOf(HidlSupport.deepHashCode(this.pcscf)), Integer.valueOf(HidlSupport.deepHashCode(Integer.valueOf(this.mtu))));
     }
 
     public final String toString() {
-        return "{" + ".status = " + DataCallFailCause.toString(this.status) + ", .suggestedRetryTime = " + this.suggestedRetryTime + ", .cid = " + this.cid + ", .active = " + this.active + ", .type = " + this.type + ", .ifname = " + this.ifname + ", .addresses = " + this.addresses + ", .dnses = " + this.dnses + ", .gateways = " + this.gateways + ", .pcscf = " + this.pcscf + ", .mtu = " + this.mtu + "}";
+        return "{.status = " + DataCallFailCause.toString(this.status) + ", .suggestedRetryTime = " + this.suggestedRetryTime + ", .cid = " + this.cid + ", .active = " + this.active + ", .type = " + this.type + ", .ifname = " + this.ifname + ", .addresses = " + this.addresses + ", .dnses = " + this.dnses + ", .gateways = " + this.gateways + ", .pcscf = " + this.pcscf + ", .mtu = " + this.mtu + "}";
     }
 
     public final void readFromParcel(HwParcel parcel) {
-        readEmbeddedFromParcel(parcel, parcel.readBuffer(120), 0);
+        HwBlob blob = parcel.readBuffer(120L);
+        readEmbeddedFromParcel(parcel, blob, 0L);
     }
 
     public static final ArrayList<SetupDataCallResult> readVectorFromParcel(HwParcel parcel) {
         ArrayList<SetupDataCallResult> _hidl_vec = new ArrayList<>();
-        HwBlob _hidl_blob = parcel.readBuffer(16);
-        int _hidl_vec_size = _hidl_blob.getInt32(8);
-        HwBlob childBlob = parcel.readEmbeddedBuffer((long) (_hidl_vec_size * 120), _hidl_blob.handle(), 0, true);
+        HwBlob _hidl_blob = parcel.readBuffer(16L);
+        int _hidl_vec_size = _hidl_blob.getInt32(8L);
+        HwBlob childBlob = parcel.readEmbeddedBuffer(_hidl_vec_size * 120, _hidl_blob.handle(), 0L, true);
         _hidl_vec.clear();
         for (int _hidl_index_0 = 0; _hidl_index_0 < _hidl_vec_size; _hidl_index_0++) {
             SetupDataCallResult _hidl_vec_element = new SetupDataCallResult();
-            _hidl_vec_element.readEmbeddedFromParcel(parcel, childBlob, (long) (_hidl_index_0 * 120));
+            _hidl_vec_element.readEmbeddedFromParcel(parcel, childBlob, _hidl_index_0 * 120);
             _hidl_vec.add(_hidl_vec_element);
         }
         return _hidl_vec;
     }
 
     public final void readEmbeddedFromParcel(HwParcel parcel, HwBlob _hidl_blob, long _hidl_offset) {
-        HwBlob hwBlob = _hidl_blob;
-        this.status = hwBlob.getInt32(_hidl_offset + 0);
-        this.suggestedRetryTime = hwBlob.getInt32(_hidl_offset + 4);
-        this.cid = hwBlob.getInt32(_hidl_offset + 8);
-        this.active = hwBlob.getInt32(_hidl_offset + 12);
-        this.type = hwBlob.getString(_hidl_offset + 16);
-        parcel.readEmbeddedBuffer((long) (this.type.getBytes().length + 1), _hidl_blob.handle(), _hidl_offset + 16 + 0, false);
-        this.ifname = hwBlob.getString(_hidl_offset + 32);
-        parcel.readEmbeddedBuffer((long) (this.ifname.getBytes().length + 1), _hidl_blob.handle(), _hidl_offset + 32 + 0, false);
-        this.addresses = hwBlob.getString(_hidl_offset + 48);
-        parcel.readEmbeddedBuffer((long) (this.addresses.getBytes().length + 1), _hidl_blob.handle(), _hidl_offset + 48 + 0, false);
-        this.dnses = hwBlob.getString(_hidl_offset + 64);
-        parcel.readEmbeddedBuffer((long) (this.dnses.getBytes().length + 1), _hidl_blob.handle(), _hidl_offset + 64 + 0, false);
-        this.gateways = hwBlob.getString(_hidl_offset + 80);
-        parcel.readEmbeddedBuffer((long) (this.gateways.getBytes().length + 1), _hidl_blob.handle(), _hidl_offset + 80 + 0, false);
-        this.pcscf = hwBlob.getString(_hidl_offset + 96);
-        parcel.readEmbeddedBuffer((long) (this.pcscf.getBytes().length + 1), _hidl_blob.handle(), _hidl_offset + 96 + 0, false);
-        this.mtu = hwBlob.getInt32(_hidl_offset + 112);
+        this.status = _hidl_blob.getInt32(_hidl_offset + 0);
+        this.suggestedRetryTime = _hidl_blob.getInt32(_hidl_offset + 4);
+        this.cid = _hidl_blob.getInt32(_hidl_offset + 8);
+        this.active = _hidl_blob.getInt32(_hidl_offset + 12);
+        this.type = _hidl_blob.getString(_hidl_offset + 16);
+        parcel.readEmbeddedBuffer(this.type.getBytes().length + 1, _hidl_blob.handle(), _hidl_offset + 16 + 0, false);
+        this.ifname = _hidl_blob.getString(_hidl_offset + 32);
+        parcel.readEmbeddedBuffer(this.ifname.getBytes().length + 1, _hidl_blob.handle(), _hidl_offset + 32 + 0, false);
+        this.addresses = _hidl_blob.getString(_hidl_offset + 48);
+        parcel.readEmbeddedBuffer(this.addresses.getBytes().length + 1, _hidl_blob.handle(), _hidl_offset + 48 + 0, false);
+        this.dnses = _hidl_blob.getString(_hidl_offset + 64);
+        parcel.readEmbeddedBuffer(this.dnses.getBytes().length + 1, _hidl_blob.handle(), _hidl_offset + 64 + 0, false);
+        this.gateways = _hidl_blob.getString(_hidl_offset + 80);
+        parcel.readEmbeddedBuffer(this.gateways.getBytes().length + 1, _hidl_blob.handle(), _hidl_offset + 80 + 0, false);
+        this.pcscf = _hidl_blob.getString(_hidl_offset + 96);
+        parcel.readEmbeddedBuffer(this.pcscf.getBytes().length + 1, _hidl_blob.handle(), _hidl_offset + 96 + 0, false);
+        this.mtu = _hidl_blob.getInt32(_hidl_offset + 112);
     }
 
     public final void writeToParcel(HwParcel parcel) {
         HwBlob _hidl_blob = new HwBlob(120);
-        writeEmbeddedToBlob(_hidl_blob, 0);
+        writeEmbeddedToBlob(_hidl_blob, 0L);
         parcel.writeBuffer(_hidl_blob);
     }
 
     public static final void writeVectorToParcel(HwParcel parcel, ArrayList<SetupDataCallResult> _hidl_vec) {
         HwBlob _hidl_blob = new HwBlob(16);
         int _hidl_vec_size = _hidl_vec.size();
-        _hidl_blob.putInt32(8, _hidl_vec_size);
-        _hidl_blob.putBool(12, false);
+        _hidl_blob.putInt32(8L, _hidl_vec_size);
+        _hidl_blob.putBool(12L, false);
         HwBlob childBlob = new HwBlob(_hidl_vec_size * 120);
         for (int _hidl_index_0 = 0; _hidl_index_0 < _hidl_vec_size; _hidl_index_0++) {
-            _hidl_vec.get(_hidl_index_0).writeEmbeddedToBlob(childBlob, (long) (_hidl_index_0 * 120));
+            _hidl_vec.get(_hidl_index_0).writeEmbeddedToBlob(childBlob, _hidl_index_0 * 120);
         }
-        _hidl_blob.putBlob(0, childBlob);
+        _hidl_blob.putBlob(0L, childBlob);
         parcel.writeBuffer(_hidl_blob);
     }
 

@@ -9,13 +9,12 @@ import android.graphics.Bitmap;
 import android.graphics.ColorSpace;
 import android.graphics.GraphicBuffer;
 import android.graphics.Rect;
-import android.os.Bundle;
-import android.os.Handler;
-import android.os.IBinder;
-import android.os.IRemoteCallback;
-import android.os.Parcelable;
-import android.os.RemoteException;
-import android.os.ResultReceiver;
+import android.p007os.Bundle;
+import android.p007os.Handler;
+import android.p007os.IRemoteCallback;
+import android.p007os.Parcelable;
+import android.p007os.RemoteException;
+import android.p007os.ResultReceiver;
 import android.transition.Transition;
 import android.transition.TransitionListenerAdapter;
 import android.transition.TransitionManager;
@@ -27,9 +26,10 @@ import android.view.RemoteAnimationAdapter;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
-import com.android.internal.R;
+import com.android.internal.C3132R;
 import java.util.ArrayList;
 
+/* loaded from: classes.dex */
 public class ActivityOptions {
     public static final int ANIM_CLIP_REVEAL = 11;
     public static final int ANIM_CUSTOM = 1;
@@ -88,7 +88,7 @@ public class ActivityOptions {
     private AppTransitionAnimationSpec[] mAnimSpecs;
     private IRemoteCallback mAnimationFinishedListener;
     private IRemoteCallback mAnimationStartedListener;
-    private int mAnimationType = 0;
+    private int mAnimationType;
     private Bundle mAppVerificationBundle;
     private boolean mAvoidMoveToFront;
     private int mCustomEnterResId;
@@ -100,22 +100,22 @@ public class ActivityOptions {
     private int mHeight;
     private boolean mIsReturning;
     @WindowConfiguration.ActivityType
-    private int mLaunchActivityType = 0;
+    private int mLaunchActivityType;
     private Rect mLaunchBounds;
-    private int mLaunchDisplayId = -1;
-    private int mLaunchTaskId = -1;
+    private int mLaunchDisplayId;
+    private int mLaunchTaskId;
     @WindowConfiguration.WindowingMode
-    private int mLaunchWindowingMode = 0;
-    private boolean mLockTaskMode = false;
+    private int mLaunchWindowingMode;
+    private boolean mLockTaskMode;
     private String mPackageName;
     private int mPendingIntentLaunchFlags;
     private RemoteAnimationAdapter mRemoteAnimationAdapter;
     private int mResultCode;
     private Intent mResultData;
-    private int mRotationAnimationHint = -1;
+    private int mRotationAnimationHint;
     private ArrayList<String> mSharedElementNames;
     private IAppTransitionAnimationSpecsFuture mSpecsFuture;
-    private int mSplitScreenCreateMode = 0;
+    private int mSplitScreenCreateMode;
     private int mStartX;
     private int mStartY;
     private boolean mTaskOverlay;
@@ -125,16 +125,18 @@ public class ActivityOptions {
     private PendingIntent mUsageTimeReport;
     private int mWidth;
 
+    /* loaded from: classes.dex */
     public interface OnAnimationFinishedListener {
         void onAnimationFinished();
     }
 
+    /* loaded from: classes.dex */
     public interface OnAnimationStartedListener {
         void onAnimationStarted();
     }
 
     public static ActivityOptions makeCustomAnimation(Context context, int enterResId, int exitResId) {
-        return makeCustomAnimation(context, enterResId, exitResId, (Handler) null, (OnAnimationStartedListener) null);
+        return makeCustomAnimation(context, enterResId, exitResId, null, null);
     }
 
     @UnsupportedAppUsage
@@ -149,21 +151,23 @@ public class ActivityOptions {
     }
 
     public static ActivityOptions makeCustomInPlaceAnimation(Context context, int animId) {
-        if (animId != 0) {
-            ActivityOptions opts = new ActivityOptions();
-            opts.mPackageName = context.getPackageName();
-            opts.mAnimationType = 10;
-            opts.mCustomInPlaceResId = animId;
-            return opts;
+        if (animId == 0) {
+            throw new RuntimeException("You must specify a valid animation.");
         }
-        throw new RuntimeException("You must specify a valid animation.");
+        ActivityOptions opts = new ActivityOptions();
+        opts.mPackageName = context.getPackageName();
+        opts.mAnimationType = 10;
+        opts.mCustomInPlaceResId = animId;
+        return opts;
     }
 
     private void setOnAnimationStartedListener(final Handler handler, final OnAnimationStartedListener listener) {
         if (listener != null) {
-            this.mAnimationStartedListener = new IRemoteCallback.Stub() {
+            this.mAnimationStartedListener = new IRemoteCallback.Stub() { // from class: android.app.ActivityOptions.1
+                @Override // android.p007os.IRemoteCallback
                 public void sendResult(Bundle data) throws RemoteException {
-                    handler.post(new Runnable() {
+                    handler.post(new Runnable() { // from class: android.app.ActivityOptions.1.1
+                        @Override // java.lang.Runnable
                         public void run() {
                             listener.onAnimationStarted();
                         }
@@ -175,9 +179,11 @@ public class ActivityOptions {
 
     private void setOnAnimationFinishedListener(final Handler handler, final OnAnimationFinishedListener listener) {
         if (listener != null) {
-            this.mAnimationFinishedListener = new IRemoteCallback.Stub() {
+            this.mAnimationFinishedListener = new IRemoteCallback.Stub() { // from class: android.app.ActivityOptions.2
+                @Override // android.p007os.IRemoteCallback
                 public void sendResult(Bundle data) throws RemoteException {
-                    handler.post(new Runnable() {
+                    handler.post(new Runnable() { // from class: android.app.ActivityOptions.2.1
+                        @Override // java.lang.Runnable
                         public void run() {
                             listener.onAnimationFinished();
                         }
@@ -219,7 +225,7 @@ public class ActivityOptions {
     }
 
     public static ActivityOptions makeThumbnailScaleUpAnimation(View source, Bitmap thumbnail, int startX, int startY) {
-        return makeThumbnailScaleUpAnimation(source, thumbnail, startX, startY, (OnAnimationStartedListener) null);
+        return makeThumbnailScaleUpAnimation(source, thumbnail, startX, startY, null);
     }
 
     private static ActivityOptions makeThumbnailScaleUpAnimation(View source, Bitmap thumbnail, int startX, int startY, OnAnimationStartedListener listener) {
@@ -260,15 +266,9 @@ public class ActivityOptions {
     }
 
     private static ActivityOptions makeAspectScaledThumbnailAnimation(View source, Bitmap thumbnail, int startX, int startY, int targetWidth, int targetHeight, Handler handler, OnAnimationStartedListener listener, boolean scaleUp) {
-        int i;
         ActivityOptions opts = new ActivityOptions();
         opts.mPackageName = source.getContext().getPackageName();
-        if (scaleUp) {
-            i = 8;
-        } else {
-            i = 9;
-        }
-        opts.mAnimationType = i;
+        opts.mAnimationType = scaleUp ? 8 : 9;
         opts.mThumbnail = thumbnail;
         int[] pts = new int[2];
         source.getLocationOnScreen(pts);
@@ -303,10 +303,15 @@ public class ActivityOptions {
 
     @SafeVarargs
     public static ActivityOptions startSharedElementAnimation(Window window, Pair<View, String>... sharedElements) {
-        ExitTransitionCoordinator exit;
         ActivityOptions opts = new ActivityOptions();
-        if (!(window.getDecorView() == null || (exit = makeSceneTransitionAnimation((Activity) null, window, opts, (SharedElementCallback) null, sharedElements)) == null)) {
-            exit.setHideSharedElementsCallback(new HideWindowListener(window, exit));
+        View decorView = window.getDecorView();
+        if (decorView == null) {
+            return opts;
+        }
+        ExitTransitionCoordinator exit = makeSceneTransitionAnimation((Activity) null, window, opts, (SharedElementCallback) null, sharedElements);
+        if (exit != null) {
+            HideWindowListener listener = new HideWindowListener(window, exit);
+            exit.setHideSharedElementsCallback(listener);
             exit.startExit();
         }
         return opts;
@@ -315,9 +320,9 @@ public class ActivityOptions {
     public static void stopSharedElementAnimation(Window window) {
         ExitTransitionCoordinator exit;
         View decorView = window.getDecorView();
-        if (decorView != null && (exit = (ExitTransitionCoordinator) decorView.getTag(R.id.cross_task_transition)) != null) {
+        if (decorView != null && (exit = (ExitTransitionCoordinator) decorView.getTag(C3132R.C3134id.cross_task_transition)) != null) {
             exit.cancelPendingTransitions();
-            decorView.setTagInternal(R.id.cross_task_transition, (Object) null);
+            decorView.setTagInternal(C3132R.C3134id.cross_task_transition, null);
             TransitionManager.endTransitions((ViewGroup) decorView);
             exit.resetViews();
             exit.clearState();
@@ -326,46 +331,35 @@ public class ActivityOptions {
     }
 
     static ExitTransitionCoordinator makeSceneTransitionAnimation(Activity activity, Window window, ActivityOptions opts, SharedElementCallback callback, Pair<View, String>[] sharedElements) {
-        Activity activity2 = activity;
-        ActivityOptions activityOptions = opts;
-        Pair<View, String>[] pairArr = sharedElements;
         if (!window.hasFeature(13)) {
-            activityOptions.mAnimationType = 6;
+            opts.mAnimationType = 6;
             return null;
         }
-        activityOptions.mAnimationType = 5;
+        opts.mAnimationType = 5;
         ArrayList<String> names = new ArrayList<>();
         ArrayList<View> views = new ArrayList<>();
-        boolean z = false;
-        if (pairArr != null) {
-            int i = 0;
-            while (i < pairArr.length) {
-                Pair<View, String> sharedElement = pairArr[i];
-                String sharedElementName = (String) sharedElement.second;
-                if (sharedElementName != null) {
-                    names.add(sharedElementName);
-                    if (((View) sharedElement.first) != null) {
-                        views.add((View) sharedElement.first);
-                        i++;
-                    } else {
-                        throw new IllegalArgumentException("Shared element must not be null");
-                    }
-                } else {
+        if (sharedElements != null) {
+            for (Pair<View, String> sharedElement : sharedElements) {
+                String sharedElementName = sharedElement.second;
+                if (sharedElementName == null) {
                     throw new IllegalArgumentException("Shared element name must not be null");
                 }
+                names.add(sharedElementName);
+                View view = sharedElement.first;
+                if (view == null) {
+                    throw new IllegalArgumentException("Shared element must not be null");
+                }
+                views.add(sharedElement.first);
             }
         }
         ExitTransitionCoordinator exit = new ExitTransitionCoordinator(activity, window, callback, names, names, views, false);
-        activityOptions.mTransitionReceiver = exit;
-        activityOptions.mSharedElementNames = names;
-        if (activity2 == null) {
-            z = true;
-        }
-        activityOptions.mIsReturning = z;
-        if (activity2 == null) {
-            activityOptions.mExitCoordinatorIndex = -1;
+        opts.mTransitionReceiver = exit;
+        opts.mSharedElementNames = names;
+        opts.mIsReturning = activity == null;
+        if (activity == null) {
+            opts.mExitCoordinatorIndex = -1;
         } else {
-            activityOptions.mExitCoordinatorIndex = activity2.mActivityTransitionState.addExitTransitionCoordinator(exit);
+            opts.mExitCoordinatorIndex = activity.mActivityTransitionState.addExitTransitionCoordinator(exit);
         }
         return exit;
     }
@@ -389,7 +383,8 @@ public class ActivityOptions {
     }
 
     public static ActivityOptions makeBasic() {
-        return new ActivityOptions();
+        ActivityOptions opts = new ActivityOptions();
+        return opts;
     }
 
     @UnsupportedAppUsage
@@ -405,15 +400,31 @@ public class ActivityOptions {
     }
 
     private ActivityOptions() {
+        this.mAnimationType = 0;
+        this.mLaunchDisplayId = -1;
+        this.mLaunchWindowingMode = 0;
+        this.mLaunchActivityType = 0;
+        this.mLaunchTaskId = -1;
+        this.mSplitScreenCreateMode = 0;
+        this.mLockTaskMode = false;
+        this.mRotationAnimationHint = -1;
     }
 
     public ActivityOptions(Bundle opts) {
+        this.mAnimationType = 0;
+        this.mLaunchDisplayId = -1;
+        this.mLaunchWindowingMode = 0;
+        this.mLaunchActivityType = 0;
+        this.mLaunchTaskId = -1;
+        this.mSplitScreenCreateMode = 0;
+        this.mLockTaskMode = false;
+        this.mRotationAnimationHint = -1;
         opts.setDefusable(true);
         this.mPackageName = opts.getString(KEY_PACKAGE_NAME);
         try {
             this.mUsageTimeReport = (PendingIntent) opts.getParcelable(KEY_USAGE_TIME_REPORT);
         } catch (RuntimeException e) {
-            Slog.w(TAG, (Throwable) e);
+            Slog.m48w(TAG, e);
         }
         this.mLaunchBounds = (Rect) opts.getParcelable(KEY_LAUNCH_BOUNDS);
         this.mAnimationType = opts.getInt(KEY_ANIM_TYPE);
@@ -558,7 +569,7 @@ public class ActivityOptions {
     public void abort() {
         if (this.mAnimationStartedListener != null) {
             try {
-                this.mAnimationStartedListener.sendResult((Bundle) null);
+                this.mAnimationStartedListener.sendResult(null);
             } catch (RemoteException e) {
             }
         }
@@ -568,8 +579,7 @@ public class ActivityOptions {
         return this.mIsReturning;
     }
 
-    /* access modifiers changed from: package-private */
-    public boolean isCrossTask() {
+    boolean isCrossTask() {
         return this.mExitCoordinatorIndex < 0;
     }
 
@@ -737,7 +747,7 @@ public class ActivityOptions {
                 this.mThumbnail = null;
                 if (this.mAnimationStartedListener != null) {
                     try {
-                        this.mAnimationStartedListener.sendResult((Bundle) null);
+                        this.mAnimationStartedListener.sendResult(null);
                     } catch (RemoteException e) {
                     }
                 }
@@ -750,7 +760,7 @@ public class ActivityOptions {
                 this.mHeight = otherOptions.mHeight;
                 if (this.mAnimationStartedListener != null) {
                     try {
-                        this.mAnimationStartedListener.sendResult((Bundle) null);
+                        this.mAnimationStartedListener.sendResult(null);
                     } catch (RemoteException e2) {
                     }
                 }
@@ -767,7 +777,7 @@ public class ActivityOptions {
                 this.mHeight = otherOptions.mHeight;
                 if (this.mAnimationStartedListener != null) {
                     try {
-                        this.mAnimationStartedListener.sendResult((Bundle) null);
+                        this.mAnimationStartedListener.sendResult(null);
                     } catch (RemoteException e3) {
                     }
                 }
@@ -806,15 +816,11 @@ public class ActivityOptions {
         if (this.mUsageTimeReport != null) {
             b.putParcelable(KEY_USAGE_TIME_REPORT, this.mUsageTimeReport);
         }
-        IBinder iBinder = null;
         switch (this.mAnimationType) {
             case 1:
                 b.putInt(KEY_ANIM_ENTER_RES_ID, this.mCustomEnterResId);
                 b.putInt(KEY_ANIM_EXIT_RES_ID, this.mCustomExitResId);
-                if (this.mAnimationStartedListener != null) {
-                    iBinder = this.mAnimationStartedListener.asBinder();
-                }
-                b.putBinder(KEY_ANIM_START_LISTENER, iBinder);
+                b.putBinder(KEY_ANIM_START_LISTENER, this.mAnimationStartedListener != null ? this.mAnimationStartedListener.asBinder() : null);
                 break;
             case 2:
             case 11:
@@ -832,17 +838,14 @@ public class ActivityOptions {
                     if (hwBitmap != null) {
                         b.putParcelable(KEY_ANIM_THUMBNAIL, hwBitmap.createGraphicBufferHandle());
                     } else {
-                        Slog.w(TAG, "Failed to copy thumbnail");
+                        Slog.m50w(TAG, "Failed to copy thumbnail");
                     }
                 }
                 b.putInt(KEY_ANIM_START_X, this.mStartX);
                 b.putInt(KEY_ANIM_START_Y, this.mStartY);
                 b.putInt(KEY_ANIM_WIDTH, this.mWidth);
                 b.putInt(KEY_ANIM_HEIGHT, this.mHeight);
-                if (this.mAnimationStartedListener != null) {
-                    iBinder = this.mAnimationStartedListener.asBinder();
-                }
-                b.putBinder(KEY_ANIM_START_LISTENER, iBinder);
+                b.putBinder(KEY_ANIM_START_LISTENER, this.mAnimationStartedListener != null ? this.mAnimationStartedListener.asBinder() : null);
                 break;
             case 5:
                 if (this.mTransitionReceiver != null) {
@@ -920,12 +923,12 @@ public class ActivityOptions {
     }
 
     public ActivityOptions forTargetActivity() {
-        if (this.mAnimationType != 5) {
-            return null;
+        if (this.mAnimationType == 5) {
+            ActivityOptions result = new ActivityOptions();
+            result.update(this);
+            return result;
         }
-        ActivityOptions result = new ActivityOptions();
-        result.update(this);
-        return result;
+        return null;
     }
 
     public int getRotationAnimationHint() {
@@ -951,6 +954,7 @@ public class ActivityOptions {
         return "ActivityOptions(" + hashCode() + "), mPackageName=" + this.mPackageName + ", mAnimationType=" + this.mAnimationType + ", mStartX=" + this.mStartX + ", mStartY=" + this.mStartY + ", mWidth=" + this.mWidth + ", mHeight=" + this.mHeight;
     }
 
+    /* loaded from: classes.dex */
     private static class HideWindowListener extends TransitionListenerAdapter implements ExitTransitionCoordinator.HideSharedElementsCallback {
         private final ExitTransitionCoordinator mExit;
         private boolean mSharedElementHidden;
@@ -971,41 +975,41 @@ public class ActivityOptions {
                 this.mWaitingForTransition = false;
             }
             View decorView = this.mWindow.getDecorView();
-            if (decorView == null) {
-                return;
+            if (decorView != null) {
+                if (decorView.getTag(C3132R.C3134id.cross_task_transition) != null) {
+                    throw new IllegalStateException("Cannot start a transition while one is running");
+                }
+                decorView.setTagInternal(C3132R.C3134id.cross_task_transition, exit);
             }
-            if (decorView.getTag(R.id.cross_task_transition) == null) {
-                decorView.setTagInternal(R.id.cross_task_transition, exit);
-                return;
-            }
-            throw new IllegalStateException("Cannot start a transition while one is running");
         }
 
+        @Override // android.transition.TransitionListenerAdapter, android.transition.Transition.TransitionListener
         public void onTransitionEnd(Transition transition) {
             this.mTransitionEnded = true;
             hideWhenDone();
             transition.removeListener(this);
         }
 
+        @Override // android.app.ExitTransitionCoordinator.HideSharedElementsCallback
         public void hideSharedElements() {
             this.mSharedElementHidden = true;
             hideWhenDone();
         }
 
         private void hideWhenDone() {
-            if (!this.mSharedElementHidden) {
-                return;
-            }
-            if (!this.mWaitingForTransition || this.mTransitionEnded) {
-                this.mExit.resetViews();
-                int numSharedElements = this.mSharedElements.size();
-                for (int i = 0; i < numSharedElements; i++) {
-                    this.mSharedElements.get(i).requestLayout();
-                }
-                View decorView = this.mWindow.getDecorView();
-                if (decorView != null) {
-                    decorView.setTagInternal(R.id.cross_task_transition, (Object) null);
-                    decorView.setVisibility(8);
+            if (this.mSharedElementHidden) {
+                if (!this.mWaitingForTransition || this.mTransitionEnded) {
+                    this.mExit.resetViews();
+                    int numSharedElements = this.mSharedElements.size();
+                    for (int i = 0; i < numSharedElements; i++) {
+                        View view = this.mSharedElements.get(i);
+                        view.requestLayout();
+                    }
+                    View decorView = this.mWindow.getDecorView();
+                    if (decorView != null) {
+                        decorView.setTagInternal(C3132R.C3134id.cross_task_transition, null);
+                        decorView.setVisibility(8);
+                    }
                 }
             }
         }

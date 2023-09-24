@@ -1,16 +1,21 @@
 package android.content;
 
 import android.app.backup.FullBackup;
-import android.os.Parcel;
-import android.os.Parcelable;
+import android.p007os.Parcel;
+import android.p007os.Parcelable;
 
+/* loaded from: classes.dex */
 public final class SyncResult implements Parcelable {
     public static final SyncResult ALREADY_IN_PROGRESS = new SyncResult(true);
-    public static final Parcelable.Creator<SyncResult> CREATOR = new Parcelable.Creator<SyncResult>() {
+    public static final Parcelable.Creator<SyncResult> CREATOR = new Parcelable.Creator<SyncResult>() { // from class: android.content.SyncResult.1
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public SyncResult createFromParcel(Parcel in) {
             return new SyncResult(in);
         }
 
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public SyncResult[] newArray(int size) {
             return new SyncResult[size];
         }
@@ -29,26 +34,25 @@ public final class SyncResult implements Parcelable {
         this(false);
     }
 
-    private SyncResult(boolean syncAlreadyInProgress2) {
-        this.syncAlreadyInProgress = syncAlreadyInProgress2;
+    private SyncResult(boolean syncAlreadyInProgress) {
+        this.syncAlreadyInProgress = syncAlreadyInProgress;
         this.tooManyDeletions = false;
         this.tooManyRetries = false;
         this.fullSyncRequested = false;
         this.partialSyncUnavailable = false;
         this.moreRecordsToGet = false;
-        this.delayUntil = 0;
+        this.delayUntil = 0L;
         this.stats = new SyncStats();
     }
 
     private SyncResult(Parcel parcel) {
-        boolean z = false;
         this.syncAlreadyInProgress = parcel.readInt() != 0;
         this.tooManyDeletions = parcel.readInt() != 0;
         this.tooManyRetries = parcel.readInt() != 0;
         this.databaseError = parcel.readInt() != 0;
         this.fullSyncRequested = parcel.readInt() != 0;
         this.partialSyncUnavailable = parcel.readInt() != 0;
-        this.moreRecordsToGet = parcel.readInt() != 0 ? true : z;
+        this.moreRecordsToGet = parcel.readInt() != 0;
         this.delayUntil = parcel.readLong();
         this.stats = new SyncStats(parcel);
     }
@@ -70,24 +74,25 @@ public final class SyncResult implements Parcelable {
     }
 
     public void clear() {
-        if (!this.syncAlreadyInProgress) {
-            this.tooManyDeletions = false;
-            this.tooManyRetries = false;
-            this.databaseError = false;
-            this.fullSyncRequested = false;
-            this.partialSyncUnavailable = false;
-            this.moreRecordsToGet = false;
-            this.delayUntil = 0;
-            this.stats.clear();
-            return;
+        if (this.syncAlreadyInProgress) {
+            throw new UnsupportedOperationException("you are not allowed to clear the ALREADY_IN_PROGRESS SyncStats");
         }
-        throw new UnsupportedOperationException("you are not allowed to clear the ALREADY_IN_PROGRESS SyncStats");
+        this.tooManyDeletions = false;
+        this.tooManyRetries = false;
+        this.databaseError = false;
+        this.fullSyncRequested = false;
+        this.partialSyncUnavailable = false;
+        this.moreRecordsToGet = false;
+        this.delayUntil = 0L;
+        this.stats.clear();
     }
 
+    @Override // android.p007os.Parcelable
     public int describeContents() {
         return 0;
     }
 
+    @Override // android.p007os.Parcelable
     public void writeToParcel(Parcel parcel, int flags) {
         parcel.writeInt(this.syncAlreadyInProgress ? 1 : 0);
         parcel.writeInt(this.tooManyDeletions ? 1 : 0);

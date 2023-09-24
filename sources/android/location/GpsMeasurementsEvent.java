@@ -1,22 +1,30 @@
 package android.location;
 
 import android.annotation.SystemApi;
-import android.os.Parcel;
-import android.os.Parcelable;
+import android.p007os.Parcel;
+import android.p007os.Parcelable;
 import java.security.InvalidParameterException;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 
 @SystemApi
+/* loaded from: classes.dex */
 public class GpsMeasurementsEvent implements Parcelable {
-    public static final Parcelable.Creator<GpsMeasurementsEvent> CREATOR = new Parcelable.Creator<GpsMeasurementsEvent>() {
+    public static final Parcelable.Creator<GpsMeasurementsEvent> CREATOR = new Parcelable.Creator<GpsMeasurementsEvent>() { // from class: android.location.GpsMeasurementsEvent.1
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public GpsMeasurementsEvent createFromParcel(Parcel in) {
-            GpsMeasurement[] measurementsArray = new GpsMeasurement[in.readInt()];
+            ClassLoader classLoader = getClass().getClassLoader();
+            GpsClock clock = (GpsClock) in.readParcelable(classLoader);
+            int measurementsLength = in.readInt();
+            GpsMeasurement[] measurementsArray = new GpsMeasurement[measurementsLength];
             in.readTypedArray(measurementsArray, GpsMeasurement.CREATOR);
-            return new GpsMeasurementsEvent((GpsClock) in.readParcelable(getClass().getClassLoader()), measurementsArray);
+            return new GpsMeasurementsEvent(clock, measurementsArray);
         }
 
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public GpsMeasurementsEvent[] newArray(int size) {
             return new GpsMeasurementsEvent[size];
         }
@@ -28,6 +36,7 @@ public class GpsMeasurementsEvent implements Parcelable {
     private final Collection<GpsMeasurement> mReadOnlyMeasurements;
 
     @SystemApi
+    /* loaded from: classes.dex */
     public interface Listener {
         void onGpsMeasurementsReceived(GpsMeasurementsEvent gpsMeasurementsEvent);
 
@@ -37,12 +46,13 @@ public class GpsMeasurementsEvent implements Parcelable {
     public GpsMeasurementsEvent(GpsClock clock, GpsMeasurement[] measurements) {
         if (clock == null) {
             throw new InvalidParameterException("Parameter 'clock' must not be null.");
-        } else if (measurements == null || measurements.length == 0) {
-            throw new InvalidParameterException("Parameter 'measurements' must not be null or empty.");
-        } else {
-            this.mClock = clock;
-            this.mReadOnlyMeasurements = Collections.unmodifiableCollection(Arrays.asList(measurements));
         }
+        if (measurements == null || measurements.length == 0) {
+            throw new InvalidParameterException("Parameter 'measurements' must not be null or empty.");
+        }
+        this.mClock = clock;
+        Collection<GpsMeasurement> measurementCollection = Arrays.asList(measurements);
+        this.mReadOnlyMeasurements = Collections.unmodifiableCollection(measurementCollection);
     }
 
     public GpsClock getClock() {
@@ -53,13 +63,16 @@ public class GpsMeasurementsEvent implements Parcelable {
         return this.mReadOnlyMeasurements;
     }
 
+    @Override // android.p007os.Parcelable
     public int describeContents() {
         return 0;
     }
 
+    @Override // android.p007os.Parcelable
     public void writeToParcel(Parcel parcel, int flags) {
         parcel.writeParcelable(this.mClock, flags);
-        GpsMeasurement[] measurementsArray = (GpsMeasurement[]) this.mReadOnlyMeasurements.toArray(new GpsMeasurement[this.mReadOnlyMeasurements.size()]);
+        int measurementsCount = this.mReadOnlyMeasurements.size();
+        GpsMeasurement[] measurementsArray = (GpsMeasurement[]) this.mReadOnlyMeasurements.toArray(new GpsMeasurement[measurementsCount]);
         parcel.writeInt(measurementsArray.length);
         parcel.writeTypedArray(measurementsArray, flags);
     }

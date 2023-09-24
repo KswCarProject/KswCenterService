@@ -1,15 +1,18 @@
 package android.media;
 
-import android.os.Handler;
-import android.os.Looper;
-import android.os.Message;
+import android.p007os.Handler;
+import android.p007os.Looper;
+import android.p007os.Message;
 import com.wits.pms.PowerManagerApp;
 
+/* loaded from: classes3.dex */
 public class NaviHelper {
     public NaviHandler mHandler;
 
+    /* JADX WARN: Type inference failed for: r0v0, types: [android.media.NaviHelper$1] */
     public NaviHelper() {
-        new Thread() {
+        new Thread() { // from class: android.media.NaviHelper.1
+            @Override // java.lang.Thread, java.lang.Runnable
             public void run() {
                 Looper.prepare();
                 NaviHelper.this.mHandler = new NaviHandler();
@@ -18,7 +21,9 @@ public class NaviHelper {
         }.start();
     }
 
+    /* loaded from: classes3.dex */
     public static class NaviHandler extends Handler {
+        @Override // android.p007os.Handler
         public void handleMessage(Message msg) {
             if (msg.what == 0) {
                 PowerManagerApp.sendCommand("{\"command\":1,\"jsonArg\":\"false\",\"subCommand\":608}");
@@ -33,7 +38,7 @@ public class NaviHelper {
                 PowerManagerApp.sendCommand("{\"command\":1,\"jsonArg\":\"true\",\"subCommand\":608}");
                 if (element[i].toString().contains("navngo.igo")) {
                     this.mHandler.removeMessages(0);
-                    this.mHandler.sendEmptyMessageDelayed(0, 2000);
+                    this.mHandler.sendEmptyMessageDelayed(0, 2000L);
                     return;
                 }
                 return;

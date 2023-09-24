@@ -8,6 +8,7 @@ import com.android.i18n.phonenumbers.AsYouTypeFormatter;
 import com.android.i18n.phonenumbers.PhoneNumberUtil;
 import java.util.Locale;
 
+/* loaded from: classes.dex */
 public class PhoneNumberFormattingTextWatcher implements TextWatcher {
     @UnsupportedAppUsage
     private AsYouTypeFormatter mFormatter;
@@ -20,25 +21,27 @@ public class PhoneNumberFormattingTextWatcher implements TextWatcher {
 
     public PhoneNumberFormattingTextWatcher(String countryCode) {
         this.mSelfChange = false;
-        if (countryCode != null) {
-            this.mFormatter = PhoneNumberUtil.getInstance().getAsYouTypeFormatter(countryCode);
-            return;
+        if (countryCode == null) {
+            throw new IllegalArgumentException();
         }
-        throw new IllegalArgumentException();
+        this.mFormatter = PhoneNumberUtil.getInstance().getAsYouTypeFormatter(countryCode);
     }
 
+    @Override // android.text.TextWatcher
     public void beforeTextChanged(CharSequence s, int start, int count, int after) {
         if (!this.mSelfChange && !this.mStopFormatting && count > 0 && hasSeparator(s, start, count)) {
             stopFormatting();
         }
     }
 
+    @Override // android.text.TextWatcher
     public void onTextChanged(CharSequence s, int start, int before, int count) {
         if (!this.mSelfChange && !this.mStopFormatting && count > 0 && hasSeparator(s, start, count)) {
             stopFormatting();
         }
     }
 
+    @Override // android.text.TextWatcher
     public synchronized void afterTextChanged(Editable s) {
         boolean z = true;
         if (this.mStopFormatting) {
@@ -46,7 +49,8 @@ public class PhoneNumberFormattingTextWatcher implements TextWatcher {
                 z = false;
             }
             this.mStopFormatting = z;
-        } else if (!this.mSelfChange) {
+        } else if (this.mSelfChange) {
+        } else {
             String formatted = reformat(s, Selection.getSelectionEnd(s));
             if (formatted != null) {
                 int rememberedPos = this.mFormatter.getRememberedPosition();
@@ -82,16 +86,14 @@ public class PhoneNumberFormattingTextWatcher implements TextWatcher {
             }
         }
         if (lastNonSeparator != 0) {
-            return getFormattedNumber(lastNonSeparator, hasCursor);
+            String formatted2 = getFormattedNumber(lastNonSeparator, hasCursor);
+            return formatted2;
         }
         return formatted;
     }
 
     private String getFormattedNumber(char lastNonSeparator, boolean hasCursor) {
-        if (hasCursor) {
-            return this.mFormatter.inputDigitAndRememberPosition(lastNonSeparator);
-        }
-        return this.mFormatter.inputDigit(lastNonSeparator);
+        return hasCursor ? this.mFormatter.inputDigitAndRememberPosition(lastNonSeparator) : this.mFormatter.inputDigit(lastNonSeparator);
     }
 
     private void stopFormatting() {
@@ -101,7 +103,8 @@ public class PhoneNumberFormattingTextWatcher implements TextWatcher {
 
     private boolean hasSeparator(CharSequence s, int start, int count) {
         for (int i = start; i < start + count; i++) {
-            if (!PhoneNumberUtils.isNonSeparator(s.charAt(i))) {
+            char c = s.charAt(i);
+            if (!PhoneNumberUtils.isNonSeparator(c)) {
                 return true;
             }
         }

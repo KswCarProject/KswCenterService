@@ -6,6 +6,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.text.TextUtils;
 import java.util.ArrayList;
 
+/* loaded from: classes4.dex */
 public class SelectionBuilder {
     private StringBuilder mSelection = new StringBuilder();
     private ArrayList<String> mSelectionArgs = new ArrayList<>();
@@ -17,25 +18,25 @@ public class SelectionBuilder {
     }
 
     public SelectionBuilder append(String selection, Object... selectionArgs) {
-        if (!TextUtils.isEmpty(selection)) {
-            if (this.mSelection.length() > 0) {
-                this.mSelection.append(" AND ");
-            }
-            StringBuilder sb = this.mSelection;
-            sb.append("(");
-            sb.append(selection);
-            sb.append(")");
-            if (selectionArgs != null) {
-                for (Object arg : selectionArgs) {
-                    this.mSelectionArgs.add(String.valueOf(arg));
-                }
+        if (TextUtils.isEmpty(selection)) {
+            if (selectionArgs != null && selectionArgs.length > 0) {
+                throw new IllegalArgumentException("Valid selection required when including arguments");
             }
             return this;
-        } else if (selectionArgs == null || selectionArgs.length <= 0) {
-            return this;
-        } else {
-            throw new IllegalArgumentException("Valid selection required when including arguments");
         }
+        if (this.mSelection.length() > 0) {
+            this.mSelection.append(" AND ");
+        }
+        StringBuilder sb = this.mSelection;
+        sb.append("(");
+        sb.append(selection);
+        sb.append(")");
+        if (selectionArgs != null) {
+            for (Object arg : selectionArgs) {
+                this.mSelectionArgs.add(String.valueOf(arg));
+            }
+        }
+        return this;
     }
 
     public String getSelection() {
@@ -47,7 +48,7 @@ public class SelectionBuilder {
     }
 
     public Cursor query(SQLiteDatabase db, String table, String[] columns, String orderBy) {
-        return query(db, table, columns, (String) null, (String) null, orderBy, (String) null);
+        return query(db, table, columns, null, null, orderBy, null);
     }
 
     public Cursor query(SQLiteDatabase db, String table, String[] columns, String groupBy, String having, String orderBy, String limit) {

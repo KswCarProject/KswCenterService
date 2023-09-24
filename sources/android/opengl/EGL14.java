@@ -6,6 +6,7 @@ import android.view.Surface;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 
+/* loaded from: classes3.dex */
 public class EGL14 {
     public static final int EGL_ALPHA_MASK_SIZE = 12350;
     public static final int EGL_ALPHA_SIZE = 12321;
@@ -205,18 +206,22 @@ public class EGL14 {
     public static EGLSurface eglCreateWindowSurface(EGLDisplay dpy, EGLConfig config, Object win, int[] attrib_list, int offset) {
         Surface sur = null;
         if (win instanceof SurfaceView) {
-            sur = ((SurfaceView) win).getHolder().getSurface();
+            SurfaceView surfaceView = (SurfaceView) win;
+            sur = surfaceView.getHolder().getSurface();
         } else if (win instanceof SurfaceHolder) {
-            sur = ((SurfaceHolder) win).getSurface();
+            SurfaceHolder holder = (SurfaceHolder) win;
+            sur = holder.getSurface();
         } else if (win instanceof Surface) {
             sur = (Surface) win;
         }
         if (sur != null) {
-            return _eglCreateWindowSurface(dpy, config, sur, attrib_list, offset);
+            EGLSurface surface = _eglCreateWindowSurface(dpy, config, sur, attrib_list, offset);
+            return surface;
+        } else if (win instanceof SurfaceTexture) {
+            EGLSurface surface2 = _eglCreateWindowSurfaceTexture(dpy, config, win, attrib_list, offset);
+            return surface2;
+        } else {
+            throw new UnsupportedOperationException("eglCreateWindowSurface() can only be called with an instance of Surface, SurfaceView, SurfaceTexture or SurfaceHolder at the moment, this will be fixed later.");
         }
-        if (win instanceof SurfaceTexture) {
-            return _eglCreateWindowSurfaceTexture(dpy, config, win, attrib_list, offset);
-        }
-        throw new UnsupportedOperationException("eglCreateWindowSurface() can only be called with an instance of Surface, SurfaceView, SurfaceTexture or SurfaceHolder at the moment, this will be fixed later.");
     }
 }

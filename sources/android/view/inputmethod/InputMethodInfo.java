@@ -3,25 +3,37 @@ package android.view.inputmethod;
 import android.annotation.UnsupportedAppUsage;
 import android.content.ComponentName;
 import android.content.Context;
-import android.content.pm.ApplicationInfo;
-import android.content.pm.PackageManager;
-import android.content.pm.ResolveInfo;
-import android.content.pm.ServiceInfo;
+import android.content.p002pm.ApplicationInfo;
+import android.content.p002pm.PackageManager;
+import android.content.p002pm.ResolveInfo;
+import android.content.p002pm.ServiceInfo;
 import android.content.res.Resources;
+import android.content.res.TypedArray;
+import android.content.res.XmlResourceParser;
 import android.graphics.drawable.Drawable;
-import android.os.Parcel;
-import android.os.Parcelable;
+import android.p007os.Parcel;
+import android.p007os.Parcelable;
+import android.util.AttributeSet;
 import android.util.Printer;
+import android.util.Xml;
+import android.view.inputmethod.InputMethodSubtype;
+import com.android.internal.C3132R;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import org.xmlpull.v1.XmlPullParserException;
 
+/* loaded from: classes4.dex */
 public final class InputMethodInfo implements Parcelable {
-    public static final Parcelable.Creator<InputMethodInfo> CREATOR = new Parcelable.Creator<InputMethodInfo>() {
+    public static final Parcelable.Creator<InputMethodInfo> CREATOR = new Parcelable.Creator<InputMethodInfo>() { // from class: android.view.inputmethod.InputMethodInfo.1
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public InputMethodInfo createFromParcel(Parcel source) {
             return new InputMethodInfo(source);
         }
 
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public InputMethodInfo[] newArray(int size) {
             return new InputMethodInfo[size];
         }
@@ -44,326 +56,207 @@ public final class InputMethodInfo implements Parcelable {
     }
 
     public InputMethodInfo(Context context, ResolveInfo service) throws XmlPullParserException, IOException {
-        this(context, service, (List<InputMethodSubtype>) null);
+        this(context, service, null);
     }
 
-    /* JADX WARNING: Removed duplicated region for block: B:105:0x0239  */
-    /* Code decompiled incorrectly, please refer to instructions dump. */
-    public InputMethodInfo(android.content.Context r26, android.content.pm.ResolveInfo r27, java.util.List<android.view.inputmethod.InputMethodSubtype> r28) throws org.xmlpull.v1.XmlPullParserException, java.io.IOException {
-        /*
-            r25 = this;
-            r1 = r25
-            r2 = r27
-            r3 = r28
-            r25.<init>()
-            r1.mService = r2
-            android.content.pm.ServiceInfo r4 = r2.serviceInfo
-            java.lang.String r0 = computeId(r27)
-            r1.mId = r0
-            r5 = 1
-            r6 = 0
-            r0 = 0
-            r1.mForceDefault = r0
-            android.content.pm.PackageManager r7 = r26.getPackageManager()
-            r8 = 0
-            r9 = 0
-            r10 = 0
-            java.util.ArrayList r11 = new java.util.ArrayList
-            r11.<init>()
-            java.lang.String r12 = "android.view.im"
-            android.content.res.XmlResourceParser r12 = r4.loadXmlMetaData(r7, r12)     // Catch:{ NameNotFoundException | IndexOutOfBoundsException | NumberFormatException -> 0x0216, all -> 0x020e }
-            r10 = r12
-            if (r10 == 0) goto L_0x01fa
-            android.content.pm.ApplicationInfo r12 = r4.applicationInfo     // Catch:{ NameNotFoundException | IndexOutOfBoundsException | NumberFormatException -> 0x0216, all -> 0x020e }
-            android.content.res.Resources r12 = r7.getResourcesForApplication((android.content.pm.ApplicationInfo) r12)     // Catch:{ NameNotFoundException | IndexOutOfBoundsException | NumberFormatException -> 0x0216, all -> 0x020e }
-            android.util.AttributeSet r13 = android.util.Xml.asAttributeSet(r10)     // Catch:{ NameNotFoundException | IndexOutOfBoundsException | NumberFormatException -> 0x0216, all -> 0x020e }
-        L_0x0037:
-            int r14 = r10.next()     // Catch:{ NameNotFoundException | IndexOutOfBoundsException | NumberFormatException -> 0x0216, all -> 0x020e }
-            r15 = r14
-            r0 = 1
-            if (r14 == r0) goto L_0x0044
-            r14 = 2
-            if (r15 == r14) goto L_0x0044
-            r0 = 0
-            goto L_0x0037
-        L_0x0044:
-            java.lang.String r14 = r10.getName()     // Catch:{ NameNotFoundException | IndexOutOfBoundsException | NumberFormatException -> 0x0216, all -> 0x020e }
-            java.lang.String r0 = "input-method"
-            boolean r0 = r0.equals(r14)     // Catch:{ NameNotFoundException | IndexOutOfBoundsException | NumberFormatException -> 0x0216, all -> 0x020e }
-            if (r0 == 0) goto L_0x01ec
-            int[] r0 = com.android.internal.R.styleable.InputMethod     // Catch:{ NameNotFoundException | IndexOutOfBoundsException | NumberFormatException -> 0x0216, all -> 0x020e }
-            android.content.res.TypedArray r0 = r12.obtainAttributes(r13, r0)     // Catch:{ NameNotFoundException | IndexOutOfBoundsException | NumberFormatException -> 0x0216, all -> 0x020e }
-            r2 = 1
-            java.lang.String r17 = r0.getString(r2)     // Catch:{ NameNotFoundException | IndexOutOfBoundsException | NumberFormatException -> 0x0216, all -> 0x020e }
-            r8 = r17
-            r2 = 3
-            r18 = r5
-            r5 = 0
-            boolean r16 = r0.getBoolean(r2, r5)     // Catch:{ NameNotFoundException | IndexOutOfBoundsException | NumberFormatException -> 0x01e6, all -> 0x01e0 }
-            r17 = r16
-            int r16 = r0.getResourceId(r5, r5)     // Catch:{ NameNotFoundException | IndexOutOfBoundsException | NumberFormatException -> 0x01e6, all -> 0x01e0 }
-            r9 = r16
-            r2 = 2
-            boolean r19 = r0.getBoolean(r2, r5)     // Catch:{ NameNotFoundException | IndexOutOfBoundsException | NumberFormatException -> 0x01e6, all -> 0x01e0 }
-            r6 = r19
-            r0.recycle()     // Catch:{ NameNotFoundException | IndexOutOfBoundsException | NumberFormatException -> 0x01e6, all -> 0x01e0 }
-            int r2 = r10.getDepth()     // Catch:{ NameNotFoundException | IndexOutOfBoundsException | NumberFormatException -> 0x01e6, all -> 0x01e0 }
-            r5 = r18
-        L_0x007d:
-            r20 = r0
-            int r0 = r10.next()     // Catch:{ NameNotFoundException | IndexOutOfBoundsException | NumberFormatException -> 0x01da, all -> 0x01d4 }
-            r15 = r0
-            r21 = r5
-            r5 = 3
-            if (r0 != r5) goto L_0x00a1
-            int r0 = r10.getDepth()     // Catch:{ NameNotFoundException | IndexOutOfBoundsException | NumberFormatException -> 0x009a, all -> 0x0095 }
-            if (r0 <= r2) goto L_0x0090
-            goto L_0x00a1
-        L_0x0090:
-            r23 = r7
-            r7 = 0
-            goto L_0x016f
-        L_0x0095:
-            r0 = move-exception
-            r23 = r7
-            goto L_0x0237
-        L_0x009a:
-            r0 = move-exception
-            r23 = r7
-        L_0x009d:
-            r5 = r21
-            goto L_0x021b
-        L_0x00a1:
-            r0 = 1
-            if (r15 == r0) goto L_0x016c
-            r0 = 2
-            if (r15 != r0) goto L_0x0162
-            java.lang.String r0 = r10.getName()     // Catch:{ NameNotFoundException | IndexOutOfBoundsException | NumberFormatException -> 0x015b, all -> 0x0156 }
-            r14 = r0
-            java.lang.String r0 = "subtype"
-            boolean r0 = r0.equals(r14)     // Catch:{ NameNotFoundException | IndexOutOfBoundsException | NumberFormatException -> 0x015b, all -> 0x0156 }
-            if (r0 == 0) goto L_0x0142
-            int[] r0 = com.android.internal.R.styleable.InputMethod_Subtype     // Catch:{ NameNotFoundException | IndexOutOfBoundsException | NumberFormatException -> 0x015b, all -> 0x0156 }
-            android.content.res.TypedArray r0 = r12.obtainAttributes(r13, r0)     // Catch:{ NameNotFoundException | IndexOutOfBoundsException | NumberFormatException -> 0x015b, all -> 0x0156 }
-            android.view.inputmethod.InputMethodSubtype$InputMethodSubtypeBuilder r5 = new android.view.inputmethod.InputMethodSubtype$InputMethodSubtypeBuilder     // Catch:{ NameNotFoundException | IndexOutOfBoundsException | NumberFormatException -> 0x015b, all -> 0x0156 }
-            r5.<init>()     // Catch:{ NameNotFoundException | IndexOutOfBoundsException | NumberFormatException -> 0x015b, all -> 0x0156 }
-            r22 = r2
-            r23 = r7
-            r2 = 0
-            int r7 = r0.getResourceId(r2, r2)     // Catch:{ NameNotFoundException | IndexOutOfBoundsException | NumberFormatException -> 0x0153, all -> 0x0150 }
-            android.view.inputmethod.InputMethodSubtype$InputMethodSubtypeBuilder r5 = r5.setSubtypeNameResId(r7)     // Catch:{ NameNotFoundException | IndexOutOfBoundsException | NumberFormatException -> 0x0153, all -> 0x0150 }
-            r24 = r12
-            r7 = 1
-            int r12 = r0.getResourceId(r7, r2)     // Catch:{ NameNotFoundException | IndexOutOfBoundsException | NumberFormatException -> 0x0153, all -> 0x0150 }
-            android.view.inputmethod.InputMethodSubtype$InputMethodSubtypeBuilder r2 = r5.setSubtypeIconResId(r12)     // Catch:{ NameNotFoundException | IndexOutOfBoundsException | NumberFormatException -> 0x0153, all -> 0x0150 }
-            r5 = 9
-            java.lang.String r5 = r0.getString(r5)     // Catch:{ NameNotFoundException | IndexOutOfBoundsException | NumberFormatException -> 0x0153, all -> 0x0150 }
-            android.view.inputmethod.InputMethodSubtype$InputMethodSubtypeBuilder r2 = r2.setLanguageTag(r5)     // Catch:{ NameNotFoundException | IndexOutOfBoundsException | NumberFormatException -> 0x0153, all -> 0x0150 }
-            r5 = 2
-            java.lang.String r12 = r0.getString(r5)     // Catch:{ NameNotFoundException | IndexOutOfBoundsException | NumberFormatException -> 0x0153, all -> 0x0150 }
-            android.view.inputmethod.InputMethodSubtype$InputMethodSubtypeBuilder r2 = r2.setSubtypeLocale(r12)     // Catch:{ NameNotFoundException | IndexOutOfBoundsException | NumberFormatException -> 0x0153, all -> 0x0150 }
-            r12 = 3
-            java.lang.String r5 = r0.getString(r12)     // Catch:{ NameNotFoundException | IndexOutOfBoundsException | NumberFormatException -> 0x0153, all -> 0x0150 }
-            android.view.inputmethod.InputMethodSubtype$InputMethodSubtypeBuilder r2 = r2.setSubtypeMode(r5)     // Catch:{ NameNotFoundException | IndexOutOfBoundsException | NumberFormatException -> 0x0153, all -> 0x0150 }
-            r5 = 4
-            java.lang.String r5 = r0.getString(r5)     // Catch:{ NameNotFoundException | IndexOutOfBoundsException | NumberFormatException -> 0x0153, all -> 0x0150 }
-            android.view.inputmethod.InputMethodSubtype$InputMethodSubtypeBuilder r2 = r2.setSubtypeExtraValue(r5)     // Catch:{ NameNotFoundException | IndexOutOfBoundsException | NumberFormatException -> 0x0153, all -> 0x0150 }
-            r5 = 5
-            r7 = 0
-            boolean r5 = r0.getBoolean(r5, r7)     // Catch:{ NameNotFoundException | IndexOutOfBoundsException | NumberFormatException -> 0x0153, all -> 0x0150 }
-            android.view.inputmethod.InputMethodSubtype$InputMethodSubtypeBuilder r2 = r2.setIsAuxiliary(r5)     // Catch:{ NameNotFoundException | IndexOutOfBoundsException | NumberFormatException -> 0x0153, all -> 0x0150 }
-            r5 = 6
-            boolean r5 = r0.getBoolean(r5, r7)     // Catch:{ NameNotFoundException | IndexOutOfBoundsException | NumberFormatException -> 0x0153, all -> 0x0150 }
-            android.view.inputmethod.InputMethodSubtype$InputMethodSubtypeBuilder r2 = r2.setOverridesImplicitlyEnabledSubtype(r5)     // Catch:{ NameNotFoundException | IndexOutOfBoundsException | NumberFormatException -> 0x0153, all -> 0x0150 }
-            r5 = 7
-            int r5 = r0.getInt(r5, r7)     // Catch:{ NameNotFoundException | IndexOutOfBoundsException | NumberFormatException -> 0x0153, all -> 0x0150 }
-            android.view.inputmethod.InputMethodSubtype$InputMethodSubtypeBuilder r2 = r2.setSubtypeId(r5)     // Catch:{ NameNotFoundException | IndexOutOfBoundsException | NumberFormatException -> 0x0153, all -> 0x0150 }
-            r5 = 8
-            boolean r5 = r0.getBoolean(r5, r7)     // Catch:{ NameNotFoundException | IndexOutOfBoundsException | NumberFormatException -> 0x0153, all -> 0x0150 }
-            android.view.inputmethod.InputMethodSubtype$InputMethodSubtypeBuilder r2 = r2.setIsAsciiCapable(r5)     // Catch:{ NameNotFoundException | IndexOutOfBoundsException | NumberFormatException -> 0x0153, all -> 0x0150 }
-            android.view.inputmethod.InputMethodSubtype r2 = r2.build()     // Catch:{ NameNotFoundException | IndexOutOfBoundsException | NumberFormatException -> 0x0153, all -> 0x0150 }
-            boolean r5 = r2.isAuxiliary()     // Catch:{ NameNotFoundException | IndexOutOfBoundsException | NumberFormatException -> 0x0153, all -> 0x0150 }
-            if (r5 != 0) goto L_0x012f
-            r5 = 0
-            goto L_0x0131
-        L_0x012f:
-            r5 = r21
-        L_0x0131:
-            r11.add(r2)     // Catch:{ NameNotFoundException | IndexOutOfBoundsException | NumberFormatException -> 0x013f }
-            r0 = r20
-            r2 = r22
-            r7 = r23
-            r12 = r24
-            goto L_0x007d
-        L_0x013f:
-            r0 = move-exception
-            goto L_0x021b
-        L_0x0142:
-            r22 = r2
-            r23 = r7
-            r24 = r12
-            org.xmlpull.v1.XmlPullParserException r0 = new org.xmlpull.v1.XmlPullParserException     // Catch:{ NameNotFoundException | IndexOutOfBoundsException | NumberFormatException -> 0x0153, all -> 0x0150 }
-            java.lang.String r2 = "Meta-data in input-method does not start with subtype tag"
-            r0.<init>(r2)     // Catch:{ NameNotFoundException | IndexOutOfBoundsException | NumberFormatException -> 0x0153, all -> 0x0150 }
-            throw r0     // Catch:{ NameNotFoundException | IndexOutOfBoundsException | NumberFormatException -> 0x0153, all -> 0x0150 }
-        L_0x0150:
-            r0 = move-exception
-            goto L_0x0237
-        L_0x0153:
-            r0 = move-exception
-            goto L_0x009d
-        L_0x0156:
-            r0 = move-exception
-            r23 = r7
-            goto L_0x01e5
-        L_0x015b:
-            r0 = move-exception
-            r23 = r7
-            r5 = r21
-            goto L_0x01eb
-        L_0x0162:
-            r22 = r2
-            r23 = r7
-            r0 = r20
-            r5 = r21
-            goto L_0x007d
-        L_0x016c:
-            r23 = r7
-            r7 = 0
-        L_0x016f:
-            if (r10 == 0) goto L_0x0174
-            r10.close()
-        L_0x0174:
-            r0 = r17
-            int r2 = r11.size()
-            if (r2 != 0) goto L_0x017e
-            r5 = 0
-            goto L_0x0180
-        L_0x017e:
-            r5 = r21
-        L_0x0180:
-            if (r3 == 0) goto L_0x01c2
-            int r2 = r28.size()
-        L_0x0187:
-            if (r7 >= r2) goto L_0x01c2
-            java.lang.Object r12 = r3.get(r7)
-            android.view.inputmethod.InputMethodSubtype r12 = (android.view.inputmethod.InputMethodSubtype) r12
-            boolean r13 = r11.contains(r12)
-            if (r13 != 0) goto L_0x0199
-            r11.add(r12)
-            goto L_0x01bf
-        L_0x0199:
-            java.lang.String r13 = "InputMethodInfo"
-            java.lang.StringBuilder r14 = new java.lang.StringBuilder
-            r14.<init>()
-            java.lang.String r15 = "Duplicated subtype definition found: "
-            r14.append(r15)
-            java.lang.String r15 = r12.getLocale()
-            r14.append(r15)
-            java.lang.String r15 = ", "
-            r14.append(r15)
-            java.lang.String r15 = r12.getMode()
-            r14.append(r15)
-            java.lang.String r14 = r14.toString()
-            android.util.Slog.w((java.lang.String) r13, (java.lang.String) r14)
-        L_0x01bf:
-            int r7 = r7 + 1
-            goto L_0x0187
-        L_0x01c2:
-            android.view.inputmethod.InputMethodSubtypeArray r2 = new android.view.inputmethod.InputMethodSubtypeArray
-            r2.<init>((java.util.List<android.view.inputmethod.InputMethodSubtype>) r11)
-            r1.mSubtypes = r2
-            r1.mSettingsActivityName = r8
-            r1.mIsDefaultResId = r9
-            r1.mIsAuxIme = r5
-            r1.mSupportsSwitchingToNextInputMethod = r6
-            r1.mIsVrOnly = r0
-            return
-        L_0x01d4:
-            r0 = move-exception
-            r21 = r5
-            r23 = r7
-            goto L_0x0237
-        L_0x01da:
-            r0 = move-exception
-            r21 = r5
-            r23 = r7
-            goto L_0x021b
-        L_0x01e0:
-            r0 = move-exception
-            r23 = r7
-            r21 = r18
-        L_0x01e5:
-            goto L_0x0237
-        L_0x01e6:
-            r0 = move-exception
-            r23 = r7
-            r5 = r18
-        L_0x01eb:
-            goto L_0x021b
-        L_0x01ec:
-            r18 = r5
-            r23 = r7
-            r24 = r12
-            org.xmlpull.v1.XmlPullParserException r0 = new org.xmlpull.v1.XmlPullParserException     // Catch:{ NameNotFoundException | IndexOutOfBoundsException | NumberFormatException -> 0x020a, all -> 0x0206 }
-            java.lang.String r2 = "Meta-data does not start with input-method tag"
-            r0.<init>(r2)     // Catch:{ NameNotFoundException | IndexOutOfBoundsException | NumberFormatException -> 0x020a, all -> 0x0206 }
-            throw r0     // Catch:{ NameNotFoundException | IndexOutOfBoundsException | NumberFormatException -> 0x020a, all -> 0x0206 }
-        L_0x01fa:
-            r18 = r5
-            r23 = r7
-            org.xmlpull.v1.XmlPullParserException r0 = new org.xmlpull.v1.XmlPullParserException     // Catch:{ NameNotFoundException | IndexOutOfBoundsException | NumberFormatException -> 0x020a, all -> 0x0206 }
-            java.lang.String r2 = "No android.view.im meta-data"
-            r0.<init>(r2)     // Catch:{ NameNotFoundException | IndexOutOfBoundsException | NumberFormatException -> 0x020a, all -> 0x0206 }
-            throw r0     // Catch:{ NameNotFoundException | IndexOutOfBoundsException | NumberFormatException -> 0x020a, all -> 0x0206 }
-        L_0x0206:
-            r0 = move-exception
-            r21 = r18
-            goto L_0x0237
-        L_0x020a:
-            r0 = move-exception
-            r5 = r18
-            goto L_0x021b
-        L_0x020e:
-            r0 = move-exception
-            r18 = r5
-            r23 = r7
-            r21 = r18
-            goto L_0x0237
-        L_0x0216:
-            r0 = move-exception
-            r18 = r5
-            r23 = r7
-        L_0x021b:
-            org.xmlpull.v1.XmlPullParserException r2 = new org.xmlpull.v1.XmlPullParserException     // Catch:{ all -> 0x0234 }
-            java.lang.StringBuilder r7 = new java.lang.StringBuilder     // Catch:{ all -> 0x0234 }
-            r7.<init>()     // Catch:{ all -> 0x0234 }
-            java.lang.String r12 = "Unable to create context for: "
-            r7.append(r12)     // Catch:{ all -> 0x0234 }
-            java.lang.String r12 = r4.packageName     // Catch:{ all -> 0x0234 }
-            r7.append(r12)     // Catch:{ all -> 0x0234 }
-            java.lang.String r7 = r7.toString()     // Catch:{ all -> 0x0234 }
-            r2.<init>(r7)     // Catch:{ all -> 0x0234 }
-            throw r2     // Catch:{ all -> 0x0234 }
-        L_0x0234:
-            r0 = move-exception
-            r21 = r5
-        L_0x0237:
-            if (r10 == 0) goto L_0x023c
-            r10.close()
-        L_0x023c:
-            throw r0
-        */
-        throw new UnsupportedOperationException("Method not decompiled: android.view.inputmethod.InputMethodInfo.<init>(android.content.Context, android.content.pm.ResolveInfo, java.util.List):void");
+    /* JADX WARN: Code restructure failed: missing block: B:48:0x014f, code lost:
+        throw new org.xmlpull.v1.XmlPullParserException("Meta-data in input-method does not start with subtype tag");
+     */
+    /* JADX WARN: Code restructure failed: missing block: B:59:0x016f, code lost:
+        if (r10 == null) goto L75;
+     */
+    /* JADX WARN: Code restructure failed: missing block: B:60:0x0171, code lost:
+        r10.close();
+     */
+    /* JADX WARN: Code restructure failed: missing block: B:62:0x017a, code lost:
+        if (r11.size() != 0) goto L91;
+     */
+    /* JADX WARN: Code restructure failed: missing block: B:63:0x017c, code lost:
+        r5 = false;
+     */
+    /* JADX WARN: Code restructure failed: missing block: B:64:0x017e, code lost:
+        r5 = r21;
+     */
+    /* JADX WARN: Code restructure failed: missing block: B:65:0x0180, code lost:
+        if (r28 == null) goto L89;
+     */
+    /* JADX WARN: Code restructure failed: missing block: B:66:0x0182, code lost:
+        r2 = r28.size();
+     */
+    /* JADX WARN: Code restructure failed: missing block: B:67:0x0187, code lost:
+        if (r7 >= r2) goto L88;
+     */
+    /* JADX WARN: Code restructure failed: missing block: B:68:0x0189, code lost:
+        r12 = r28.get(r7);
+     */
+    /* JADX WARN: Code restructure failed: missing block: B:69:0x0193, code lost:
+        if (r11.contains(r12) != false) goto L86;
+     */
+    /* JADX WARN: Code restructure failed: missing block: B:70:0x0195, code lost:
+        r11.add(r12);
+     */
+    /* JADX WARN: Code restructure failed: missing block: B:71:0x0199, code lost:
+        android.util.Slog.m50w(android.view.inputmethod.InputMethodInfo.TAG, "Duplicated subtype definition found: " + r12.getLocale() + ", " + r12.getMode());
+     */
+    /* JADX WARN: Code restructure failed: missing block: B:72:0x01bf, code lost:
+        r7 = r7 + 1;
+     */
+    /* JADX WARN: Code restructure failed: missing block: B:73:0x01c2, code lost:
+        r25.mSubtypes = new android.view.inputmethod.InputMethodSubtypeArray(r11);
+        r25.mSettingsActivityName = r17;
+        r25.mIsDefaultResId = r16;
+        r25.mIsAuxIme = r5;
+        r25.mSupportsSwitchingToNextInputMethod = r19;
+        r25.mIsVrOnly = r16;
+     */
+    /* JADX WARN: Code restructure failed: missing block: B:74:0x01d3, code lost:
+        return;
+     */
+    /* JADX WARN: Not initialized variable reg: 18, insn: 0x0207: MOVE  (r21 I:??[int, float, boolean, short, byte, char, OBJECT, ARRAY]) = (r18 I:??[int, float, boolean, short, byte, char, OBJECT, ARRAY] A[D('isAuxIme' boolean)]), block:B:91:0x0207 */
+    /* JADX WARN: Not initialized variable reg: 18, insn: 0x020b: MOVE  (r5 I:??[int, float, boolean, short, byte, char, OBJECT, ARRAY]) = (r18 I:??[int, float, boolean, short, byte, char, OBJECT, ARRAY] A[D('isAuxIme' boolean)]), block:B:93:0x020b */
+    /* JADX WARN: Removed duplicated region for block: B:103:0x0239  */
+    /*
+        Code decompiled incorrectly, please refer to instructions dump.
+    */
+    public InputMethodInfo(Context context, ResolveInfo service, List<InputMethodSubtype> additionalSubtypes) throws XmlPullParserException, IOException {
+        boolean isAuxIme;
+        int i;
+        Resources res;
+        InputMethodSubtype subtype;
+        this.mService = service;
+        ServiceInfo si = service.serviceInfo;
+        this.mId = computeId(service);
+        boolean isAuxIme2 = true;
+        this.mForceDefault = false;
+        PackageManager pm = context.getPackageManager();
+        XmlResourceParser parser = null;
+        ArrayList<InputMethodSubtype> subtypes = new ArrayList<>();
+        try {
+            parser = si.loadXmlMetaData(pm, InputMethod.SERVICE_META_DATA);
+            try {
+                if (parser == null) {
+                    throw new XmlPullParserException("No android.view.im meta-data");
+                }
+                Resources res2 = pm.getResourcesForApplication(si.applicationInfo);
+                AttributeSet attrs = Xml.asAttributeSet(parser);
+                while (true) {
+                    int type = parser.next();
+                    if (type == 1 || type == 2) {
+                        break;
+                    }
+                }
+                String nodeName = parser.getName();
+                if (!"input-method".equals(nodeName)) {
+                    throw new XmlPullParserException("Meta-data does not start with input-method tag");
+                }
+                TypedArray sa = res2.obtainAttributes(attrs, C3132R.styleable.InputMethod);
+                String settingsActivityComponent = sa.getString(1);
+                try {
+                    boolean isVrOnly = sa.getBoolean(3, false);
+                    int isDefaultResId = sa.getResourceId(0, 0);
+                    boolean supportsSwitchingToNextInputMethod = sa.getBoolean(2, false);
+                    sa.recycle();
+                    int depth = parser.getDepth();
+                    isAuxIme2 = true;
+                    while (true) {
+                        TypedArray sa2 = sa;
+                        try {
+                            int type2 = parser.next();
+                            boolean isAuxIme3 = isAuxIme2;
+                            if (type2 == 3) {
+                                try {
+                                    if (parser.getDepth() <= depth) {
+                                        i = 0;
+                                        break;
+                                    }
+                                } catch (PackageManager.NameNotFoundException | IndexOutOfBoundsException | NumberFormatException e) {
+                                    isAuxIme2 = isAuxIme3;
+                                    throw new XmlPullParserException("Unable to create context for: " + si.packageName);
+                                } catch (Throwable th) {
+                                    e = th;
+                                    if (parser != null) {
+                                    }
+                                    throw e;
+                                }
+                            }
+                            if (type2 == 1) {
+                                i = 0;
+                                break;
+                            } else if (type2 == 2) {
+                                try {
+                                    String nodeName2 = parser.getName();
+                                    if (!"subtype".equals(nodeName2)) {
+                                        break;
+                                    }
+                                    TypedArray a = res2.obtainAttributes(attrs, C3132R.styleable.InputMethod_Subtype);
+                                    int depth2 = depth;
+                                    PackageManager pm2 = pm;
+                                    try {
+                                        res = res2;
+                                        subtype = new InputMethodSubtype.InputMethodSubtypeBuilder().setSubtypeNameResId(a.getResourceId(0, 0)).setSubtypeIconResId(a.getResourceId(1, 0)).setLanguageTag(a.getString(9)).setSubtypeLocale(a.getString(2)).setSubtypeMode(a.getString(3)).setSubtypeExtraValue(a.getString(4)).setIsAuxiliary(a.getBoolean(5, false)).setOverridesImplicitlyEnabledSubtype(a.getBoolean(6, false)).setSubtypeId(a.getInt(7, 0)).setIsAsciiCapable(a.getBoolean(8, false)).build();
+                                        isAuxIme2 = !subtype.isAuxiliary() ? false : isAuxIme3;
+                                    } catch (PackageManager.NameNotFoundException | IndexOutOfBoundsException | NumberFormatException e2) {
+                                        isAuxIme2 = isAuxIme3;
+                                        throw new XmlPullParserException("Unable to create context for: " + si.packageName);
+                                    } catch (Throwable th2) {
+                                        e = th2;
+                                        if (parser != null) {
+                                        }
+                                        throw e;
+                                    }
+                                    try {
+                                        try {
+                                            subtypes.add(subtype);
+                                            sa = sa2;
+                                            depth = depth2;
+                                            pm = pm2;
+                                            res2 = res;
+                                        } catch (Throwable th3) {
+                                            e = th3;
+                                            if (parser != null) {
+                                                parser.close();
+                                            }
+                                            throw e;
+                                        }
+                                    } catch (PackageManager.NameNotFoundException | IndexOutOfBoundsException | NumberFormatException e3) {
+                                        throw new XmlPullParserException("Unable to create context for: " + si.packageName);
+                                    }
+                                } catch (PackageManager.NameNotFoundException | IndexOutOfBoundsException | NumberFormatException e4) {
+                                    isAuxIme2 = isAuxIme3;
+                                } catch (Throwable th4) {
+                                    e = th4;
+                                }
+                            } else {
+                                sa = sa2;
+                                isAuxIme2 = isAuxIme3;
+                            }
+                        } catch (PackageManager.NameNotFoundException | IndexOutOfBoundsException | NumberFormatException e5) {
+                        } catch (Throwable th5) {
+                            e = th5;
+                        }
+                    }
+                } catch (PackageManager.NameNotFoundException | IndexOutOfBoundsException | NumberFormatException e6) {
+                    isAuxIme2 = true;
+                } catch (Throwable th6) {
+                    e = th6;
+                }
+            } catch (PackageManager.NameNotFoundException | IndexOutOfBoundsException | NumberFormatException e7) {
+                isAuxIme2 = isAuxIme;
+            } catch (Throwable th7) {
+                e = th7;
+            }
+        } catch (PackageManager.NameNotFoundException | IndexOutOfBoundsException | NumberFormatException e8) {
+        } catch (Throwable th8) {
+            e = th8;
+        }
     }
 
     InputMethodInfo(Parcel source) {
         this.mId = source.readString();
         this.mSettingsActivityName = source.readString();
         this.mIsDefaultResId = source.readInt();
-        boolean z = true;
         this.mIsAuxIme = source.readInt() == 1;
-        this.mSupportsSwitchingToNextInputMethod = source.readInt() != 1 ? false : z;
+        this.mSupportsSwitchingToNextInputMethod = source.readInt() == 1;
         this.mIsVrOnly = source.readBoolean();
         this.mService = ResolveInfo.CREATOR.createFromParcel(source);
         this.mSubtypes = new InputMethodSubtypeArray(source);
@@ -371,7 +264,7 @@ public final class InputMethodInfo implements Parcelable {
     }
 
     public InputMethodInfo(String packageName, String className, CharSequence label, String settingsActivity) {
-        this(buildDummyResolveInfo(packageName, className, label), false, settingsActivity, (List<InputMethodSubtype>) null, 0, false, true, false);
+        this(buildDummyResolveInfo(packageName, className, label), false, settingsActivity, null, 0, false, true, false);
     }
 
     public InputMethodInfo(ResolveInfo ri, boolean isAuxIme, String settingsActivity, List<InputMethodSubtype> subtypes, int isDefaultResId, boolean forceDefault) {
@@ -464,7 +357,8 @@ public final class InputMethodInfo implements Parcelable {
             if (getIsDefaultResourceId() == 0) {
                 return false;
             }
-            return context.createPackageContext(getPackageName(), 0).getResources().getBoolean(getIsDefaultResourceId());
+            Resources res = context.createPackageContext(getPackageName(), 0).getResources();
+            return res.getBoolean(getIsDefaultResourceId());
         } catch (PackageManager.NameNotFoundException | Resources.NotFoundException e) {
             return false;
         }
@@ -493,10 +387,11 @@ public final class InputMethodInfo implements Parcelable {
         if (o == this) {
             return true;
         }
-        if (o != null && (o instanceof InputMethodInfo)) {
-            return this.mId.equals(((InputMethodInfo) o).mId);
+        if (o == null || !(o instanceof InputMethodInfo)) {
+            return false;
         }
-        return false;
+        InputMethodInfo obj = (InputMethodInfo) o;
+        return this.mId.equals(obj.mId);
     }
 
     public int hashCode() {
@@ -515,6 +410,7 @@ public final class InputMethodInfo implements Parcelable {
         return this.mSupportsSwitchingToNextInputMethod;
     }
 
+    @Override // android.p007os.Parcelable
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeString(this.mId);
         dest.writeString(this.mSettingsActivityName);
@@ -526,6 +422,7 @@ public final class InputMethodInfo implements Parcelable {
         this.mSubtypes.writeToParcel(dest);
     }
 
+    @Override // android.p007os.Parcelable
     public int describeContents() {
         return 0;
     }

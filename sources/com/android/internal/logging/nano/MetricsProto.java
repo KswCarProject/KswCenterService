@@ -4,10 +4,13 @@ import com.android.framework.protobuf.nano.CodedInputByteBufferNano;
 import com.android.framework.protobuf.nano.InternalNano;
 import com.android.framework.protobuf.nano.InvalidProtocolBufferNanoException;
 import com.android.framework.protobuf.nano.MessageNano;
+import com.android.framework.protobuf.nano.WireFormatNano;
 import java.io.IOException;
 
+/* loaded from: classes4.dex */
 public interface MetricsProto {
 
+    /* loaded from: classes4.dex */
     public static final class MetricsEvent extends MessageNano {
         public static final int ABOUT_LEGAL_SETTINGS = 225;
         public static final int ACCESSIBILITY = 2;
@@ -1661,26 +1664,16 @@ public interface MetricsProto {
             return this;
         }
 
-        /*  JADX ERROR: StackOverflow in pass: RegionMakerVisitor
-            jadx.core.utils.exceptions.JadxOverflowException: 
-            	at jadx.core.utils.ErrorsCounter.addError(ErrorsCounter.java:47)
-            	at jadx.core.utils.ErrorsCounter.methodError(ErrorsCounter.java:81)
-            */
-        public com.android.internal.logging.nano.MetricsProto.MetricsEvent mergeFrom(com.android.framework.protobuf.nano.CodedInputByteBufferNano r3) throws java.io.IOException {
-            /*
-                r2 = this;
-            L_0x0000:
-                int r0 = r3.readTag()
-                if (r0 == 0) goto L_0x000e
-                boolean r1 = com.android.framework.protobuf.nano.WireFormatNano.parseUnknownField(r3, r0)
-                if (r1 != 0) goto L_0x000d
-                return r2
-            L_0x000d:
-                goto L_0x0000
-            L_0x000e:
-                return r2
-            */
-            throw new UnsupportedOperationException("Method not decompiled: com.android.internal.logging.nano.MetricsProto.MetricsEvent.mergeFrom(com.android.framework.protobuf.nano.CodedInputByteBufferNano):com.android.internal.logging.nano.MetricsProto$MetricsEvent");
+        @Override // com.android.framework.protobuf.nano.MessageNano
+        public MetricsEvent mergeFrom(CodedInputByteBufferNano input) throws IOException {
+            int tag;
+            do {
+                tag = input.readTag();
+                if (tag == 0) {
+                    return this;
+                }
+            } while (WireFormatNano.parseUnknownField(input, tag));
+            return this;
         }
 
         public static MetricsEvent parseFrom(byte[] data) throws InvalidProtocolBufferNanoException {

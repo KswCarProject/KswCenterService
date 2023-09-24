@@ -6,6 +6,7 @@ import com.android.internal.midi.MidiConstants;
 import com.wits.pms.mcu.McuService;
 import java.io.PrintStream;
 
+/* loaded from: classes2.dex */
 public abstract class KswMcuReceiver implements McuService.OnReceiveData {
     private static byte[] bytes;
     private byte[] currentPack;
@@ -21,6 +22,7 @@ public abstract class KswMcuReceiver implements McuService.OnReceiveData {
         printStream.println("-----" + "hfpcg=123".substring("hfpcg=123".indexOf("=") + 1));
     }
 
+    @Override // com.wits.pms.mcu.McuService.OnReceiveData
     public void reset() {
         this.dataIndex = 0;
         this.currentPack = null;
@@ -28,16 +30,16 @@ public abstract class KswMcuReceiver implements McuService.OnReceiveData {
         this.recvHead = false;
     }
 
+    @Override // com.wits.pms.mcu.McuService.OnReceiveData
     public void onReceiveMcu(byte[] packs) {
-        int i = 0;
-        while (i < packs.length) {
+        for (int i = 0; i < packs.length; i++) {
             try {
                 int data = packs[i] & 255;
                 if (this.recvHead) {
                     if (this.currentPack != null) {
                         this.currentPack[this.dataIndex] = (byte) data;
                         if (this.dataIndex == 3) {
-                            this.realPack = new byte[(packs[i] + 5)];
+                            this.realPack = new byte[packs[i] + 5];
                         }
                         if (this.realPack != null && this.dataIndex == this.realPack.length - 1) {
                             System.arraycopy(this.currentPack, 0, this.realPack, 0, this.realPack.length);
@@ -54,11 +56,10 @@ public abstract class KswMcuReceiver implements McuService.OnReceiveData {
                     this.currentPack[0] = MidiConstants.STATUS_SONG_POSITION;
                 }
                 this.dataIndex++;
-                i++;
             } catch (Exception e) {
                 reset();
                 printHex("onDataReceived McuException", packs);
-                Log.e("McuService", "McuException", e);
+                Log.m69e("McuService", "McuException", e);
                 return;
             }
         }
@@ -77,8 +78,9 @@ public abstract class KswMcuReceiver implements McuService.OnReceiveData {
             sb.append(hex.toUpperCase());
             sb.append(SmsManager.REGEX_PREFIX_DELIMITER);
         }
-        sb.replace(sb.length() - 1, sb.length(), "");
+        int i = sb.length();
+        sb.replace(i - 1, sb.length(), "");
         sb.append("]\n");
-        Log.v("KswMcuMessage", sb.toString());
+        Log.m66v("KswMcuMessage", sb.toString());
     }
 }

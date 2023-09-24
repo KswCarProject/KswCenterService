@@ -2,7 +2,6 @@ package android.content;
 
 import android.annotation.UnsupportedAppUsage;
 import android.app.SearchManager;
-import android.database.ContentObserver;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
@@ -10,6 +9,7 @@ import android.net.Uri;
 import android.text.TextUtils;
 import android.util.Log;
 
+/* loaded from: classes.dex */
 public class SearchRecentSuggestionsProvider extends ContentProvider {
     public static final int DATABASE_MODE_2LINES = 2;
     public static final int DATABASE_MODE_QUERIES = 1;
@@ -30,6 +30,7 @@ public class SearchRecentSuggestionsProvider extends ContentProvider {
     private boolean mTwoLineDisplay;
     private UriMatcher mUriMatcher;
 
+    /* loaded from: classes.dex */
     private static class DatabaseHelper extends SQLiteOpenHelper {
         private int mNewVersion;
 
@@ -38,6 +39,7 @@ public class SearchRecentSuggestionsProvider extends ContentProvider {
             this.mNewVersion = newVersion;
         }
 
+        @Override // android.database.sqlite.SQLiteOpenHelper
         public void onCreate(SQLiteDatabase db) {
             StringBuilder builder = new StringBuilder();
             builder.append("CREATE TABLE suggestions (_id INTEGER PRIMARY KEY,display1 TEXT UNIQUE ON CONFLICT REPLACE");
@@ -48,15 +50,15 @@ public class SearchRecentSuggestionsProvider extends ContentProvider {
             db.execSQL(builder.toString());
         }
 
+        @Override // android.database.sqlite.SQLiteOpenHelper
         public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-            Log.w(SearchRecentSuggestionsProvider.TAG, "Upgrading database from version " + oldVersion + " to " + newVersion + ", which will destroy all old data");
+            Log.m64w(SearchRecentSuggestionsProvider.TAG, "Upgrading database from version " + oldVersion + " to " + newVersion + ", which will destroy all old data");
             db.execSQL("DROP TABLE IF EXISTS suggestions");
             onCreate(db);
         }
     }
 
-    /* access modifiers changed from: protected */
-    public void setupSuggestions(String authority, int mode) {
+    protected void setupSuggestions(String authority, int mode) {
         if (TextUtils.isEmpty(authority) || (mode & 1) == 0) {
             throw new IllegalArgumentException();
         }
@@ -75,72 +77,81 @@ public class SearchRecentSuggestionsProvider extends ContentProvider {
         this.mSuggestionProjection = new String[]{"0 AS suggest_format", "'android.resource://system/17301578' AS suggest_icon_1", "display1 AS suggest_text_1", "query AS suggest_intent_query", "_id"};
     }
 
+    @Override // android.content.ContentProvider, android.content.ContentInterface
     public int delete(Uri uri, String selection, String[] selectionArgs) {
         SQLiteDatabase db = this.mOpenHelper.getWritableDatabase();
-        if (uri.getPathSegments().size() != 1) {
-            throw new IllegalArgumentException("Unknown Uri");
-        } else if (uri.getPathSegments().get(0).equals("suggestions")) {
-            int count = db.delete("suggestions", selection, selectionArgs);
-            getContext().getContentResolver().notifyChange(uri, (ContentObserver) null);
-            return count;
-        } else {
+        int length = uri.getPathSegments().size();
+        if (length != 1) {
             throw new IllegalArgumentException("Unknown Uri");
         }
+        String base = uri.getPathSegments().get(0);
+        if (base.equals("suggestions")) {
+            int count = db.delete("suggestions", selection, selectionArgs);
+            getContext().getContentResolver().notifyChange(uri, null);
+            return count;
+        }
+        throw new IllegalArgumentException("Unknown Uri");
     }
 
+    @Override // android.content.ContentProvider, android.content.ContentInterface
     public String getType(Uri uri) {
         if (this.mUriMatcher.match(uri) == 1) {
             return SearchManager.SUGGEST_MIME_TYPE;
         }
         int length = uri.getPathSegments().size();
-        if (length >= 1 && uri.getPathSegments().get(0).equals("suggestions")) {
-            if (length == 1) {
-                return "vnd.android.cursor.dir/suggestion";
-            }
-            if (length == 2) {
-                return "vnd.android.cursor.item/suggestion";
+        if (length >= 1) {
+            String base = uri.getPathSegments().get(0);
+            if (base.equals("suggestions")) {
+                if (length == 1) {
+                    return "vnd.android.cursor.dir/suggestion";
+                }
+                if (length == 2) {
+                    return "vnd.android.cursor.item/suggestion";
+                }
             }
         }
         throw new IllegalArgumentException("Unknown Uri");
     }
 
+    @Override // android.content.ContentProvider, android.content.ContentInterface
     public Uri insert(Uri uri, ContentValues values) {
         SQLiteDatabase db = this.mOpenHelper.getWritableDatabase();
         int length = uri.getPathSegments().size();
-        if (length >= 1) {
-            long rowID = -1;
-            Uri newUri = null;
-            if (uri.getPathSegments().get(0).equals("suggestions") && length == 1) {
-                rowID = db.insert("suggestions", "query", values);
-                if (rowID > 0) {
-                    newUri = Uri.withAppendedPath(this.mSuggestionsUri, String.valueOf(rowID));
-                }
-            }
-            if (rowID >= 0) {
-                getContext().getContentResolver().notifyChange(newUri, (ContentObserver) null);
-                return newUri;
-            }
+        if (length < 1) {
             throw new IllegalArgumentException("Unknown Uri");
         }
-        throw new IllegalArgumentException("Unknown Uri");
+        long rowID = -1;
+        String base = uri.getPathSegments().get(0);
+        Uri newUri = null;
+        if (base.equals("suggestions") && length == 1) {
+            rowID = db.insert("suggestions", "query", values);
+            if (rowID > 0) {
+                newUri = Uri.withAppendedPath(this.mSuggestionsUri, String.valueOf(rowID));
+            }
+        }
+        if (rowID < 0) {
+            throw new IllegalArgumentException("Unknown Uri");
+        }
+        getContext().getContentResolver().notifyChange(newUri, null);
+        return newUri;
     }
 
+    @Override // android.content.ContentProvider
     public boolean onCreate() {
         if (this.mAuthority == null || this.mMode == 0) {
             throw new IllegalArgumentException("Provider not configured");
         }
-        this.mOpenHelper = new DatabaseHelper(getContext(), this.mMode + 512);
+        int mWorkingDbVersion = this.mMode + 512;
+        this.mOpenHelper = new DatabaseHelper(getContext(), mWorkingDbVersion);
         return true;
     }
 
+    @Override // android.content.ContentProvider
     public Cursor query(Uri uri, String[] projection, String selection, String[] selectionArgs, String sortOrder) {
         String[] myArgs;
         String suggestSelection;
-        Uri uri2 = uri;
-        String[] strArr = projection;
-        String str = selection;
         SQLiteDatabase db = this.mOpenHelper.getReadableDatabase();
-        if (this.mUriMatcher.match(uri2) == 1) {
+        if (this.mUriMatcher.match(uri) == 1) {
             if (TextUtils.isEmpty(selectionArgs[0])) {
                 suggestSelection = null;
                 myArgs = null;
@@ -149,45 +160,45 @@ public class SearchRecentSuggestionsProvider extends ContentProvider {
                 myArgs = this.mTwoLineDisplay ? new String[]{like, like} : new String[]{like};
                 suggestSelection = this.mSuggestSuggestionClause;
             }
-            Cursor c = db.query("suggestions", this.mSuggestionProjection, suggestSelection, myArgs, (String) null, (String) null, "date DESC", (String) null);
-            c.setNotificationUri(getContext().getContentResolver(), uri2);
+            Cursor c = db.query("suggestions", this.mSuggestionProjection, suggestSelection, myArgs, null, null, "date DESC", null);
+            c.setNotificationUri(getContext().getContentResolver(), uri);
             return c;
         }
         int length = uri.getPathSegments().size();
-        if (length == 1 || length == 2) {
-            String base = uri.getPathSegments().get(0);
-            if (base.equals("suggestions")) {
-                String[] useProjection = null;
-                if (strArr != null && strArr.length > 0) {
-                    useProjection = new String[(strArr.length + 1)];
-                    System.arraycopy(strArr, 0, useProjection, 0, strArr.length);
-                    useProjection[strArr.length] = "_id AS _id";
-                }
-                String[] useProjection2 = useProjection;
-                StringBuilder whereClause = new StringBuilder(256);
-                if (length == 2) {
-                    whereClause.append("(_id = ");
-                    whereClause.append(uri.getPathSegments().get(1));
-                    whereClause.append(")");
-                }
-                if (str != null && selection.length() > 0) {
-                    if (whereClause.length() > 0) {
-                        whereClause.append(" AND ");
-                    }
-                    whereClause.append('(');
-                    whereClause.append(str);
-                    whereClause.append(')');
-                }
-                StringBuilder sb = whereClause;
-                Cursor c2 = db.query(base, useProjection2, whereClause.toString(), selectionArgs, (String) null, (String) null, sortOrder, (String) null);
-                c2.setNotificationUri(getContext().getContentResolver(), uri2);
-                return c2;
-            }
+        if (length != 1 && length != 2) {
             throw new IllegalArgumentException("Unknown Uri");
         }
-        throw new IllegalArgumentException("Unknown Uri");
+        String base = uri.getPathSegments().get(0);
+        if (!base.equals("suggestions")) {
+            throw new IllegalArgumentException("Unknown Uri");
+        }
+        String[] useProjection = null;
+        if (projection != null && projection.length > 0) {
+            useProjection = new String[projection.length + 1];
+            System.arraycopy(projection, 0, useProjection, 0, projection.length);
+            useProjection[projection.length] = "_id AS _id";
+        }
+        String[] useProjection2 = useProjection;
+        StringBuilder whereClause = new StringBuilder(256);
+        if (length == 2) {
+            whereClause.append("(_id = ");
+            whereClause.append(uri.getPathSegments().get(1));
+            whereClause.append(")");
+        }
+        if (selection != null && selection.length() > 0) {
+            if (whereClause.length() > 0) {
+                whereClause.append(" AND ");
+            }
+            whereClause.append('(');
+            whereClause.append(selection);
+            whereClause.append(')');
+        }
+        Cursor c2 = db.query(base, useProjection2, whereClause.toString(), selectionArgs, null, null, sortOrder, null);
+        c2.setNotificationUri(getContext().getContentResolver(), uri);
+        return c2;
     }
 
+    @Override // android.content.ContentProvider, android.content.ContentInterface
     public int update(Uri uri, ContentValues values, String selection, String[] selectionArgs) {
         throw new UnsupportedOperationException("Not implemented");
     }

@@ -3,9 +3,9 @@ package android.net;
 import android.net.DnsPacket;
 import android.net.DnsResolver;
 import android.net.util.DnsUtils;
-import android.os.CancellationSignal;
-import android.os.Looper;
-import android.os.MessageQueue;
+import android.p007os.CancellationSignal;
+import android.p007os.Looper;
+import android.p007os.MessageQueue;
 import android.system.ErrnoException;
 import android.system.OsConstants;
 import android.util.Log;
@@ -18,6 +18,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.Executor;
 
+/* loaded from: classes3.dex */
 public final class DnsResolver {
     public static final int CLASS_IN = 1;
     public static final int ERROR_PARSE = 0;
@@ -35,6 +36,7 @@ public final class DnsResolver {
     public static final int TYPE_AAAA = 28;
     private static final DnsResolver sInstance = new DnsResolver();
 
+    /* loaded from: classes3.dex */
     public interface Callback<T> {
         void onAnswer(T t, int i);
 
@@ -42,18 +44,22 @@ public final class DnsResolver {
     }
 
     @Retention(RetentionPolicy.SOURCE)
+    /* loaded from: classes3.dex */
     @interface DnsError {
     }
 
     @Retention(RetentionPolicy.SOURCE)
+    /* loaded from: classes3.dex */
     @interface QueryClass {
     }
 
     @Retention(RetentionPolicy.SOURCE)
+    /* loaded from: classes3.dex */
     @interface QueryFlag {
     }
 
     @Retention(RetentionPolicy.SOURCE)
+    /* loaded from: classes3.dex */
     @interface QueryType {
     }
 
@@ -64,121 +70,110 @@ public final class DnsResolver {
     private DnsResolver() {
     }
 
+    /* loaded from: classes3.dex */
     public static class DnsException extends Exception {
         public final int code;
 
-        DnsException(int code2, Throwable cause) {
+        DnsException(int code, Throwable cause) {
             super(cause);
-            this.code = code2;
+            this.code = code;
         }
     }
 
-    public void rawQuery(Network network, byte[] query, int flags, Executor executor, CancellationSignal cancellationSignal, Callback<? super byte[]> callback) {
-        int i;
-        if (cancellationSignal == null || !cancellationSignal.isCanceled()) {
-            Object lock = new Object();
-            if (network != null) {
-                try {
-                    i = network.getNetIdForResolv();
-                } catch (ErrnoException e) {
-                    executor.execute(new Runnable(e) {
-                        private final /* synthetic */ ErrnoException f$1;
-
-                        {
-                            this.f$1 = r2;
-                        }
-
-                        public final void run() {
-                            DnsResolver.Callback.this.onError(new DnsResolver.DnsException(1, this.f$1));
-                        }
-                    });
-                    return;
-                }
-            } else {
-                i = 0;
-            }
-            FileDescriptor queryfd = NetworkUtils.resNetworkSend(i, query, query.length, flags);
-            synchronized (lock) {
-                registerFDListener(executor, queryfd, callback, cancellationSignal, lock);
-                if (cancellationSignal != null) {
-                    addCancellationSignal(cancellationSignal, queryfd, lock);
-                }
-            }
+    public void rawQuery(Network network, byte[] query, int flags, Executor executor, CancellationSignal cancellationSignal, final Callback<? super byte[]> callback) {
+        int netIdForResolv;
+        if (cancellationSignal != null && cancellationSignal.isCanceled()) {
+            return;
         }
-    }
-
-    public void rawQuery(Network network, String domain, int nsClass, int nsType, int flags, Executor executor, CancellationSignal cancellationSignal, Callback<? super byte[]> callback) {
-        int i;
-        CancellationSignal cancellationSignal2 = cancellationSignal;
-        if (cancellationSignal2 == null || !cancellationSignal.isCanceled()) {
-            Object lock = new Object();
-            if (network != null) {
-                try {
-                    i = network.getNetIdForResolv();
-                } catch (ErrnoException e) {
-                    e = e;
-                    String str = domain;
-                    int i2 = nsClass;
-                    int i3 = nsType;
-                    int i4 = flags;
-                    executor.execute(new Runnable(e) {
-                        private final /* synthetic */ ErrnoException f$1;
-
-                        {
-                            this.f$1 = r2;
-                        }
-
-                        public final void run() {
-                            DnsResolver.Callback.this.onError(new DnsResolver.DnsException(1, this.f$1));
-                        }
-                    });
-                }
-            } else {
-                i = 0;
-            }
+        Object lock = new Object();
+        if (network != null) {
             try {
-                FileDescriptor queryfd = NetworkUtils.resNetworkQuery(i, domain, nsClass, nsType, flags);
-                synchronized (lock) {
-                    try {
-                        registerFDListener(executor, queryfd, callback, cancellationSignal, lock);
-                        if (cancellationSignal2 != null) {
-                            addCancellationSignal(cancellationSignal2, queryfd, lock);
-                        }
-                    } catch (Throwable th) {
-                        th = th;
-                        throw th;
-                    }
-                }
-            } catch (ErrnoException e2) {
-                e = e2;
-                executor.execute(new Runnable(e) {
-                    private final /* synthetic */ ErrnoException f$1;
-
-                    {
-                        this.f$1 = r2;
-                    }
-
+                netIdForResolv = network.getNetIdForResolv();
+            } catch (ErrnoException e) {
+                executor.execute(new Runnable() { // from class: android.net.-$$Lambda$DnsResolver$h2SsAzA5_rVr-mzxppK8PJLQe98
+                    @Override // java.lang.Runnable
                     public final void run() {
-                        DnsResolver.Callback.this.onError(new DnsResolver.DnsException(1, this.f$1));
+                        DnsResolver.Callback.this.onError(new DnsResolver.DnsException(1, e));
+                    }
+                });
+                return;
+            }
+        } else {
+            netIdForResolv = 0;
+        }
+        FileDescriptor queryfd = NetworkUtils.resNetworkSend(netIdForResolv, query, query.length, flags);
+        synchronized (lock) {
+            registerFDListener(executor, queryfd, callback, cancellationSignal, lock);
+            if (cancellationSignal == null) {
+                return;
+            }
+            addCancellationSignal(cancellationSignal, queryfd, lock);
+        }
+    }
+
+    public void rawQuery(Network network, String domain, int nsClass, int nsType, int flags, Executor executor, CancellationSignal cancellationSignal, final Callback<? super byte[]> callback) {
+        int netIdForResolv;
+        if (cancellationSignal != null && cancellationSignal.isCanceled()) {
+            return;
+        }
+        Object lock = new Object();
+        if (network != null) {
+            try {
+                netIdForResolv = network.getNetIdForResolv();
+            } catch (ErrnoException e) {
+                e = e;
+                executor.execute(new Runnable() { // from class: android.net.-$$Lambda$DnsResolver$GTAgQiExADAzbCx0WiV_97W72-g
+                    @Override // java.lang.Runnable
+                    public final void run() {
+                        DnsResolver.Callback.this.onError(new DnsResolver.DnsException(1, e));
                     }
                 });
             }
+        } else {
+            netIdForResolv = 0;
+        }
+        try {
+            FileDescriptor queryfd = NetworkUtils.resNetworkQuery(netIdForResolv, domain, nsClass, nsType, flags);
+            synchronized (lock) {
+                try {
+                } catch (Throwable th) {
+                    th = th;
+                }
+                try {
+                    registerFDListener(executor, queryfd, callback, cancellationSignal, lock);
+                    if (cancellationSignal == null) {
+                        return;
+                    }
+                    addCancellationSignal(cancellationSignal, queryfd, lock);
+                } catch (Throwable th2) {
+                    th = th2;
+                    throw th;
+                }
+            }
+        } catch (ErrnoException e2) {
+            e = e2;
+            executor.execute(new Runnable() { // from class: android.net.-$$Lambda$DnsResolver$GTAgQiExADAzbCx0WiV_97W72-g
+                @Override // java.lang.Runnable
+                public final void run() {
+                    DnsResolver.Callback.this.onError(new DnsResolver.DnsException(1, e));
+                }
+            });
         }
     }
 
+    /* loaded from: classes3.dex */
     private class InetAddressAnswerAccumulator implements Callback<byte[]> {
-        private final List<InetAddress> mAllAnswers;
         private DnsException mDnsException;
         private final Network mNetwork;
         private int mRcode;
-        private int mReceivedAnswerCount = 0;
         private final int mTargetAnswerCount;
         private final Callback<? super List<InetAddress>> mUserCallback;
+        private int mReceivedAnswerCount = 0;
+        private final List<InetAddress> mAllAnswers = new ArrayList();
 
         InetAddressAnswerAccumulator(Network network, int size, Callback<? super List<InetAddress>> callback) {
             this.mNetwork = network;
             this.mTargetAnswerCount = size;
-            this.mAllAnswers = new ArrayList();
             this.mUserCallback = callback;
         }
 
@@ -186,24 +181,27 @@ public final class DnsResolver {
             if (this.mRcode != 0) {
                 this.mUserCallback.onAnswer(this.mAllAnswers, this.mRcode);
                 return true;
-            } else if (this.mDnsException == null) {
-                return false;
-            } else {
+            } else if (this.mDnsException != null) {
                 this.mUserCallback.onError(this.mDnsException);
                 return true;
+            } else {
+                return false;
             }
         }
 
         private void maybeReportAnswer() {
             int i = this.mReceivedAnswerCount + 1;
             this.mReceivedAnswerCount = i;
-            if (i == this.mTargetAnswerCount) {
-                if (!this.mAllAnswers.isEmpty() || !maybeReportError()) {
-                    this.mUserCallback.onAnswer(DnsUtils.rfc6724Sort(this.mNetwork, this.mAllAnswers), this.mRcode);
-                }
+            if (i != this.mTargetAnswerCount) {
+                return;
             }
+            if (this.mAllAnswers.isEmpty() && maybeReportError()) {
+                return;
+            }
+            this.mUserCallback.onAnswer(DnsUtils.rfc6724Sort(this.mNetwork, this.mAllAnswers), this.mRcode);
         }
 
+        @Override // android.net.DnsResolver.Callback
         public void onAnswer(byte[] answer, int rcode) {
             if (this.mReceivedAnswerCount == 0 || rcode == 0) {
                 this.mRcode = rcode;
@@ -216,162 +214,125 @@ public final class DnsResolver {
             maybeReportAnswer();
         }
 
+        @Override // android.net.DnsResolver.Callback
         public void onError(DnsException error) {
             this.mDnsException = error;
             maybeReportAnswer();
         }
     }
 
-    public void query(Network network, String domain, int flags, Executor executor, CancellationSignal cancellationSignal, Callback<? super List<InetAddress>> callback) {
-        Network network2;
+    public void query(Network network, String domain, int flags, Executor executor, CancellationSignal cancellationSignal, final Callback<? super List<InetAddress>> callback) {
+        Network dnsNetwork;
         FileDescriptor v6fd;
         FileDescriptor v4fd;
         int queryCount;
         CancellationSignal cancellationSignal2;
-        String str = domain;
-        int i = flags;
-        Executor executor2 = executor;
-        CancellationSignal cancellationSignal3 = cancellationSignal;
-        Callback<? super List<InetAddress>> callback2 = callback;
-        if (cancellationSignal3 == null || !cancellationSignal.isCanceled()) {
-            Object lock = new Object();
-            if (network != null) {
-                network2 = network;
-            } else {
-                try {
-                    network2 = NetworkUtils.getDnsNetwork();
-                } catch (ErrnoException e) {
-                    CancellationSignal cancellationSignal4 = cancellationSignal3;
-                    executor2.execute(new Runnable(e) {
-                        private final /* synthetic */ ErrnoException f$1;
-
-                        {
-                            this.f$1 = r2;
-                        }
-
-                        public final void run() {
-                            DnsResolver.Callback.this.onError(new DnsResolver.DnsException(1, this.f$1));
-                        }
-                    });
-                    return;
-                }
+        if (cancellationSignal != null && cancellationSignal.isCanceled()) {
+            return;
+        }
+        final Object lock = new Object();
+        if (network != null) {
+            dnsNetwork = network;
+        } else {
+            try {
+                dnsNetwork = NetworkUtils.getDnsNetwork();
+            } catch (ErrnoException e) {
+                executor.execute(new Runnable() { // from class: android.net.-$$Lambda$DnsResolver$vvKhya16sREGcN1Gxnqgw-LBoV4
+                    @Override // java.lang.Runnable
+                    public final void run() {
+                        DnsResolver.Callback.this.onError(new DnsResolver.DnsException(1, e));
+                    }
+                });
+                return;
             }
-            Network queryNetwork = network2;
-            boolean queryIpv6 = DnsUtils.haveIpv6(queryNetwork);
-            boolean queryIpv4 = DnsUtils.haveIpv4(queryNetwork);
-            if (queryIpv6 || queryIpv4) {
-                int queryCount2 = 0;
-                if (queryIpv6) {
-                    try {
-                        queryCount2 = 0 + 1;
-                        v6fd = NetworkUtils.resNetworkQuery(queryNetwork.getNetIdForResolv(), str, 1, 28, i);
-                    } catch (ErrnoException e2) {
-                        executor2.execute(new Runnable(e2) {
-                            private final /* synthetic */ ErrnoException f$1;
-
-                            {
-                                this.f$1 = r2;
-                            }
-
-                            public final void run() {
-                                DnsResolver.Callback.this.onError(new DnsResolver.DnsException(1, this.f$1));
-                            }
-                        });
-                        return;
-                    }
-                } else {
-                    v6fd = null;
-                }
-                try {
-                    Thread.sleep(2);
-                } catch (InterruptedException e3) {
-                    InterruptedException interruptedException = e3;
-                    Thread.currentThread().interrupt();
-                }
-                if (queryIpv4) {
-                    try {
-                        v4fd = NetworkUtils.resNetworkQuery(queryNetwork.getNetIdForResolv(), str, 1, 1, i);
-                        queryCount = queryCount2 + 1;
-                    } catch (ErrnoException e4) {
-                        if (queryIpv6) {
-                            NetworkUtils.resNetworkCancel(v6fd);
-                        }
-                        executor2.execute(new Runnable(e4) {
-                            private final /* synthetic */ ErrnoException f$1;
-
-                            {
-                                this.f$1 = r2;
-                            }
-
-                            public final void run() {
-                                DnsResolver.Callback.this.onError(new DnsResolver.DnsException(1, this.f$1));
-                            }
-                        });
-                        return;
-                    }
-                } else {
-                    queryCount = queryCount2;
-                    v4fd = null;
-                }
-                InetAddressAnswerAccumulator accumulator = new InetAddressAnswerAccumulator(queryNetwork, queryCount, callback2);
-                synchronized (lock) {
-                    if (queryIpv6) {
-                        try {
-                            registerFDListener(executor, v6fd, accumulator, cancellationSignal, lock);
-                        } catch (Throwable th) {
-                            th = th;
-                            int i2 = queryCount;
-                            Network network3 = queryNetwork;
-                            Callback<? super List<InetAddress>> callback3 = callback2;
-                            CancellationSignal cancellationSignal5 = cancellationSignal3;
-                        }
-                    }
-                    if (queryIpv4) {
-                        int i3 = queryCount;
-                        Network network4 = queryNetwork;
-                        Callback<? super List<InetAddress>> callback4 = callback2;
-                        cancellationSignal2 = cancellationSignal3;
-                        try {
-                            registerFDListener(executor, v4fd, accumulator, cancellationSignal, lock);
-                        } catch (Throwable th2) {
-                            th = th2;
-                            throw th;
-                        }
-                    } else {
-                        Network network5 = queryNetwork;
-                        Callback<? super List<InetAddress>> callback5 = callback2;
-                        cancellationSignal2 = cancellationSignal3;
-                    }
-                    if (cancellationSignal2 != null) {
-                        cancellationSignal2.setOnCancelListener(new CancellationSignal.OnCancelListener(lock, queryIpv4, v4fd, queryIpv6, v6fd) {
-                            private final /* synthetic */ Object f$1;
-                            private final /* synthetic */ boolean f$2;
-                            private final /* synthetic */ FileDescriptor f$3;
-                            private final /* synthetic */ boolean f$4;
-                            private final /* synthetic */ FileDescriptor f$5;
-
-                            {
-                                this.f$1 = r2;
-                                this.f$2 = r3;
-                                this.f$3 = r4;
-                                this.f$4 = r5;
-                                this.f$5 = r6;
-                            }
-
-                            public final void onCancel() {
-                                DnsResolver.lambda$query$6(DnsResolver.this, this.f$1, this.f$2, this.f$3, this.f$4, this.f$5);
-                            }
-                        });
-                        return;
-                    }
-                    return;
-                }
-            }
-            executor2.execute(new Runnable() {
+        }
+        Network queryNetwork = dnsNetwork;
+        final boolean queryIpv6 = DnsUtils.haveIpv6(queryNetwork);
+        final boolean queryIpv4 = DnsUtils.haveIpv4(queryNetwork);
+        if (!queryIpv6 && !queryIpv4) {
+            executor.execute(new Runnable() { // from class: android.net.-$$Lambda$DnsResolver$kjq9c3feWPGKUPV3AzJBFi1GUvw
+                @Override // java.lang.Runnable
                 public final void run() {
                     DnsResolver.Callback.this.onError(new DnsResolver.DnsException(1, new ErrnoException("resNetworkQuery", OsConstants.ENONET)));
                 }
             });
+            return;
+        }
+        int queryCount2 = 0;
+        if (queryIpv6) {
+            try {
+                FileDescriptor v6fd2 = NetworkUtils.resNetworkQuery(queryNetwork.getNetIdForResolv(), domain, 1, 28, flags);
+                queryCount2 = 0 + 1;
+                v6fd = v6fd2;
+            } catch (ErrnoException e2) {
+                executor.execute(new Runnable() { // from class: android.net.-$$Lambda$DnsResolver$uxb9gSgrd6Qyj9SLhCAtOvpxa3I
+                    @Override // java.lang.Runnable
+                    public final void run() {
+                        DnsResolver.Callback.this.onError(new DnsResolver.DnsException(1, e2));
+                    }
+                });
+                return;
+            }
+        } else {
+            v6fd = null;
+        }
+        try {
+            Thread.sleep(2L);
+        } catch (InterruptedException e3) {
+            Thread.currentThread().interrupt();
+        }
+        if (queryIpv4) {
+            try {
+                FileDescriptor v4fd2 = NetworkUtils.resNetworkQuery(queryNetwork.getNetIdForResolv(), domain, 1, 1, flags);
+                v4fd = v4fd2;
+                queryCount = queryCount2 + 1;
+            } catch (ErrnoException e4) {
+                if (queryIpv6) {
+                    NetworkUtils.resNetworkCancel(v6fd);
+                }
+                executor.execute(new Runnable() { // from class: android.net.-$$Lambda$DnsResolver$t5xp-fS_zTQ564hG-PIaWJdBP8c
+                    @Override // java.lang.Runnable
+                    public final void run() {
+                        DnsResolver.Callback.this.onError(new DnsResolver.DnsException(1, e4));
+                    }
+                });
+                return;
+            }
+        } else {
+            queryCount = queryCount2;
+            v4fd = null;
+        }
+        InetAddressAnswerAccumulator accumulator = new InetAddressAnswerAccumulator(queryNetwork, queryCount, callback);
+        synchronized (lock) {
+            try {
+                if (queryIpv6) {
+                    try {
+                        registerFDListener(executor, v6fd, accumulator, cancellationSignal, lock);
+                    } catch (Throwable th) {
+                        th = th;
+                        throw th;
+                    }
+                }
+                if (queryIpv4) {
+                    cancellationSignal2 = cancellationSignal;
+                    registerFDListener(executor, v4fd, accumulator, cancellationSignal, lock);
+                } else {
+                    cancellationSignal2 = cancellationSignal;
+                }
+                if (cancellationSignal2 == null) {
+                    return;
+                }
+                final FileDescriptor fileDescriptor = v4fd;
+                final FileDescriptor fileDescriptor2 = v6fd;
+                cancellationSignal2.setOnCancelListener(new CancellationSignal.OnCancelListener() { // from class: android.net.-$$Lambda$DnsResolver$DW9jYL2ZOH6BjebIVPhZIrrhoD8
+                    @Override // android.p007os.CancellationSignal.OnCancelListener
+                    public final void onCancel() {
+                        DnsResolver.lambda$query$6(DnsResolver.this, lock, queryIpv4, fileDescriptor, queryIpv6, fileDescriptor2);
+                    }
+                });
+            } catch (Throwable th2) {
+                th = th2;
+            }
         }
     }
 
@@ -390,111 +351,76 @@ public final class DnsResolver {
         }
     }
 
-    public void query(Network network, String domain, int nsType, int flags, Executor executor, CancellationSignal cancellationSignal, Callback<? super List<InetAddress>> callback) {
-        Network network2;
-        CancellationSignal cancellationSignal2 = cancellationSignal;
-        Callback<? super List<InetAddress>> callback2 = callback;
-        if (cancellationSignal2 == null || !cancellationSignal.isCanceled()) {
-            Object lock = new Object();
-            if (network != null) {
-                network2 = network;
-            } else {
-                try {
-                    network2 = NetworkUtils.getDnsNetwork();
-                } catch (ErrnoException e) {
-                    e = e;
-                    String str = domain;
-                    int i = nsType;
-                    int i2 = flags;
-                    executor.execute(new Runnable(e) {
-                        private final /* synthetic */ ErrnoException f$1;
-
-                        {
-                            this.f$1 = r2;
-                        }
-
-                        public final void run() {
-                            DnsResolver.Callback.this.onError(new DnsResolver.DnsException(1, this.f$1));
-                        }
-                    });
-                }
-            }
-            Network queryNetwork = network2;
+    public void query(Network network, String domain, int nsType, int flags, Executor executor, CancellationSignal cancellationSignal, final Callback<? super List<InetAddress>> callback) {
+        Network dnsNetwork;
+        if (cancellationSignal != null && cancellationSignal.isCanceled()) {
+            return;
+        }
+        Object lock = new Object();
+        if (network != null) {
+            dnsNetwork = network;
+        } else {
             try {
-                FileDescriptor queryfd = NetworkUtils.resNetworkQuery(queryNetwork.getNetIdForResolv(), domain, 1, nsType, flags);
-                InetAddressAnswerAccumulator accumulator = new InetAddressAnswerAccumulator(queryNetwork, 1, callback2);
-                synchronized (lock) {
-                    FileDescriptor queryfd2 = queryfd;
-                    registerFDListener(executor, queryfd, accumulator, cancellationSignal, lock);
-                    if (cancellationSignal2 != null) {
-                        addCancellationSignal(cancellationSignal2, queryfd2, lock);
-                    }
-                }
-            } catch (ErrnoException e2) {
-                e = e2;
-                executor.execute(new Runnable(e) {
-                    private final /* synthetic */ ErrnoException f$1;
-
-                    {
-                        this.f$1 = r2;
-                    }
-
+                dnsNetwork = NetworkUtils.getDnsNetwork();
+            } catch (ErrnoException e) {
+                e = e;
+                executor.execute(new Runnable() { // from class: android.net.-$$Lambda$DnsResolver$wc3_cnx2aezlAHvMEbQVFaTPAcE
+                    @Override // java.lang.Runnable
                     public final void run() {
-                        DnsResolver.Callback.this.onError(new DnsResolver.DnsException(1, this.f$1));
+                        DnsResolver.Callback.this.onError(new DnsResolver.DnsException(1, e));
                     }
                 });
             }
         }
+        Network queryNetwork = dnsNetwork;
+        try {
+            FileDescriptor queryfd = NetworkUtils.resNetworkQuery(queryNetwork.getNetIdForResolv(), domain, 1, nsType, flags);
+            InetAddressAnswerAccumulator accumulator = new InetAddressAnswerAccumulator(queryNetwork, 1, callback);
+            synchronized (lock) {
+                registerFDListener(executor, queryfd, accumulator, cancellationSignal, lock);
+                if (cancellationSignal == null) {
+                    return;
+                }
+                addCancellationSignal(cancellationSignal, queryfd, lock);
+            }
+        } catch (ErrnoException e2) {
+            e = e2;
+            executor.execute(new Runnable() { // from class: android.net.-$$Lambda$DnsResolver$wc3_cnx2aezlAHvMEbQVFaTPAcE
+                @Override // java.lang.Runnable
+                public final void run() {
+                    DnsResolver.Callback.this.onError(new DnsResolver.DnsException(1, e));
+                }
+            });
+        }
     }
 
+    /* loaded from: classes3.dex */
     public static final class DnsResponse {
         public final byte[] answerbuf;
         public final int rcode;
 
-        public DnsResponse(byte[] answerbuf2, int rcode2) {
-            this.answerbuf = answerbuf2;
-            this.rcode = rcode2;
+        public DnsResponse(byte[] answerbuf, int rcode) {
+            this.answerbuf = answerbuf;
+            this.rcode = rcode;
         }
     }
 
-    private void registerFDListener(Executor executor, FileDescriptor queryfd, Callback<? super byte[]> answerCallback, CancellationSignal cancellationSignal, Object lock) {
-        MessageQueue mainThreadMessageQueue = Looper.getMainLooper().getQueue();
-        mainThreadMessageQueue.addOnFileDescriptorEventListener(queryfd, 5, new MessageQueue.OnFileDescriptorEventListener(executor, lock, cancellationSignal, answerCallback) {
-            private final /* synthetic */ Executor f$1;
-            private final /* synthetic */ Object f$2;
-            private final /* synthetic */ CancellationSignal f$3;
-            private final /* synthetic */ DnsResolver.Callback f$4;
-
-            {
-                this.f$1 = r2;
-                this.f$2 = r3;
-                this.f$3 = r4;
-                this.f$4 = r5;
-            }
-
+    private void registerFDListener(final Executor executor, FileDescriptor queryfd, final Callback<? super byte[]> answerCallback, final CancellationSignal cancellationSignal, final Object lock) {
+        final MessageQueue mainThreadMessageQueue = Looper.getMainLooper().getQueue();
+        mainThreadMessageQueue.addOnFileDescriptorEventListener(queryfd, 5, new MessageQueue.OnFileDescriptorEventListener() { // from class: android.net.-$$Lambda$DnsResolver$kxKi6qjPYeR_SIipxW4tYpxyM50
+            @Override // android.p007os.MessageQueue.OnFileDescriptorEventListener
             public final int onFileDescriptorEvents(FileDescriptor fileDescriptor, int i) {
-                return DnsResolver.lambda$registerFDListener$9(MessageQueue.this, this.f$1, this.f$2, this.f$3, this.f$4, fileDescriptor, i);
+                return DnsResolver.lambda$registerFDListener$9(MessageQueue.this, executor, lock, cancellationSignal, answerCallback, fileDescriptor, i);
             }
         });
     }
 
-    static /* synthetic */ int lambda$registerFDListener$9(MessageQueue mainThreadMessageQueue, Executor executor, Object lock, CancellationSignal cancellationSignal, Callback answerCallback, FileDescriptor fd, int events) {
+    static /* synthetic */ int lambda$registerFDListener$9(MessageQueue mainThreadMessageQueue, Executor executor, final Object lock, final CancellationSignal cancellationSignal, final Callback answerCallback, final FileDescriptor fd, int events) {
         mainThreadMessageQueue.removeOnFileDescriptorEventListener(fd);
-        executor.execute(new Runnable(lock, cancellationSignal, fd, answerCallback) {
-            private final /* synthetic */ Object f$0;
-            private final /* synthetic */ CancellationSignal f$1;
-            private final /* synthetic */ FileDescriptor f$2;
-            private final /* synthetic */ DnsResolver.Callback f$3;
-
-            {
-                this.f$0 = r1;
-                this.f$1 = r2;
-                this.f$2 = r3;
-                this.f$3 = r4;
-            }
-
+        executor.execute(new Runnable() { // from class: android.net.-$$Lambda$DnsResolver$hIO7FFv0AXN6Nj0Dzka-LD8S870
+            @Override // java.lang.Runnable
             public final void run() {
-                DnsResolver.lambda$registerFDListener$8(this.f$0, this.f$1, this.f$2, this.f$3);
+                DnsResolver.lambda$registerFDListener$8(lock, cancellationSignal, fd, answerCallback);
             }
         });
         return 0;
@@ -512,14 +438,14 @@ public final class DnsResolver {
             try {
                 resp = NetworkUtils.resNetworkResult(fd);
             } catch (ErrnoException e) {
-                Log.e(TAG, "resNetworkResult:" + e.toString());
+                Log.m70e(TAG, "resNetworkResult:" + e.toString());
                 exception = e;
             }
-        }
-        if (exception != null) {
-            answerCallback.onError(new DnsException(1, exception));
-        } else {
-            answerCallback.onAnswer(resp.answerbuf, resp.rcode);
+            if (exception != null) {
+                answerCallback.onError(new DnsException(1, exception));
+            } else {
+                answerCallback.onAnswer(resp.answerbuf, resp.rcode);
+            }
         }
     }
 
@@ -530,18 +456,11 @@ public final class DnsResolver {
         }
     }
 
-    private void addCancellationSignal(CancellationSignal cancellationSignal, FileDescriptor queryfd, Object lock) {
-        cancellationSignal.setOnCancelListener(new CancellationSignal.OnCancelListener(lock, queryfd) {
-            private final /* synthetic */ Object f$1;
-            private final /* synthetic */ FileDescriptor f$2;
-
-            {
-                this.f$1 = r2;
-                this.f$2 = r3;
-            }
-
+    private void addCancellationSignal(CancellationSignal cancellationSignal, final FileDescriptor queryfd, final Object lock) {
+        cancellationSignal.setOnCancelListener(new CancellationSignal.OnCancelListener() { // from class: android.net.-$$Lambda$DnsResolver$05nTktlCCI7FQsULCMbgIrjmrGc
+            @Override // android.p007os.CancellationSignal.OnCancelListener
             public final void onCancel() {
-                DnsResolver.lambda$addCancellationSignal$10(DnsResolver.this, this.f$1, this.f$2);
+                DnsResolver.lambda$addCancellationSignal$10(DnsResolver.this, lock, queryfd);
             }
         });
     }
@@ -552,6 +471,7 @@ public final class DnsResolver {
         }
     }
 
+    /* loaded from: classes3.dex */
     private static class DnsAddressAnswer extends DnsPacket {
         private static final boolean DBG = false;
         private static final String TAG = "DnsResolver.DnsAddressAnswer";
@@ -561,11 +481,11 @@ public final class DnsResolver {
             super(data);
             if ((this.mHeader.flags & 32768) == 0) {
                 throw new ParseException("Not an answer packet");
-            } else if (this.mHeader.getRecordCount(0) != 0) {
-                this.mQueryType = ((DnsPacket.DnsRecord) this.mRecords[0].get(0)).nsType;
-            } else {
+            }
+            if (this.mHeader.getRecordCount(0) == 0) {
                 throw new ParseException("No question found");
             }
+            this.mQueryType = this.mRecords[0].get(0).nsType;
         }
 
         public List<InetAddress> getAddresses() {

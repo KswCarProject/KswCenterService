@@ -3,6 +3,7 @@ package android.hardware.radio.V1_0;
 import android.security.keystore.KeyProperties;
 import java.util.ArrayList;
 
+/* loaded from: classes.dex */
 public final class RestrictedState {
     public static final int CS_ALL = 4;
     public static final int CS_EMERGENCY = 1;

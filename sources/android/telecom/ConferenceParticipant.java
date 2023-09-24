@@ -1,30 +1,36 @@
 package android.telecom;
 
 import android.net.Uri;
-import android.os.Parcel;
-import android.os.Parcelable;
+import android.p007os.Parcel;
+import android.p007os.Parcelable;
 import android.telephony.PhoneNumberUtils;
 import android.text.TextUtils;
 import com.android.internal.annotations.VisibleForTesting;
 
+/* loaded from: classes3.dex */
 public class ConferenceParticipant implements Parcelable {
     private static final String ANONYMOUS_INVALID_HOST = "anonymous.invalid";
-    public static final Parcelable.Creator<ConferenceParticipant> CREATOR = new Parcelable.Creator<ConferenceParticipant>() {
+    public static final Parcelable.Creator<ConferenceParticipant> CREATOR = new Parcelable.Creator<ConferenceParticipant>() { // from class: android.telecom.ConferenceParticipant.1
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public ConferenceParticipant createFromParcel(Parcel source) {
-            Parcel parcel = source;
             ClassLoader classLoader = ParcelableCall.class.getClassLoader();
+            Uri handle = (Uri) source.readParcelable(classLoader);
             String displayName = source.readString();
+            Uri endpoint = (Uri) source.readParcelable(classLoader);
             int state = source.readInt();
             long connectTime = source.readLong();
             long elapsedRealTime = source.readLong();
             int callDirection = source.readInt();
-            ConferenceParticipant participant = new ConferenceParticipant((Uri) parcel.readParcelable(classLoader), displayName, (Uri) parcel.readParcelable(classLoader), state, callDirection);
+            ConferenceParticipant participant = new ConferenceParticipant(handle, displayName, endpoint, state, callDirection);
             participant.setConnectTime(connectTime);
             participant.setConnectElapsedTime(elapsedRealTime);
             participant.setCallDirection(callDirection);
             return participant;
         }
 
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public ConferenceParticipant[] newArray(int size) {
             return new ConferenceParticipant[size];
         }
@@ -45,6 +51,7 @@ public class ConferenceParticipant implements Parcelable {
         this.mCallDirection = callDirection;
     }
 
+    @Override // android.p007os.Parcelable
     public int describeContents() {
         return 0;
     }
@@ -59,13 +66,17 @@ public class ConferenceParticipant implements Parcelable {
         if (TextUtils.isEmpty(number)) {
             return 2;
         }
-        String[] numberParts = number.split("[;]")[0].split("[@]");
-        if (numberParts.length == 2 && numberParts[1].equals(ANONYMOUS_INVALID_HOST)) {
-            return 2;
+        String[] hostParts = number.split("[;]");
+        String addressPart = hostParts[0];
+        String[] numberParts = addressPart.split("[@]");
+        if (numberParts.length != 2) {
+            return 1;
         }
-        return 1;
+        String hostName = numberParts[1];
+        return hostName.equals(ANONYMOUS_INVALID_HOST) ? 2 : 1;
     }
 
+    @Override // android.p007os.Parcelable
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeParcelable(this.mHandle, 0);
         dest.writeString(this.mDisplayName);
@@ -154,6 +165,6 @@ public class ConferenceParticipant implements Parcelable {
         if (!TextUtils.isEmpty(countryIso)) {
             formattedNumber = PhoneNumberUtils.formatNumberToE164(number2, countryIso);
         }
-        return Uri.fromParts(PhoneAccount.SCHEME_TEL, formattedNumber != null ? formattedNumber : number2, (String) null);
+        return Uri.fromParts(PhoneAccount.SCHEME_TEL, formattedNumber != null ? formattedNumber : number2, null);
     }
 }

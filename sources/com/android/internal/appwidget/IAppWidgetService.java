@@ -7,15 +7,17 @@ import android.appwidget.AppWidgetProviderInfo;
 import android.content.ComponentName;
 import android.content.Intent;
 import android.content.IntentSender;
-import android.content.pm.ParceledListSlice;
-import android.os.Binder;
-import android.os.Bundle;
-import android.os.IBinder;
-import android.os.IInterface;
-import android.os.Parcel;
-import android.os.RemoteException;
+import android.content.p002pm.ParceledListSlice;
+import android.p007os.Binder;
+import android.p007os.Bundle;
+import android.p007os.IBinder;
+import android.p007os.IInterface;
+import android.p007os.Parcel;
+import android.p007os.RemoteException;
 import android.widget.RemoteViews;
+import com.android.internal.appwidget.IAppWidgetHost;
 
+/* loaded from: classes4.dex */
 public interface IAppWidgetService extends IInterface {
     int allocateAppWidgetId(String str, int i) throws RemoteException;
 
@@ -73,105 +75,134 @@ public interface IAppWidgetService extends IInterface {
 
     void updateAppWidgetProviderInfo(ComponentName componentName, String str) throws RemoteException;
 
+    /* loaded from: classes4.dex */
     public static class Default implements IAppWidgetService {
+        @Override // com.android.internal.appwidget.IAppWidgetService
         public ParceledListSlice startListening(IAppWidgetHost host, String callingPackage, int hostId, int[] appWidgetIds) throws RemoteException {
             return null;
         }
 
+        @Override // com.android.internal.appwidget.IAppWidgetService
         public void stopListening(String callingPackage, int hostId) throws RemoteException {
         }
 
+        @Override // com.android.internal.appwidget.IAppWidgetService
         public int allocateAppWidgetId(String callingPackage, int hostId) throws RemoteException {
             return 0;
         }
 
+        @Override // com.android.internal.appwidget.IAppWidgetService
         public void deleteAppWidgetId(String callingPackage, int appWidgetId) throws RemoteException {
         }
 
+        @Override // com.android.internal.appwidget.IAppWidgetService
         public void deleteHost(String packageName, int hostId) throws RemoteException {
         }
 
+        @Override // com.android.internal.appwidget.IAppWidgetService
         public void deleteAllHosts() throws RemoteException {
         }
 
+        @Override // com.android.internal.appwidget.IAppWidgetService
         public RemoteViews getAppWidgetViews(String callingPackage, int appWidgetId) throws RemoteException {
             return null;
         }
 
+        @Override // com.android.internal.appwidget.IAppWidgetService
         public int[] getAppWidgetIdsForHost(String callingPackage, int hostId) throws RemoteException {
             return null;
         }
 
+        @Override // com.android.internal.appwidget.IAppWidgetService
         public IntentSender createAppWidgetConfigIntentSender(String callingPackage, int appWidgetId, int intentFlags) throws RemoteException {
             return null;
         }
 
+        @Override // com.android.internal.appwidget.IAppWidgetService
         public void updateAppWidgetIds(String callingPackage, int[] appWidgetIds, RemoteViews views) throws RemoteException {
         }
 
+        @Override // com.android.internal.appwidget.IAppWidgetService
         public void updateAppWidgetOptions(String callingPackage, int appWidgetId, Bundle extras) throws RemoteException {
         }
 
+        @Override // com.android.internal.appwidget.IAppWidgetService
         public Bundle getAppWidgetOptions(String callingPackage, int appWidgetId) throws RemoteException {
             return null;
         }
 
+        @Override // com.android.internal.appwidget.IAppWidgetService
         public void partiallyUpdateAppWidgetIds(String callingPackage, int[] appWidgetIds, RemoteViews views) throws RemoteException {
         }
 
+        @Override // com.android.internal.appwidget.IAppWidgetService
         public void updateAppWidgetProvider(ComponentName provider, RemoteViews views) throws RemoteException {
         }
 
+        @Override // com.android.internal.appwidget.IAppWidgetService
         public void updateAppWidgetProviderInfo(ComponentName provider, String metadataKey) throws RemoteException {
         }
 
+        @Override // com.android.internal.appwidget.IAppWidgetService
         public void notifyAppWidgetViewDataChanged(String packageName, int[] appWidgetIds, int viewId) throws RemoteException {
         }
 
+        @Override // com.android.internal.appwidget.IAppWidgetService
         public ParceledListSlice getInstalledProvidersForProfile(int categoryFilter, int profileId, String packageName) throws RemoteException {
             return null;
         }
 
+        @Override // com.android.internal.appwidget.IAppWidgetService
         public AppWidgetProviderInfo getAppWidgetInfo(String callingPackage, int appWidgetId) throws RemoteException {
             return null;
         }
 
+        @Override // com.android.internal.appwidget.IAppWidgetService
         public boolean hasBindAppWidgetPermission(String packageName, int userId) throws RemoteException {
             return false;
         }
 
+        @Override // com.android.internal.appwidget.IAppWidgetService
         public void setBindAppWidgetPermission(String packageName, int userId, boolean permission) throws RemoteException {
         }
 
+        @Override // com.android.internal.appwidget.IAppWidgetService
         public boolean bindAppWidgetId(String callingPackage, int appWidgetId, int providerProfileId, ComponentName providerComponent, Bundle options) throws RemoteException {
             return false;
         }
 
+        @Override // com.android.internal.appwidget.IAppWidgetService
         public boolean bindRemoteViewsService(String callingPackage, int appWidgetId, Intent intent, IApplicationThread caller, IBinder token, IServiceConnection connection, int flags) throws RemoteException {
             return false;
         }
 
+        @Override // com.android.internal.appwidget.IAppWidgetService
         public int[] getAppWidgetIds(ComponentName providerComponent) throws RemoteException {
             return null;
         }
 
+        @Override // com.android.internal.appwidget.IAppWidgetService
         public boolean isBoundWidgetPackage(String packageName, int userId) throws RemoteException {
             return false;
         }
 
+        @Override // com.android.internal.appwidget.IAppWidgetService
         public boolean requestPinAppWidget(String packageName, ComponentName providerComponent, Bundle extras, IntentSender resultIntent) throws RemoteException {
             return false;
         }
 
+        @Override // com.android.internal.appwidget.IAppWidgetService
         public boolean isRequestPinAppWidgetSupported() throws RemoteException {
             return false;
         }
 
+        @Override // android.p007os.IInterface
         public IBinder asBinder() {
             return null;
         }
     }
 
+    /* loaded from: classes4.dex */
     public static abstract class Stub extends Binder implements IAppWidgetService {
         private static final String DESCRIPTOR = "com.android.internal.appwidget.IAppWidgetService";
         static final int TRANSACTION_allocateAppWidgetId = 3;
@@ -210,12 +241,13 @@ public interface IAppWidgetService extends IInterface {
                 return null;
             }
             IInterface iin = obj.queryLocalInterface(DESCRIPTOR);
-            if (iin == null || !(iin instanceof IAppWidgetService)) {
-                return new Proxy(obj);
+            if (iin != null && (iin instanceof IAppWidgetService)) {
+                return (IAppWidgetService) iin;
             }
-            return (IAppWidgetService) iin;
+            return new Proxy(obj);
         }
 
+        @Override // android.p007os.IInterface
         public IBinder asBinder() {
             return this;
         }
@@ -279,447 +311,281 @@ public interface IAppWidgetService extends IInterface {
             }
         }
 
+        @Override // android.p007os.Binder
         public String getTransactionName(int transactionCode) {
             return getDefaultTransactionName(transactionCode);
         }
 
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r1v14, resolved type: android.os.Bundle} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r1v43, resolved type: android.content.IntentSender} */
-        /* JADX WARNING: type inference failed for: r1v0 */
-        /* JADX WARNING: type inference failed for: r1v10, types: [android.widget.RemoteViews] */
-        /* JADX WARNING: type inference failed for: r1v19, types: [android.widget.RemoteViews] */
-        /* JADX WARNING: type inference failed for: r1v23, types: [android.widget.RemoteViews] */
-        /* JADX WARNING: type inference failed for: r1v27 */
-        /* JADX WARNING: type inference failed for: r1v38 */
-        /* JADX WARNING: type inference failed for: r1v47 */
-        /* JADX WARNING: type inference failed for: r1v48 */
-        /* JADX WARNING: type inference failed for: r1v49 */
-        /* JADX WARNING: type inference failed for: r1v50 */
-        /* JADX WARNING: type inference failed for: r1v51 */
-        /* JADX WARNING: type inference failed for: r1v52 */
-        /* JADX WARNING: type inference failed for: r1v53 */
-        /* JADX WARNING: Multi-variable type inference failed */
-        /* Code decompiled incorrectly, please refer to instructions dump. */
-        public boolean onTransact(int r21, android.os.Parcel r22, android.os.Parcel r23, int r24) throws android.os.RemoteException {
-            /*
-                r20 = this;
-                r8 = r20
-                r9 = r21
-                r10 = r22
-                r11 = r23
-                java.lang.String r12 = "com.android.internal.appwidget.IAppWidgetService"
-                r0 = 1598968902(0x5f4e5446, float:1.4867585E19)
-                r13 = 1
-                if (r9 == r0) goto L_0x035c
-                r0 = 0
-                r1 = 0
-                switch(r9) {
-                    case 1: goto L_0x0331;
-                    case 2: goto L_0x031f;
-                    case 3: goto L_0x0309;
-                    case 4: goto L_0x02f7;
-                    case 5: goto L_0x02e5;
-                    case 6: goto L_0x02db;
-                    case 7: goto L_0x02bc;
-                    case 8: goto L_0x02a6;
-                    case 9: goto L_0x0283;
-                    case 10: goto L_0x0261;
-                    case 11: goto L_0x023f;
-                    case 12: goto L_0x0220;
-                    case 13: goto L_0x01fe;
-                    case 14: goto L_0x01d4;
-                    case 15: goto L_0x01b4;
-                    case 16: goto L_0x019e;
-                    case 17: goto L_0x017b;
-                    case 18: goto L_0x015c;
-                    case 19: goto L_0x0146;
-                    case 20: goto L_0x012c;
-                    case 21: goto L_0x00eb;
-                    case 22: goto L_0x00a0;
-                    case 23: goto L_0x0080;
-                    case 24: goto L_0x006a;
-                    case 25: goto L_0x0028;
-                    case 26: goto L_0x001a;
-                    default: goto L_0x0015;
-                }
-            L_0x0015:
-                boolean r0 = super.onTransact(r21, r22, r23, r24)
-                return r0
-            L_0x001a:
-                r10.enforceInterface(r12)
-                boolean r0 = r20.isRequestPinAppWidgetSupported()
-                r23.writeNoException()
-                r11.writeInt(r0)
-                return r13
-            L_0x0028:
-                r10.enforceInterface(r12)
-                java.lang.String r0 = r22.readString()
-                int r2 = r22.readInt()
-                if (r2 == 0) goto L_0x003e
-                android.os.Parcelable$Creator<android.content.ComponentName> r2 = android.content.ComponentName.CREATOR
-                java.lang.Object r2 = r2.createFromParcel(r10)
-                android.content.ComponentName r2 = (android.content.ComponentName) r2
-                goto L_0x003f
-            L_0x003e:
-                r2 = r1
-            L_0x003f:
-                int r3 = r22.readInt()
-                if (r3 == 0) goto L_0x004e
-                android.os.Parcelable$Creator<android.os.Bundle> r3 = android.os.Bundle.CREATOR
-                java.lang.Object r3 = r3.createFromParcel(r10)
-                android.os.Bundle r3 = (android.os.Bundle) r3
-                goto L_0x004f
-            L_0x004e:
-                r3 = r1
-            L_0x004f:
-                int r4 = r22.readInt()
-                if (r4 == 0) goto L_0x005e
-                android.os.Parcelable$Creator<android.content.IntentSender> r1 = android.content.IntentSender.CREATOR
-                java.lang.Object r1 = r1.createFromParcel(r10)
-                android.content.IntentSender r1 = (android.content.IntentSender) r1
-                goto L_0x005f
-            L_0x005e:
-            L_0x005f:
-                boolean r4 = r8.requestPinAppWidget(r0, r2, r3, r1)
-                r23.writeNoException()
-                r11.writeInt(r4)
-                return r13
-            L_0x006a:
-                r10.enforceInterface(r12)
-                java.lang.String r0 = r22.readString()
-                int r1 = r22.readInt()
-                boolean r2 = r8.isBoundWidgetPackage(r0, r1)
-                r23.writeNoException()
-                r11.writeInt(r2)
-                return r13
-            L_0x0080:
-                r10.enforceInterface(r12)
-                int r0 = r22.readInt()
-                if (r0 == 0) goto L_0x0093
-                android.os.Parcelable$Creator<android.content.ComponentName> r0 = android.content.ComponentName.CREATOR
-                java.lang.Object r0 = r0.createFromParcel(r10)
-                r1 = r0
-                android.content.ComponentName r1 = (android.content.ComponentName) r1
-                goto L_0x0094
-            L_0x0093:
-            L_0x0094:
-                r0 = r1
-                int[] r1 = r8.getAppWidgetIds(r0)
-                r23.writeNoException()
-                r11.writeIntArray(r1)
-                return r13
-            L_0x00a0:
-                r10.enforceInterface(r12)
-                java.lang.String r14 = r22.readString()
-                int r15 = r22.readInt()
-                int r0 = r22.readInt()
-                if (r0 == 0) goto L_0x00bb
-                android.os.Parcelable$Creator<android.content.Intent> r0 = android.content.Intent.CREATOR
-                java.lang.Object r0 = r0.createFromParcel(r10)
-                android.content.Intent r0 = (android.content.Intent) r0
-                r3 = r0
-                goto L_0x00bc
-            L_0x00bb:
-                r3 = r1
-            L_0x00bc:
-                android.os.IBinder r0 = r22.readStrongBinder()
-                android.app.IApplicationThread r16 = android.app.IApplicationThread.Stub.asInterface(r0)
-                android.os.IBinder r17 = r22.readStrongBinder()
-                android.os.IBinder r0 = r22.readStrongBinder()
-                android.app.IServiceConnection r18 = android.app.IServiceConnection.Stub.asInterface(r0)
-                int r19 = r22.readInt()
-                r0 = r20
-                r1 = r14
-                r2 = r15
-                r4 = r16
-                r5 = r17
-                r6 = r18
-                r7 = r19
-                boolean r0 = r0.bindRemoteViewsService(r1, r2, r3, r4, r5, r6, r7)
-                r23.writeNoException()
-                r11.writeInt(r0)
-                return r13
-            L_0x00eb:
-                r10.enforceInterface(r12)
-                java.lang.String r6 = r22.readString()
-                int r7 = r22.readInt()
-                int r14 = r22.readInt()
-                int r0 = r22.readInt()
-                if (r0 == 0) goto L_0x010a
-                android.os.Parcelable$Creator<android.content.ComponentName> r0 = android.content.ComponentName.CREATOR
-                java.lang.Object r0 = r0.createFromParcel(r10)
-                android.content.ComponentName r0 = (android.content.ComponentName) r0
-                r4 = r0
-                goto L_0x010b
-            L_0x010a:
-                r4 = r1
-            L_0x010b:
-                int r0 = r22.readInt()
-                if (r0 == 0) goto L_0x011b
-                android.os.Parcelable$Creator<android.os.Bundle> r0 = android.os.Bundle.CREATOR
-                java.lang.Object r0 = r0.createFromParcel(r10)
-                android.os.Bundle r0 = (android.os.Bundle) r0
-                r5 = r0
-                goto L_0x011c
-            L_0x011b:
-                r5 = r1
-            L_0x011c:
-                r0 = r20
-                r1 = r6
-                r2 = r7
-                r3 = r14
-                boolean r0 = r0.bindAppWidgetId(r1, r2, r3, r4, r5)
-                r23.writeNoException()
-                r11.writeInt(r0)
-                return r13
-            L_0x012c:
-                r10.enforceInterface(r12)
-                java.lang.String r1 = r22.readString()
-                int r2 = r22.readInt()
-                int r3 = r22.readInt()
-                if (r3 == 0) goto L_0x013f
-                r0 = r13
-            L_0x013f:
-                r8.setBindAppWidgetPermission(r1, r2, r0)
-                r23.writeNoException()
-                return r13
-            L_0x0146:
-                r10.enforceInterface(r12)
-                java.lang.String r0 = r22.readString()
-                int r1 = r22.readInt()
-                boolean r2 = r8.hasBindAppWidgetPermission(r0, r1)
-                r23.writeNoException()
-                r11.writeInt(r2)
-                return r13
-            L_0x015c:
-                r10.enforceInterface(r12)
-                java.lang.String r1 = r22.readString()
-                int r2 = r22.readInt()
-                android.appwidget.AppWidgetProviderInfo r3 = r8.getAppWidgetInfo(r1, r2)
-                r23.writeNoException()
-                if (r3 == 0) goto L_0x0177
-                r11.writeInt(r13)
-                r3.writeToParcel(r11, r13)
-                goto L_0x017a
-            L_0x0177:
-                r11.writeInt(r0)
-            L_0x017a:
-                return r13
-            L_0x017b:
-                r10.enforceInterface(r12)
-                int r1 = r22.readInt()
-                int r2 = r22.readInt()
-                java.lang.String r3 = r22.readString()
-                android.content.pm.ParceledListSlice r4 = r8.getInstalledProvidersForProfile(r1, r2, r3)
-                r23.writeNoException()
-                if (r4 == 0) goto L_0x019a
-                r11.writeInt(r13)
-                r4.writeToParcel(r11, r13)
-                goto L_0x019d
-            L_0x019a:
-                r11.writeInt(r0)
-            L_0x019d:
-                return r13
-            L_0x019e:
-                r10.enforceInterface(r12)
-                java.lang.String r0 = r22.readString()
-                int[] r1 = r22.createIntArray()
-                int r2 = r22.readInt()
-                r8.notifyAppWidgetViewDataChanged(r0, r1, r2)
-                r23.writeNoException()
-                return r13
-            L_0x01b4:
-                r10.enforceInterface(r12)
-                int r0 = r22.readInt()
-                if (r0 == 0) goto L_0x01c7
-                android.os.Parcelable$Creator<android.content.ComponentName> r0 = android.content.ComponentName.CREATOR
-                java.lang.Object r0 = r0.createFromParcel(r10)
-                r1 = r0
-                android.content.ComponentName r1 = (android.content.ComponentName) r1
-                goto L_0x01c8
-            L_0x01c7:
-            L_0x01c8:
-                r0 = r1
-                java.lang.String r1 = r22.readString()
-                r8.updateAppWidgetProviderInfo(r0, r1)
-                r23.writeNoException()
-                return r13
-            L_0x01d4:
-                r10.enforceInterface(r12)
-                int r0 = r22.readInt()
-                if (r0 == 0) goto L_0x01e6
-                android.os.Parcelable$Creator<android.content.ComponentName> r0 = android.content.ComponentName.CREATOR
-                java.lang.Object r0 = r0.createFromParcel(r10)
-                android.content.ComponentName r0 = (android.content.ComponentName) r0
-                goto L_0x01e7
-            L_0x01e6:
-                r0 = r1
-            L_0x01e7:
-                int r2 = r22.readInt()
-                if (r2 == 0) goto L_0x01f6
-                android.os.Parcelable$Creator<android.widget.RemoteViews> r1 = android.widget.RemoteViews.CREATOR
-                java.lang.Object r1 = r1.createFromParcel(r10)
-                android.widget.RemoteViews r1 = (android.widget.RemoteViews) r1
-                goto L_0x01f7
-            L_0x01f6:
-            L_0x01f7:
-                r8.updateAppWidgetProvider(r0, r1)
-                r23.writeNoException()
-                return r13
-            L_0x01fe:
-                r10.enforceInterface(r12)
-                java.lang.String r0 = r22.readString()
-                int[] r2 = r22.createIntArray()
-                int r3 = r22.readInt()
-                if (r3 == 0) goto L_0x0218
-                android.os.Parcelable$Creator<android.widget.RemoteViews> r1 = android.widget.RemoteViews.CREATOR
-                java.lang.Object r1 = r1.createFromParcel(r10)
-                android.widget.RemoteViews r1 = (android.widget.RemoteViews) r1
-                goto L_0x0219
-            L_0x0218:
-            L_0x0219:
-                r8.partiallyUpdateAppWidgetIds(r0, r2, r1)
-                r23.writeNoException()
-                return r13
-            L_0x0220:
-                r10.enforceInterface(r12)
-                java.lang.String r1 = r22.readString()
-                int r2 = r22.readInt()
-                android.os.Bundle r3 = r8.getAppWidgetOptions(r1, r2)
-                r23.writeNoException()
-                if (r3 == 0) goto L_0x023b
-                r11.writeInt(r13)
-                r3.writeToParcel(r11, r13)
-                goto L_0x023e
-            L_0x023b:
-                r11.writeInt(r0)
-            L_0x023e:
-                return r13
-            L_0x023f:
-                r10.enforceInterface(r12)
-                java.lang.String r0 = r22.readString()
-                int r2 = r22.readInt()
-                int r3 = r22.readInt()
-                if (r3 == 0) goto L_0x0259
-                android.os.Parcelable$Creator<android.os.Bundle> r1 = android.os.Bundle.CREATOR
-                java.lang.Object r1 = r1.createFromParcel(r10)
-                android.os.Bundle r1 = (android.os.Bundle) r1
-                goto L_0x025a
-            L_0x0259:
-            L_0x025a:
-                r8.updateAppWidgetOptions(r0, r2, r1)
-                r23.writeNoException()
-                return r13
-            L_0x0261:
-                r10.enforceInterface(r12)
-                java.lang.String r0 = r22.readString()
-                int[] r2 = r22.createIntArray()
-                int r3 = r22.readInt()
-                if (r3 == 0) goto L_0x027b
-                android.os.Parcelable$Creator<android.widget.RemoteViews> r1 = android.widget.RemoteViews.CREATOR
-                java.lang.Object r1 = r1.createFromParcel(r10)
-                android.widget.RemoteViews r1 = (android.widget.RemoteViews) r1
-                goto L_0x027c
-            L_0x027b:
-            L_0x027c:
-                r8.updateAppWidgetIds(r0, r2, r1)
-                r23.writeNoException()
-                return r13
-            L_0x0283:
-                r10.enforceInterface(r12)
-                java.lang.String r1 = r22.readString()
-                int r2 = r22.readInt()
-                int r3 = r22.readInt()
-                android.content.IntentSender r4 = r8.createAppWidgetConfigIntentSender(r1, r2, r3)
-                r23.writeNoException()
-                if (r4 == 0) goto L_0x02a2
-                r11.writeInt(r13)
-                r4.writeToParcel(r11, r13)
-                goto L_0x02a5
-            L_0x02a2:
-                r11.writeInt(r0)
-            L_0x02a5:
-                return r13
-            L_0x02a6:
-                r10.enforceInterface(r12)
-                java.lang.String r0 = r22.readString()
-                int r1 = r22.readInt()
-                int[] r2 = r8.getAppWidgetIdsForHost(r0, r1)
-                r23.writeNoException()
-                r11.writeIntArray(r2)
-                return r13
-            L_0x02bc:
-                r10.enforceInterface(r12)
-                java.lang.String r1 = r22.readString()
-                int r2 = r22.readInt()
-                android.widget.RemoteViews r3 = r8.getAppWidgetViews(r1, r2)
-                r23.writeNoException()
-                if (r3 == 0) goto L_0x02d7
-                r11.writeInt(r13)
-                r3.writeToParcel(r11, r13)
-                goto L_0x02da
-            L_0x02d7:
-                r11.writeInt(r0)
-            L_0x02da:
-                return r13
-            L_0x02db:
-                r10.enforceInterface(r12)
-                r20.deleteAllHosts()
-                r23.writeNoException()
-                return r13
-            L_0x02e5:
-                r10.enforceInterface(r12)
-                java.lang.String r0 = r22.readString()
-                int r1 = r22.readInt()
-                r8.deleteHost(r0, r1)
-                r23.writeNoException()
-                return r13
-            L_0x02f7:
-                r10.enforceInterface(r12)
-                java.lang.String r0 = r22.readString()
-                int r1 = r22.readInt()
-                r8.deleteAppWidgetId(r0, r1)
-                r23.writeNoException()
-                return r13
-            L_0x0309:
-                r10.enforceInterface(r12)
-                java.lang.String r0 = r22.readString()
-                int r1 = r22.readInt()
-                int r2 = r8.allocateAppWidgetId(r0, r1)
-                r23.writeNoException()
-                r11.writeInt(r2)
-                return r13
-            L_0x031f:
-                r10.enforceInterface(r12)
-                java.lang.String r0 = r22.readString()
-                int r1 = r22.readInt()
-                r8.stopListening(r0, r1)
-                r23.writeNoException()
-                return r13
-            L_0x0331:
-                r10.enforceInterface(r12)
-                android.os.IBinder r1 = r22.readStrongBinder()
-                com.android.internal.appwidget.IAppWidgetHost r1 = com.android.internal.appwidget.IAppWidgetHost.Stub.asInterface(r1)
-                java.lang.String r2 = r22.readString()
-                int r3 = r22.readInt()
-                int[] r4 = r22.createIntArray()
-                android.content.pm.ParceledListSlice r5 = r8.startListening(r1, r2, r3, r4)
-                r23.writeNoException()
-                if (r5 == 0) goto L_0x0358
-                r11.writeInt(r13)
-                r5.writeToParcel(r11, r13)
-                goto L_0x035b
-            L_0x0358:
-                r11.writeInt(r0)
-            L_0x035b:
-                return r13
-            L_0x035c:
-                r11.writeString(r12)
-                return r13
-            */
-            throw new UnsupportedOperationException("Method not decompiled: com.android.internal.appwidget.IAppWidgetService.Stub.onTransact(int, android.os.Parcel, android.os.Parcel, int):boolean");
+        @Override // android.p007os.Binder
+        public boolean onTransact(int code, Parcel data, Parcel reply, int flags) throws RemoteException {
+            ComponentName _arg0;
+            ComponentName _arg1;
+            Bundle _arg2;
+            if (code == 1598968902) {
+                reply.writeString(DESCRIPTOR);
+                return true;
+            }
+            switch (code) {
+                case 1:
+                    data.enforceInterface(DESCRIPTOR);
+                    IAppWidgetHost _arg02 = IAppWidgetHost.Stub.asInterface(data.readStrongBinder());
+                    String _arg12 = data.readString();
+                    int _arg22 = data.readInt();
+                    int[] _arg3 = data.createIntArray();
+                    ParceledListSlice _result = startListening(_arg02, _arg12, _arg22, _arg3);
+                    reply.writeNoException();
+                    if (_result != null) {
+                        reply.writeInt(1);
+                        _result.writeToParcel(reply, 1);
+                    } else {
+                        reply.writeInt(0);
+                    }
+                    return true;
+                case 2:
+                    data.enforceInterface(DESCRIPTOR);
+                    String _arg03 = data.readString();
+                    int _arg13 = data.readInt();
+                    stopListening(_arg03, _arg13);
+                    reply.writeNoException();
+                    return true;
+                case 3:
+                    data.enforceInterface(DESCRIPTOR);
+                    String _arg04 = data.readString();
+                    int _arg14 = data.readInt();
+                    int _result2 = allocateAppWidgetId(_arg04, _arg14);
+                    reply.writeNoException();
+                    reply.writeInt(_result2);
+                    return true;
+                case 4:
+                    data.enforceInterface(DESCRIPTOR);
+                    String _arg05 = data.readString();
+                    int _arg15 = data.readInt();
+                    deleteAppWidgetId(_arg05, _arg15);
+                    reply.writeNoException();
+                    return true;
+                case 5:
+                    data.enforceInterface(DESCRIPTOR);
+                    String _arg06 = data.readString();
+                    int _arg16 = data.readInt();
+                    deleteHost(_arg06, _arg16);
+                    reply.writeNoException();
+                    return true;
+                case 6:
+                    data.enforceInterface(DESCRIPTOR);
+                    deleteAllHosts();
+                    reply.writeNoException();
+                    return true;
+                case 7:
+                    data.enforceInterface(DESCRIPTOR);
+                    String _arg07 = data.readString();
+                    int _arg17 = data.readInt();
+                    RemoteViews _result3 = getAppWidgetViews(_arg07, _arg17);
+                    reply.writeNoException();
+                    if (_result3 != null) {
+                        reply.writeInt(1);
+                        _result3.writeToParcel(reply, 1);
+                    } else {
+                        reply.writeInt(0);
+                    }
+                    return true;
+                case 8:
+                    data.enforceInterface(DESCRIPTOR);
+                    String _arg08 = data.readString();
+                    int _arg18 = data.readInt();
+                    int[] _result4 = getAppWidgetIdsForHost(_arg08, _arg18);
+                    reply.writeNoException();
+                    reply.writeIntArray(_result4);
+                    return true;
+                case 9:
+                    data.enforceInterface(DESCRIPTOR);
+                    String _arg09 = data.readString();
+                    int _arg19 = data.readInt();
+                    int _arg23 = data.readInt();
+                    IntentSender _result5 = createAppWidgetConfigIntentSender(_arg09, _arg19, _arg23);
+                    reply.writeNoException();
+                    if (_result5 != null) {
+                        reply.writeInt(1);
+                        _result5.writeToParcel(reply, 1);
+                    } else {
+                        reply.writeInt(0);
+                    }
+                    return true;
+                case 10:
+                    data.enforceInterface(DESCRIPTOR);
+                    String _arg010 = data.readString();
+                    int[] _arg110 = data.createIntArray();
+                    RemoteViews _arg24 = data.readInt() != 0 ? RemoteViews.CREATOR.createFromParcel(data) : null;
+                    updateAppWidgetIds(_arg010, _arg110, _arg24);
+                    reply.writeNoException();
+                    return true;
+                case 11:
+                    data.enforceInterface(DESCRIPTOR);
+                    String _arg011 = data.readString();
+                    int _arg111 = data.readInt();
+                    Bundle _arg25 = data.readInt() != 0 ? Bundle.CREATOR.createFromParcel(data) : null;
+                    updateAppWidgetOptions(_arg011, _arg111, _arg25);
+                    reply.writeNoException();
+                    return true;
+                case 12:
+                    data.enforceInterface(DESCRIPTOR);
+                    String _arg012 = data.readString();
+                    int _arg112 = data.readInt();
+                    Bundle _result6 = getAppWidgetOptions(_arg012, _arg112);
+                    reply.writeNoException();
+                    if (_result6 != null) {
+                        reply.writeInt(1);
+                        _result6.writeToParcel(reply, 1);
+                    } else {
+                        reply.writeInt(0);
+                    }
+                    return true;
+                case 13:
+                    data.enforceInterface(DESCRIPTOR);
+                    String _arg013 = data.readString();
+                    int[] _arg113 = data.createIntArray();
+                    RemoteViews _arg26 = data.readInt() != 0 ? RemoteViews.CREATOR.createFromParcel(data) : null;
+                    partiallyUpdateAppWidgetIds(_arg013, _arg113, _arg26);
+                    reply.writeNoException();
+                    return true;
+                case 14:
+                    data.enforceInterface(DESCRIPTOR);
+                    if (data.readInt() != 0) {
+                        _arg0 = ComponentName.CREATOR.createFromParcel(data);
+                    } else {
+                        _arg0 = null;
+                    }
+                    RemoteViews _arg114 = data.readInt() != 0 ? RemoteViews.CREATOR.createFromParcel(data) : null;
+                    updateAppWidgetProvider(_arg0, _arg114);
+                    reply.writeNoException();
+                    return true;
+                case 15:
+                    data.enforceInterface(DESCRIPTOR);
+                    ComponentName _arg014 = data.readInt() != 0 ? ComponentName.CREATOR.createFromParcel(data) : null;
+                    ComponentName _arg015 = _arg014;
+                    String _arg115 = data.readString();
+                    updateAppWidgetProviderInfo(_arg015, _arg115);
+                    reply.writeNoException();
+                    return true;
+                case 16:
+                    data.enforceInterface(DESCRIPTOR);
+                    String _arg016 = data.readString();
+                    int[] _arg116 = data.createIntArray();
+                    int _arg27 = data.readInt();
+                    notifyAppWidgetViewDataChanged(_arg016, _arg116, _arg27);
+                    reply.writeNoException();
+                    return true;
+                case 17:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg017 = data.readInt();
+                    int _arg117 = data.readInt();
+                    String _arg28 = data.readString();
+                    ParceledListSlice _result7 = getInstalledProvidersForProfile(_arg017, _arg117, _arg28);
+                    reply.writeNoException();
+                    if (_result7 != null) {
+                        reply.writeInt(1);
+                        _result7.writeToParcel(reply, 1);
+                    } else {
+                        reply.writeInt(0);
+                    }
+                    return true;
+                case 18:
+                    data.enforceInterface(DESCRIPTOR);
+                    String _arg018 = data.readString();
+                    int _arg118 = data.readInt();
+                    AppWidgetProviderInfo _result8 = getAppWidgetInfo(_arg018, _arg118);
+                    reply.writeNoException();
+                    if (_result8 != null) {
+                        reply.writeInt(1);
+                        _result8.writeToParcel(reply, 1);
+                    } else {
+                        reply.writeInt(0);
+                    }
+                    return true;
+                case 19:
+                    data.enforceInterface(DESCRIPTOR);
+                    String _arg019 = data.readString();
+                    int _arg119 = data.readInt();
+                    boolean hasBindAppWidgetPermission = hasBindAppWidgetPermission(_arg019, _arg119);
+                    reply.writeNoException();
+                    reply.writeInt(hasBindAppWidgetPermission ? 1 : 0);
+                    return true;
+                case 20:
+                    data.enforceInterface(DESCRIPTOR);
+                    String _arg020 = data.readString();
+                    int _arg120 = data.readInt();
+                    boolean _arg29 = data.readInt() != 0;
+                    setBindAppWidgetPermission(_arg020, _arg120, _arg29);
+                    reply.writeNoException();
+                    return true;
+                case 21:
+                    data.enforceInterface(DESCRIPTOR);
+                    String _arg021 = data.readString();
+                    int _arg121 = data.readInt();
+                    int _arg210 = data.readInt();
+                    ComponentName _arg32 = data.readInt() != 0 ? ComponentName.CREATOR.createFromParcel(data) : null;
+                    Bundle _arg4 = data.readInt() != 0 ? Bundle.CREATOR.createFromParcel(data) : null;
+                    boolean bindAppWidgetId = bindAppWidgetId(_arg021, _arg121, _arg210, _arg32, _arg4);
+                    reply.writeNoException();
+                    reply.writeInt(bindAppWidgetId ? 1 : 0);
+                    return true;
+                case 22:
+                    data.enforceInterface(DESCRIPTOR);
+                    String _arg022 = data.readString();
+                    int _arg122 = data.readInt();
+                    Intent _arg211 = data.readInt() != 0 ? Intent.CREATOR.createFromParcel(data) : null;
+                    IApplicationThread _arg33 = IApplicationThread.Stub.asInterface(data.readStrongBinder());
+                    IBinder _arg42 = data.readStrongBinder();
+                    IServiceConnection _arg5 = IServiceConnection.Stub.asInterface(data.readStrongBinder());
+                    int _arg6 = data.readInt();
+                    boolean bindRemoteViewsService = bindRemoteViewsService(_arg022, _arg122, _arg211, _arg33, _arg42, _arg5, _arg6);
+                    reply.writeNoException();
+                    reply.writeInt(bindRemoteViewsService ? 1 : 0);
+                    return true;
+                case 23:
+                    data.enforceInterface(DESCRIPTOR);
+                    ComponentName _arg023 = data.readInt() != 0 ? ComponentName.CREATOR.createFromParcel(data) : null;
+                    int[] _result9 = getAppWidgetIds(_arg023);
+                    reply.writeNoException();
+                    reply.writeIntArray(_result9);
+                    return true;
+                case 24:
+                    data.enforceInterface(DESCRIPTOR);
+                    String _arg024 = data.readString();
+                    int _arg123 = data.readInt();
+                    boolean isBoundWidgetPackage = isBoundWidgetPackage(_arg024, _arg123);
+                    reply.writeNoException();
+                    reply.writeInt(isBoundWidgetPackage ? 1 : 0);
+                    return true;
+                case 25:
+                    data.enforceInterface(DESCRIPTOR);
+                    String _arg025 = data.readString();
+                    if (data.readInt() != 0) {
+                        _arg1 = ComponentName.CREATOR.createFromParcel(data);
+                    } else {
+                        _arg1 = null;
+                    }
+                    if (data.readInt() != 0) {
+                        _arg2 = Bundle.CREATOR.createFromParcel(data);
+                    } else {
+                        _arg2 = null;
+                    }
+                    IntentSender _arg34 = data.readInt() != 0 ? IntentSender.CREATOR.createFromParcel(data) : null;
+                    boolean requestPinAppWidget = requestPinAppWidget(_arg025, _arg1, _arg2, _arg34);
+                    reply.writeNoException();
+                    reply.writeInt(requestPinAppWidget ? 1 : 0);
+                    return true;
+                case 26:
+                    data.enforceInterface(DESCRIPTOR);
+                    boolean isRequestPinAppWidgetSupported = isRequestPinAppWidgetSupported();
+                    reply.writeNoException();
+                    reply.writeInt(isRequestPinAppWidgetSupported ? 1 : 0);
+                    return true;
+                default:
+                    return super.onTransact(code, data, reply, flags);
+            }
         }
 
+        /* loaded from: classes4.dex */
         private static class Proxy implements IAppWidgetService {
             public static IAppWidgetService sDefaultImpl;
             private IBinder mRemote;
@@ -728,6 +594,7 @@ public interface IAppWidgetService extends IInterface {
                 this.mRemote = remote;
             }
 
+            @Override // android.p007os.IInterface
             public IBinder asBinder() {
                 return this.mRemote;
             }
@@ -736,6 +603,7 @@ public interface IAppWidgetService extends IInterface {
                 return Stub.DESCRIPTOR;
             }
 
+            @Override // com.android.internal.appwidget.IAppWidgetService
             public ParceledListSlice startListening(IAppWidgetHost host, String callingPackage, int hostId, int[] appWidgetIds) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -746,15 +614,14 @@ public interface IAppWidgetService extends IInterface {
                     _data.writeString(callingPackage);
                     _data.writeInt(hostId);
                     _data.writeIntArray(appWidgetIds);
-                    if (!this.mRemote.transact(1, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(1, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().startListening(host, callingPackage, hostId, appWidgetIds);
                     }
                     _reply.readException();
                     if (_reply.readInt() != 0) {
                         _result = ParceledListSlice.CREATOR.createFromParcel(_reply);
                     }
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -762,6 +629,7 @@ public interface IAppWidgetService extends IInterface {
                 }
             }
 
+            @Override // com.android.internal.appwidget.IAppWidgetService
             public void stopListening(String callingPackage, int hostId) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -769,19 +637,19 @@ public interface IAppWidgetService extends IInterface {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeString(callingPackage);
                     _data.writeInt(hostId);
-                    if (this.mRemote.transact(2, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(2, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().stopListening(callingPackage, hostId);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().stopListening(callingPackage, hostId);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // com.android.internal.appwidget.IAppWidgetService
             public int allocateAppWidgetId(String callingPackage, int hostId) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -789,13 +657,12 @@ public interface IAppWidgetService extends IInterface {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeString(callingPackage);
                     _data.writeInt(hostId);
-                    if (!this.mRemote.transact(3, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(3, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().allocateAppWidgetId(callingPackage, hostId);
                     }
                     _reply.readException();
                     int _result = _reply.readInt();
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -803,6 +670,7 @@ public interface IAppWidgetService extends IInterface {
                 }
             }
 
+            @Override // com.android.internal.appwidget.IAppWidgetService
             public void deleteAppWidgetId(String callingPackage, int appWidgetId) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -810,19 +678,19 @@ public interface IAppWidgetService extends IInterface {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeString(callingPackage);
                     _data.writeInt(appWidgetId);
-                    if (this.mRemote.transact(4, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(4, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().deleteAppWidgetId(callingPackage, appWidgetId);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().deleteAppWidgetId(callingPackage, appWidgetId);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // com.android.internal.appwidget.IAppWidgetService
             public void deleteHost(String packageName, int hostId) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -830,37 +698,37 @@ public interface IAppWidgetService extends IInterface {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeString(packageName);
                     _data.writeInt(hostId);
-                    if (this.mRemote.transact(5, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(5, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().deleteHost(packageName, hostId);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().deleteHost(packageName, hostId);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // com.android.internal.appwidget.IAppWidgetService
             public void deleteAllHosts() throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    if (this.mRemote.transact(6, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(6, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().deleteAllHosts();
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().deleteAllHosts();
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // com.android.internal.appwidget.IAppWidgetService
             public RemoteViews getAppWidgetViews(String callingPackage, int appWidgetId) throws RemoteException {
                 RemoteViews _result;
                 Parcel _data = Parcel.obtain();
@@ -869,7 +737,8 @@ public interface IAppWidgetService extends IInterface {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeString(callingPackage);
                     _data.writeInt(appWidgetId);
-                    if (!this.mRemote.transact(7, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(7, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().getAppWidgetViews(callingPackage, appWidgetId);
                     }
                     _reply.readException();
@@ -878,30 +747,6 @@ public interface IAppWidgetService extends IInterface {
                     } else {
                         _result = null;
                     }
-                    RemoteViews _result2 = _result;
-                    _reply.recycle();
-                    _data.recycle();
-                    return _result2;
-                } finally {
-                    _reply.recycle();
-                    _data.recycle();
-                }
-            }
-
-            public int[] getAppWidgetIdsForHost(String callingPackage, int hostId) throws RemoteException {
-                Parcel _data = Parcel.obtain();
-                Parcel _reply = Parcel.obtain();
-                try {
-                    _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    _data.writeString(callingPackage);
-                    _data.writeInt(hostId);
-                    if (!this.mRemote.transact(8, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
-                        return Stub.getDefaultImpl().getAppWidgetIdsForHost(callingPackage, hostId);
-                    }
-                    _reply.readException();
-                    int[] _result = _reply.createIntArray();
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -909,6 +754,28 @@ public interface IAppWidgetService extends IInterface {
                 }
             }
 
+            @Override // com.android.internal.appwidget.IAppWidgetService
+            public int[] getAppWidgetIdsForHost(String callingPackage, int hostId) throws RemoteException {
+                Parcel _data = Parcel.obtain();
+                Parcel _reply = Parcel.obtain();
+                try {
+                    _data.writeInterfaceToken(Stub.DESCRIPTOR);
+                    _data.writeString(callingPackage);
+                    _data.writeInt(hostId);
+                    boolean _status = this.mRemote.transact(8, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        return Stub.getDefaultImpl().getAppWidgetIdsForHost(callingPackage, hostId);
+                    }
+                    _reply.readException();
+                    int[] _result = _reply.createIntArray();
+                    return _result;
+                } finally {
+                    _reply.recycle();
+                    _data.recycle();
+                }
+            }
+
+            @Override // com.android.internal.appwidget.IAppWidgetService
             public IntentSender createAppWidgetConfigIntentSender(String callingPackage, int appWidgetId, int intentFlags) throws RemoteException {
                 IntentSender _result;
                 Parcel _data = Parcel.obtain();
@@ -918,7 +785,8 @@ public interface IAppWidgetService extends IInterface {
                     _data.writeString(callingPackage);
                     _data.writeInt(appWidgetId);
                     _data.writeInt(intentFlags);
-                    if (!this.mRemote.transact(9, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(9, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().createAppWidgetConfigIntentSender(callingPackage, appWidgetId, intentFlags);
                     }
                     _reply.readException();
@@ -927,16 +795,14 @@ public interface IAppWidgetService extends IInterface {
                     } else {
                         _result = null;
                     }
-                    IntentSender _result2 = _result;
-                    _reply.recycle();
-                    _data.recycle();
-                    return _result2;
+                    return _result;
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // com.android.internal.appwidget.IAppWidgetService
             public void updateAppWidgetIds(String callingPackage, int[] appWidgetIds, RemoteViews views) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -950,19 +816,19 @@ public interface IAppWidgetService extends IInterface {
                     } else {
                         _data.writeInt(0);
                     }
-                    if (this.mRemote.transact(10, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(10, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().updateAppWidgetIds(callingPackage, appWidgetIds, views);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().updateAppWidgetIds(callingPackage, appWidgetIds, views);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // com.android.internal.appwidget.IAppWidgetService
             public void updateAppWidgetOptions(String callingPackage, int appWidgetId, Bundle extras) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -976,19 +842,19 @@ public interface IAppWidgetService extends IInterface {
                     } else {
                         _data.writeInt(0);
                     }
-                    if (this.mRemote.transact(11, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(11, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().updateAppWidgetOptions(callingPackage, appWidgetId, extras);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().updateAppWidgetOptions(callingPackage, appWidgetId, extras);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // com.android.internal.appwidget.IAppWidgetService
             public Bundle getAppWidgetOptions(String callingPackage, int appWidgetId) throws RemoteException {
                 Bundle _result;
                 Parcel _data = Parcel.obtain();
@@ -997,7 +863,8 @@ public interface IAppWidgetService extends IInterface {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeString(callingPackage);
                     _data.writeInt(appWidgetId);
-                    if (!this.mRemote.transact(12, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(12, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().getAppWidgetOptions(callingPackage, appWidgetId);
                     }
                     _reply.readException();
@@ -1006,16 +873,14 @@ public interface IAppWidgetService extends IInterface {
                     } else {
                         _result = null;
                     }
-                    Bundle _result2 = _result;
-                    _reply.recycle();
-                    _data.recycle();
-                    return _result2;
+                    return _result;
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // com.android.internal.appwidget.IAppWidgetService
             public void partiallyUpdateAppWidgetIds(String callingPackage, int[] appWidgetIds, RemoteViews views) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -1029,19 +894,19 @@ public interface IAppWidgetService extends IInterface {
                     } else {
                         _data.writeInt(0);
                     }
-                    if (this.mRemote.transact(13, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(13, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().partiallyUpdateAppWidgetIds(callingPackage, appWidgetIds, views);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().partiallyUpdateAppWidgetIds(callingPackage, appWidgetIds, views);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // com.android.internal.appwidget.IAppWidgetService
             public void updateAppWidgetProvider(ComponentName provider, RemoteViews views) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -1059,19 +924,19 @@ public interface IAppWidgetService extends IInterface {
                     } else {
                         _data.writeInt(0);
                     }
-                    if (this.mRemote.transact(14, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(14, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().updateAppWidgetProvider(provider, views);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().updateAppWidgetProvider(provider, views);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // com.android.internal.appwidget.IAppWidgetService
             public void updateAppWidgetProviderInfo(ComponentName provider, String metadataKey) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -1084,19 +949,19 @@ public interface IAppWidgetService extends IInterface {
                         _data.writeInt(0);
                     }
                     _data.writeString(metadataKey);
-                    if (this.mRemote.transact(15, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(15, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().updateAppWidgetProviderInfo(provider, metadataKey);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().updateAppWidgetProviderInfo(provider, metadataKey);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // com.android.internal.appwidget.IAppWidgetService
             public void notifyAppWidgetViewDataChanged(String packageName, int[] appWidgetIds, int viewId) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -1105,19 +970,19 @@ public interface IAppWidgetService extends IInterface {
                     _data.writeString(packageName);
                     _data.writeIntArray(appWidgetIds);
                     _data.writeInt(viewId);
-                    if (this.mRemote.transact(16, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(16, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().notifyAppWidgetViewDataChanged(packageName, appWidgetIds, viewId);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().notifyAppWidgetViewDataChanged(packageName, appWidgetIds, viewId);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // com.android.internal.appwidget.IAppWidgetService
             public ParceledListSlice getInstalledProvidersForProfile(int categoryFilter, int profileId, String packageName) throws RemoteException {
                 ParceledListSlice _result;
                 Parcel _data = Parcel.obtain();
@@ -1127,7 +992,8 @@ public interface IAppWidgetService extends IInterface {
                     _data.writeInt(categoryFilter);
                     _data.writeInt(profileId);
                     _data.writeString(packageName);
-                    if (!this.mRemote.transact(17, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(17, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().getInstalledProvidersForProfile(categoryFilter, profileId, packageName);
                     }
                     _reply.readException();
@@ -1136,16 +1002,14 @@ public interface IAppWidgetService extends IInterface {
                     } else {
                         _result = null;
                     }
-                    ParceledListSlice _result2 = _result;
-                    _reply.recycle();
-                    _data.recycle();
-                    return _result2;
+                    return _result;
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // com.android.internal.appwidget.IAppWidgetService
             public AppWidgetProviderInfo getAppWidgetInfo(String callingPackage, int appWidgetId) throws RemoteException {
                 AppWidgetProviderInfo _result;
                 Parcel _data = Parcel.obtain();
@@ -1154,7 +1018,8 @@ public interface IAppWidgetService extends IInterface {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeString(callingPackage);
                     _data.writeInt(appWidgetId);
-                    if (!this.mRemote.transact(18, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(18, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().getAppWidgetInfo(callingPackage, appWidgetId);
                     }
                     _reply.readException();
@@ -1163,16 +1028,14 @@ public interface IAppWidgetService extends IInterface {
                     } else {
                         _result = null;
                     }
-                    AppWidgetProviderInfo _result2 = _result;
-                    _reply.recycle();
-                    _data.recycle();
-                    return _result2;
+                    return _result;
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // com.android.internal.appwidget.IAppWidgetService
             public boolean hasBindAppWidgetPermission(String packageName, int userId) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -1180,24 +1043,20 @@ public interface IAppWidgetService extends IInterface {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeString(packageName);
                     _data.writeInt(userId);
-                    boolean z = false;
-                    if (!this.mRemote.transact(19, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(19, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().hasBindAppWidgetPermission(packageName, userId);
                     }
                     _reply.readException();
-                    if (_reply.readInt() != 0) {
-                        z = true;
-                    }
-                    boolean _status = z;
-                    _reply.recycle();
-                    _data.recycle();
-                    return _status;
+                    boolean _status2 = _reply.readInt() != 0;
+                    return _status2;
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // com.android.internal.appwidget.IAppWidgetService
             public void setBindAppWidgetPermission(String packageName, int userId, boolean permission) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -1205,172 +1064,139 @@ public interface IAppWidgetService extends IInterface {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeString(packageName);
                     _data.writeInt(userId);
-                    _data.writeInt(permission);
-                    if (this.mRemote.transact(20, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    _data.writeInt(permission ? 1 : 0);
+                    boolean _status = this.mRemote.transact(20, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().setBindAppWidgetPermission(packageName, userId, permission);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().setBindAppWidgetPermission(packageName, userId, permission);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // com.android.internal.appwidget.IAppWidgetService
             public boolean bindAppWidgetId(String callingPackage, int appWidgetId, int providerProfileId, ComponentName providerComponent, Bundle options) throws RemoteException {
-                boolean _result;
-                ComponentName componentName = providerComponent;
-                Bundle bundle = options;
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
+                } catch (Throwable th) {
+                    th = th;
+                }
+                try {
+                    _data.writeString(callingPackage);
+                } catch (Throwable th2) {
+                    th = th2;
+                    _reply.recycle();
+                    _data.recycle();
+                    throw th;
+                }
+                try {
+                    _data.writeInt(appWidgetId);
                     try {
-                        _data.writeString(callingPackage);
-                    } catch (Throwable th) {
-                        th = th;
-                        int i = appWidgetId;
-                        int i2 = providerProfileId;
-                        _reply.recycle();
-                        _data.recycle();
-                        throw th;
+                        _data.writeInt(providerProfileId);
+                        if (providerComponent != null) {
+                            _data.writeInt(1);
+                            providerComponent.writeToParcel(_data, 0);
+                        } else {
+                            _data.writeInt(0);
+                        }
+                        if (options != null) {
+                            _data.writeInt(1);
+                            options.writeToParcel(_data, 0);
+                        } else {
+                            _data.writeInt(0);
+                        }
+                    } catch (Throwable th3) {
+                        th = th3;
                     }
                     try {
-                        _data.writeInt(appWidgetId);
-                        try {
-                            _data.writeInt(providerProfileId);
-                            _result = true;
-                            if (componentName != null) {
-                                _data.writeInt(1);
-                                componentName.writeToParcel(_data, 0);
-                            } else {
-                                _data.writeInt(0);
-                            }
-                            if (bundle != null) {
-                                _data.writeInt(1);
-                                bundle.writeToParcel(_data, 0);
-                            } else {
-                                _data.writeInt(0);
-                            }
-                        } catch (Throwable th2) {
-                            th = th2;
-                            _reply.recycle();
-                            _data.recycle();
-                            throw th;
-                        }
-                        try {
-                            if (this.mRemote.transact(21, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
-                                _reply.readException();
-                                if (_reply.readInt() == 0) {
-                                    _result = false;
-                                }
-                                _reply.recycle();
-                                _data.recycle();
-                                return _result;
-                            }
+                        boolean _status = this.mRemote.transact(21, _data, _reply, 0);
+                        if (!_status && Stub.getDefaultImpl() != null) {
                             boolean bindAppWidgetId = Stub.getDefaultImpl().bindAppWidgetId(callingPackage, appWidgetId, providerProfileId, providerComponent, options);
                             _reply.recycle();
                             _data.recycle();
                             return bindAppWidgetId;
-                        } catch (Throwable th3) {
-                            th = th3;
-                            _reply.recycle();
-                            _data.recycle();
-                            throw th;
                         }
+                        _reply.readException();
+                        boolean _result = _reply.readInt() != 0;
+                        _reply.recycle();
+                        _data.recycle();
+                        return _result;
                     } catch (Throwable th4) {
                         th = th4;
-                        int i22 = providerProfileId;
                         _reply.recycle();
                         _data.recycle();
                         throw th;
                     }
                 } catch (Throwable th5) {
                     th = th5;
-                    String str = callingPackage;
-                    int i3 = appWidgetId;
-                    int i222 = providerProfileId;
                     _reply.recycle();
                     _data.recycle();
                     throw th;
                 }
             }
 
+            @Override // com.android.internal.appwidget.IAppWidgetService
             public boolean bindRemoteViewsService(String callingPackage, int appWidgetId, Intent intent, IApplicationThread caller, IBinder token, IServiceConnection connection, int flags) throws RemoteException {
-                boolean _result;
-                IBinder iBinder;
-                Intent intent2 = intent;
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
+                } catch (Throwable th) {
+                    th = th;
+                }
+                try {
+                    _data.writeString(callingPackage);
                     try {
-                        _data.writeString(callingPackage);
-                        try {
-                            _data.writeInt(appWidgetId);
-                            _result = true;
-                            if (intent2 != null) {
-                                _data.writeInt(1);
-                                intent2.writeToParcel(_data, 0);
-                            } else {
-                                _data.writeInt(0);
-                            }
-                            iBinder = null;
-                            _data.writeStrongBinder(caller != null ? caller.asBinder() : null);
-                        } catch (Throwable th) {
-                            th = th;
-                            IBinder iBinder2 = token;
-                            _reply.recycle();
-                            _data.recycle();
-                            throw th;
+                        _data.writeInt(appWidgetId);
+                        if (intent != null) {
+                            _data.writeInt(1);
+                            intent.writeToParcel(_data, 0);
+                        } else {
+                            _data.writeInt(0);
                         }
-                        try {
-                            _data.writeStrongBinder(token);
-                            if (connection != null) {
-                                iBinder = connection.asBinder();
-                            }
-                            _data.writeStrongBinder(iBinder);
-                            _data.writeInt(flags);
-                            if (this.mRemote.transact(22, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
-                                _reply.readException();
-                                if (_reply.readInt() == 0) {
-                                    _result = false;
-                                }
-                                _reply.recycle();
-                                _data.recycle();
-                                return _result;
-                            }
+                        _data.writeStrongBinder(caller != null ? caller.asBinder() : null);
+                    } catch (Throwable th2) {
+                        th = th2;
+                        _reply.recycle();
+                        _data.recycle();
+                        throw th;
+                    }
+                    try {
+                        _data.writeStrongBinder(token);
+                        _data.writeStrongBinder(connection != null ? connection.asBinder() : null);
+                        _data.writeInt(flags);
+                        boolean _status = this.mRemote.transact(22, _data, _reply, 0);
+                        if (!_status && Stub.getDefaultImpl() != null) {
                             boolean bindRemoteViewsService = Stub.getDefaultImpl().bindRemoteViewsService(callingPackage, appWidgetId, intent, caller, token, connection, flags);
                             _reply.recycle();
                             _data.recycle();
                             return bindRemoteViewsService;
-                        } catch (Throwable th2) {
-                            th = th2;
-                            _reply.recycle();
-                            _data.recycle();
-                            throw th;
                         }
+                        _reply.readException();
+                        boolean _result = _reply.readInt() != 0;
+                        _reply.recycle();
+                        _data.recycle();
+                        return _result;
                     } catch (Throwable th3) {
                         th = th3;
-                        int i = appWidgetId;
-                        IBinder iBinder22 = token;
                         _reply.recycle();
                         _data.recycle();
                         throw th;
                     }
                 } catch (Throwable th4) {
                     th = th4;
-                    String str = callingPackage;
-                    int i2 = appWidgetId;
-                    IBinder iBinder222 = token;
                     _reply.recycle();
                     _data.recycle();
                     throw th;
                 }
             }
 
+            @Override // com.android.internal.appwidget.IAppWidgetService
             public int[] getAppWidgetIds(ComponentName providerComponent) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -1382,13 +1208,12 @@ public interface IAppWidgetService extends IInterface {
                     } else {
                         _data.writeInt(0);
                     }
-                    if (!this.mRemote.transact(23, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(23, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().getAppWidgetIds(providerComponent);
                     }
                     _reply.readException();
                     int[] _result = _reply.createIntArray();
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -1396,6 +1221,7 @@ public interface IAppWidgetService extends IInterface {
                 }
             }
 
+            @Override // com.android.internal.appwidget.IAppWidgetService
             public boolean isBoundWidgetPackage(String packageName, int userId) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -1403,31 +1229,26 @@ public interface IAppWidgetService extends IInterface {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeString(packageName);
                     _data.writeInt(userId);
-                    boolean z = false;
-                    if (!this.mRemote.transact(24, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(24, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().isBoundWidgetPackage(packageName, userId);
                     }
                     _reply.readException();
-                    if (_reply.readInt() != 0) {
-                        z = true;
-                    }
-                    boolean _status = z;
-                    _reply.recycle();
-                    _data.recycle();
-                    return _status;
+                    boolean _status2 = _reply.readInt() != 0;
+                    return _status2;
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // com.android.internal.appwidget.IAppWidgetService
             public boolean requestPinAppWidget(String packageName, ComponentName providerComponent, Bundle extras, IntentSender resultIntent) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeString(packageName);
-                    boolean _result = true;
                     if (providerComponent != null) {
                         _data.writeInt(1);
                         providerComponent.writeToParcel(_data, 0);
@@ -1446,15 +1267,12 @@ public interface IAppWidgetService extends IInterface {
                     } else {
                         _data.writeInt(0);
                     }
-                    if (!this.mRemote.transact(25, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(25, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().requestPinAppWidget(packageName, providerComponent, extras, resultIntent);
                     }
                     _reply.readException();
-                    if (_reply.readInt() == 0) {
-                        _result = false;
-                    }
-                    _reply.recycle();
-                    _data.recycle();
+                    boolean _result = _reply.readInt() != 0;
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -1462,23 +1280,19 @@ public interface IAppWidgetService extends IInterface {
                 }
             }
 
+            @Override // com.android.internal.appwidget.IAppWidgetService
             public boolean isRequestPinAppWidgetSupported() throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    boolean z = false;
-                    if (!this.mRemote.transact(26, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(26, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().isRequestPinAppWidgetSupported();
                     }
                     _reply.readException();
-                    if (_reply.readInt() != 0) {
-                        z = true;
-                    }
-                    boolean _status = z;
-                    _reply.recycle();
-                    _data.recycle();
-                    return _status;
+                    boolean _status2 = _reply.readInt() != 0;
+                    return _status2;
                 } finally {
                     _reply.recycle();
                     _data.recycle();
@@ -1487,11 +1301,11 @@ public interface IAppWidgetService extends IInterface {
         }
 
         public static boolean setDefaultImpl(IAppWidgetService impl) {
-            if (Proxy.sDefaultImpl != null || impl == null) {
-                return false;
+            if (Proxy.sDefaultImpl == null && impl != null) {
+                Proxy.sDefaultImpl = impl;
+                return true;
             }
-            Proxy.sDefaultImpl = impl;
-            return true;
+            return false;
         }
 
         public static IAppWidgetService getDefaultImpl() {

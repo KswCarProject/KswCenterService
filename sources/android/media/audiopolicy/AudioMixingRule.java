@@ -3,13 +3,14 @@ package android.media.audiopolicy;
 import android.annotation.SystemApi;
 import android.annotation.UnsupportedAppUsage;
 import android.media.AudioAttributes;
-import android.os.Parcel;
+import android.p007os.Parcel;
 import android.util.Log;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.Objects;
 
 @SystemApi
+/* loaded from: classes3.dex */
 public class AudioMixingRule {
     public static final int RULE_EXCLUDE_ATTRIBUTE_CAPTURE_PRESET = 32770;
     public static final int RULE_EXCLUDE_ATTRIBUTE_USAGE = 32769;
@@ -31,6 +32,7 @@ public class AudioMixingRule {
         this.mAllowPrivilegedPlaybackCapture = allowPrivilegedPlaybackCapture;
     }
 
+    /* loaded from: classes3.dex */
     public static final class AudioMixMatchCriterion {
         @UnsupportedAppUsage
         final AudioAttributes mAttr;
@@ -52,13 +54,12 @@ public class AudioMixingRule {
         }
 
         public int hashCode() {
-            return Objects.hash(new Object[]{this.mAttr, Integer.valueOf(this.mIntProp), Integer.valueOf(this.mRule)});
+            return Objects.hash(this.mAttr, Integer.valueOf(this.mIntProp), Integer.valueOf(this.mRule));
         }
 
-        /* access modifiers changed from: package-private */
-        public void writeToParcel(Parcel dest) {
+        void writeToParcel(Parcel dest) {
             dest.writeInt(this.mRule);
-            int match_rule = this.mRule & -32769;
+            int match_rule = this.mRule & (-32769);
             if (match_rule != 4) {
                 switch (match_rule) {
                     case 1:
@@ -68,13 +69,12 @@ public class AudioMixingRule {
                         dest.writeInt(this.mAttr.getCapturePreset());
                         return;
                     default:
-                        Log.e("AudioMixMatchCriterion", "Unknown match rule" + match_rule + " when writing to Parcel");
+                        Log.m70e("AudioMixMatchCriterion", "Unknown match rule" + match_rule + " when writing to Parcel");
                         dest.writeInt(-1);
                         return;
                 }
-            } else {
-                dest.writeInt(this.mIntProp);
             }
+            dest.writeInt(this.mIntProp);
         }
 
         public AudioAttributes getAudioAttributes() {
@@ -90,8 +90,7 @@ public class AudioMixingRule {
         }
     }
 
-    /* access modifiers changed from: package-private */
-    public boolean isAffectingUsage(int usage) {
+    boolean isAffectingUsage(int usage) {
         Iterator<AudioMixMatchCriterion> it = this.mCriteria.iterator();
         while (it.hasNext()) {
             AudioMixMatchCriterion criterion = it.next();
@@ -109,14 +108,13 @@ public class AudioMixingRule {
         if (cr1 == cr2) {
             return true;
         }
-        if (cr1.size() == cr2.size() && cr1.hashCode() == cr2.hashCode()) {
-            return true;
+        if (cr1.size() != cr2.size() || cr1.hashCode() != cr2.hashCode()) {
+            return false;
         }
-        return false;
+        return true;
     }
 
-    /* access modifiers changed from: package-private */
-    public int getTargetMixType() {
+    int getTargetMixType() {
         return this.mTargetMixType;
     }
 
@@ -143,24 +141,24 @@ public class AudioMixingRule {
     }
 
     public int hashCode() {
-        return Objects.hash(new Object[]{Integer.valueOf(this.mTargetMixType), this.mCriteria, Boolean.valueOf(this.mAllowPrivilegedPlaybackCapture)});
+        return Objects.hash(Integer.valueOf(this.mTargetMixType), this.mCriteria, Boolean.valueOf(this.mAllowPrivilegedPlaybackCapture));
     }
 
-    /* access modifiers changed from: private */
+    /* JADX INFO: Access modifiers changed from: private */
     public static boolean isValidSystemApiRule(int rule) {
-        if (rule == 4) {
-            return true;
+        if (rule != 4) {
+            switch (rule) {
+                case 1:
+                case 2:
+                    return true;
+                default:
+                    return false;
+            }
         }
-        switch (rule) {
-            case 1:
-            case 2:
-                return true;
-            default:
-                return false;
-        }
+        return true;
     }
 
-    /* access modifiers changed from: private */
+    /* JADX INFO: Access modifiers changed from: private */
     public static boolean isValidAttributesSystemApiRule(int rule) {
         switch (rule) {
             case 1:
@@ -171,31 +169,31 @@ public class AudioMixingRule {
         }
     }
 
-    /* access modifiers changed from: private */
+    /* JADX INFO: Access modifiers changed from: private */
     public static boolean isValidRule(int rule) {
-        int match_rule = -32769 & rule;
-        if (match_rule == 4) {
-            return true;
+        int match_rule = (-32769) & rule;
+        if (match_rule != 4) {
+            switch (match_rule) {
+                case 1:
+                case 2:
+                    return true;
+                default:
+                    return false;
+            }
         }
-        switch (match_rule) {
-            case 1:
-            case 2:
-                return true;
-            default:
-                return false;
-        }
+        return true;
     }
 
-    /* access modifiers changed from: private */
+    /* JADX INFO: Access modifiers changed from: private */
     public static boolean isPlayerRule(int rule) {
-        int match_rule = -32769 & rule;
+        int match_rule = (-32769) & rule;
         if (match_rule == 1 || match_rule == 4) {
             return true;
         }
         return false;
     }
 
-    /* access modifiers changed from: private */
+    /* JADX INFO: Access modifiers changed from: private */
     public static boolean isAudioAttributeRule(int match_rule) {
         switch (match_rule) {
             case 1:
@@ -206,37 +204,38 @@ public class AudioMixingRule {
         }
     }
 
+    /* loaded from: classes3.dex */
     public static class Builder {
+        private int mTargetMixType = -1;
         private boolean mAllowPrivilegedPlaybackCapture = false;
         private ArrayList<AudioMixMatchCriterion> mCriteria = new ArrayList<>();
-        private int mTargetMixType = -1;
 
         public Builder addRule(AudioAttributes attrToMatch, int rule) throws IllegalArgumentException {
-            if (AudioMixingRule.isValidAttributesSystemApiRule(rule)) {
-                return checkAddRuleObjInternal(rule, attrToMatch);
+            if (!AudioMixingRule.isValidAttributesSystemApiRule(rule)) {
+                throw new IllegalArgumentException("Illegal rule value " + rule);
             }
-            throw new IllegalArgumentException("Illegal rule value " + rule);
+            return checkAddRuleObjInternal(rule, attrToMatch);
         }
 
         public Builder excludeRule(AudioAttributes attrToMatch, int rule) throws IllegalArgumentException {
-            if (AudioMixingRule.isValidAttributesSystemApiRule(rule)) {
-                return checkAddRuleObjInternal(32768 | rule, attrToMatch);
+            if (!AudioMixingRule.isValidAttributesSystemApiRule(rule)) {
+                throw new IllegalArgumentException("Illegal rule value " + rule);
             }
-            throw new IllegalArgumentException("Illegal rule value " + rule);
+            return checkAddRuleObjInternal(32768 | rule, attrToMatch);
         }
 
         public Builder addMixRule(int rule, Object property) throws IllegalArgumentException {
-            if (AudioMixingRule.isValidSystemApiRule(rule)) {
-                return checkAddRuleObjInternal(rule, property);
+            if (!AudioMixingRule.isValidSystemApiRule(rule)) {
+                throw new IllegalArgumentException("Illegal rule value " + rule);
             }
-            throw new IllegalArgumentException("Illegal rule value " + rule);
+            return checkAddRuleObjInternal(rule, property);
         }
 
         public Builder excludeMixRule(int rule, Object property) throws IllegalArgumentException {
-            if (AudioMixingRule.isValidSystemApiRule(rule)) {
-                return checkAddRuleObjInternal(32768 | rule, property);
+            if (!AudioMixingRule.isValidSystemApiRule(rule)) {
+                throw new IllegalArgumentException("Illegal rule value " + rule);
             }
-            throw new IllegalArgumentException("Illegal rule value " + rule);
+            return checkAddRuleObjInternal(32768 | rule, property);
         }
 
         public Builder allowPrivilegedPlaybackCapture(boolean allow) {
@@ -245,188 +244,98 @@ public class AudioMixingRule {
         }
 
         private Builder checkAddRuleObjInternal(int rule, Object property) throws IllegalArgumentException {
-            if (property == null) {
-                throw new IllegalArgumentException("Illegal null argument for mixing rule");
-            } else if (!AudioMixingRule.isValidRule(rule)) {
-                throw new IllegalArgumentException("Illegal rule value " + rule);
-            } else if (AudioMixingRule.isAudioAttributeRule(-32769 & rule)) {
-                if (property instanceof AudioAttributes) {
-                    return addRuleInternal((AudioAttributes) property, (Integer) null, rule);
+            if (property != null) {
+                if (!AudioMixingRule.isValidRule(rule)) {
+                    throw new IllegalArgumentException("Illegal rule value " + rule);
                 }
-                throw new IllegalArgumentException("Invalid AudioAttributes argument");
-            } else if (property instanceof Integer) {
-                return addRuleInternal((AudioAttributes) null, (Integer) property, rule);
-            } else {
-                throw new IllegalArgumentException("Invalid Integer argument");
+                int match_rule = (-32769) & rule;
+                if (AudioMixingRule.isAudioAttributeRule(match_rule)) {
+                    if (!(property instanceof AudioAttributes)) {
+                        throw new IllegalArgumentException("Invalid AudioAttributes argument");
+                    }
+                    return addRuleInternal((AudioAttributes) property, null, rule);
+                } else if (!(property instanceof Integer)) {
+                    throw new IllegalArgumentException("Invalid Integer argument");
+                } else {
+                    return addRuleInternal(null, (Integer) property, rule);
+                }
+            }
+            throw new IllegalArgumentException("Illegal null argument for mixing rule");
+        }
+
+        private Builder addRuleInternal(AudioAttributes attrToMatch, Integer intProp, int rule) throws IllegalArgumentException {
+            if (this.mTargetMixType == -1) {
+                if (AudioMixingRule.isPlayerRule(rule)) {
+                    this.mTargetMixType = 0;
+                } else {
+                    this.mTargetMixType = 1;
+                }
+            } else if ((this.mTargetMixType == 0 && !AudioMixingRule.isPlayerRule(rule)) || (this.mTargetMixType == 1 && AudioMixingRule.isPlayerRule(rule))) {
+                throw new IllegalArgumentException("Incompatible rule for mix");
+            }
+            synchronized (this.mCriteria) {
+                Iterator<AudioMixMatchCriterion> crIterator = this.mCriteria.iterator();
+                int match_rule = rule & (-32769);
+                while (crIterator.hasNext()) {
+                    AudioMixMatchCriterion criterion = crIterator.next();
+                    if ((criterion.mRule & (-32769)) == match_rule) {
+                        if (match_rule != 4) {
+                            switch (match_rule) {
+                                case 1:
+                                    if (criterion.mAttr.getUsage() == attrToMatch.getUsage()) {
+                                        if (criterion.mRule == rule) {
+                                            return this;
+                                        }
+                                        throw new IllegalArgumentException("Contradictory rule exists for " + attrToMatch);
+                                    }
+                                    break;
+                                case 2:
+                                    if (criterion.mAttr.getCapturePreset() == attrToMatch.getCapturePreset()) {
+                                        if (criterion.mRule == rule) {
+                                            return this;
+                                        }
+                                        throw new IllegalArgumentException("Contradictory rule exists for " + attrToMatch);
+                                    }
+                                    break;
+                            }
+                        } else if (criterion.mIntProp == intProp.intValue()) {
+                            if (criterion.mRule == rule) {
+                                return this;
+                            }
+                            throw new IllegalArgumentException("Contradictory rule exists for UID " + intProp);
+                        }
+                    }
+                }
+                if (match_rule != 4) {
+                    switch (match_rule) {
+                        case 1:
+                        case 2:
+                            this.mCriteria.add(new AudioMixMatchCriterion(attrToMatch, rule));
+                            break;
+                        default:
+                            throw new IllegalStateException("Unreachable code in addRuleInternal()");
+                    }
+                } else {
+                    this.mCriteria.add(new AudioMixMatchCriterion(intProp, rule));
+                }
+                return this;
             }
         }
 
-        /* JADX WARNING: Code restructure failed: missing block: B:60:0x00f5, code lost:
-            return r7;
-         */
-        /* Code decompiled incorrectly, please refer to instructions dump. */
-        private android.media.audiopolicy.AudioMixingRule.Builder addRuleInternal(android.media.AudioAttributes r8, java.lang.Integer r9, int r10) throws java.lang.IllegalArgumentException {
-            /*
-                r7 = this;
-                int r0 = r7.mTargetMixType
-                r1 = 1
-                r2 = -1
-                if (r0 != r2) goto L_0x0013
-                boolean r0 = android.media.audiopolicy.AudioMixingRule.isPlayerRule(r10)
-                if (r0 == 0) goto L_0x0010
-                r0 = 0
-                r7.mTargetMixType = r0
-                goto L_0x0030
-            L_0x0010:
-                r7.mTargetMixType = r1
-                goto L_0x0030
-            L_0x0013:
-                int r0 = r7.mTargetMixType
-                if (r0 != 0) goto L_0x001d
-                boolean r0 = android.media.audiopolicy.AudioMixingRule.isPlayerRule(r10)
-                if (r0 == 0) goto L_0x0028
-            L_0x001d:
-                int r0 = r7.mTargetMixType
-                if (r0 != r1) goto L_0x0030
-                boolean r0 = android.media.audiopolicy.AudioMixingRule.isPlayerRule(r10)
-                if (r0 != 0) goto L_0x0028
-                goto L_0x0030
-            L_0x0028:
-                java.lang.IllegalArgumentException r0 = new java.lang.IllegalArgumentException
-                java.lang.String r1 = "Incompatible rule for mix"
-                r0.<init>(r1)
-                throw r0
-            L_0x0030:
-                java.util.ArrayList<android.media.audiopolicy.AudioMixingRule$AudioMixMatchCriterion> r0 = r7.mCriteria
-                monitor-enter(r0)
-                java.util.ArrayList<android.media.audiopolicy.AudioMixingRule$AudioMixMatchCriterion> r1 = r7.mCriteria     // Catch:{ all -> 0x00f6 }
-                java.util.Iterator r1 = r1.iterator()     // Catch:{ all -> 0x00f6 }
-                r2 = -32769(0xffffffffffff7fff, float:NaN)
-                r3 = r10 & r2
-            L_0x003e:
-                boolean r4 = r1.hasNext()     // Catch:{ all -> 0x00f6 }
-                r5 = 4
-                if (r4 == 0) goto L_0x00d1
-                java.lang.Object r4 = r1.next()     // Catch:{ all -> 0x00f6 }
-                android.media.audiopolicy.AudioMixingRule$AudioMixMatchCriterion r4 = (android.media.audiopolicy.AudioMixingRule.AudioMixMatchCriterion) r4     // Catch:{ all -> 0x00f6 }
-                int r6 = r4.mRule     // Catch:{ all -> 0x00f6 }
-                r6 = r6 & r2
-                if (r6 == r3) goto L_0x0051
-                goto L_0x003e
-            L_0x0051:
-                if (r3 == r5) goto L_0x00aa
-                switch(r3) {
-                    case 1: goto L_0x0081;
-                    case 2: goto L_0x0058;
-                    default: goto L_0x0056;
-                }     // Catch:{ all -> 0x00f6 }
-            L_0x0056:
-                goto L_0x00cf
-            L_0x0058:
-                android.media.AudioAttributes r5 = r4.mAttr     // Catch:{ all -> 0x00f6 }
-                int r5 = r5.getCapturePreset()     // Catch:{ all -> 0x00f6 }
-                int r6 = r8.getCapturePreset()     // Catch:{ all -> 0x00f6 }
-                if (r5 != r6) goto L_0x00cf
-                int r2 = r4.mRule     // Catch:{ all -> 0x00f6 }
-                if (r2 != r10) goto L_0x006a
-                monitor-exit(r0)     // Catch:{ all -> 0x00f6 }
-                return r7
-            L_0x006a:
-                java.lang.IllegalArgumentException r2 = new java.lang.IllegalArgumentException     // Catch:{ all -> 0x00f6 }
-                java.lang.StringBuilder r5 = new java.lang.StringBuilder     // Catch:{ all -> 0x00f6 }
-                r5.<init>()     // Catch:{ all -> 0x00f6 }
-                java.lang.String r6 = "Contradictory rule exists for "
-                r5.append(r6)     // Catch:{ all -> 0x00f6 }
-                r5.append(r8)     // Catch:{ all -> 0x00f6 }
-                java.lang.String r5 = r5.toString()     // Catch:{ all -> 0x00f6 }
-                r2.<init>(r5)     // Catch:{ all -> 0x00f6 }
-                throw r2     // Catch:{ all -> 0x00f6 }
-            L_0x0081:
-                android.media.AudioAttributes r5 = r4.mAttr     // Catch:{ all -> 0x00f6 }
-                int r5 = r5.getUsage()     // Catch:{ all -> 0x00f6 }
-                int r6 = r8.getUsage()     // Catch:{ all -> 0x00f6 }
-                if (r5 != r6) goto L_0x00cf
-                int r2 = r4.mRule     // Catch:{ all -> 0x00f6 }
-                if (r2 != r10) goto L_0x0093
-                monitor-exit(r0)     // Catch:{ all -> 0x00f6 }
-                return r7
-            L_0x0093:
-                java.lang.IllegalArgumentException r2 = new java.lang.IllegalArgumentException     // Catch:{ all -> 0x00f6 }
-                java.lang.StringBuilder r5 = new java.lang.StringBuilder     // Catch:{ all -> 0x00f6 }
-                r5.<init>()     // Catch:{ all -> 0x00f6 }
-                java.lang.String r6 = "Contradictory rule exists for "
-                r5.append(r6)     // Catch:{ all -> 0x00f6 }
-                r5.append(r8)     // Catch:{ all -> 0x00f6 }
-                java.lang.String r5 = r5.toString()     // Catch:{ all -> 0x00f6 }
-                r2.<init>(r5)     // Catch:{ all -> 0x00f6 }
-                throw r2     // Catch:{ all -> 0x00f6 }
-            L_0x00aa:
-                int r5 = r4.mIntProp     // Catch:{ all -> 0x00f6 }
-                int r6 = r9.intValue()     // Catch:{ all -> 0x00f6 }
-                if (r5 != r6) goto L_0x00cf
-                int r2 = r4.mRule     // Catch:{ all -> 0x00f6 }
-                if (r2 != r10) goto L_0x00b8
-                monitor-exit(r0)     // Catch:{ all -> 0x00f6 }
-                return r7
-            L_0x00b8:
-                java.lang.IllegalArgumentException r2 = new java.lang.IllegalArgumentException     // Catch:{ all -> 0x00f6 }
-                java.lang.StringBuilder r5 = new java.lang.StringBuilder     // Catch:{ all -> 0x00f6 }
-                r5.<init>()     // Catch:{ all -> 0x00f6 }
-                java.lang.String r6 = "Contradictory rule exists for UID "
-                r5.append(r6)     // Catch:{ all -> 0x00f6 }
-                r5.append(r9)     // Catch:{ all -> 0x00f6 }
-                java.lang.String r5 = r5.toString()     // Catch:{ all -> 0x00f6 }
-                r2.<init>(r5)     // Catch:{ all -> 0x00f6 }
-                throw r2     // Catch:{ all -> 0x00f6 }
-            L_0x00cf:
-                goto L_0x003e
-            L_0x00d1:
-                if (r3 == r5) goto L_0x00e9
-                switch(r3) {
-                    case 1: goto L_0x00de;
-                    case 2: goto L_0x00de;
-                    default: goto L_0x00d6;
-                }     // Catch:{ all -> 0x00f6 }
-            L_0x00d6:
-                java.lang.IllegalStateException r2 = new java.lang.IllegalStateException     // Catch:{ all -> 0x00f6 }
-                java.lang.String r4 = "Unreachable code in addRuleInternal()"
-                r2.<init>(r4)     // Catch:{ all -> 0x00f6 }
-                throw r2     // Catch:{ all -> 0x00f6 }
-            L_0x00de:
-                java.util.ArrayList<android.media.audiopolicy.AudioMixingRule$AudioMixMatchCriterion> r2 = r7.mCriteria     // Catch:{ all -> 0x00f6 }
-                android.media.audiopolicy.AudioMixingRule$AudioMixMatchCriterion r4 = new android.media.audiopolicy.AudioMixingRule$AudioMixMatchCriterion     // Catch:{ all -> 0x00f6 }
-                r4.<init>((android.media.AudioAttributes) r8, (int) r10)     // Catch:{ all -> 0x00f6 }
-                r2.add(r4)     // Catch:{ all -> 0x00f6 }
-                goto L_0x00f4
-            L_0x00e9:
-                java.util.ArrayList<android.media.audiopolicy.AudioMixingRule$AudioMixMatchCriterion> r2 = r7.mCriteria     // Catch:{ all -> 0x00f6 }
-                android.media.audiopolicy.AudioMixingRule$AudioMixMatchCriterion r4 = new android.media.audiopolicy.AudioMixingRule$AudioMixMatchCriterion     // Catch:{ all -> 0x00f6 }
-                r4.<init>((java.lang.Integer) r9, (int) r10)     // Catch:{ all -> 0x00f6 }
-                r2.add(r4)     // Catch:{ all -> 0x00f6 }
-            L_0x00f4:
-                monitor-exit(r0)     // Catch:{ all -> 0x00f6 }
-                return r7
-            L_0x00f6:
-                r1 = move-exception
-                monitor-exit(r0)     // Catch:{ all -> 0x00f6 }
-                throw r1
-            */
-            throw new UnsupportedOperationException("Method not decompiled: android.media.audiopolicy.AudioMixingRule.Builder.addRuleInternal(android.media.AudioAttributes, java.lang.Integer, int):android.media.audiopolicy.AudioMixingRule$Builder");
-        }
-
-        /* access modifiers changed from: package-private */
-        public Builder addRuleFromParcel(Parcel in) throws IllegalArgumentException {
+        Builder addRuleFromParcel(Parcel in) throws IllegalArgumentException {
             int rule = in.readInt();
-            int match_rule = -32769 & rule;
+            int match_rule = (-32769) & rule;
             AudioAttributes attr = null;
             Integer intProp = null;
             if (match_rule != 4) {
                 switch (match_rule) {
                     case 1:
-                        attr = new AudioAttributes.Builder().setUsage(in.readInt()).build();
+                        int usage = in.readInt();
+                        attr = new AudioAttributes.Builder().setUsage(usage).build();
                         break;
                     case 2:
-                        attr = new AudioAttributes.Builder().setInternalCapturePreset(in.readInt()).build();
+                        int preset = in.readInt();
+                        attr = new AudioAttributes.Builder().setInternalCapturePreset(preset).build();
                         break;
                     default:
                         in.readInt();

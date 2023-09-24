@@ -7,14 +7,15 @@ import android.content.Context;
 import android.content.ContextWrapper;
 import android.content.Intent;
 import android.content.res.Configuration;
-import android.os.IBinder;
-import android.os.RemoteException;
+import android.p007os.IBinder;
+import android.p007os.RemoteException;
 import android.util.Log;
 import java.io.FileDescriptor;
 import java.io.PrintWriter;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 
+/* loaded from: classes.dex */
 public abstract class Service extends ContextWrapper implements ComponentCallbacks2 {
     public static final int START_CONTINUATION_MASK = 15;
     public static final int START_FLAG_REDELIVERY = 1;
@@ -28,34 +29,43 @@ public abstract class Service extends ContextWrapper implements ComponentCallbac
     public static final int STOP_FOREGROUND_REMOVE = 1;
     private static final String TAG = "Service";
     @UnsupportedAppUsage
-    private IActivityManager mActivityManager = null;
+    private IActivityManager mActivityManager;
     @UnsupportedAppUsage
-    private Application mApplication = null;
+    private Application mApplication;
     @UnsupportedAppUsage
-    private String mClassName = null;
+    private String mClassName;
     @UnsupportedAppUsage
-    private boolean mStartCompatibility = false;
+    private boolean mStartCompatibility;
     @UnsupportedAppUsage
-    private ActivityThread mThread = null;
+    private ActivityThread mThread;
     @UnsupportedAppUsage
-    private IBinder mToken = null;
+    private IBinder mToken;
 
     @Retention(RetentionPolicy.SOURCE)
+    /* loaded from: classes.dex */
     public @interface StartArgFlags {
     }
 
     @Retention(RetentionPolicy.SOURCE)
+    /* loaded from: classes.dex */
     public @interface StartResult {
     }
 
     @Retention(RetentionPolicy.SOURCE)
+    /* loaded from: classes.dex */
     public @interface StopForegroundFlags {
     }
 
     public abstract IBinder onBind(Intent intent);
 
     public Service() {
-        super((Context) null);
+        super(null);
+        this.mThread = null;
+        this.mClassName = null;
+        this.mToken = null;
+        this.mApplication = null;
+        this.mActivityManager = null;
+        this.mStartCompatibility = false;
     }
 
     public final Application getApplication() {
@@ -71,18 +81,21 @@ public abstract class Service extends ContextWrapper implements ComponentCallbac
 
     public int onStartCommand(Intent intent, int flags, int startId) {
         onStart(intent, startId);
-        return this.mStartCompatibility ^ true ? 1 : 0;
+        return !this.mStartCompatibility ? 1 : 0;
     }
 
     public void onDestroy() {
     }
 
+    @Override // android.content.ComponentCallbacks
     public void onConfigurationChanged(Configuration newConfig) {
     }
 
+    @Override // android.content.ComponentCallbacks
     public void onLowMemory() {
     }
 
+    @Override // android.content.ComponentCallbacks2
     public void onTrimMemory(int level) {
     }
 
@@ -101,11 +114,12 @@ public abstract class Service extends ContextWrapper implements ComponentCallbac
     }
 
     public final void stopSelf(int startId) {
-        if (this.mActivityManager != null) {
-            try {
-                this.mActivityManager.stopServiceToken(new ComponentName((Context) this, this.mClassName), this.mToken, startId);
-            } catch (RemoteException e) {
-            }
+        if (this.mActivityManager == null) {
+            return;
+        }
+        try {
+            this.mActivityManager.stopServiceToken(new ComponentName(this, this.mClassName), this.mToken, startId);
+        } catch (RemoteException e) {
         }
     }
 
@@ -114,53 +128,53 @@ public abstract class Service extends ContextWrapper implements ComponentCallbac
             return false;
         }
         try {
-            return this.mActivityManager.stopServiceToken(new ComponentName((Context) this, this.mClassName), this.mToken, startId);
+            return this.mActivityManager.stopServiceToken(new ComponentName(this, this.mClassName), this.mToken, startId);
         } catch (RemoteException e) {
             return false;
         }
     }
 
-    @Deprecated
     @UnsupportedAppUsage
+    @Deprecated
     public final void setForeground(boolean isForeground) {
-        Log.w(TAG, "setForeground: ignoring old API call on " + getClass().getName());
+        Log.m64w(TAG, "setForeground: ignoring old API call on " + getClass().getName());
     }
 
     public final void startForeground(int id, Notification notification) {
         try {
-            this.mActivityManager.setServiceForeground(new ComponentName((Context) this, this.mClassName), this.mToken, id, notification, 0, -1);
+            this.mActivityManager.setServiceForeground(new ComponentName(this, this.mClassName), this.mToken, id, notification, 0, -1);
         } catch (RemoteException e) {
         }
     }
 
     public final void startForeground(int id, Notification notification, int foregroundServiceType) {
         try {
-            this.mActivityManager.setServiceForeground(new ComponentName((Context) this, this.mClassName), this.mToken, id, notification, 0, foregroundServiceType);
+            this.mActivityManager.setServiceForeground(new ComponentName(this, this.mClassName), this.mToken, id, notification, 0, foregroundServiceType);
         } catch (RemoteException e) {
         }
     }
 
     public final void stopForeground(boolean removeNotification) {
-        stopForeground((int) removeNotification);
+        stopForeground(removeNotification ? 1 : 0);
     }
 
     public final void stopForeground(int flags) {
         try {
-            this.mActivityManager.setServiceForeground(new ComponentName((Context) this, this.mClassName), this.mToken, 0, (Notification) null, flags, 0);
+            this.mActivityManager.setServiceForeground(new ComponentName(this, this.mClassName), this.mToken, 0, null, flags, 0);
         } catch (RemoteException e) {
         }
     }
 
     public final int getForegroundServiceType() {
         try {
-            return this.mActivityManager.getForegroundServiceType(new ComponentName((Context) this, this.mClassName), this.mToken);
+            int ret = this.mActivityManager.getForegroundServiceType(new ComponentName(this, this.mClassName), this.mToken);
+            return ret;
         } catch (RemoteException e) {
             return 0;
         }
     }
 
-    /* access modifiers changed from: protected */
-    public void dump(FileDescriptor fd, PrintWriter writer, String[] args) {
+    protected void dump(FileDescriptor fd, PrintWriter writer, String[] args) {
         writer.println("nothing to dump");
     }
 
@@ -179,8 +193,7 @@ public abstract class Service extends ContextWrapper implements ComponentCallbac
         this.mToken = null;
     }
 
-    /* access modifiers changed from: package-private */
-    public final String getClassName() {
+    final String getClassName() {
         return this.mClassName;
     }
 }

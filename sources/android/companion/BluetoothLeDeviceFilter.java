@@ -2,10 +2,10 @@ package android.companion;
 
 import android.annotation.UnsupportedAppUsage;
 import android.bluetooth.BluetoothDevice;
-import android.bluetooth.le.ScanFilter;
-import android.bluetooth.le.ScanResult;
-import android.os.Parcel;
-import android.os.Parcelable;
+import android.bluetooth.p000le.ScanFilter;
+import android.bluetooth.p000le.ScanResult;
+import android.p007os.Parcel;
+import android.p007os.Parcelable;
 import android.provider.OneTimeUseBuilder;
 import android.text.TextUtils;
 import android.text.format.DateFormat;
@@ -17,10 +17,13 @@ import java.util.Arrays;
 import java.util.Objects;
 import java.util.regex.Pattern;
 
+/* loaded from: classes.dex */
 public final class BluetoothLeDeviceFilter implements DeviceFilter<ScanResult> {
-    public static final Parcelable.Creator<BluetoothLeDeviceFilter> CREATOR = new Parcelable.Creator<BluetoothLeDeviceFilter>() {
+    public static final Parcelable.Creator<BluetoothLeDeviceFilter> CREATOR = new Parcelable.Creator<BluetoothLeDeviceFilter>() { // from class: android.companion.BluetoothLeDeviceFilter.1
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public BluetoothLeDeviceFilter createFromParcel(Parcel in) {
-            Builder builder = new Builder().setNamePattern(BluetoothDeviceFilterUtils.patternFromString(in.readString())).setScanFilter((ScanFilter) in.readParcelable((ClassLoader) null));
+            Builder builder = new Builder().setNamePattern(BluetoothDeviceFilterUtils.patternFromString(in.readString())).setScanFilter((ScanFilter) in.readParcelable(null));
             byte[] rawDataFilter = in.createByteArray();
             byte[] rawDataFilterMask = in.createByteArray();
             if (rawDataFilter != null) {
@@ -43,6 +46,8 @@ public final class BluetoothLeDeviceFilter implements DeviceFilter<ScanResult> {
             return builder.build();
         }
 
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public BluetoothLeDeviceFilter[] newArray(int size) {
             return new BluetoothLeDeviceFilter[size];
         }
@@ -113,6 +118,7 @@ public final class BluetoothLeDeviceFilter implements DeviceFilter<ScanResult> {
         return this.mRenameBytesReverseOrder;
     }
 
+    @Override // android.companion.DeviceFilter
     public String getDeviceDisplayName(ScanResult sr) {
         if (this.mRenameBytesFrom < 0 && this.mRenameNameFrom < 0) {
             return BluetoothDeviceFilterUtils.getDeviceDisplayNameInternal(sr.getDevice());
@@ -124,10 +130,8 @@ public final class BluetoothLeDeviceFilter implements DeviceFilter<ScanResult> {
             int endInclusive = (this.mRenameBytesFrom + this.mRenameBytesLength) - 1;
             int initial = this.mRenameBytesReverseOrder ? endInclusive : startInclusive;
             int step = this.mRenameBytesReverseOrder ? -1 : 1;
-            int i = initial;
-            while (startInclusive <= i && i <= endInclusive) {
+            for (int i = initial; startInclusive <= i && i <= endInclusive; i += step) {
                 sb.append(Byte.toHexString(bytes[i], true));
-                i += step;
             }
         } else {
             sb.append(BluetoothDeviceFilterUtils.getDeviceDisplayNameInternal(sr.getDevice()).substring(this.mRenameNameFrom, this.mRenameNameFrom + this.mRenameNameLength));
@@ -136,6 +140,7 @@ public final class BluetoothLeDeviceFilter implements DeviceFilter<ScanResult> {
         return sb.toString();
     }
 
+    @Override // android.companion.DeviceFilter
     public boolean matches(ScanResult device) {
         return matches(device.getDevice()) && (this.mRawDataFilter == null || BitUtils.maskedEquals(device.getScanRecord().getBytes(), this.mRawDataFilter, this.mRawDataFilterMask));
     }
@@ -144,6 +149,7 @@ public final class BluetoothLeDeviceFilter implements DeviceFilter<ScanResult> {
         return BluetoothDeviceFilterUtils.matches(getScanFilter(), device) && BluetoothDeviceFilterUtils.matchesName(getNamePattern(), device);
     }
 
+    @Override // android.companion.DeviceFilter
     public int getMediumType() {
         return 1;
     }
@@ -156,16 +162,17 @@ public final class BluetoothLeDeviceFilter implements DeviceFilter<ScanResult> {
             return false;
         }
         BluetoothLeDeviceFilter that = (BluetoothLeDeviceFilter) o;
-        if (this.mRenameBytesFrom != that.mRenameBytesFrom || this.mRenameBytesLength != that.mRenameBytesLength || this.mRenameNameFrom != that.mRenameNameFrom || this.mRenameNameLength != that.mRenameNameLength || this.mRenameBytesReverseOrder != that.mRenameBytesReverseOrder || !Objects.equals(this.mNamePattern, that.mNamePattern) || !Objects.equals(this.mScanFilter, that.mScanFilter) || !Arrays.equals(this.mRawDataFilter, that.mRawDataFilter) || !Arrays.equals(this.mRawDataFilterMask, that.mRawDataFilterMask) || !Objects.equals(this.mRenamePrefix, that.mRenamePrefix) || !Objects.equals(this.mRenameSuffix, that.mRenameSuffix)) {
-            return false;
+        if (this.mRenameBytesFrom == that.mRenameBytesFrom && this.mRenameBytesLength == that.mRenameBytesLength && this.mRenameNameFrom == that.mRenameNameFrom && this.mRenameNameLength == that.mRenameNameLength && this.mRenameBytesReverseOrder == that.mRenameBytesReverseOrder && Objects.equals(this.mNamePattern, that.mNamePattern) && Objects.equals(this.mScanFilter, that.mScanFilter) && Arrays.equals(this.mRawDataFilter, that.mRawDataFilter) && Arrays.equals(this.mRawDataFilterMask, that.mRawDataFilterMask) && Objects.equals(this.mRenamePrefix, that.mRenamePrefix) && Objects.equals(this.mRenameSuffix, that.mRenameSuffix)) {
+            return true;
         }
-        return true;
+        return false;
     }
 
     public int hashCode() {
-        return Objects.hash(new Object[]{this.mNamePattern, this.mScanFilter, this.mRawDataFilter, this.mRawDataFilterMask, this.mRenamePrefix, this.mRenameSuffix, Integer.valueOf(this.mRenameBytesFrom), Integer.valueOf(this.mRenameBytesLength), Integer.valueOf(this.mRenameNameFrom), Integer.valueOf(this.mRenameNameLength), Boolean.valueOf(this.mRenameBytesReverseOrder)});
+        return Objects.hash(this.mNamePattern, this.mScanFilter, this.mRawDataFilter, this.mRawDataFilterMask, this.mRenamePrefix, this.mRenameSuffix, Integer.valueOf(this.mRenameBytesFrom), Integer.valueOf(this.mRenameBytesLength), Integer.valueOf(this.mRenameNameFrom), Integer.valueOf(this.mRenameNameLength), Boolean.valueOf(this.mRenameBytesReverseOrder));
     }
 
+    @Override // android.p007os.Parcelable
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeString(BluetoothDeviceFilterUtils.patternToString(getNamePattern()));
         dest.writeParcelable(this.mScanFilter, flags);
@@ -180,6 +187,7 @@ public final class BluetoothLeDeviceFilter implements DeviceFilter<ScanResult> {
         dest.writeBoolean(this.mRenameBytesReverseOrder);
     }
 
+    @Override // android.p007os.Parcelable
     public int describeContents() {
         return 0;
     }
@@ -192,18 +200,19 @@ public final class BluetoothLeDeviceFilter implements DeviceFilter<ScanResult> {
         return 10;
     }
 
+    /* loaded from: classes.dex */
     public static final class Builder extends OneTimeUseBuilder<BluetoothLeDeviceFilter> {
         private Pattern mNamePattern;
         private byte[] mRawDataFilter;
         private byte[] mRawDataFilterMask;
-        private int mRenameBytesFrom = -1;
         private int mRenameBytesLength;
-        private boolean mRenameBytesReverseOrder = false;
-        private int mRenameNameFrom = -1;
         private int mRenameNameLength;
         private String mRenamePrefix;
         private String mRenameSuffix;
         private ScanFilter mScanFilter;
+        private int mRenameBytesFrom = -1;
+        private int mRenameNameFrom = -1;
+        private boolean mRenameBytesReverseOrder = false;
 
         public Builder setNamePattern(Pattern regex) {
             checkNotUsed();
@@ -260,6 +269,8 @@ public final class BluetoothLeDeviceFilter implements DeviceFilter<ScanResult> {
             return this;
         }
 
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.provider.OneTimeUseBuilder
         public BluetoothLeDeviceFilter build() {
             markUsed();
             return new BluetoothLeDeviceFilter(this.mNamePattern, this.mScanFilter, this.mRawDataFilter, this.mRawDataFilterMask, this.mRenamePrefix, this.mRenameSuffix, this.mRenameBytesFrom, this.mRenameBytesLength, this.mRenameNameFrom, this.mRenameNameLength, this.mRenameBytesReverseOrder);

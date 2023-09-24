@@ -9,23 +9,25 @@ import java.util.Arrays;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
 
+/* loaded from: classes4.dex */
 public class DualDumpOutputStream {
     private static final String LOG_TAG = DualDumpOutputStream.class.getSimpleName();
     private final LinkedList<DumpObject> mDumpObjects;
     private final IndentingPrintWriter mIpw;
     private final ProtoOutputStream mProtoStream;
 
+    /* loaded from: classes4.dex */
     private static abstract class Dumpable {
         final String name;
 
-        /* access modifiers changed from: package-private */
-        public abstract void print(IndentingPrintWriter indentingPrintWriter, boolean z);
+        abstract void print(IndentingPrintWriter indentingPrintWriter, boolean z);
 
-        private Dumpable(String name2) {
-            this.name = name2;
+        private Dumpable(String name) {
+            this.name = name;
         }
     }
 
+    /* loaded from: classes4.dex */
     private static class DumpObject extends Dumpable {
         private final LinkedHashMap<String, ArrayList<Dumpable>> mSubObjects;
 
@@ -34,8 +36,8 @@ public class DualDumpOutputStream {
             this.mSubObjects = new LinkedHashMap<>();
         }
 
-        /* access modifiers changed from: package-private */
-        public void print(IndentingPrintWriter ipw, boolean printName) {
+        @Override // com.android.internal.util.dump.DualDumpOutputStream.Dumpable
+        void print(IndentingPrintWriter ipw, boolean printName) {
             if (printName) {
                 ipw.println(this.name + "={");
             } else {
@@ -70,6 +72,7 @@ public class DualDumpOutputStream {
         }
     }
 
+    /* loaded from: classes4.dex */
     private static class DumpField extends Dumpable {
         private final String mValue;
 
@@ -78,8 +81,8 @@ public class DualDumpOutputStream {
             this.mValue = value;
         }
 
-        /* access modifiers changed from: package-private */
-        public void print(IndentingPrintWriter ipw, boolean printName) {
+        @Override // com.android.internal.util.dump.DualDumpOutputStream.Dumpable
+        void print(IndentingPrintWriter ipw, boolean printName) {
             if (printName) {
                 ipw.println(this.name + "=" + this.mValue);
                 return;
@@ -98,7 +101,7 @@ public class DualDumpOutputStream {
         this.mDumpObjects = new LinkedList<>();
         this.mProtoStream = null;
         this.mIpw = ipw;
-        this.mDumpObjects.add(new DumpObject((String) null));
+        this.mDumpObjects.add(new DumpObject(null));
     }
 
     public void write(String fieldName, long fieldId, double val) {
@@ -164,7 +167,7 @@ public class DualDumpOutputStream {
         DumpObject d = new DumpObject(fieldName);
         this.mDumpObjects.getLast().add(fieldName, d);
         this.mDumpObjects.addLast(d);
-        return (long) System.identityHashCode(d);
+        return System.identityHashCode(d);
     }
 
     public void end(long token) {
@@ -172,9 +175,9 @@ public class DualDumpOutputStream {
             this.mProtoStream.end(token);
             return;
         }
-        if (((long) System.identityHashCode(this.mDumpObjects.getLast())) != token) {
+        if (System.identityHashCode(this.mDumpObjects.getLast()) != token) {
             String str = LOG_TAG;
-            Log.w(str, "Unexpected token for ending " + this.mDumpObjects.getLast().name + " at " + Arrays.toString(Thread.currentThread().getStackTrace()));
+            Log.m64w(str, "Unexpected token for ending " + this.mDumpObjects.getLast().name + " at " + Arrays.toString(Thread.currentThread().getStackTrace()));
         }
         this.mDumpObjects.removeLast();
     }
@@ -187,14 +190,14 @@ public class DualDumpOutputStream {
         if (this.mDumpObjects.size() == 1) {
             this.mDumpObjects.getFirst().print(this.mIpw, false);
             this.mDumpObjects.clear();
-            this.mDumpObjects.add(new DumpObject((String) null));
+            this.mDumpObjects.add(new DumpObject(null));
         }
         this.mIpw.flush();
     }
 
     public void writeNested(String fieldName, byte[] nestedState) {
         if (this.mIpw == null) {
-            Log.w(LOG_TAG, "writeNested does not work for proto logging");
+            Log.m64w(LOG_TAG, "writeNested does not work for proto logging");
         } else {
             this.mDumpObjects.getLast().add(fieldName, new DumpField(fieldName, new String(nestedState, StandardCharsets.UTF_8).trim()));
         }

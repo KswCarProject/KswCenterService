@@ -4,6 +4,7 @@ import com.android.internal.telephony.IccCardConstants;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 
+/* loaded from: classes.dex */
 public final class GnssStatus {
     public static final int CONSTELLATION_BEIDOU = 5;
     public static final int CONSTELLATION_COUNT = 8;
@@ -30,9 +31,11 @@ public final class GnssStatus {
     final int[] mSvidWithFlags;
 
     @Retention(RetentionPolicy.SOURCE)
+    /* loaded from: classes.dex */
     public @interface ConstellationType {
     }
 
+    /* loaded from: classes.dex */
     public static abstract class Callback {
         public void onStarted() {
         }

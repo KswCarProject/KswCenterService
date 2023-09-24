@@ -2,6 +2,7 @@ package android.view;
 
 import android.graphics.drawable.Drawable;
 
+/* loaded from: classes4.dex */
 public interface SubMenu extends Menu {
     void clearHeader();
 

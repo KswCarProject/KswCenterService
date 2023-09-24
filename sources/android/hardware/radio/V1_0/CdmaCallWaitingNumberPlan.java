@@ -3,6 +3,7 @@ package android.hardware.radio.V1_0;
 import com.android.internal.telephony.IccCardConstants;
 import java.util.ArrayList;
 
+/* loaded from: classes.dex */
 public final class CdmaCallWaitingNumberPlan {
     public static final int DATA = 3;
     public static final int ISDN = 1;

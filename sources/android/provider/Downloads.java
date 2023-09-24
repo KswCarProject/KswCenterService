@@ -4,6 +4,7 @@ import android.annotation.UnsupportedAppUsage;
 import android.content.Context;
 import android.net.Uri;
 
+/* loaded from: classes3.dex */
 public final class Downloads {
     public static final String CALL_CREATE_EXTERNAL_PUBLIC_DIR = "create_external_public_dir";
     public static final String CALL_MEDIASTORE_DOWNLOADS_DELETED = "mediastore_downloads_deleted";
@@ -16,11 +17,10 @@ public final class Downloads {
     private Downloads() {
     }
 
+    /* loaded from: classes3.dex */
     public static final class Impl implements BaseColumns {
         public static final String ACTION_DOWNLOAD_COMPLETED = "android.intent.action.DOWNLOAD_COMPLETED";
         public static final String ACTION_NOTIFICATION_CLICKED = "android.intent.action.DOWNLOAD_NOTIFICATION_CLICKED";
-        @UnsupportedAppUsage
-        public static final Uri ALL_DOWNLOADS_CONTENT_URI = Uri.parse("content://downloads/all_downloads");
         public static final String AUTHORITY = "downloads";
         @UnsupportedAppUsage
         public static final String COLUMN_ALLOWED_NETWORK_TYPES = "allowed_network_types";
@@ -76,8 +76,6 @@ public final class Downloads {
         public static final String COLUMN_USER_AGENT = "useragent";
         @UnsupportedAppUsage
         public static final String COLUMN_VISIBILITY = "visibility";
-        @UnsupportedAppUsage
-        public static final Uri CONTENT_URI = Uri.parse("content://downloads/my_downloads");
         public static final int CONTROL_PAUSED = 1;
         public static final int CONTROL_RUN = 0;
         public static final int DESTINATION_CACHE_PARTITION = 1;
@@ -105,8 +103,6 @@ public final class Downloads {
         public static final String PERMISSION_CACHE_NON_PURGEABLE = "android.permission.DOWNLOAD_CACHE_NON_PURGEABLE";
         public static final String PERMISSION_NO_NOTIFICATION = "android.permission.DOWNLOAD_WITHOUT_NOTIFICATION";
         public static final String PERMISSION_SEND_INTENTS = "android.permission.SEND_DOWNLOAD_COMPLETED_INTENTS";
-        @UnsupportedAppUsage
-        public static final Uri PUBLICLY_ACCESSIBLE_DOWNLOADS_URI = Uri.parse("content://downloads/public_downloads");
         public static final String PUBLICLY_ACCESSIBLE_DOWNLOADS_URI_SEGMENT = "public_downloads";
         public static final int STATUS_BAD_REQUEST = 400;
         @Deprecated
@@ -137,7 +133,14 @@ public final class Downloads {
         public static final int VISIBILITY_VISIBLE = 0;
         public static final int VISIBILITY_VISIBLE_NOTIFY_COMPLETED = 1;
         public static final String _DATA = "_data";
+        @UnsupportedAppUsage
+        public static final Uri CONTENT_URI = Uri.parse("content://downloads/my_downloads");
+        @UnsupportedAppUsage
+        public static final Uri ALL_DOWNLOADS_CONTENT_URI = Uri.parse("content://downloads/all_downloads");
+        @UnsupportedAppUsage
+        public static final Uri PUBLICLY_ACCESSIBLE_DOWNLOADS_URI = Uri.parse("content://downloads/public_downloads");
 
+        /* loaded from: classes3.dex */
         public static class RequestHeaders {
             public static final String COLUMN_DOWNLOAD_ID = "download_id";
             public static final String COLUMN_HEADER = "header";
@@ -184,70 +187,70 @@ public final class Downloads {
         }
 
         public static String statusToString(int status) {
-            if (status == 190) {
-                return "PENDING";
-            }
-            if (status == 400) {
+            if (status != 190) {
+                if (status != 400) {
+                    if (status != 406) {
+                        switch (status) {
+                            case 192:
+                                return "RUNNING";
+                            case 193:
+                                return "PAUSED_BY_APP";
+                            case 194:
+                                return "WAITING_TO_RETRY";
+                            case 195:
+                                return "WAITING_FOR_NETWORK";
+                            case 196:
+                                return "QUEUED_FOR_WIFI";
+                            default:
+                                switch (status) {
+                                    case 198:
+                                        return "INSUFFICIENT_SPACE_ERROR";
+                                    case 199:
+                                        return "DEVICE_NOT_FOUND_ERROR";
+                                    case 200:
+                                        return "SUCCESS";
+                                    default:
+                                        switch (status) {
+                                            case 411:
+                                                return "LENGTH_REQUIRED";
+                                            case STATUS_PRECONDITION_FAILED /* 412 */:
+                                                return "PRECONDITION_FAILED";
+                                            default:
+                                                switch (status) {
+                                                    case 488:
+                                                        return "FILE_ALREADY_EXISTS_ERROR";
+                                                    case 489:
+                                                        return "CANNOT_RESUME";
+                                                    case 490:
+                                                        return "CANCELED";
+                                                    case 491:
+                                                        return "UNKNOWN_ERROR";
+                                                    case 492:
+                                                        return "FILE_ERROR";
+                                                    case 493:
+                                                        return "UNHANDLED_REDIRECT";
+                                                    case 494:
+                                                        return "UNHANDLED_HTTP_CODE";
+                                                    case 495:
+                                                        return "HTTP_DATA_ERROR";
+                                                    case 496:
+                                                        return "HTTP_EXCEPTION";
+                                                    case STATUS_TOO_MANY_REDIRECTS /* 497 */:
+                                                        return "TOO_MANY_REDIRECTS";
+                                                    case 498:
+                                                        return "BLOCKED";
+                                                    default:
+                                                        return Integer.toString(status);
+                                                }
+                                        }
+                                }
+                        }
+                    }
+                    return "NOT_ACCEPTABLE";
+                }
                 return "BAD_REQUEST";
             }
-            if (status == 406) {
-                return "NOT_ACCEPTABLE";
-            }
-            switch (status) {
-                case 192:
-                    return "RUNNING";
-                case 193:
-                    return "PAUSED_BY_APP";
-                case 194:
-                    return "WAITING_TO_RETRY";
-                case 195:
-                    return "WAITING_FOR_NETWORK";
-                case 196:
-                    return "QUEUED_FOR_WIFI";
-                default:
-                    switch (status) {
-                        case 198:
-                            return "INSUFFICIENT_SPACE_ERROR";
-                        case 199:
-                            return "DEVICE_NOT_FOUND_ERROR";
-                        case 200:
-                            return "SUCCESS";
-                        default:
-                            switch (status) {
-                                case 411:
-                                    return "LENGTH_REQUIRED";
-                                case STATUS_PRECONDITION_FAILED /*412*/:
-                                    return "PRECONDITION_FAILED";
-                                default:
-                                    switch (status) {
-                                        case 488:
-                                            return "FILE_ALREADY_EXISTS_ERROR";
-                                        case 489:
-                                            return "CANNOT_RESUME";
-                                        case 490:
-                                            return "CANCELED";
-                                        case 491:
-                                            return "UNKNOWN_ERROR";
-                                        case 492:
-                                            return "FILE_ERROR";
-                                        case 493:
-                                            return "UNHANDLED_REDIRECT";
-                                        case 494:
-                                            return "UNHANDLED_HTTP_CODE";
-                                        case 495:
-                                            return "HTTP_DATA_ERROR";
-                                        case 496:
-                                            return "HTTP_EXCEPTION";
-                                        case STATUS_TOO_MANY_REDIRECTS /*497*/:
-                                            return "TOO_MANY_REDIRECTS";
-                                        case 498:
-                                            return "BLOCKED";
-                                        default:
-                                            return Integer.toString(status);
-                                    }
-                            }
-                    }
-            }
+            return "PENDING";
         }
     }
 

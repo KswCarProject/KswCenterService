@@ -10,10 +10,11 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.net.Uri;
-import android.os.RemoteException;
+import android.p007os.RemoteException;
 import android.provider.SyncStateContract;
 import android.util.Pair;
 
+/* loaded from: classes3.dex */
 public class BrowserContract {
     public static final String AUTHORITY = "com.android.browser";
     @UnsupportedAppUsage
@@ -21,6 +22,7 @@ public class BrowserContract {
     public static final String CALLER_IS_SYNCADAPTER = "caller_is_syncadapter";
     public static final String PARAM_LIMIT = "limit";
 
+    /* loaded from: classes3.dex */
     public static final class Accounts {
         public static final String ACCOUNT_NAME = "account_name";
         public static final String ACCOUNT_TYPE = "account_type";
@@ -29,6 +31,7 @@ public class BrowserContract {
         public static final String ROOT_ID = "root_id";
     }
 
+    /* loaded from: classes3.dex */
     interface BaseSyncColumns {
         public static final String SYNC1 = "sync1";
         public static final String SYNC2 = "sync2";
@@ -37,6 +40,7 @@ public class BrowserContract {
         public static final String SYNC5 = "sync5";
     }
 
+    /* loaded from: classes3.dex */
     interface CommonColumns {
         public static final String DATE_CREATED = "created";
         public static final String TITLE = "title";
@@ -44,23 +48,27 @@ public class BrowserContract {
         public static final String _ID = "_id";
     }
 
+    /* loaded from: classes3.dex */
     interface HistoryColumns {
         public static final String DATE_LAST_VISITED = "date";
         public static final String USER_ENTERED = "user_entered";
         public static final String VISITS = "visits";
     }
 
+    /* loaded from: classes3.dex */
     interface ImageColumns {
         public static final String FAVICON = "favicon";
         public static final String THUMBNAIL = "thumbnail";
         public static final String TOUCH_ICON = "touch_icon";
     }
 
+    /* loaded from: classes3.dex */
     interface ImageMappingColumns {
         public static final String IMAGE_ID = "image_id";
         public static final String URL = "url";
     }
 
+    /* loaded from: classes3.dex */
     interface SyncColumns extends BaseSyncColumns {
         public static final String ACCOUNT_NAME = "account_name";
         public static final String ACCOUNT_TYPE = "account_type";
@@ -70,6 +78,7 @@ public class BrowserContract {
         public static final String VERSION = "version";
     }
 
+    /* loaded from: classes3.dex */
     public static final class ChromeSyncColumns {
         public static final String CLIENT_UNIQUE = "sync4";
         public static final String FOLDER_NAME_BOOKMARKS = "google_chrome_bookmarks";
@@ -82,6 +91,7 @@ public class BrowserContract {
         }
     }
 
+    /* loaded from: classes3.dex */
     public static final class Bookmarks implements CommonColumns, ImageColumns, SyncColumns {
         public static final int BOOKMARK_TYPE_BOOKMARK = 1;
         public static final int BOOKMARK_TYPE_BOOKMARK_BAR_FOLDER = 3;
@@ -115,6 +125,7 @@ public class BrowserContract {
         }
     }
 
+    /* loaded from: classes3.dex */
     public static final class History implements CommonColumns, HistoryColumns, ImageColumns {
         public static final String CONTENT_ITEM_TYPE = "vnd.android.cursor.item/browser-history";
         public static final String CONTENT_TYPE = "vnd.android.cursor.dir/browser-history";
@@ -125,6 +136,7 @@ public class BrowserContract {
         }
     }
 
+    /* loaded from: classes3.dex */
     public static final class Searches {
         public static final String CONTENT_ITEM_TYPE = "vnd.android.cursor.item/searches";
         public static final String CONTENT_TYPE = "vnd.android.cursor.dir/searches";
@@ -137,6 +149,7 @@ public class BrowserContract {
         }
     }
 
+    /* loaded from: classes3.dex */
     public static final class SyncState implements SyncStateContract.Columns {
         public static final String CONTENT_DIRECTORY = "syncstate";
         public static final Uri CONTENT_URI = Uri.withAppendedPath(BrowserContract.AUTHORITY_URI, "syncstate");
@@ -161,6 +174,7 @@ public class BrowserContract {
         }
     }
 
+    /* loaded from: classes3.dex */
     public static final class Images implements ImageColumns {
         public static final String CONTENT_ITEM_TYPE = "vnd.android.cursor.item/images";
         public static final String CONTENT_TYPE = "vnd.android.cursor.dir/images";
@@ -177,6 +191,7 @@ public class BrowserContract {
         }
     }
 
+    /* loaded from: classes3.dex */
     public static final class ImageMappings implements ImageMappingColumns {
         public static final String CONTENT_ITEM_TYPE = "vnd.android.cursor.item/image_mappings";
         public static final String CONTENT_TYPE = "vnd.android.cursor.dir/image_mappings";
@@ -186,6 +201,7 @@ public class BrowserContract {
         }
     }
 
+    /* loaded from: classes3.dex */
     public static final class Combined implements CommonColumns, HistoryColumns, ImageColumns {
         @UnsupportedAppUsage
         public static final Uri CONTENT_URI = Uri.withAppendedPath(BrowserContract.AUTHORITY_URI, "combined");
@@ -195,6 +211,7 @@ public class BrowserContract {
         }
     }
 
+    /* loaded from: classes3.dex */
     public static final class Settings {
         public static final Uri CONTENT_URI = Uri.withAppendedPath(BrowserContract.AUTHORITY_URI, "settings");
         public static final String KEY = "key";
@@ -204,21 +221,18 @@ public class BrowserContract {
         private Settings() {
         }
 
+        /* JADX WARN: Code restructure failed: missing block: B:16:0x0038, code lost:
+            r0.close();
+         */
+        /*
+            Code decompiled incorrectly, please refer to instructions dump.
+        */
         public static boolean isSyncEnabled(Context context) {
             Cursor cursor = null;
             try {
-                cursor = context.getContentResolver().query(CONTENT_URI, new String[]{"value"}, "key=?", new String[]{KEY_SYNC_ENABLED}, (String) null);
-                boolean z = false;
-                if (cursor != null) {
-                    if (cursor.moveToFirst()) {
-                        if (cursor.getInt(0) != 0) {
-                            z = true;
-                        }
-                        if (cursor != null) {
-                            cursor.close();
-                        }
-                        return z;
-                    }
+                cursor = context.getContentResolver().query(CONTENT_URI, new String[]{"value"}, "key=?", new String[]{KEY_SYNC_ENABLED}, null);
+                if (cursor != null && cursor.moveToFirst()) {
+                    return cursor.getInt(0) != 0;
                 }
                 return false;
             } finally {
@@ -231,7 +245,7 @@ public class BrowserContract {
         public static void setSyncEnabled(Context context, boolean enabled) {
             ContentValues values = new ContentValues();
             values.put("key", KEY_SYNC_ENABLED);
-            values.put("value", Integer.valueOf(enabled));
+            values.put("value", Integer.valueOf(enabled ? 1 : 0));
             context.getContentResolver().insert(CONTENT_URI, values);
         }
     }

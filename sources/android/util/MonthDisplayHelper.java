@@ -2,6 +2,7 @@ package android.util;
 
 import java.util.Calendar;
 
+/* loaded from: classes4.dex */
 public class MonthDisplayHelper {
     private Calendar mCalendar;
     private int mNumDaysInMonth;
@@ -69,10 +70,10 @@ public class MonthDisplayHelper {
             return ((this.mNumDaysInPrevMonth + column) - this.mOffset) + 1;
         }
         int day = (((row * 7) + column) - this.mOffset) + 1;
-        if (day > this.mNumDaysInMonth) {
-            return day - this.mNumDaysInMonth;
+        if (day <= this.mNumDaysInMonth) {
+            return day;
         }
-        return day;
+        return day - this.mNumDaysInMonth;
     }
 
     public int getRowOf(int day) {
@@ -97,10 +98,11 @@ public class MonthDisplayHelper {
         if (row < 0 || column < 0 || row > 5 || column > 6) {
             return false;
         }
-        if ((row != 0 || column >= this.mOffset) && (((row * 7) + column) - this.mOffset) + 1 <= this.mNumDaysInMonth) {
-            return true;
+        if (row == 0 && column < this.mOffset) {
+            return false;
         }
-        return false;
+        int day = (((row * 7) + column) - this.mOffset) + 1;
+        return day <= this.mNumDaysInMonth;
     }
 
     private void recalculate() {
@@ -108,7 +110,8 @@ public class MonthDisplayHelper {
         this.mCalendar.add(2, -1);
         this.mNumDaysInPrevMonth = this.mCalendar.getActualMaximum(5);
         this.mCalendar.add(2, 1);
-        int offset = getFirstDayOfMonth() - this.mWeekStartDay;
+        int firstDayOfMonth = getFirstDayOfMonth();
+        int offset = firstDayOfMonth - this.mWeekStartDay;
         if (offset < 0) {
             offset += 7;
         }

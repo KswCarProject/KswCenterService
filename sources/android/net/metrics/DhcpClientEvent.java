@@ -3,17 +3,22 @@ package android.net.metrics;
 import android.annotation.SystemApi;
 import android.annotation.UnsupportedAppUsage;
 import android.net.metrics.IpConnectivityLog;
-import android.os.Parcel;
-import android.os.Parcelable;
+import android.p007os.Parcel;
+import android.p007os.Parcelable;
 import android.text.TextUtils;
 
 @SystemApi
+/* loaded from: classes3.dex */
 public final class DhcpClientEvent implements IpConnectivityLog.Event {
-    public static final Parcelable.Creator<DhcpClientEvent> CREATOR = new Parcelable.Creator<DhcpClientEvent>() {
+    public static final Parcelable.Creator<DhcpClientEvent> CREATOR = new Parcelable.Creator<DhcpClientEvent>() { // from class: android.net.metrics.DhcpClientEvent.1
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public DhcpClientEvent createFromParcel(Parcel in) {
             return new DhcpClientEvent(in);
         }
 
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public DhcpClientEvent[] newArray(int size) {
             return new DhcpClientEvent[size];
         }
@@ -22,9 +27,9 @@ public final class DhcpClientEvent implements IpConnectivityLog.Event {
     public final String msg;
 
     @UnsupportedAppUsage
-    private DhcpClientEvent(String msg2, int durationMs2) {
-        this.msg = msg2;
-        this.durationMs = durationMs2;
+    private DhcpClientEvent(String msg, int durationMs) {
+        this.msg = msg;
+        this.durationMs = durationMs;
     }
 
     private DhcpClientEvent(Parcel in) {
@@ -32,6 +37,7 @@ public final class DhcpClientEvent implements IpConnectivityLog.Event {
         this.durationMs = in.readInt();
     }
 
+    /* loaded from: classes3.dex */
     public static final class Builder {
         private int mDurationMs;
         private String mMsg;
@@ -51,17 +57,19 @@ public final class DhcpClientEvent implements IpConnectivityLog.Event {
         }
     }
 
+    @Override // android.p007os.Parcelable
     public void writeToParcel(Parcel out, int flags) {
         out.writeString(this.msg);
         out.writeInt(this.durationMs);
     }
 
+    @Override // android.p007os.Parcelable
     public int describeContents() {
         return 0;
     }
 
     public String toString() {
-        return String.format("DhcpClientEvent(%s, %dms)", new Object[]{this.msg, Integer.valueOf(this.durationMs)});
+        return String.format("DhcpClientEvent(%s, %dms)", this.msg, Integer.valueOf(this.durationMs));
     }
 
     public boolean equals(Object obj) {
@@ -69,9 +77,6 @@ public final class DhcpClientEvent implements IpConnectivityLog.Event {
             return false;
         }
         DhcpClientEvent other = (DhcpClientEvent) obj;
-        if (!TextUtils.equals(this.msg, other.msg) || this.durationMs != other.durationMs) {
-            return false;
-        }
-        return true;
+        return TextUtils.equals(this.msg, other.msg) && this.durationMs == other.durationMs;
     }
 }

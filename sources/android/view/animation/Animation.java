@@ -4,13 +4,14 @@ import android.annotation.UnsupportedAppUsage;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.RectF;
-import android.os.Handler;
-import android.os.SystemProperties;
+import android.p007os.Handler;
+import android.p007os.SystemProperties;
 import android.util.AttributeSet;
 import android.util.TypedValue;
-import com.android.internal.R;
+import com.android.internal.C3132R;
 import dalvik.system.CloseGuard;
 
+/* loaded from: classes4.dex */
 public abstract class Animation implements Cloneable {
     public static final int ABSOLUTE = 0;
     public static final int INFINITE = -1;
@@ -22,43 +23,44 @@ public abstract class Animation implements Cloneable {
     public static final int ZORDER_BOTTOM = -1;
     public static final int ZORDER_NORMAL = 0;
     public static final int ZORDER_TOP = 1;
-    private final CloseGuard guard = CloseGuard.get();
     private int mBackgroundColor;
-    boolean mCycleFlip = false;
     long mDuration;
-    boolean mEnded = false;
-    boolean mFillAfter = false;
-    boolean mFillBefore = true;
-    boolean mFillEnabled = false;
     private boolean mHasRoundedCorners;
-    boolean mInitialized = false;
     Interpolator mInterpolator;
     @UnsupportedAppUsage(maxTargetSdk = 28, trackingBug = 117519981)
     private AnimationListener mListener;
     private Handler mListenerHandler;
-    private boolean mMore = true;
     private Runnable mOnEnd;
     private Runnable mOnRepeat;
     private Runnable mOnStart;
+    private boolean mShowWallpaper;
+    long mStartOffset;
+    private int mZAdjustment;
+    boolean mEnded = false;
+    boolean mStarted = false;
+    boolean mCycleFlip = false;
+    boolean mInitialized = false;
+    boolean mFillBefore = true;
+    boolean mFillAfter = false;
+    boolean mFillEnabled = false;
+    long mStartTime = -1;
+    int mRepeatCount = 0;
+    int mRepeated = 0;
+    int mRepeatMode = 1;
+    private float mScaleFactor = 1.0f;
+    private boolean mMore = true;
     private boolean mOneMoreTime = true;
     @UnsupportedAppUsage
     RectF mPreviousRegion = new RectF();
     @UnsupportedAppUsage
-    Transformation mPreviousTransformation = new Transformation();
-    @UnsupportedAppUsage
     RectF mRegion = new RectF();
-    int mRepeatCount = 0;
-    int mRepeatMode = 1;
-    int mRepeated = 0;
-    private float mScaleFactor = 1.0f;
-    private boolean mShowWallpaper;
-    long mStartOffset;
-    long mStartTime = -1;
-    boolean mStarted = false;
     @UnsupportedAppUsage
     Transformation mTransformation = new Transformation();
-    private int mZAdjustment;
+    @UnsupportedAppUsage
+    Transformation mPreviousTransformation = new Transformation();
+    private final CloseGuard guard = CloseGuard.get();
 
+    /* loaded from: classes4.dex */
     public interface AnimationListener {
         void onAnimationEnd(Animation animation);
 
@@ -67,6 +69,7 @@ public abstract class Animation implements Cloneable {
         void onAnimationStart(Animation animation);
     }
 
+    /* loaded from: classes4.dex */
     private static class NoImagePreloadHolder {
         public static final boolean USE_CLOSEGUARD = SystemProperties.getBoolean("log.closeguard.Animation", false);
 
@@ -79,9 +82,9 @@ public abstract class Animation implements Cloneable {
     }
 
     public Animation(Context context, AttributeSet attrs) {
-        TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.Animation);
-        setDuration((long) a.getInt(2, 0));
-        setStartOffset((long) a.getInt(5, 0));
+        TypedArray a = context.obtainStyledAttributes(attrs, C3132R.styleable.Animation);
+        setDuration(a.getInt(2, 0));
+        setStartOffset(a.getInt(5, 0));
         setFillEnabled(a.getBoolean(9, this.mFillEnabled));
         setFillBefore(a.getBoolean(3, this.mFillBefore));
         setFillAfter(a.getBoolean(4, this.mFillAfter));
@@ -100,8 +103,10 @@ public abstract class Animation implements Cloneable {
         ensureInterpolator();
     }
 
-    /* access modifiers changed from: protected */
-    public Animation clone() throws CloneNotSupportedException {
+    /* JADX INFO: Access modifiers changed from: protected */
+    @Override // 
+    /* renamed from: clone */
+    public Animation mo181clone() throws CloneNotSupportedException {
         Animation animation = (Animation) super.clone();
         animation.mPreviousRegion = new RectF();
         animation.mRegion = new RectF();
@@ -152,17 +157,20 @@ public abstract class Animation implements Cloneable {
 
     public void setListenerHandler(Handler handler) {
         if (this.mListenerHandler == null) {
-            this.mOnStart = new Runnable() {
+            this.mOnStart = new Runnable() { // from class: android.view.animation.Animation.1
+                @Override // java.lang.Runnable
                 public void run() {
                     Animation.this.dispatchAnimationStart();
                 }
             };
-            this.mOnRepeat = new Runnable() {
+            this.mOnRepeat = new Runnable() { // from class: android.view.animation.Animation.2
+                @Override // java.lang.Runnable
                 public void run() {
                     Animation.this.dispatchAnimationRepeat();
                 }
             };
-            this.mOnEnd = new Runnable() {
+            this.mOnEnd = new Runnable() { // from class: android.view.animation.Animation.3
+                @Override // java.lang.Runnable
                 public void run() {
                     Animation.this.dispatchAnimationEnd();
                 }
@@ -184,17 +192,16 @@ public abstract class Animation implements Cloneable {
     }
 
     public void setDuration(long durationMillis) {
-        if (durationMillis >= 0) {
-            this.mDuration = durationMillis;
-            return;
+        if (durationMillis < 0) {
+            throw new IllegalArgumentException("Animation duration cannot be negative");
         }
-        throw new IllegalArgumentException("Animation duration cannot be negative");
+        this.mDuration = durationMillis;
     }
 
     public void restrictDuration(long durationMillis) {
         if (this.mStartOffset > durationMillis) {
             this.mStartOffset = durationMillis;
-            this.mDuration = 0;
+            this.mDuration = 0L;
             this.mRepeatCount = 0;
             return;
         }
@@ -204,9 +211,9 @@ public abstract class Animation implements Cloneable {
             dur = durationMillis;
         }
         if (this.mDuration <= 0) {
-            this.mDuration = 0;
+            this.mDuration = 0L;
             this.mRepeatCount = 0;
-        } else if (this.mRepeatCount < 0 || ((long) this.mRepeatCount) > durationMillis || ((long) this.mRepeatCount) * dur > durationMillis) {
+        } else if (this.mRepeatCount < 0 || this.mRepeatCount > durationMillis || this.mRepeatCount * dur > durationMillis) {
             this.mRepeatCount = ((int) (durationMillis / dur)) - 1;
             if (this.mRepeatCount < 0) {
                 this.mRepeatCount = 0;
@@ -215,8 +222,8 @@ public abstract class Animation implements Cloneable {
     }
 
     public void scaleCurrentDuration(float scale) {
-        this.mDuration = (long) (((float) this.mDuration) * scale);
-        this.mStartOffset = (long) (((float) this.mStartOffset) * scale);
+        this.mDuration = ((float) this.mDuration) * scale;
+        this.mStartOffset = ((float) this.mStartOffset) * scale;
     }
 
     public void setStartTime(long startTimeMillis) {
@@ -229,7 +236,7 @@ public abstract class Animation implements Cloneable {
     }
 
     public void start() {
-        setStartTime(-1);
+        setStartTime(-1L);
     }
 
     public void startNow() {
@@ -271,8 +278,7 @@ public abstract class Animation implements Cloneable {
         this.mBackgroundColor = bg;
     }
 
-    /* access modifiers changed from: protected */
-    public float getScaleFactor() {
+    protected float getScaleFactor() {
         return this.mScaleFactor;
     }
 
@@ -355,29 +361,27 @@ public abstract class Animation implements Cloneable {
         this.mListener = listener;
     }
 
-    /* access modifiers changed from: protected */
-    public void ensureInterpolator() {
+    protected void ensureInterpolator() {
         if (this.mInterpolator == null) {
             this.mInterpolator = new AccelerateDecelerateInterpolator();
         }
     }
 
     public long computeDurationHint() {
-        return (getStartOffset() + getDuration()) * ((long) (getRepeatCount() + 1));
+        return (getStartOffset() + getDuration()) * (getRepeatCount() + 1);
     }
 
     public boolean getTransformation(long currentTime, Transformation outTransformation) {
         float normalizedTime;
-        long j = currentTime;
         if (this.mStartTime == -1) {
-            this.mStartTime = j;
+            this.mStartTime = currentTime;
         }
         long startOffset = getStartOffset();
         long duration = this.mDuration;
         if (duration != 0) {
-            normalizedTime = ((float) (j - (this.mStartTime + startOffset))) / ((float) duration);
+            normalizedTime = ((float) (currentTime - (this.mStartTime + startOffset))) / ((float) duration);
         } else {
-            normalizedTime = j < this.mStartTime ? 0.0f : 1.0f;
+            normalizedTime = currentTime < this.mStartTime ? 0.0f : 1.0f;
         }
         boolean expired = normalizedTime >= 1.0f || isCanceled();
         this.mMore = !expired;
@@ -398,32 +402,33 @@ public abstract class Animation implements Cloneable {
             if (this.mCycleFlip) {
                 normalizedTime = 1.0f - normalizedTime;
             }
-            applyTransformation(this.mInterpolator.getInterpolation(normalizedTime), outTransformation);
-        } else {
-            Transformation transformation = outTransformation;
+            float interpolatedTime = this.mInterpolator.getInterpolation(normalizedTime);
+            applyTransformation(interpolatedTime, outTransformation);
         }
         if (expired) {
-            if (this.mRepeatCount != this.mRepeated && !isCanceled()) {
+            if (this.mRepeatCount == this.mRepeated || isCanceled()) {
+                if (!this.mEnded) {
+                    this.mEnded = true;
+                    this.guard.close();
+                    fireAnimationEnd();
+                }
+            } else {
                 if (this.mRepeatCount > 0) {
                     this.mRepeated++;
                 }
                 if (this.mRepeatMode == 2) {
                     this.mCycleFlip = !this.mCycleFlip;
                 }
-                this.mStartTime = -1;
+                this.mStartTime = -1L;
                 this.mMore = true;
                 fireAnimationRepeat();
-            } else if (!this.mEnded) {
-                this.mEnded = true;
-                this.guard.close();
-                fireAnimationEnd();
             }
         }
-        if (this.mMore || !this.mOneMoreTime) {
-            return this.mMore;
+        if (!this.mMore && this.mOneMoreTime) {
+            this.mOneMoreTime = false;
+            return true;
         }
-        this.mOneMoreTime = false;
-        return true;
+        return this.mMore;
     }
 
     private boolean isCanceled() {
@@ -431,54 +436,48 @@ public abstract class Animation implements Cloneable {
     }
 
     private void fireAnimationStart() {
-        if (!hasAnimationListener()) {
-            return;
-        }
-        if (this.mListenerHandler == null) {
-            dispatchAnimationStart();
-        } else {
-            this.mListenerHandler.postAtFrontOfQueue(this.mOnStart);
+        if (hasAnimationListener()) {
+            if (this.mListenerHandler != null) {
+                this.mListenerHandler.postAtFrontOfQueue(this.mOnStart);
+            } else {
+                dispatchAnimationStart();
+            }
         }
     }
 
     private void fireAnimationRepeat() {
-        if (!hasAnimationListener()) {
-            return;
-        }
-        if (this.mListenerHandler == null) {
-            dispatchAnimationRepeat();
-        } else {
-            this.mListenerHandler.postAtFrontOfQueue(this.mOnRepeat);
+        if (hasAnimationListener()) {
+            if (this.mListenerHandler != null) {
+                this.mListenerHandler.postAtFrontOfQueue(this.mOnRepeat);
+            } else {
+                dispatchAnimationRepeat();
+            }
         }
     }
 
     private void fireAnimationEnd() {
-        if (!hasAnimationListener()) {
-            return;
-        }
-        if (this.mListenerHandler == null) {
-            dispatchAnimationEnd();
-        } else {
-            this.mListenerHandler.postAtFrontOfQueue(this.mOnEnd);
+        if (hasAnimationListener()) {
+            if (this.mListenerHandler != null) {
+                this.mListenerHandler.postAtFrontOfQueue(this.mOnEnd);
+            } else {
+                dispatchAnimationEnd();
+            }
         }
     }
 
-    /* access modifiers changed from: package-private */
-    public void dispatchAnimationStart() {
+    void dispatchAnimationStart() {
         if (this.mListener != null) {
             this.mListener.onAnimationStart(this);
         }
     }
 
-    /* access modifiers changed from: package-private */
-    public void dispatchAnimationRepeat() {
+    void dispatchAnimationRepeat() {
         if (this.mListener != null) {
             this.mListener.onAnimationRepeat(this);
         }
     }
 
-    /* access modifiers changed from: package-private */
-    public void dispatchAnimationEnd() {
+    void dispatchAnimationEnd() {
         if (this.mListener != null) {
             this.mListener.onAnimationEnd(this);
         }
@@ -497,19 +496,17 @@ public abstract class Animation implements Cloneable {
         return this.mEnded;
     }
 
-    /* access modifiers changed from: protected */
-    public void applyTransformation(float interpolatedTime, Transformation t) {
+    protected void applyTransformation(float interpolatedTime, Transformation t) {
     }
 
-    /* access modifiers changed from: protected */
-    public float resolveSize(int type, float value, int size, int parentSize) {
+    protected float resolveSize(int type, float value, int size, int parentSize) {
         switch (type) {
             case 0:
                 return value;
             case 1:
-                return ((float) size) * value;
+                return size * value;
             case 2:
-                return ((float) parentSize) * value;
+                return parentSize * value;
             default:
                 return value;
         }
@@ -519,7 +516,7 @@ public abstract class Animation implements Cloneable {
     public void getInvalidateRegion(int left, int top, int right, int bottom, RectF invalidate, Transformation transformation) {
         RectF tempRegion = this.mRegion;
         RectF previousRegion = this.mPreviousRegion;
-        invalidate.set((float) left, (float) top, (float) right, (float) bottom);
+        invalidate.set(left, top, right, bottom);
         transformation.getMatrix().mapRect(invalidate);
         invalidate.inset(-1.0f, -1.0f);
         tempRegion.set(invalidate);
@@ -535,15 +532,15 @@ public abstract class Animation implements Cloneable {
     @UnsupportedAppUsage
     public void initializeInvalidateRegion(int left, int top, int right, int bottom) {
         RectF region = this.mPreviousRegion;
-        region.set((float) left, (float) top, (float) right, (float) bottom);
+        region.set(left, top, right, bottom);
         region.inset(-1.0f, -1.0f);
         if (this.mFillBefore) {
-            applyTransformation(this.mInterpolator.getInterpolation(0.0f), this.mPreviousTransformation);
+            Transformation previousTransformation = this.mPreviousTransformation;
+            applyTransformation(this.mInterpolator.getInterpolation(0.0f), previousTransformation);
         }
     }
 
-    /* access modifiers changed from: protected */
-    public void finalize() throws Throwable {
+    protected void finalize() throws Throwable {
         try {
             if (this.guard != null) {
                 this.guard.warnIfOpen();
@@ -557,6 +554,7 @@ public abstract class Animation implements Cloneable {
         return false;
     }
 
+    /* loaded from: classes4.dex */
     protected static class Description {
         public int type;
         public float value;
@@ -564,26 +562,22 @@ public abstract class Animation implements Cloneable {
         protected Description() {
         }
 
-        static Description parseValue(TypedValue value2) {
+        static Description parseValue(TypedValue value) {
             Description d = new Description();
-            if (value2 == null) {
+            if (value == null) {
                 d.type = 0;
                 d.value = 0.0f;
-            } else if (value2.type == 6) {
-                int i = 1;
-                if ((value2.data & 15) == 1) {
-                    i = 2;
-                }
-                d.type = i;
-                d.value = TypedValue.complexToFloat(value2.data);
+            } else if (value.type == 6) {
+                d.type = (value.data & 15) == 1 ? 2 : 1;
+                d.value = TypedValue.complexToFloat(value.data);
                 return d;
-            } else if (value2.type == 4) {
+            } else if (value.type == 4) {
                 d.type = 0;
-                d.value = value2.getFloat();
+                d.value = value.getFloat();
                 return d;
-            } else if (value2.type >= 16 && value2.type <= 31) {
+            } else if (value.type >= 16 && value.type <= 31) {
                 d.type = 0;
-                d.value = (float) value2.data;
+                d.value = value.data;
                 return d;
             }
             d.type = 0;

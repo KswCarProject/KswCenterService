@@ -1,19 +1,24 @@
 package android.view.textclassifier;
 
 import android.app.RemoteAction;
-import android.os.Bundle;
-import android.os.Parcel;
-import android.os.Parcelable;
+import android.p007os.Bundle;
+import android.p007os.Parcel;
+import android.p007os.Parcelable;
 import com.android.internal.util.Preconditions;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 
+/* loaded from: classes4.dex */
 public final class ConversationAction implements Parcelable {
-    public static final Parcelable.Creator<ConversationAction> CREATOR = new Parcelable.Creator<ConversationAction>() {
+    public static final Parcelable.Creator<ConversationAction> CREATOR = new Parcelable.Creator<ConversationAction>() { // from class: android.view.textclassifier.ConversationAction.1
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public ConversationAction createFromParcel(Parcel in) {
             return new ConversationAction(in);
         }
 
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public ConversationAction[] newArray(int size) {
             return new ConversationAction[size];
         }
@@ -37,6 +42,7 @@ public final class ConversationAction implements Parcelable {
     private final String mType;
 
     @Retention(RetentionPolicy.SOURCE)
+    /* loaded from: classes4.dex */
     public @interface ActionType {
     }
 
@@ -50,12 +56,13 @@ public final class ConversationAction implements Parcelable {
 
     private ConversationAction(Parcel in) {
         this.mType = in.readString();
-        this.mAction = (RemoteAction) in.readParcelable((ClassLoader) null);
+        this.mAction = (RemoteAction) in.readParcelable(null);
         this.mTextReply = in.readCharSequence();
         this.mScore = in.readFloat();
         this.mExtras = in.readBundle();
     }
 
+    @Override // android.p007os.Parcelable
     public void writeToParcel(Parcel parcel, int flags) {
         parcel.writeString(this.mType);
         parcel.writeParcelable(this.mAction, flags);
@@ -64,6 +71,7 @@ public final class ConversationAction implements Parcelable {
         parcel.writeBundle(this.mExtras);
     }
 
+    @Override // android.p007os.Parcelable
     public int describeContents() {
         return 0;
     }
@@ -88,6 +96,7 @@ public final class ConversationAction implements Parcelable {
         return this.mExtras;
     }
 
+    /* loaded from: classes4.dex */
     public static final class Builder {
         private RemoteAction mAction;
         private Bundle mExtras;

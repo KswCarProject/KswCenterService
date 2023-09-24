@@ -1,9 +1,9 @@
 package android.app.admin;
 
 import android.annotation.UnsupportedAppUsage;
-import android.os.Parcel;
-import android.os.Parcelable;
-import android.os.SystemProperties;
+import android.p007os.Parcel;
+import android.p007os.Parcelable;
+import android.p007os.SystemProperties;
 import android.util.EventLog;
 import java.io.IOException;
 import java.lang.annotation.Retention;
@@ -11,6 +11,7 @@ import java.lang.annotation.RetentionPolicy;
 import java.util.Collection;
 import java.util.Objects;
 
+/* loaded from: classes.dex */
 public class SecurityLog {
     public static final int LEVEL_ERROR = 3;
     public static final int LEVEL_INFO = 1;
@@ -51,10 +52,12 @@ public class SecurityLog {
     public static final int TAG_WIPE_FAILURE = 210023;
 
     @Retention(RetentionPolicy.SOURCE)
+    /* loaded from: classes.dex */
     public @interface SecurityLogLevel {
     }
 
     @Retention(RetentionPolicy.SOURCE)
+    /* loaded from: classes.dex */
     public @interface SecurityLogTag {
     }
 
@@ -80,12 +83,17 @@ public class SecurityLog {
         return SystemProperties.getBoolean(PROPERTY_LOGGING_ENABLED, false);
     }
 
+    /* loaded from: classes.dex */
     public static final class SecurityEvent implements Parcelable {
-        public static final Parcelable.Creator<SecurityEvent> CREATOR = new Parcelable.Creator<SecurityEvent>() {
+        public static final Parcelable.Creator<SecurityEvent> CREATOR = new Parcelable.Creator<SecurityEvent>() { // from class: android.app.admin.SecurityLog.SecurityEvent.1
+            /* JADX WARN: Can't rename method to resolve collision */
+            @Override // android.p007os.Parcelable.Creator
             public SecurityEvent createFromParcel(Parcel source) {
                 return new SecurityEvent(source);
             }
 
+            /* JADX WARN: Can't rename method to resolve collision */
+            @Override // android.p007os.Parcelable.Creator
             public SecurityEvent[] newArray(int size) {
                 return new SecurityEvent[size];
             }
@@ -95,7 +103,7 @@ public class SecurityLog {
 
         @UnsupportedAppUsage
         SecurityEvent(byte[] data) {
-            this(0, data);
+            this(0L, data);
         }
 
         SecurityEvent(Parcel source) {
@@ -155,24 +163,20 @@ public class SecurityLog {
                 case 210025:
                 case 210026:
                 case 210029:
-                    if (getSuccess()) {
-                        return 1;
-                    }
-                    return 2;
+                    return getSuccess() ? 1 : 2;
                 case 210015:
                 case 210023:
                 case 210032:
                     return 3;
-                case 210030:
-                case 210031:
-                    if (getSuccess()) {
-                        return 1;
-                    }
-                    return 3;
-                case 210033:
-                    return 2;
+                case 210021:
+                case 210022:
                 default:
                     return 1;
+                case 210030:
+                case 210031:
+                    return getSuccess() ? 1 : 3;
+                case 210033:
+                    return 2;
             }
         }
 
@@ -182,16 +186,15 @@ public class SecurityLog {
                 return false;
             }
             Object[] array = (Object[]) data;
-            if (array.length < 1 || !(array[0] instanceof Integer) || ((Integer) array[0]).intValue() == 0) {
-                return false;
-            }
-            return true;
+            return array.length >= 1 && (array[0] instanceof Integer) && ((Integer) array[0]).intValue() != 0;
         }
 
+        @Override // android.p007os.Parcelable
         public int describeContents() {
             return 0;
         }
 
+        @Override // android.p007os.Parcelable
         public void writeToParcel(Parcel dest, int flags) {
             dest.writeLong(this.mId);
             dest.writeByteArray(this.mEvent.getBytes());
@@ -205,14 +208,14 @@ public class SecurityLog {
                 return false;
             }
             SecurityEvent other = (SecurityEvent) o;
-            if (!this.mEvent.equals(other.mEvent) || this.mId != other.mId) {
-                return false;
+            if (this.mEvent.equals(other.mEvent) && this.mId == other.mId) {
+                return true;
             }
-            return true;
+            return false;
         }
 
         public int hashCode() {
-            return Objects.hash(new Object[]{this.mEvent, Long.valueOf(this.mId)});
+            return Objects.hash(this.mEvent, Long.valueOf(this.mId));
         }
 
         public boolean eventEquals(SecurityEvent other) {

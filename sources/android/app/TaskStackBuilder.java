@@ -3,13 +3,14 @@ package android.app;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
-import android.content.pm.ActivityInfo;
-import android.content.pm.PackageManager;
-import android.os.Bundle;
-import android.os.UserHandle;
+import android.content.p002pm.ActivityInfo;
+import android.content.p002pm.PackageManager;
+import android.p007os.Bundle;
+import android.p007os.UserHandle;
 import android.util.Log;
 import java.util.ArrayList;
 
+/* loaded from: classes.dex */
 public class TaskStackBuilder {
     private static final String TAG = "TaskStackBuilder";
     private final ArrayList<Intent> mIntents = new ArrayList<>();
@@ -77,7 +78,7 @@ public class TaskStackBuilder {
             }
             return this;
         } catch (PackageManager.NameNotFoundException e) {
-            Log.e(TAG, "Bad ComponentName while traversing activity parent metadata");
+            Log.m70e(TAG, "Bad ComponentName while traversing activity parent metadata");
             throw new IllegalArgumentException(e);
         }
     }
@@ -91,14 +92,14 @@ public class TaskStackBuilder {
     }
 
     public void startActivities() {
-        startActivities((Bundle) null);
+        startActivities(null);
     }
 
     public int startActivities(Bundle options, UserHandle userHandle) {
-        if (!this.mIntents.isEmpty()) {
-            return this.mSourceContext.startActivitiesAsUser(getIntents(), options, userHandle);
+        if (this.mIntents.isEmpty()) {
+            throw new IllegalStateException("No intents added to TaskStackBuilder; cannot startActivities");
         }
-        throw new IllegalStateException("No intents added to TaskStackBuilder; cannot startActivities");
+        return this.mSourceContext.startActivitiesAsUser(getIntents(), options, userHandle);
     }
 
     public void startActivities(Bundle options) {
@@ -106,21 +107,21 @@ public class TaskStackBuilder {
     }
 
     public PendingIntent getPendingIntent(int requestCode, int flags) {
-        return getPendingIntent(requestCode, flags, (Bundle) null);
+        return getPendingIntent(requestCode, flags, null);
     }
 
     public PendingIntent getPendingIntent(int requestCode, int flags, Bundle options) {
-        if (!this.mIntents.isEmpty()) {
-            return PendingIntent.getActivities(this.mSourceContext, requestCode, getIntents(), flags, options);
+        if (this.mIntents.isEmpty()) {
+            throw new IllegalStateException("No intents added to TaskStackBuilder; cannot getPendingIntent");
         }
-        throw new IllegalStateException("No intents added to TaskStackBuilder; cannot getPendingIntent");
+        return PendingIntent.getActivities(this.mSourceContext, requestCode, getIntents(), flags, options);
     }
 
     public PendingIntent getPendingIntent(int requestCode, int flags, Bundle options, UserHandle user) {
-        if (!this.mIntents.isEmpty()) {
-            return PendingIntent.getActivitiesAsUser(this.mSourceContext, requestCode, getIntents(), flags, options, user);
+        if (this.mIntents.isEmpty()) {
+            throw new IllegalStateException("No intents added to TaskStackBuilder; cannot getPendingIntent");
         }
-        throw new IllegalStateException("No intents added to TaskStackBuilder; cannot getPendingIntent");
+        return PendingIntent.getActivitiesAsUser(this.mSourceContext, requestCode, getIntents(), flags, options, user);
     }
 
     public Intent[] getIntents() {

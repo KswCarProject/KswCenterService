@@ -1,6 +1,6 @@
 package android.hardware.camera2.legacy;
 
-import android.os.SystemClock;
+import android.p007os.SystemClock;
 import android.provider.SettingsStringUtil;
 import android.util.Log;
 import java.io.BufferedWriter;
@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.Queue;
 
+/* loaded from: classes.dex */
 class PerfMeasurement {
     public static final int DEFAULT_MAX_QUERIES = 3;
     private static final long FAILED_TIMING = -2;
@@ -53,11 +54,10 @@ class PerfMeasurement {
         this.mCollectedTimestamps = new ArrayList<>();
         this.mTimestampQueue = new LinkedList();
         this.mCpuDurationsQueue = new LinkedList();
-        if (maxQueries >= 1) {
-            this.mNativeContext = nativeCreateContext(maxQueries);
-            return;
+        if (maxQueries < 1) {
+            throw new IllegalArgumentException("maxQueries is less than 1");
         }
-        throw new IllegalArgumentException("maxQueries is less than 1");
+        this.mNativeContext = nativeCreateContext(maxQueries);
     }
 
     public static boolean isGlTimingSupported() {
@@ -65,25 +65,19 @@ class PerfMeasurement {
     }
 
     public void dumpPerformanceData(String path) {
-        BufferedWriter dump;
         try {
-            dump = new BufferedWriter(new FileWriter(path));
+            BufferedWriter dump = new BufferedWriter(new FileWriter(path));
             dump.write("timestamp gpu_duration cpu_duration\n");
             for (int i = 0; i < this.mCollectedGpuDurations.size(); i++) {
-                dump.write(String.format("%d %d %d\n", new Object[]{this.mCollectedTimestamps.get(i), this.mCollectedGpuDurations.get(i), this.mCollectedCpuDurations.get(i)}));
+                dump.write(String.format("%d %d %d\n", this.mCollectedTimestamps.get(i), this.mCollectedGpuDurations.get(i), this.mCollectedCpuDurations.get(i)));
             }
             this.mCollectedTimestamps.clear();
             this.mCollectedGpuDurations.clear();
             this.mCollectedCpuDurations.clear();
             dump.close();
-            return;
         } catch (IOException e) {
-            Log.e(TAG, "Error writing data dump to " + path + SettingsStringUtil.DELIMITER + e);
-            return;
-        } catch (Throwable th) {
-            r1.addSuppressed(th);
+            Log.m70e(TAG, "Error writing data dump to " + path + SettingsStringUtil.DELIMITER + e);
         }
-        throw th;
     }
 
     public void startTimer() {
@@ -92,25 +86,21 @@ class PerfMeasurement {
     }
 
     public void stopTimer() {
-        long j;
-        this.mCpuDurationsQueue.add(Long.valueOf(SystemClock.elapsedRealtimeNanos() - this.mStartTimeNs));
+        long longValue;
+        long endTimeNs = SystemClock.elapsedRealtimeNanos();
+        this.mCpuDurationsQueue.add(Long.valueOf(endTimeNs - this.mStartTimeNs));
         nativeStopGlTimer(this.mNativeContext);
         long duration = getNextGlDuration();
         if (duration > 0) {
             this.mCollectedGpuDurations.add(Long.valueOf(duration));
             ArrayList<Long> arrayList = this.mCollectedTimestamps;
-            long j2 = -1;
             if (this.mTimestampQueue.isEmpty()) {
-                j = -1;
+                longValue = -1;
             } else {
-                j = this.mTimestampQueue.poll().longValue();
+                longValue = this.mTimestampQueue.poll().longValue();
             }
-            arrayList.add(Long.valueOf(j));
-            ArrayList<Long> arrayList2 = this.mCollectedCpuDurations;
-            if (!this.mCpuDurationsQueue.isEmpty()) {
-                j2 = this.mCpuDurationsQueue.poll().longValue();
-            }
-            arrayList2.add(Long.valueOf(j2));
+            arrayList.add(Long.valueOf(longValue));
+            this.mCollectedCpuDurations.add(Long.valueOf(this.mCpuDurationsQueue.isEmpty() ? -1L : this.mCpuDurationsQueue.poll().longValue()));
         }
         if (duration == -2) {
             if (!this.mTimestampQueue.isEmpty()) {
@@ -138,8 +128,7 @@ class PerfMeasurement {
         return this.mCompletedQueryCount;
     }
 
-    /* access modifiers changed from: protected */
-    public void finalize() {
+    protected void finalize() {
         nativeDeleteContext(this.mNativeContext);
     }
 }

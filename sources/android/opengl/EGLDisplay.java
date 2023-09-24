@@ -1,5 +1,6 @@
 package android.opengl;
 
+/* loaded from: classes3.dex */
 public class EGLDisplay extends EGLObjectHandle {
     private EGLDisplay(long handle) {
         super(handle);
@@ -9,11 +10,9 @@ public class EGLDisplay extends EGLObjectHandle {
         if (this == o) {
             return true;
         }
-        if (!(o instanceof EGLDisplay)) {
-            return false;
-        }
-        if (getNativeHandle() == ((EGLDisplay) o).getNativeHandle()) {
-            return true;
+        if (o instanceof EGLDisplay) {
+            EGLDisplay that = (EGLDisplay) o;
+            return getNativeHandle() == that.getNativeHandle();
         }
         return false;
     }

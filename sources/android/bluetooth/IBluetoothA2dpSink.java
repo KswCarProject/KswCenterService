@@ -1,12 +1,13 @@
 package android.bluetooth;
 
-import android.os.Binder;
-import android.os.IBinder;
-import android.os.IInterface;
-import android.os.Parcel;
-import android.os.RemoteException;
+import android.p007os.Binder;
+import android.p007os.IBinder;
+import android.p007os.IInterface;
+import android.p007os.Parcel;
+import android.p007os.RemoteException;
 import java.util.List;
 
+/* loaded from: classes.dex */
 public interface IBluetoothA2dpSink extends IInterface {
     boolean connect(BluetoothDevice bluetoothDevice) throws RemoteException;
 
@@ -26,48 +27,60 @@ public interface IBluetoothA2dpSink extends IInterface {
 
     boolean setPriority(BluetoothDevice bluetoothDevice, int i) throws RemoteException;
 
+    /* loaded from: classes.dex */
     public static class Default implements IBluetoothA2dpSink {
+        @Override // android.bluetooth.IBluetoothA2dpSink
         public boolean connect(BluetoothDevice device) throws RemoteException {
             return false;
         }
 
+        @Override // android.bluetooth.IBluetoothA2dpSink
         public boolean disconnect(BluetoothDevice device) throws RemoteException {
             return false;
         }
 
+        @Override // android.bluetooth.IBluetoothA2dpSink
         public List<BluetoothDevice> getConnectedDevices() throws RemoteException {
             return null;
         }
 
+        @Override // android.bluetooth.IBluetoothA2dpSink
         public List<BluetoothDevice> getDevicesMatchingConnectionStates(int[] states) throws RemoteException {
             return null;
         }
 
+        @Override // android.bluetooth.IBluetoothA2dpSink
         public int getConnectionState(BluetoothDevice device) throws RemoteException {
             return 0;
         }
 
+        @Override // android.bluetooth.IBluetoothA2dpSink
         public BluetoothAudioConfig getAudioConfig(BluetoothDevice device) throws RemoteException {
             return null;
         }
 
+        @Override // android.bluetooth.IBluetoothA2dpSink
         public boolean setPriority(BluetoothDevice device, int priority) throws RemoteException {
             return false;
         }
 
+        @Override // android.bluetooth.IBluetoothA2dpSink
         public int getPriority(BluetoothDevice device) throws RemoteException {
             return 0;
         }
 
+        @Override // android.bluetooth.IBluetoothA2dpSink
         public boolean isA2dpPlaying(BluetoothDevice device) throws RemoteException {
             return false;
         }
 
+        @Override // android.p007os.IInterface
         public IBinder asBinder() {
             return null;
         }
     }
 
+    /* loaded from: classes.dex */
     public static abstract class Stub extends Binder implements IBluetoothA2dpSink {
         private static final String DESCRIPTOR = "android.bluetooth.IBluetoothA2dpSink";
         static final int TRANSACTION_connect = 1;
@@ -89,12 +102,13 @@ public interface IBluetoothA2dpSink extends IInterface {
                 return null;
             }
             IInterface iin = obj.queryLocalInterface(DESCRIPTOR);
-            if (iin == null || !(iin instanceof IBluetoothA2dpSink)) {
-                return new Proxy(obj);
+            if (iin != null && (iin instanceof IBluetoothA2dpSink)) {
+                return (IBluetoothA2dpSink) iin;
             }
-            return (IBluetoothA2dpSink) iin;
+            return new Proxy(obj);
         }
 
+        @Override // android.p007os.IInterface
         public IBinder asBinder() {
             return this;
         }
@@ -124,103 +138,92 @@ public interface IBluetoothA2dpSink extends IInterface {
             }
         }
 
+        @Override // android.p007os.Binder
         public String getTransactionName(int transactionCode) {
             return getDefaultTransactionName(transactionCode);
         }
 
+        @Override // android.p007os.Binder
         public boolean onTransact(int code, Parcel data, Parcel reply, int flags) throws RemoteException {
-            if (code != 1598968902) {
-                BluetoothDevice _arg0 = null;
-                switch (code) {
-                    case 1:
-                        data.enforceInterface(DESCRIPTOR);
-                        if (data.readInt() != 0) {
-                            _arg0 = BluetoothDevice.CREATOR.createFromParcel(data);
-                        }
-                        boolean _result = connect(_arg0);
-                        reply.writeNoException();
-                        reply.writeInt(_result);
-                        return true;
-                    case 2:
-                        data.enforceInterface(DESCRIPTOR);
-                        if (data.readInt() != 0) {
-                            _arg0 = BluetoothDevice.CREATOR.createFromParcel(data);
-                        }
-                        boolean _result2 = disconnect(_arg0);
-                        reply.writeNoException();
-                        reply.writeInt(_result2);
-                        return true;
-                    case 3:
-                        data.enforceInterface(DESCRIPTOR);
-                        List<BluetoothDevice> _result3 = getConnectedDevices();
-                        reply.writeNoException();
-                        reply.writeTypedList(_result3);
-                        return true;
-                    case 4:
-                        data.enforceInterface(DESCRIPTOR);
-                        List<BluetoothDevice> _result4 = getDevicesMatchingConnectionStates(data.createIntArray());
-                        reply.writeNoException();
-                        reply.writeTypedList(_result4);
-                        return true;
-                    case 5:
-                        data.enforceInterface(DESCRIPTOR);
-                        if (data.readInt() != 0) {
-                            _arg0 = BluetoothDevice.CREATOR.createFromParcel(data);
-                        }
-                        int _result5 = getConnectionState(_arg0);
-                        reply.writeNoException();
-                        reply.writeInt(_result5);
-                        return true;
-                    case 6:
-                        data.enforceInterface(DESCRIPTOR);
-                        if (data.readInt() != 0) {
-                            _arg0 = BluetoothDevice.CREATOR.createFromParcel(data);
-                        }
-                        BluetoothAudioConfig _result6 = getAudioConfig(_arg0);
-                        reply.writeNoException();
-                        if (_result6 != null) {
-                            reply.writeInt(1);
-                            _result6.writeToParcel(reply, 1);
-                        } else {
-                            reply.writeInt(0);
-                        }
-                        return true;
-                    case 7:
-                        data.enforceInterface(DESCRIPTOR);
-                        if (data.readInt() != 0) {
-                            _arg0 = BluetoothDevice.CREATOR.createFromParcel(data);
-                        }
-                        boolean _result7 = setPriority(_arg0, data.readInt());
-                        reply.writeNoException();
-                        reply.writeInt(_result7);
-                        return true;
-                    case 8:
-                        data.enforceInterface(DESCRIPTOR);
-                        if (data.readInt() != 0) {
-                            _arg0 = BluetoothDevice.CREATOR.createFromParcel(data);
-                        }
-                        int _result8 = getPriority(_arg0);
-                        reply.writeNoException();
-                        reply.writeInt(_result8);
-                        return true;
-                    case 9:
-                        data.enforceInterface(DESCRIPTOR);
-                        if (data.readInt() != 0) {
-                            _arg0 = BluetoothDevice.CREATOR.createFromParcel(data);
-                        }
-                        boolean _result9 = isA2dpPlaying(_arg0);
-                        reply.writeNoException();
-                        reply.writeInt(_result9);
-                        return true;
-                    default:
-                        return super.onTransact(code, data, reply, flags);
-                }
-            } else {
+            BluetoothDevice _arg0;
+            if (code == 1598968902) {
                 reply.writeString(DESCRIPTOR);
                 return true;
             }
+            switch (code) {
+                case 1:
+                    data.enforceInterface(DESCRIPTOR);
+                    _arg0 = data.readInt() != 0 ? BluetoothDevice.CREATOR.createFromParcel(data) : null;
+                    boolean connect = connect(_arg0);
+                    reply.writeNoException();
+                    reply.writeInt(connect ? 1 : 0);
+                    return true;
+                case 2:
+                    data.enforceInterface(DESCRIPTOR);
+                    _arg0 = data.readInt() != 0 ? BluetoothDevice.CREATOR.createFromParcel(data) : null;
+                    boolean disconnect = disconnect(_arg0);
+                    reply.writeNoException();
+                    reply.writeInt(disconnect ? 1 : 0);
+                    return true;
+                case 3:
+                    data.enforceInterface(DESCRIPTOR);
+                    List<BluetoothDevice> _result = getConnectedDevices();
+                    reply.writeNoException();
+                    reply.writeTypedList(_result);
+                    return true;
+                case 4:
+                    data.enforceInterface(DESCRIPTOR);
+                    List<BluetoothDevice> _result2 = getDevicesMatchingConnectionStates(data.createIntArray());
+                    reply.writeNoException();
+                    reply.writeTypedList(_result2);
+                    return true;
+                case 5:
+                    data.enforceInterface(DESCRIPTOR);
+                    _arg0 = data.readInt() != 0 ? BluetoothDevice.CREATOR.createFromParcel(data) : null;
+                    int _result3 = getConnectionState(_arg0);
+                    reply.writeNoException();
+                    reply.writeInt(_result3);
+                    return true;
+                case 6:
+                    data.enforceInterface(DESCRIPTOR);
+                    _arg0 = data.readInt() != 0 ? BluetoothDevice.CREATOR.createFromParcel(data) : null;
+                    BluetoothAudioConfig _result4 = getAudioConfig(_arg0);
+                    reply.writeNoException();
+                    if (_result4 != null) {
+                        reply.writeInt(1);
+                        _result4.writeToParcel(reply, 1);
+                    } else {
+                        reply.writeInt(0);
+                    }
+                    return true;
+                case 7:
+                    data.enforceInterface(DESCRIPTOR);
+                    _arg0 = data.readInt() != 0 ? BluetoothDevice.CREATOR.createFromParcel(data) : null;
+                    int _arg1 = data.readInt();
+                    boolean priority = setPriority(_arg0, _arg1);
+                    reply.writeNoException();
+                    reply.writeInt(priority ? 1 : 0);
+                    return true;
+                case 8:
+                    data.enforceInterface(DESCRIPTOR);
+                    _arg0 = data.readInt() != 0 ? BluetoothDevice.CREATOR.createFromParcel(data) : null;
+                    int _result5 = getPriority(_arg0);
+                    reply.writeNoException();
+                    reply.writeInt(_result5);
+                    return true;
+                case 9:
+                    data.enforceInterface(DESCRIPTOR);
+                    _arg0 = data.readInt() != 0 ? BluetoothDevice.CREATOR.createFromParcel(data) : null;
+                    boolean isA2dpPlaying = isA2dpPlaying(_arg0);
+                    reply.writeNoException();
+                    reply.writeInt(isA2dpPlaying ? 1 : 0);
+                    return true;
+                default:
+                    return super.onTransact(code, data, reply, flags);
+            }
         }
 
+        /* loaded from: classes.dex */
         private static class Proxy implements IBluetoothA2dpSink {
             public static IBluetoothA2dpSink sDefaultImpl;
             private IBinder mRemote;
@@ -229,6 +232,7 @@ public interface IBluetoothA2dpSink extends IInterface {
                 this.mRemote = remote;
             }
 
+            @Override // android.p007os.IInterface
             public IBinder asBinder() {
                 return this.mRemote;
             }
@@ -237,27 +241,24 @@ public interface IBluetoothA2dpSink extends IInterface {
                 return Stub.DESCRIPTOR;
             }
 
+            @Override // android.bluetooth.IBluetoothA2dpSink
             public boolean connect(BluetoothDevice device) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    boolean _result = true;
                     if (device != null) {
                         _data.writeInt(1);
                         device.writeToParcel(_data, 0);
                     } else {
                         _data.writeInt(0);
                     }
-                    if (!this.mRemote.transact(1, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(1, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().connect(device);
                     }
                     _reply.readException();
-                    if (_reply.readInt() == 0) {
-                        _result = false;
-                    }
-                    _reply.recycle();
-                    _data.recycle();
+                    boolean _result = _reply.readInt() != 0;
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -265,27 +266,24 @@ public interface IBluetoothA2dpSink extends IInterface {
                 }
             }
 
+            @Override // android.bluetooth.IBluetoothA2dpSink
             public boolean disconnect(BluetoothDevice device) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    boolean _result = true;
                     if (device != null) {
                         _data.writeInt(1);
                         device.writeToParcel(_data, 0);
                     } else {
                         _data.writeInt(0);
                     }
-                    if (!this.mRemote.transact(2, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(2, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().disconnect(device);
                     }
                     _reply.readException();
-                    if (_reply.readInt() == 0) {
-                        _result = false;
-                    }
-                    _reply.recycle();
-                    _data.recycle();
+                    boolean _result = _reply.readInt() != 0;
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -293,18 +291,18 @@ public interface IBluetoothA2dpSink extends IInterface {
                 }
             }
 
+            @Override // android.bluetooth.IBluetoothA2dpSink
             public List<BluetoothDevice> getConnectedDevices() throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    if (!this.mRemote.transact(3, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(3, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().getConnectedDevices();
                     }
                     _reply.readException();
                     List<BluetoothDevice> _result = _reply.createTypedArrayList(BluetoothDevice.CREATOR);
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -312,19 +310,19 @@ public interface IBluetoothA2dpSink extends IInterface {
                 }
             }
 
+            @Override // android.bluetooth.IBluetoothA2dpSink
             public List<BluetoothDevice> getDevicesMatchingConnectionStates(int[] states) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeIntArray(states);
-                    if (!this.mRemote.transact(4, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(4, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().getDevicesMatchingConnectionStates(states);
                     }
                     _reply.readException();
                     List<BluetoothDevice> _result = _reply.createTypedArrayList(BluetoothDevice.CREATOR);
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -332,6 +330,7 @@ public interface IBluetoothA2dpSink extends IInterface {
                 }
             }
 
+            @Override // android.bluetooth.IBluetoothA2dpSink
             public int getConnectionState(BluetoothDevice device) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -343,13 +342,12 @@ public interface IBluetoothA2dpSink extends IInterface {
                     } else {
                         _data.writeInt(0);
                     }
-                    if (!this.mRemote.transact(5, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(5, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().getConnectionState(device);
                     }
                     _reply.readException();
                     int _result = _reply.readInt();
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -357,6 +355,7 @@ public interface IBluetoothA2dpSink extends IInterface {
                 }
             }
 
+            @Override // android.bluetooth.IBluetoothA2dpSink
             public BluetoothAudioConfig getAudioConfig(BluetoothDevice device) throws RemoteException {
                 BluetoothAudioConfig _result;
                 Parcel _data = Parcel.obtain();
@@ -369,7 +368,8 @@ public interface IBluetoothA2dpSink extends IInterface {
                     } else {
                         _data.writeInt(0);
                     }
-                    if (!this.mRemote.transact(6, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(6, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().getAudioConfig(device);
                     }
                     _reply.readException();
@@ -378,38 +378,6 @@ public interface IBluetoothA2dpSink extends IInterface {
                     } else {
                         _result = null;
                     }
-                    BluetoothAudioConfig _result2 = _result;
-                    _reply.recycle();
-                    _data.recycle();
-                    return _result2;
-                } finally {
-                    _reply.recycle();
-                    _data.recycle();
-                }
-            }
-
-            public boolean setPriority(BluetoothDevice device, int priority) throws RemoteException {
-                Parcel _data = Parcel.obtain();
-                Parcel _reply = Parcel.obtain();
-                try {
-                    _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    boolean _result = true;
-                    if (device != null) {
-                        _data.writeInt(1);
-                        device.writeToParcel(_data, 0);
-                    } else {
-                        _data.writeInt(0);
-                    }
-                    _data.writeInt(priority);
-                    if (!this.mRemote.transact(7, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
-                        return Stub.getDefaultImpl().setPriority(device, priority);
-                    }
-                    _reply.readException();
-                    if (_reply.readInt() == 0) {
-                        _result = false;
-                    }
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -417,6 +385,33 @@ public interface IBluetoothA2dpSink extends IInterface {
                 }
             }
 
+            @Override // android.bluetooth.IBluetoothA2dpSink
+            public boolean setPriority(BluetoothDevice device, int priority) throws RemoteException {
+                Parcel _data = Parcel.obtain();
+                Parcel _reply = Parcel.obtain();
+                try {
+                    _data.writeInterfaceToken(Stub.DESCRIPTOR);
+                    if (device != null) {
+                        _data.writeInt(1);
+                        device.writeToParcel(_data, 0);
+                    } else {
+                        _data.writeInt(0);
+                    }
+                    _data.writeInt(priority);
+                    boolean _status = this.mRemote.transact(7, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        return Stub.getDefaultImpl().setPriority(device, priority);
+                    }
+                    _reply.readException();
+                    boolean _result = _reply.readInt() != 0;
+                    return _result;
+                } finally {
+                    _reply.recycle();
+                    _data.recycle();
+                }
+            }
+
+            @Override // android.bluetooth.IBluetoothA2dpSink
             public int getPriority(BluetoothDevice device) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -428,13 +423,12 @@ public interface IBluetoothA2dpSink extends IInterface {
                     } else {
                         _data.writeInt(0);
                     }
-                    if (!this.mRemote.transact(8, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(8, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().getPriority(device);
                     }
                     _reply.readException();
                     int _result = _reply.readInt();
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -442,27 +436,24 @@ public interface IBluetoothA2dpSink extends IInterface {
                 }
             }
 
+            @Override // android.bluetooth.IBluetoothA2dpSink
             public boolean isA2dpPlaying(BluetoothDevice device) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    boolean _result = true;
                     if (device != null) {
                         _data.writeInt(1);
                         device.writeToParcel(_data, 0);
                     } else {
                         _data.writeInt(0);
                     }
-                    if (!this.mRemote.transact(9, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(9, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().isA2dpPlaying(device);
                     }
                     _reply.readException();
-                    if (_reply.readInt() == 0) {
-                        _result = false;
-                    }
-                    _reply.recycle();
-                    _data.recycle();
+                    boolean _result = _reply.readInt() != 0;
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -472,11 +463,11 @@ public interface IBluetoothA2dpSink extends IInterface {
         }
 
         public static boolean setDefaultImpl(IBluetoothA2dpSink impl) {
-            if (Proxy.sDefaultImpl != null || impl == null) {
-                return false;
+            if (Proxy.sDefaultImpl == null && impl != null) {
+                Proxy.sDefaultImpl = impl;
+                return true;
             }
-            Proxy.sDefaultImpl = impl;
-            return true;
+            return false;
         }
 
         public static IBluetoothA2dpSink getDefaultImpl() {

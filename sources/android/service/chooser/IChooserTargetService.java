@@ -2,25 +2,30 @@ package android.service.chooser;
 
 import android.content.ComponentName;
 import android.content.IntentFilter;
-import android.os.Binder;
-import android.os.IBinder;
-import android.os.IInterface;
-import android.os.Parcel;
-import android.os.RemoteException;
+import android.p007os.Binder;
+import android.p007os.IBinder;
+import android.p007os.IInterface;
+import android.p007os.Parcel;
+import android.p007os.RemoteException;
 import android.service.chooser.IChooserTargetResult;
 
+/* loaded from: classes3.dex */
 public interface IChooserTargetService extends IInterface {
     void getChooserTargets(ComponentName componentName, IntentFilter intentFilter, IChooserTargetResult iChooserTargetResult) throws RemoteException;
 
+    /* loaded from: classes3.dex */
     public static class Default implements IChooserTargetService {
+        @Override // android.service.chooser.IChooserTargetService
         public void getChooserTargets(ComponentName targetComponentName, IntentFilter matchedFilter, IChooserTargetResult result) throws RemoteException {
         }
 
+        @Override // android.p007os.IInterface
         public IBinder asBinder() {
             return null;
         }
     }
 
+    /* loaded from: classes3.dex */
     public static abstract class Stub extends Binder implements IChooserTargetService {
         private static final String DESCRIPTOR = "android.service.chooser.IChooserTargetService";
         static final int TRANSACTION_getChooserTargets = 1;
@@ -34,50 +39,52 @@ public interface IChooserTargetService extends IInterface {
                 return null;
             }
             IInterface iin = obj.queryLocalInterface(DESCRIPTOR);
-            if (iin == null || !(iin instanceof IChooserTargetService)) {
-                return new Proxy(obj);
+            if (iin != null && (iin instanceof IChooserTargetService)) {
+                return (IChooserTargetService) iin;
             }
-            return (IChooserTargetService) iin;
+            return new Proxy(obj);
         }
 
+        @Override // android.p007os.IInterface
         public IBinder asBinder() {
             return this;
         }
 
         public static String getDefaultTransactionName(int transactionCode) {
-            if (transactionCode != 1) {
-                return null;
+            if (transactionCode == 1) {
+                return "getChooserTargets";
             }
-            return "getChooserTargets";
+            return null;
         }
 
+        @Override // android.p007os.Binder
         public String getTransactionName(int transactionCode) {
             return getDefaultTransactionName(transactionCode);
         }
 
+        @Override // android.p007os.Binder
         public boolean onTransact(int code, Parcel data, Parcel reply, int flags) throws RemoteException {
             ComponentName _arg0;
-            if (code == 1) {
-                data.enforceInterface(DESCRIPTOR);
-                IntentFilter _arg1 = null;
-                if (data.readInt() != 0) {
-                    _arg0 = ComponentName.CREATOR.createFromParcel(data);
-                } else {
-                    _arg0 = null;
+            if (code != 1) {
+                if (code == 1598968902) {
+                    reply.writeString(DESCRIPTOR);
+                    return true;
                 }
-                if (data.readInt() != 0) {
-                    _arg1 = IntentFilter.CREATOR.createFromParcel(data);
-                }
-                getChooserTargets(_arg0, _arg1, IChooserTargetResult.Stub.asInterface(data.readStrongBinder()));
-                return true;
-            } else if (code != 1598968902) {
                 return super.onTransact(code, data, reply, flags);
-            } else {
-                reply.writeString(DESCRIPTOR);
-                return true;
             }
+            data.enforceInterface(DESCRIPTOR);
+            if (data.readInt() != 0) {
+                _arg0 = ComponentName.CREATOR.createFromParcel(data);
+            } else {
+                _arg0 = null;
+            }
+            IntentFilter _arg1 = data.readInt() != 0 ? IntentFilter.CREATOR.createFromParcel(data) : null;
+            IChooserTargetResult _arg2 = IChooserTargetResult.Stub.asInterface(data.readStrongBinder());
+            getChooserTargets(_arg0, _arg1, _arg2);
+            return true;
         }
 
+        /* loaded from: classes3.dex */
         private static class Proxy implements IChooserTargetService {
             public static IChooserTargetService sDefaultImpl;
             private IBinder mRemote;
@@ -86,6 +93,7 @@ public interface IChooserTargetService extends IInterface {
                 this.mRemote = remote;
             }
 
+            @Override // android.p007os.IInterface
             public IBinder asBinder() {
                 return this.mRemote;
             }
@@ -94,6 +102,7 @@ public interface IChooserTargetService extends IInterface {
                 return Stub.DESCRIPTOR;
             }
 
+            @Override // android.service.chooser.IChooserTargetService
             public void getChooserTargets(ComponentName targetComponentName, IntentFilter matchedFilter, IChooserTargetResult result) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
@@ -111,9 +120,8 @@ public interface IChooserTargetService extends IInterface {
                         _data.writeInt(0);
                     }
                     _data.writeStrongBinder(result != null ? result.asBinder() : null);
-                    if (this.mRemote.transact(1, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    boolean _status = this.mRemote.transact(1, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().getChooserTargets(targetComponentName, matchedFilter, result);
                     }
                 } finally {
@@ -123,11 +131,11 @@ public interface IChooserTargetService extends IInterface {
         }
 
         public static boolean setDefaultImpl(IChooserTargetService impl) {
-            if (Proxy.sDefaultImpl != null || impl == null) {
-                return false;
+            if (Proxy.sDefaultImpl == null && impl != null) {
+                Proxy.sDefaultImpl = impl;
+                return true;
             }
-            Proxy.sDefaultImpl = impl;
-            return true;
+            return false;
         }
 
         public static IChooserTargetService getDefaultImpl() {

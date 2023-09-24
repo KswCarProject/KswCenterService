@@ -1,24 +1,29 @@
 package android.location;
 
 import android.annotation.SystemApi;
-import android.os.Parcel;
-import android.os.Parcelable;
+import android.p007os.Parcel;
+import android.p007os.Parcelable;
 import com.android.internal.util.Preconditions;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
 @SystemApi
+/* loaded from: classes.dex */
 public final class GnssMeasurementCorrections implements Parcelable {
-    public static final Parcelable.Creator<GnssMeasurementCorrections> CREATOR = new Parcelable.Creator<GnssMeasurementCorrections>() {
+    public static final Parcelable.Creator<GnssMeasurementCorrections> CREATOR = new Parcelable.Creator<GnssMeasurementCorrections>() { // from class: android.location.GnssMeasurementCorrections.1
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public GnssMeasurementCorrections createFromParcel(Parcel parcel) {
             Builder gnssMeasurementCorrectons = new Builder().setLatitudeDegrees(parcel.readDouble()).setLongitudeDegrees(parcel.readDouble()).setAltitudeMeters(parcel.readDouble()).setHorizontalPositionUncertaintyMeters(parcel.readDouble()).setVerticalPositionUncertaintyMeters(parcel.readDouble()).setToaGpsNanosecondsOfWeek(parcel.readLong());
-            List<GnssSingleSatCorrection> singleSatCorrectionList = new ArrayList<>();
-            parcel.readTypedList(singleSatCorrectionList, GnssSingleSatCorrection.CREATOR);
-            gnssMeasurementCorrectons.setSingleSatelliteCorrectionList(singleSatCorrectionList);
+            ArrayList arrayList = new ArrayList();
+            parcel.readTypedList(arrayList, GnssSingleSatCorrection.CREATOR);
+            gnssMeasurementCorrectons.setSingleSatelliteCorrectionList(arrayList);
             return gnssMeasurementCorrectons.build();
         }
 
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public GnssMeasurementCorrections[] newArray(int i) {
             return new GnssMeasurementCorrections[i];
         }
@@ -39,7 +44,7 @@ public final class GnssMeasurementCorrections implements Parcelable {
         this.mVerticalPositionUncertaintyMeters = builder.mVerticalPositionUncertaintyMeters;
         this.mToaGpsNanosecondsOfWeek = builder.mToaGpsNanosecondsOfWeek;
         List<GnssSingleSatCorrection> singleSatCorrList = builder.mSingleSatCorrectionList;
-        Preconditions.checkArgument(singleSatCorrList != null && !singleSatCorrList.isEmpty());
+        Preconditions.checkArgument((singleSatCorrList == null || singleSatCorrList.isEmpty()) ? false : true);
         this.mSingleSatCorrectionList = Collections.unmodifiableList(new ArrayList(singleSatCorrList));
     }
 
@@ -71,14 +76,16 @@ public final class GnssMeasurementCorrections implements Parcelable {
         return this.mSingleSatCorrectionList;
     }
 
+    @Override // android.p007os.Parcelable
     public int describeContents() {
         return 0;
     }
 
     public String toString() {
-        return "GnssMeasurementCorrections:\n" + String.format("   %-29s = %s\n", new Object[]{"LatitudeDegrees = ", Double.valueOf(this.mLatitudeDegrees)}) + String.format("   %-29s = %s\n", new Object[]{"LongitudeDegrees = ", Double.valueOf(this.mLongitudeDegrees)}) + String.format("   %-29s = %s\n", new Object[]{"AltitudeMeters = ", Double.valueOf(this.mAltitudeMeters)}) + String.format("   %-29s = %s\n", new Object[]{"HorizontalPositionUncertaintyMeters = ", Double.valueOf(this.mHorizontalPositionUncertaintyMeters)}) + String.format("   %-29s = %s\n", new Object[]{"VerticalPositionUncertaintyMeters = ", Double.valueOf(this.mVerticalPositionUncertaintyMeters)}) + String.format("   %-29s = %s\n", new Object[]{"ToaGpsNanosecondsOfWeek = ", Long.valueOf(this.mToaGpsNanosecondsOfWeek)}) + String.format("   %-29s = %s\n", new Object[]{"mSingleSatCorrectionList = ", this.mSingleSatCorrectionList});
+        return "GnssMeasurementCorrections:\n" + String.format("   %-29s = %s\n", "LatitudeDegrees = ", Double.valueOf(this.mLatitudeDegrees)) + String.format("   %-29s = %s\n", "LongitudeDegrees = ", Double.valueOf(this.mLongitudeDegrees)) + String.format("   %-29s = %s\n", "AltitudeMeters = ", Double.valueOf(this.mAltitudeMeters)) + String.format("   %-29s = %s\n", "HorizontalPositionUncertaintyMeters = ", Double.valueOf(this.mHorizontalPositionUncertaintyMeters)) + String.format("   %-29s = %s\n", "VerticalPositionUncertaintyMeters = ", Double.valueOf(this.mVerticalPositionUncertaintyMeters)) + String.format("   %-29s = %s\n", "ToaGpsNanosecondsOfWeek = ", Long.valueOf(this.mToaGpsNanosecondsOfWeek)) + String.format("   %-29s = %s\n", "mSingleSatCorrectionList = ", this.mSingleSatCorrectionList);
     }
 
+    @Override // android.p007os.Parcelable
     public void writeToParcel(Parcel parcel, int flags) {
         parcel.writeDouble(this.mLatitudeDegrees);
         parcel.writeDouble(this.mLongitudeDegrees);
@@ -89,21 +96,15 @@ public final class GnssMeasurementCorrections implements Parcelable {
         parcel.writeTypedList(this.mSingleSatCorrectionList);
     }
 
+    /* loaded from: classes.dex */
     public static final class Builder {
-        /* access modifiers changed from: private */
-        public double mAltitudeMeters;
-        /* access modifiers changed from: private */
-        public double mHorizontalPositionUncertaintyMeters;
-        /* access modifiers changed from: private */
-        public double mLatitudeDegrees;
-        /* access modifiers changed from: private */
-        public double mLongitudeDegrees;
-        /* access modifiers changed from: private */
-        public List<GnssSingleSatCorrection> mSingleSatCorrectionList;
-        /* access modifiers changed from: private */
-        public long mToaGpsNanosecondsOfWeek;
-        /* access modifiers changed from: private */
-        public double mVerticalPositionUncertaintyMeters;
+        private double mAltitudeMeters;
+        private double mHorizontalPositionUncertaintyMeters;
+        private double mLatitudeDegrees;
+        private double mLongitudeDegrees;
+        private List<GnssSingleSatCorrection> mSingleSatCorrectionList;
+        private long mToaGpsNanosecondsOfWeek;
+        private double mVerticalPositionUncertaintyMeters;
 
         public Builder setLatitudeDegrees(double latitudeDegrees) {
             this.mLatitudeDegrees = latitudeDegrees;

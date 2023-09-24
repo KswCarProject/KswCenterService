@@ -5,12 +5,14 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Set;
 
+/* loaded from: classes.dex */
 public class FilterContext {
     private FrameManager mFrameManager;
     private GLEnvironment mGLEnvironment;
-    private Set<FilterGraph> mGraphs = new HashSet();
     private HashMap<String, Frame> mStoredFrames = new HashMap<>();
+    private Set<FilterGraph> mGraphs = new HashSet();
 
+    /* loaded from: classes.dex */
     public interface OnFrameReceivedListener {
         void onFrameReceived(Filter filter, Frame frame, Object obj);
     }
@@ -23,12 +25,12 @@ public class FilterContext {
     public void setFrameManager(FrameManager manager) {
         if (manager == null) {
             throw new NullPointerException("Attempting to set null FrameManager!");
-        } else if (manager.getContext() == null) {
-            this.mFrameManager = manager;
-            this.mFrameManager.setContext(this);
-        } else {
+        }
+        if (manager.getContext() != null) {
             throw new IllegalArgumentException("Attempting to set FrameManager which is already bound to another FilterContext!");
         }
+        this.mFrameManager = manager;
+        this.mFrameManager.setContext(this);
     }
 
     @UnsupportedAppUsage
@@ -89,8 +91,7 @@ public class FilterContext {
         }
     }
 
-    /* access modifiers changed from: package-private */
-    public final void addGraph(FilterGraph graph) {
+    final void addGraph(FilterGraph graph) {
         this.mGraphs.add(graph);
     }
 }

@@ -3,16 +3,17 @@ package android.app;
 import android.annotation.UnsupportedAppUsage;
 import android.content.ComponentName;
 import android.content.Context;
+import android.content.ContextWrapper;
 import android.content.DialogInterface;
-import android.content.pm.ApplicationInfo;
+import android.content.p002pm.ApplicationInfo;
+import android.content.res.Configuration;
 import android.graphics.drawable.Drawable;
 import android.net.TrafficStats;
 import android.net.Uri;
-import android.os.Bundle;
-import android.os.Handler;
-import android.os.IBinder;
-import android.os.Looper;
-import android.os.Message;
+import android.p007os.Bundle;
+import android.p007os.Handler;
+import android.p007os.Looper;
+import android.p007os.Message;
 import android.util.Log;
 import android.util.TypedValue;
 import android.view.ActionMode;
@@ -33,6 +34,7 @@ import com.android.internal.app.WindowDecorActionBar;
 import com.android.internal.policy.PhoneWindow;
 import java.lang.ref.WeakReference;
 
+/* loaded from: classes.dex */
 public class Dialog implements DialogInterface, Window.Callback, KeyEvent.Callback, View.OnCreateContextMenuListener, Window.OnWindowDismissedCallback {
     @UnsupportedAppUsage(maxTargetSdk = 28, trackingBug = 115609023)
     private static final int CANCEL = 68;
@@ -88,7 +90,8 @@ public class Dialog implements DialogInterface, Window.Callback, KeyEvent.Callba
         this.mCanceled = false;
         this.mHandler = new Handler();
         this.mActionModeTypeStarting = 0;
-        this.mDismissAction = new Runnable() {
+        this.mDismissAction = new Runnable() { // from class: android.app.-$$Lambda$oslF4K8Uk6v-6nTRoaEpCmfAptE
+            @Override // java.lang.Runnable
             public final void run() {
                 Dialog.this.dismissDialog();
             }
@@ -108,12 +111,13 @@ public class Dialog implements DialogInterface, Window.Callback, KeyEvent.Callba
         this.mWindow = w;
         w.setCallback(this);
         w.setOnWindowDismissedCallback(this);
-        w.setOnWindowSwipeDismissedCallback(new Window.OnWindowSwipeDismissedCallback() {
+        w.setOnWindowSwipeDismissedCallback(new Window.OnWindowSwipeDismissedCallback() { // from class: android.app.-$$Lambda$Dialog$zXRzrq3I7H1_zmZ8d_W7t2CQN0I
+            @Override // android.view.Window.OnWindowSwipeDismissedCallback
             public final void onWindowSwipeDismissed() {
                 Dialog.lambda$new$0(Dialog.this);
             }
         });
-        w.setWindowManager(this.mWindowManager, (IBinder) null, (String) null);
+        w.setWindowManager(this.mWindowManager, null, null);
         w.setGravity(17);
         this.mListenersHandler = new ListenersHandler(this);
     }
@@ -162,44 +166,48 @@ public class Dialog implements DialogInterface, Window.Callback, KeyEvent.Callba
 
     public void create() {
         if (!this.mCreated) {
-            dispatchOnCreate((Bundle) null);
+            dispatchOnCreate(null);
         }
     }
 
     public void show() {
-        if (!this.mShowing) {
-            this.mCanceled = false;
-            if (!this.mCreated) {
-                dispatchOnCreate((Bundle) null);
-            } else {
-                this.mWindow.getDecorView().dispatchConfigurationChanged(this.mContext.getResources().getConfiguration());
+        if (this.mShowing) {
+            if (this.mDecor != null) {
+                if (this.mWindow.hasFeature(8)) {
+                    this.mWindow.invalidatePanelMenu(8);
+                }
+                this.mDecor.setVisibility(0);
+                return;
             }
-            onStart();
-            this.mDecor = this.mWindow.getDecorView();
-            if (this.mActionBar == null && this.mWindow.hasFeature(8)) {
-                ApplicationInfo info = this.mContext.getApplicationInfo();
-                this.mWindow.setDefaultIcon(info.icon);
-                this.mWindow.setDefaultLogo(info.logo);
-                this.mActionBar = new WindowDecorActionBar(this);
-            }
-            WindowManager.LayoutParams l = this.mWindow.getAttributes();
-            boolean restoreSoftInputMode = false;
-            if ((l.softInputMode & 256) == 0) {
-                l.softInputMode |= 256;
-                restoreSoftInputMode = true;
-            }
-            this.mWindowManager.addView(this.mDecor, l);
-            if (restoreSoftInputMode) {
-                l.softInputMode &= TrafficStats.TAG_NETWORK_STACK_RANGE_END;
-            }
-            this.mShowing = true;
-            sendShowMessage();
-        } else if (this.mDecor != null) {
-            if (this.mWindow.hasFeature(8)) {
-                this.mWindow.invalidatePanelMenu(8);
-            }
-            this.mDecor.setVisibility(0);
+            return;
         }
+        this.mCanceled = false;
+        if (!this.mCreated) {
+            dispatchOnCreate(null);
+        } else {
+            Configuration config = this.mContext.getResources().getConfiguration();
+            this.mWindow.getDecorView().dispatchConfigurationChanged(config);
+        }
+        onStart();
+        this.mDecor = this.mWindow.getDecorView();
+        if (this.mActionBar == null && this.mWindow.hasFeature(8)) {
+            ApplicationInfo info = this.mContext.getApplicationInfo();
+            this.mWindow.setDefaultIcon(info.icon);
+            this.mWindow.setDefaultLogo(info.logo);
+            this.mActionBar = new WindowDecorActionBar(this);
+        }
+        WindowManager.LayoutParams l = this.mWindow.getAttributes();
+        boolean restoreSoftInputMode = false;
+        if ((l.softInputMode & 256) == 0) {
+            l.softInputMode |= 256;
+            restoreSoftInputMode = true;
+        }
+        this.mWindowManager.addView(this.mDecor, l);
+        if (restoreSoftInputMode) {
+            l.softInputMode &= TrafficStats.TAG_NETWORK_STACK_RANGE_END;
+        }
+        this.mShowing = true;
+        sendShowMessage();
     }
 
     public void hide() {
@@ -208,6 +216,7 @@ public class Dialog implements DialogInterface, Window.Callback, KeyEvent.Callba
         }
     }
 
+    @Override // android.content.DialogInterface
     public void dismiss() {
         if (Looper.myLooper() == this.mHandler.getLooper()) {
             dismissDialog();
@@ -216,26 +225,26 @@ public class Dialog implements DialogInterface, Window.Callback, KeyEvent.Callba
         }
     }
 
-    /* access modifiers changed from: package-private */
     @UnsupportedAppUsage
-    public void dismissDialog() {
-        if (this.mDecor != null && this.mShowing) {
-            if (this.mWindow.isDestroyed()) {
-                Log.e(TAG, "Tried to dismissDialog() but the Dialog's window was already destroyed!");
-                return;
+    void dismissDialog() {
+        if (this.mDecor == null || !this.mShowing) {
+            return;
+        }
+        if (this.mWindow.isDestroyed()) {
+            Log.m70e(TAG, "Tried to dismissDialog() but the Dialog's window was already destroyed!");
+            return;
+        }
+        try {
+            this.mWindowManager.removeViewImmediate(this.mDecor);
+        } finally {
+            if (this.mActionMode != null) {
+                this.mActionMode.finish();
             }
-            try {
-                this.mWindowManager.removeViewImmediate(this.mDecor);
-            } finally {
-                if (this.mActionMode != null) {
-                    this.mActionMode.finish();
-                }
-                this.mDecor = null;
-                this.mWindow.closeAllPanels();
-                onStop();
-                this.mShowing = false;
-                sendDismissMessage();
-            }
+            this.mDecor = null;
+            this.mWindow.closeAllPanels();
+            onStop();
+            this.mShowing = false;
+            sendDismissMessage();
         }
     }
 
@@ -251,27 +260,23 @@ public class Dialog implements DialogInterface, Window.Callback, KeyEvent.Callba
         }
     }
 
-    /* access modifiers changed from: package-private */
-    public void dispatchOnCreate(Bundle savedInstanceState) {
+    void dispatchOnCreate(Bundle savedInstanceState) {
         if (!this.mCreated) {
             onCreate(savedInstanceState);
             this.mCreated = true;
         }
     }
 
-    /* access modifiers changed from: protected */
-    public void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(Bundle savedInstanceState) {
     }
 
-    /* access modifiers changed from: protected */
-    public void onStart() {
+    protected void onStart() {
         if (this.mActionBar != null) {
             this.mActionBar.setShowHideAnimationEnabled(true);
         }
     }
 
-    /* access modifiers changed from: protected */
-    public void onStop() {
+    protected void onStop() {
         if (this.mActionBar != null) {
             this.mActionBar.setShowHideAnimationEnabled(false);
         }
@@ -288,12 +293,13 @@ public class Dialog implements DialogInterface, Window.Callback, KeyEvent.Callba
 
     public void onRestoreInstanceState(Bundle savedInstanceState) {
         Bundle dialogHierarchyState = savedInstanceState.getBundle(DIALOG_HIERARCHY_TAG);
-        if (dialogHierarchyState != null) {
-            dispatchOnCreate(savedInstanceState);
-            this.mWindow.restoreHierarchyState(dialogHierarchyState);
-            if (savedInstanceState.getBoolean(DIALOG_SHOWING_TAG)) {
-                show();
-            }
+        if (dialogHierarchyState == null) {
+            return;
+        }
+        dispatchOnCreate(savedInstanceState);
+        this.mWindow.restoreHierarchyState(dialogHierarchyState);
+        if (savedInstanceState.getBoolean(DIALOG_SHOWING_TAG)) {
+            show();
         }
     }
 
@@ -309,15 +315,15 @@ public class Dialog implements DialogInterface, Window.Callback, KeyEvent.Callba
     }
 
     public <T extends View> T findViewById(int id) {
-        return this.mWindow.findViewById(id);
+        return (T) this.mWindow.findViewById(id);
     }
 
     public final <T extends View> T requireViewById(int id) {
-        T view = findViewById(id);
-        if (view != null) {
-            return view;
+        T view = (T) findViewById(id);
+        if (view == null) {
+            throw new IllegalArgumentException("ID does not reference a View inside this Dialog");
         }
-        throw new IllegalArgumentException("ID does not reference a View inside this Dialog");
+        return view;
     }
 
     public void setContentView(int layoutResID) {
@@ -346,25 +352,27 @@ public class Dialog implements DialogInterface, Window.Callback, KeyEvent.Callba
     }
 
     public boolean onKeyDown(int keyCode, KeyEvent event) {
-        if (keyCode != 4 && keyCode != 111) {
-            return false;
+        if (keyCode == 4 || keyCode == 111) {
+            event.startTracking();
+            return true;
         }
-        event.startTracking();
-        return true;
+        return false;
     }
 
+    @Override // android.view.KeyEvent.Callback
     public boolean onKeyLongPress(int keyCode, KeyEvent event) {
         return false;
     }
 
     public boolean onKeyUp(int keyCode, KeyEvent event) {
-        if ((keyCode != 4 && keyCode != 111) || !event.isTracking() || event.isCanceled()) {
-            return false;
+        if ((keyCode == 4 || keyCode == 111) && event.isTracking() && !event.isCanceled()) {
+            onBackPressed();
+            return true;
         }
-        onBackPressed();
-        return true;
+        return false;
     }
 
+    @Override // android.view.KeyEvent.Callback
     public boolean onKeyMultiple(int keyCode, int repeatCount, KeyEvent event) {
         return false;
     }
@@ -380,11 +388,11 @@ public class Dialog implements DialogInterface, Window.Callback, KeyEvent.Callba
     }
 
     public boolean onTouchEvent(MotionEvent event) {
-        if (!this.mCancelable || !this.mShowing || !this.mWindow.shouldCloseOnTouch(this.mContext, event)) {
-            return false;
+        if (this.mCancelable && this.mShowing && this.mWindow.shouldCloseOnTouch(this.mContext, event)) {
+            cancel();
+            return true;
         }
-        cancel();
-        return true;
+        return false;
     }
 
     public boolean onTrackballEvent(MotionEvent event) {
@@ -395,35 +403,43 @@ public class Dialog implements DialogInterface, Window.Callback, KeyEvent.Callba
         return false;
     }
 
+    @Override // android.view.Window.Callback
     public void onWindowAttributesChanged(WindowManager.LayoutParams params) {
         if (this.mDecor != null) {
             this.mWindowManager.updateViewLayout(this.mDecor, params);
         }
     }
 
+    @Override // android.view.Window.Callback
     public void onContentChanged() {
     }
 
+    @Override // android.view.Window.Callback
     public void onWindowFocusChanged(boolean hasFocus) {
     }
 
+    @Override // android.view.Window.Callback
     public void onAttachedToWindow() {
     }
 
+    @Override // android.view.Window.Callback
     public void onDetachedFromWindow() {
     }
 
+    @Override // android.view.Window.OnWindowDismissedCallback
     public void onWindowDismissed(boolean finishTask, boolean suppressWindowTransition) {
         dismiss();
     }
 
+    @Override // android.view.Window.Callback
     public boolean dispatchKeyEvent(KeyEvent event) {
-        if ((this.mOnKeyListener != null && this.mOnKeyListener.onKey(this, event.getKeyCode(), event)) || this.mWindow.superDispatchKeyEvent(event)) {
-            return true;
+        if ((this.mOnKeyListener == null || !this.mOnKeyListener.onKey(this, event.getKeyCode(), event)) && !this.mWindow.superDispatchKeyEvent(event)) {
+            return event.dispatch(this, this.mDecor != null ? this.mDecor.getKeyDispatcherState() : null, this);
         }
-        return event.dispatch(this, this.mDecor != null ? this.mDecor.getKeyDispatcherState() : null, this);
+        return true;
     }
 
+    @Override // android.view.Window.Callback
     public boolean dispatchKeyShortcutEvent(KeyEvent event) {
         if (this.mWindow.superDispatchKeyShortcutEvent(event)) {
             return true;
@@ -431,6 +447,7 @@ public class Dialog implements DialogInterface, Window.Callback, KeyEvent.Callba
         return onKeyShortcut(event.getKeyCode(), event);
     }
 
+    @Override // android.view.Window.Callback
     public boolean dispatchTouchEvent(MotionEvent ev) {
         if (this.mWindow.superDispatchTouchEvent(ev)) {
             return true;
@@ -438,6 +455,7 @@ public class Dialog implements DialogInterface, Window.Callback, KeyEvent.Callba
         return onTouchEvent(ev);
     }
 
+    @Override // android.view.Window.Callback
     public boolean dispatchTrackballEvent(MotionEvent ev) {
         if (this.mWindow.superDispatchTrackballEvent(ev)) {
             return true;
@@ -445,6 +463,7 @@ public class Dialog implements DialogInterface, Window.Callback, KeyEvent.Callba
         return onTrackballEvent(ev);
     }
 
+    @Override // android.view.Window.Callback
     public boolean dispatchGenericMotionEvent(MotionEvent ev) {
         if (this.mWindow.superDispatchGenericMotionEvent(ev)) {
             return true;
@@ -452,18 +471,22 @@ public class Dialog implements DialogInterface, Window.Callback, KeyEvent.Callba
         return onGenericMotionEvent(ev);
     }
 
+    @Override // android.view.Window.Callback
     public boolean dispatchPopulateAccessibilityEvent(AccessibilityEvent event) {
         event.setClassName(getClass().getName());
         event.setPackageName(this.mContext.getPackageName());
         ViewGroup.LayoutParams params = getWindow().getAttributes();
-        event.setFullScreen(params.width == -1 && params.height == -1);
+        boolean isFullScreen = params.width == -1 && params.height == -1;
+        event.setFullScreen(isFullScreen);
         return false;
     }
 
+    @Override // android.view.Window.Callback
     public View onCreatePanelView(int featureId) {
         return null;
     }
 
+    @Override // android.view.Window.Callback
     public boolean onCreatePanelMenu(int featureId, Menu menu) {
         if (featureId == 0) {
             return onCreateOptionsMenu(menu);
@@ -471,16 +494,15 @@ public class Dialog implements DialogInterface, Window.Callback, KeyEvent.Callba
         return false;
     }
 
+    @Override // android.view.Window.Callback
     public boolean onPreparePanel(int featureId, View view, Menu menu) {
-        if (featureId != 0) {
-            return true;
-        }
-        if (!onPrepareOptionsMenu(menu) || !menu.hasVisibleItems()) {
-            return false;
+        if (featureId == 0) {
+            return onPrepareOptionsMenu(menu) && menu.hasVisibleItems();
         }
         return true;
     }
 
+    @Override // android.view.Window.Callback
     public boolean onMenuOpened(int featureId, Menu menu) {
         if (featureId == 8) {
             this.mActionBar.dispatchMenuVisibilityChanged(true);
@@ -488,10 +510,12 @@ public class Dialog implements DialogInterface, Window.Callback, KeyEvent.Callba
         return true;
     }
 
+    @Override // android.view.Window.Callback
     public boolean onMenuItemSelected(int featureId, MenuItem item) {
         return false;
     }
 
+    @Override // android.view.Window.Callback
     public void onPanelClosed(int featureId, Menu menu) {
         if (featureId == 8) {
             this.mActionBar.dispatchMenuVisibilityChanged(false);
@@ -515,7 +539,7 @@ public class Dialog implements DialogInterface, Window.Callback, KeyEvent.Callba
 
     public void openOptionsMenu() {
         if (this.mWindow.hasFeature(0)) {
-            this.mWindow.openPanel(0, (KeyEvent) null);
+            this.mWindow.openPanel(0, null);
         }
     }
 
@@ -531,6 +555,7 @@ public class Dialog implements DialogInterface, Window.Callback, KeyEvent.Callba
         }
     }
 
+    @Override // android.view.View.OnCreateContextMenuListener
     public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
     }
 
@@ -539,7 +564,7 @@ public class Dialog implements DialogInterface, Window.Callback, KeyEvent.Callba
     }
 
     public void unregisterForContextMenu(View view) {
-        view.setOnCreateContextMenuListener((View.OnCreateContextMenuListener) null);
+        view.setOnCreateContextMenuListener(null);
     }
 
     public void openContextMenu(View view) {
@@ -553,91 +578,78 @@ public class Dialog implements DialogInterface, Window.Callback, KeyEvent.Callba
     public void onContextMenuClosed(Menu menu) {
     }
 
+    @Override // android.view.Window.Callback
     public boolean onSearchRequested(SearchEvent searchEvent) {
         this.mSearchEvent = searchEvent;
         return onSearchRequested();
     }
 
+    @Override // android.view.Window.Callback
     public boolean onSearchRequested() {
         SearchManager searchManager = (SearchManager) this.mContext.getSystemService("search");
         ComponentName appName = getAssociatedActivity();
-        if (appName == null || searchManager.getSearchableInfo(appName) == null) {
-            return false;
+        if (appName != null && searchManager.getSearchableInfo(appName) != null) {
+            searchManager.startSearch(null, false, appName, null, false);
+            dismiss();
+            return true;
         }
-        searchManager.startSearch((String) null, false, appName, (Bundle) null, false);
-        dismiss();
-        return true;
+        return false;
     }
 
     public final SearchEvent getSearchEvent() {
         return this.mSearchEvent;
     }
 
+    @Override // android.view.Window.Callback
     public ActionMode onWindowStartingActionMode(ActionMode.Callback callback) {
-        if (this.mActionBar == null || this.mActionModeTypeStarting != 0) {
-            return null;
+        if (this.mActionBar != null && this.mActionModeTypeStarting == 0) {
+            return this.mActionBar.startActionMode(callback);
         }
-        return this.mActionBar.startActionMode(callback);
+        return null;
     }
 
-    /* JADX INFO: finally extract failed */
+    @Override // android.view.Window.Callback
     public ActionMode onWindowStartingActionMode(ActionMode.Callback callback, int type) {
         try {
             this.mActionModeTypeStarting = type;
-            ActionMode onWindowStartingActionMode = onWindowStartingActionMode(callback);
+            return onWindowStartingActionMode(callback);
+        } finally {
             this.mActionModeTypeStarting = 0;
-            return onWindowStartingActionMode;
-        } catch (Throwable th) {
-            this.mActionModeTypeStarting = 0;
-            throw th;
         }
     }
 
+    @Override // android.view.Window.Callback
     public void onActionModeStarted(ActionMode mode) {
         this.mActionMode = mode;
     }
 
+    @Override // android.view.Window.Callback
     public void onActionModeFinished(ActionMode mode) {
         if (mode == this.mActionMode) {
             this.mActionMode = null;
         }
     }
 
-    /* JADX WARNING: Removed duplicated region for block: B:12:0x0024  */
-    /* JADX WARNING: Removed duplicated region for block: B:19:? A[RETURN, SYNTHETIC] */
-    /* Code decompiled incorrectly, please refer to instructions dump. */
-    private android.content.ComponentName getAssociatedActivity() {
-        /*
-            r4 = this;
-            android.app.Activity r0 = r4.mOwnerActivity
-            android.content.Context r1 = r4.getContext()
-        L_0x0006:
-            r2 = 0
-            if (r0 != 0) goto L_0x0021
-            if (r1 == 0) goto L_0x0021
-            boolean r3 = r1 instanceof android.app.Activity
-            if (r3 == 0) goto L_0x0013
-            r0 = r1
-            android.app.Activity r0 = (android.app.Activity) r0
-            goto L_0x0006
-        L_0x0013:
-            boolean r3 = r1 instanceof android.content.ContextWrapper
-            if (r3 == 0) goto L_0x001f
-            r2 = r1
-            android.content.ContextWrapper r2 = (android.content.ContextWrapper) r2
-            android.content.Context r2 = r2.getBaseContext()
-        L_0x001f:
-            r1 = r2
-            goto L_0x0006
-        L_0x0021:
-            if (r0 != 0) goto L_0x0024
-            goto L_0x0028
-        L_0x0024:
-            android.content.ComponentName r2 = r0.getComponentName()
-        L_0x0028:
-            return r2
-        */
-        throw new UnsupportedOperationException("Method not decompiled: android.app.Dialog.getAssociatedActivity():android.content.ComponentName");
+    private ComponentName getAssociatedActivity() {
+        Activity activity = this.mOwnerActivity;
+        Context context = getContext();
+        while (true) {
+            Context context2 = null;
+            if (activity != null || context == null) {
+                break;
+            } else if (context instanceof Activity) {
+                activity = (Activity) context;
+            } else {
+                if (context instanceof ContextWrapper) {
+                    context2 = ((ContextWrapper) context).getBaseContext();
+                }
+                context = context2;
+            }
+        }
+        if (activity == null) {
+            return null;
+        }
+        return activity.getComponentName();
     }
 
     public void takeKeyEvents(boolean get) {
@@ -681,6 +693,7 @@ public class Dialog implements DialogInterface, Window.Callback, KeyEvent.Callba
         this.mWindow.setCloseOnTouchOutside(cancel);
     }
 
+    @Override // android.content.DialogInterface
     public void cancel() {
         if (!this.mCanceled && this.mCancelMessage != null) {
             this.mCanceled = true;
@@ -728,7 +741,7 @@ public class Dialog implements DialogInterface, Window.Callback, KeyEvent.Callba
     public boolean takeCancelAndDismissListeners(String msg, DialogInterface.OnCancelListener cancel, DialogInterface.OnDismissListener dismiss) {
         if (this.mCancelAndDismissTaken != null) {
             this.mCancelAndDismissTaken = null;
-        } else if (!(this.mCancelMessage == null && this.mDismissMessage == null)) {
+        } else if (this.mCancelMessage != null || this.mDismissMessage != null) {
             return false;
         }
         setOnCancelListener(cancel);
@@ -749,6 +762,7 @@ public class Dialog implements DialogInterface, Window.Callback, KeyEvent.Callba
         this.mOnKeyListener = onKeyListener;
     }
 
+    /* loaded from: classes.dex */
     private static final class ListenersHandler extends Handler {
         private final WeakReference<DialogInterface> mDialog;
 
@@ -756,16 +770,17 @@ public class Dialog implements DialogInterface, Window.Callback, KeyEvent.Callba
             this.mDialog = new WeakReference<>(dialog);
         }
 
+        @Override // android.p007os.Handler
         public void handleMessage(Message msg) {
             switch (msg.what) {
                 case 67:
-                    ((DialogInterface.OnDismissListener) msg.obj).onDismiss((DialogInterface) this.mDialog.get());
+                    ((DialogInterface.OnDismissListener) msg.obj).onDismiss(this.mDialog.get());
                     return;
                 case 68:
-                    ((DialogInterface.OnCancelListener) msg.obj).onCancel((DialogInterface) this.mDialog.get());
+                    ((DialogInterface.OnCancelListener) msg.obj).onCancel(this.mDialog.get());
                     return;
                 case 69:
-                    ((DialogInterface.OnShowListener) msg.obj).onShow((DialogInterface) this.mDialog.get());
+                    ((DialogInterface.OnShowListener) msg.obj).onShow(this.mDialog.get());
                     return;
                 default:
                     return;

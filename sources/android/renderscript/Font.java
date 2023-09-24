@@ -3,18 +3,20 @@ package android.renderscript;
 import android.annotation.UnsupportedAppUsage;
 import android.content.res.AssetManager;
 import android.content.res.Resources;
-import android.os.Environment;
+import android.p007os.Environment;
 import java.io.File;
 import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Map;
 
+/* loaded from: classes3.dex */
 public class Font extends BaseObj {
     private static Map<String, FontFamily> sFontFamilyMap;
-    private static final String[] sMonoNames = {"monospace", "courier", "courier new", "monaco"};
     private static final String[] sSansNames = {"sans-serif", "arial", "helvetica", "tahoma", "verdana"};
     private static final String[] sSerifNames = {"serif", "times", "times new roman", "palatino", "georgia", "baskerville", "goudy", "fantasy", "cursive", "ITC Stone Serif"};
+    private static final String[] sMonoNames = {"monospace", "courier", "courier new", "monaco"};
 
+    /* loaded from: classes3.dex */
     public enum Style {
         NORMAL,
         BOLD,
@@ -26,6 +28,7 @@ public class Font extends BaseObj {
         initFontFamilyMap();
     }
 
+    /* loaded from: classes3.dex */
     private static class FontFamily {
         String mBoldFileName;
         String mBoldItalicFileName;
@@ -38,8 +41,8 @@ public class Font extends BaseObj {
     }
 
     private static void addFamilyToMap(FontFamily family) {
-        for (String put : family.mNames) {
-            sFontFamilyMap.put(put, family);
+        for (int i = 0; i < family.mNames.length; i++) {
+            sFontFamilyMap.put(family.mNames[i], family);
         }
     }
 
@@ -70,21 +73,21 @@ public class Font extends BaseObj {
 
     static String getFontFileName(String familyName, Style style) {
         FontFamily family = sFontFamilyMap.get(familyName);
-        if (family == null) {
-            return "DroidSans.ttf";
+        if (family != null) {
+            switch (style) {
+                case NORMAL:
+                    return family.mNormalFileName;
+                case BOLD:
+                    return family.mBoldFileName;
+                case ITALIC:
+                    return family.mItalicFileName;
+                case BOLD_ITALIC:
+                    return family.mBoldItalicFileName;
+                default:
+                    return "DroidSans.ttf";
+            }
         }
-        switch (style) {
-            case NORMAL:
-                return family.mNormalFileName;
-            case BOLD:
-                return family.mBoldFileName;
-            case ITALIC:
-                return family.mItalicFileName;
-            case BOLD_ITALIC:
-                return family.mBoldItalicFileName;
-            default:
-                return "DroidSans.ttf";
-        }
+        return "DroidSans.ttf";
     }
 
     Font(long id, RenderScript rs) {
@@ -94,11 +97,13 @@ public class Font extends BaseObj {
 
     public static Font createFromFile(RenderScript rs, Resources res, String path, float pointSize) {
         rs.validate();
-        long fontId = rs.nFontCreateFromFile(path, pointSize, res.getDisplayMetrics().densityDpi);
-        if (fontId != 0) {
-            return new Font(fontId, rs);
+        int dpi = res.getDisplayMetrics().densityDpi;
+        long fontId = rs.nFontCreateFromFile(path, pointSize, dpi);
+        if (fontId == 0) {
+            throw new RSRuntimeException("Unable to create font from file " + path);
         }
-        throw new RSRuntimeException("Unable to create font from file " + path);
+        Font rsFont = new Font(fontId, rs);
+        return rsFont;
     }
 
     public static Font createFromFile(RenderScript rs, Resources res, File path, float pointSize) {
@@ -107,35 +112,34 @@ public class Font extends BaseObj {
 
     public static Font createFromAsset(RenderScript rs, Resources res, String path, float pointSize) {
         rs.validate();
-        long fontId = rs.nFontCreateFromAsset(res.getAssets(), path, pointSize, res.getDisplayMetrics().densityDpi);
-        if (fontId != 0) {
-            return new Font(fontId, rs);
+        AssetManager mgr = res.getAssets();
+        int dpi = res.getDisplayMetrics().densityDpi;
+        long fontId = rs.nFontCreateFromAsset(mgr, path, pointSize, dpi);
+        if (fontId == 0) {
+            throw new RSRuntimeException("Unable to create font from asset " + path);
         }
-        throw new RSRuntimeException("Unable to create font from asset " + path);
+        Font rsFont = new Font(fontId, rs);
+        return rsFont;
     }
 
     public static Font createFromResource(RenderScript rs, Resources res, int id, float pointSize) {
-        int i = id;
         String name = "R." + Integer.toString(id);
         rs.validate();
         try {
             InputStream is = res.openRawResource(id);
             int dpi = res.getDisplayMetrics().densityDpi;
             if (is instanceof AssetManager.AssetInputStream) {
-                long fontId = rs.nFontCreateFromAssetStream(name, pointSize, dpi, ((AssetManager.AssetInputStream) is).getNativeAsset());
-                if (fontId != 0) {
-                    RenderScript renderScript = rs;
-                    return new Font(fontId, rs);
+                long asset = ((AssetManager.AssetInputStream) is).getNativeAsset();
+                long fontId = rs.nFontCreateFromAssetStream(name, pointSize, dpi, asset);
+                if (fontId == 0) {
+                    throw new RSRuntimeException("Unable to create font from resource " + id);
                 }
-                RenderScript renderScript2 = rs;
-                throw new RSRuntimeException("Unable to create font from resource " + i);
+                Font rsFont = new Font(fontId, rs);
+                return rsFont;
             }
-            RenderScript renderScript3 = rs;
             throw new RSRuntimeException("Unsupported asset stream created");
         } catch (Exception e) {
-            RenderScript renderScript4 = rs;
-            Exception exc = e;
-            throw new RSRuntimeException("Unable to open resource " + i);
+            throw new RSRuntimeException("Unable to open resource " + id);
         }
     }
 

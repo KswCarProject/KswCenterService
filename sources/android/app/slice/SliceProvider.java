@@ -7,23 +7,22 @@ import android.content.ContentProvider;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
-import android.content.pm.PackageManager;
-import android.content.pm.ProviderInfo;
+import android.content.p002pm.PackageManager;
+import android.content.p002pm.ProviderInfo;
 import android.database.Cursor;
 import android.graphics.drawable.Icon;
 import android.net.Uri;
-import android.os.Binder;
-import android.os.Bundle;
-import android.os.CancellationSignal;
-import android.os.Handler;
-import android.os.Parcelable;
-import android.os.Process;
-import android.os.StrictMode;
+import android.p007os.Binder;
+import android.p007os.Bundle;
+import android.p007os.CancellationSignal;
+import android.p007os.Handler;
+import android.p007os.Process;
+import android.p007os.StrictMode;
 import android.util.ArraySet;
 import android.util.Log;
 import android.util.TypedValue;
 import android.view.ContextThemeWrapper;
-import com.android.internal.R;
+import com.android.internal.C3132R;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -31,6 +30,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 
+/* loaded from: classes.dex */
 public abstract class SliceProvider extends ContentProvider {
     private static final boolean DEBUG = false;
     public static final String EXTRA_BIND_URI = "slice_uri";
@@ -57,7 +57,8 @@ public abstract class SliceProvider extends ContentProvider {
     private SliceManager mSliceManager;
 
     public SliceProvider(String... autoGrantPermissions) {
-        this.mAnr = new Runnable() {
+        this.mAnr = new Runnable() { // from class: android.app.slice.-$$Lambda$SliceProvider$bIgM5f4PsMvz_YYWEeFTjvTqevw
+            @Override // java.lang.Runnable
             public final void run() {
                 SliceProvider.lambda$new$0(SliceProvider.this);
             }
@@ -66,7 +67,8 @@ public abstract class SliceProvider extends ContentProvider {
     }
 
     public SliceProvider() {
-        this.mAnr = new Runnable() {
+        this.mAnr = new Runnable() { // from class: android.app.slice.-$$Lambda$SliceProvider$bIgM5f4PsMvz_YYWEeFTjvTqevw
+            @Override // java.lang.Runnable
             public final void run() {
                 SliceProvider.lambda$new$0(SliceProvider.this);
             }
@@ -74,17 +76,18 @@ public abstract class SliceProvider extends ContentProvider {
         this.mAutoGrantPermissions = new String[0];
     }
 
+    @Override // android.content.ContentProvider
     public void attachInfo(Context context, ProviderInfo info) {
         super.attachInfo(context, info);
         this.mSliceManager = (SliceManager) context.getSystemService(SliceManager.class);
     }
 
     public Slice onBindSlice(Uri sliceUri, Set<SliceSpec> supportedSpecs) {
-        return onBindSlice(sliceUri, (List<SliceSpec>) new ArrayList(supportedSpecs));
+        return onBindSlice(sliceUri, new ArrayList(supportedSpecs));
     }
 
     @Deprecated
-    public Slice onBindSlice(Uri sliceUri, List<SliceSpec> list) {
+    public Slice onBindSlice(Uri sliceUri, List<SliceSpec> supportedSpecs) {
         return null;
     }
 
@@ -106,37 +109,50 @@ public abstract class SliceProvider extends ContentProvider {
         return createPermissionIntent(getContext(), sliceUri, getCallingPackage());
     }
 
+    @Override // android.content.ContentProvider, android.content.ContentInterface
     public final int update(Uri uri, ContentValues values, String selection, String[] selectionArgs) {
         return 0;
     }
 
+    @Override // android.content.ContentProvider, android.content.ContentInterface
     public final int delete(Uri uri, String selection, String[] selectionArgs) {
         return 0;
     }
 
+    @Override // android.content.ContentProvider
     public final Cursor query(Uri uri, String[] projection, String selection, String[] selectionArgs, String sortOrder) {
         return null;
     }
 
+    @Override // android.content.ContentProvider
     public final Cursor query(Uri uri, String[] projection, String selection, String[] selectionArgs, String sortOrder, CancellationSignal cancellationSignal) {
         return null;
     }
 
+    @Override // android.content.ContentProvider, android.content.ContentInterface
     public final Cursor query(Uri uri, String[] projection, Bundle queryArgs, CancellationSignal cancellationSignal) {
         return null;
     }
 
+    @Override // android.content.ContentProvider, android.content.ContentInterface
     public final Uri insert(Uri uri, ContentValues values) {
         return null;
     }
 
+    @Override // android.content.ContentProvider, android.content.ContentInterface
     public final String getType(Uri uri) {
         return SLICE_TYPE;
     }
 
+    @Override // android.content.ContentProvider
     public Bundle call(String method, String arg, Bundle extras) {
         if (method.equals(METHOD_SLICE)) {
-            Slice s = handleBindSlice(getUriWithoutUserId((Uri) extras.getParcelable("slice_uri")), extras.getParcelableArrayList(EXTRA_SUPPORTED_SPECS), getCallingPackage(), Binder.getCallingUid(), Binder.getCallingPid());
+            Uri uri = getUriWithoutUserId((Uri) extras.getParcelable("slice_uri"));
+            List<SliceSpec> supportedSpecs = extras.getParcelableArrayList(EXTRA_SUPPORTED_SPECS);
+            String callingPackage = getCallingPackage();
+            int callingUid = Binder.getCallingUid();
+            int callingPid = Binder.getCallingPid();
+            Slice s = handleBindSlice(uri, supportedSpecs, callingPackage, callingUid, callingPid);
             Bundle b = new Bundle();
             b.putParcelable("slice", s);
             return b;
@@ -145,13 +161,14 @@ public abstract class SliceProvider extends ContentProvider {
             if (intent == null) {
                 return null;
             }
-            Uri uri = onMapIntentToUri(intent);
-            ArrayList parcelableArrayList = extras.getParcelableArrayList(EXTRA_SUPPORTED_SPECS);
+            Uri uri2 = onMapIntentToUri(intent);
+            List<SliceSpec> supportedSpecs2 = extras.getParcelableArrayList(EXTRA_SUPPORTED_SPECS);
             Bundle b2 = new Bundle();
-            if (uri != null) {
-                b2.putParcelable("slice", handleBindSlice(uri, parcelableArrayList, getCallingPackage(), Binder.getCallingUid(), Binder.getCallingPid()));
+            if (uri2 != null) {
+                Slice s2 = handleBindSlice(uri2, supportedSpecs2, getCallingPackage(), Binder.getCallingUid(), Binder.getCallingPid());
+                b2.putParcelable("slice", s2);
             } else {
-                b2.putParcelable("slice", (Parcelable) null);
+                b2.putParcelable("slice", null);
             }
             return b2;
         } else if (method.equals(METHOD_MAP_ONLY_INTENT)) {
@@ -159,37 +176,35 @@ public abstract class SliceProvider extends ContentProvider {
             if (intent2 == null) {
                 return null;
             }
-            Uri uri2 = onMapIntentToUri(intent2);
+            Uri uri3 = onMapIntentToUri(intent2);
             Bundle b3 = new Bundle();
-            b3.putParcelable("slice", uri2);
+            b3.putParcelable("slice", uri3);
             return b3;
         } else {
             if (method.equals(METHOD_PIN)) {
-                Uri uri3 = getUriWithoutUserId((Uri) extras.getParcelable("slice_uri"));
-                if (Binder.getCallingUid() == 1000) {
-                    handlePinSlice(uri3);
-                } else {
-                    throw new SecurityException("Only the system can pin/unpin slices");
-                }
-            } else if (method.equals(METHOD_UNPIN)) {
                 Uri uri4 = getUriWithoutUserId((Uri) extras.getParcelable("slice_uri"));
-                if (Binder.getCallingUid() == 1000) {
-                    handleUnpinSlice(uri4);
-                } else {
+                if (Binder.getCallingUid() != 1000) {
                     throw new SecurityException("Only the system can pin/unpin slices");
                 }
-            } else if (method.equals(METHOD_GET_DESCENDANTS)) {
+                handlePinSlice(uri4);
+            } else if (method.equals(METHOD_UNPIN)) {
                 Uri uri5 = getUriWithoutUserId((Uri) extras.getParcelable("slice_uri"));
+                if (Binder.getCallingUid() != 1000) {
+                    throw new SecurityException("Only the system can pin/unpin slices");
+                }
+                handleUnpinSlice(uri5);
+            } else if (method.equals(METHOD_GET_DESCENDANTS)) {
+                Uri uri6 = getUriWithoutUserId((Uri) extras.getParcelable("slice_uri"));
                 Bundle b4 = new Bundle();
-                b4.putParcelableArrayList(EXTRA_SLICE_DESCENDANTS, new ArrayList(handleGetDescendants(uri5)));
+                b4.putParcelableArrayList(EXTRA_SLICE_DESCENDANTS, new ArrayList<>(handleGetDescendants(uri6)));
                 return b4;
             } else if (method.equals(METHOD_GET_PERMISSIONS)) {
-                if (Binder.getCallingUid() == 1000) {
-                    Bundle b5 = new Bundle();
-                    b5.putStringArray("result", this.mAutoGrantPermissions);
-                    return b5;
+                if (Binder.getCallingUid() != 1000) {
+                    throw new SecurityException("Only the system can get permissions");
                 }
-                throw new SecurityException("Only the system can get permissions");
+                Bundle b5 = new Bundle();
+                b5.putStringArray("result", this.mAutoGrantPermissions);
+                return b5;
             }
             return super.call(method, arg, extras);
         }
@@ -236,7 +251,6 @@ public abstract class SliceProvider extends ContentProvider {
         }
     }
 
-    /* JADX INFO: finally extract failed */
     public Slice createPermissionSlice(Context context, Uri sliceUri, String callingPackage) {
         this.mCallback = "onCreatePermissionRequest";
         Handler.getMain().postDelayed(this.mAnr, SLICE_BIND_ANR);
@@ -244,11 +258,12 @@ public abstract class SliceProvider extends ContentProvider {
             PendingIntent action = onCreatePermissionRequest(sliceUri);
             Handler.getMain().removeCallbacks(this.mAnr);
             Slice.Builder parent = new Slice.Builder(sliceUri);
-            Slice.Builder childAction = new Slice.Builder(parent).addIcon(Icon.createWithResource(context, (int) R.drawable.ic_permission), (String) null, Collections.emptyList()).addHints(Arrays.asList(new String[]{"title", "shortcut"})).addAction(action, new Slice.Builder(parent).build(), (String) null);
+            Slice.Builder childAction = new Slice.Builder(parent).addIcon(Icon.createWithResource(context, (int) C3132R.C3133drawable.ic_permission), null, Collections.emptyList()).addHints(Arrays.asList("title", "shortcut")).addAction(action, new Slice.Builder(parent).build(), null);
             TypedValue tv = new TypedValue();
             new ContextThemeWrapper(context, 16974123).getTheme().resolveAttribute(16843829, tv, true);
-            parent.addSubSlice(new Slice.Builder(sliceUri.buildUpon().appendPath("permission").build()).addIcon(Icon.createWithResource(context, (int) R.drawable.ic_arrow_forward), (String) null, Collections.emptyList()).addText(getPermissionString(context, callingPackage), (String) null, Collections.emptyList()).addInt(tv.data, "color", Collections.emptyList()).addSubSlice(childAction.build(), (String) null).build(), (String) null);
-            return parent.addHints(Arrays.asList(new String[]{Slice.HINT_PERMISSION_REQUEST})).build();
+            int deviceDefaultAccent = tv.data;
+            parent.addSubSlice(new Slice.Builder(sliceUri.buildUpon().appendPath("permission").build()).addIcon(Icon.createWithResource(context, (int) C3132R.C3133drawable.ic_arrow_forward), null, Collections.emptyList()).addText(getPermissionString(context, callingPackage), null, Collections.emptyList()).addInt(deviceDefaultAccent, "color", Collections.emptyList()).addSubSlice(childAction.build(), null).build(), null);
+            return parent.addHints(Arrays.asList(Slice.HINT_PERMISSION_REQUEST)).build();
         } catch (Throwable th) {
             Handler.getMain().removeCallbacks(this.mAnr);
             throw th;
@@ -258,7 +273,7 @@ public abstract class SliceProvider extends ContentProvider {
     public static PendingIntent createPermissionIntent(Context context, Uri sliceUri, String callingPackage) {
         Intent intent = new Intent(SliceManager.ACTION_REQUEST_SLICE_PERMISSION);
         intent.setComponent(new ComponentName("com.android.systemui", "com.android.systemui.SlicePermissionActivity"));
-        intent.putExtra("slice_uri", (Parcelable) sliceUri);
+        intent.putExtra("slice_uri", sliceUri);
         intent.putExtra("pkg", callingPackage);
         intent.putExtra(EXTRA_PROVIDER_PKG, context.getPackageName());
         intent.setData(sliceUri.buildUpon().appendQueryParameter("package", callingPackage).build());
@@ -268,23 +283,19 @@ public abstract class SliceProvider extends ContentProvider {
     public static CharSequence getPermissionString(Context context, String callingPackage) {
         PackageManager pm = context.getPackageManager();
         try {
-            return context.getString(R.string.slices_permission_request, pm.getApplicationInfo(callingPackage, 0).loadLabel(pm), context.getApplicationInfo().loadLabel(pm));
+            return context.getString(C3132R.string.slices_permission_request, pm.getApplicationInfo(callingPackage, 0).loadLabel(pm), context.getApplicationInfo().loadLabel(pm));
         } catch (PackageManager.NameNotFoundException e) {
             throw new RuntimeException("Unknown calling app", e);
         }
     }
 
-    /* JADX INFO: finally extract failed */
     private Slice onBindSliceStrict(Uri sliceUri, List<SliceSpec> supportedSpecs) {
         StrictMode.ThreadPolicy oldPolicy = StrictMode.getThreadPolicy();
         try {
             StrictMode.setThreadPolicy(new StrictMode.ThreadPolicy.Builder().detectAll().penaltyDeath().build());
-            Slice onBindSlice = onBindSlice(sliceUri, (Set<SliceSpec>) new ArraySet(supportedSpecs));
+            return onBindSlice(sliceUri, new ArraySet(supportedSpecs));
+        } finally {
             StrictMode.setThreadPolicy(oldPolicy);
-            return onBindSlice;
-        } catch (Throwable th) {
-            StrictMode.setThreadPolicy(oldPolicy);
-            throw th;
         }
     }
 

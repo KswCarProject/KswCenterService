@@ -1,5 +1,6 @@
 package android.util;
 
+/* loaded from: classes4.dex */
 public final class BinaryLogEntry {
     public static final long ELEMS = 2246267895815L;
     public static final long NANOSEC = 1116691496962L;
@@ -9,6 +10,7 @@ public final class BinaryLogEntry {
     public static final long TID = 1120986464261L;
     public static final long UID = 1120986464259L;
 
+    /* loaded from: classes4.dex */
     public final class Elem {
         public static final int EVENT_TYPE_FLOAT = 4;
         public static final int EVENT_TYPE_INT = 0;

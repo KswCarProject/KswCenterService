@@ -1,21 +1,26 @@
 package android.telephony;
 
-import android.os.Parcel;
-import android.os.Parcelable;
+import android.p007os.Parcel;
+import android.p007os.Parcelable;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.util.Arrays;
 import java.util.Objects;
 
+/* loaded from: classes.dex */
 public final class PhysicalChannelConfig implements Parcelable {
     public static final int CONNECTION_PRIMARY_SERVING = 1;
     public static final int CONNECTION_SECONDARY_SERVING = 2;
     public static final int CONNECTION_UNKNOWN = Integer.MAX_VALUE;
-    public static final Parcelable.Creator<PhysicalChannelConfig> CREATOR = new Parcelable.Creator<PhysicalChannelConfig>() {
+    public static final Parcelable.Creator<PhysicalChannelConfig> CREATOR = new Parcelable.Creator<PhysicalChannelConfig>() { // from class: android.telephony.PhysicalChannelConfig.1
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public PhysicalChannelConfig createFromParcel(Parcel in) {
             return new PhysicalChannelConfig(in);
         }
 
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public PhysicalChannelConfig[] newArray(int size) {
             return new PhysicalChannelConfig[size];
         }
@@ -29,13 +34,16 @@ public final class PhysicalChannelConfig implements Parcelable {
     private int mRat;
 
     @Retention(RetentionPolicy.SOURCE)
+    /* loaded from: classes.dex */
     public @interface ConnectionStatus {
     }
 
+    @Override // android.p007os.Parcelable
     public int describeContents() {
         return 0;
     }
 
+    @Override // android.p007os.Parcelable
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeInt(this.mCellConnectionStatus);
         dest.writeInt(this.mCellBandwidthDownlinkKhz);
@@ -76,35 +84,32 @@ public final class PhysicalChannelConfig implements Parcelable {
 
     private String getConnectionStatusString() {
         int i = this.mCellConnectionStatus;
-        if (i == Integer.MAX_VALUE) {
-            return "Unknown";
+        if (i != Integer.MAX_VALUE) {
+            switch (i) {
+                case 1:
+                    return "PrimaryServing";
+                case 2:
+                    return "SecondaryServing";
+                default:
+                    return "Invalid(" + this.mCellConnectionStatus + ")";
+            }
         }
-        switch (i) {
-            case 1:
-                return "PrimaryServing";
-            case 2:
-                return "SecondaryServing";
-            default:
-                return "Invalid(" + this.mCellConnectionStatus + ")";
-        }
+        return "Unknown";
     }
 
     public boolean equals(Object o) {
         if (this == o) {
             return true;
         }
-        if (!(o instanceof PhysicalChannelConfig)) {
-            return false;
-        }
-        PhysicalChannelConfig config = (PhysicalChannelConfig) o;
-        if (this.mCellConnectionStatus == config.mCellConnectionStatus && this.mCellBandwidthDownlinkKhz == config.mCellBandwidthDownlinkKhz && this.mRat == config.mRat && this.mFrequencyRange == config.mFrequencyRange && this.mChannelNumber == config.mChannelNumber && this.mPhysicalCellId == config.mPhysicalCellId && Arrays.equals(this.mContextIds, config.mContextIds)) {
-            return true;
+        if (o instanceof PhysicalChannelConfig) {
+            PhysicalChannelConfig config = (PhysicalChannelConfig) o;
+            return this.mCellConnectionStatus == config.mCellConnectionStatus && this.mCellBandwidthDownlinkKhz == config.mCellBandwidthDownlinkKhz && this.mRat == config.mRat && this.mFrequencyRange == config.mFrequencyRange && this.mChannelNumber == config.mChannelNumber && this.mPhysicalCellId == config.mPhysicalCellId && Arrays.equals(this.mContextIds, config.mContextIds);
         }
         return false;
     }
 
     public int hashCode() {
-        return Objects.hash(new Object[]{Integer.valueOf(this.mCellConnectionStatus), Integer.valueOf(this.mCellBandwidthDownlinkKhz), Integer.valueOf(this.mRat), Integer.valueOf(this.mFrequencyRange), Integer.valueOf(this.mChannelNumber), Integer.valueOf(this.mPhysicalCellId), this.mContextIds});
+        return Objects.hash(Integer.valueOf(this.mCellConnectionStatus), Integer.valueOf(this.mCellBandwidthDownlinkKhz), Integer.valueOf(this.mRat), Integer.valueOf(this.mFrequencyRange), Integer.valueOf(this.mChannelNumber), Integer.valueOf(this.mPhysicalCellId), this.mContextIds);
     }
 
     public String toString() {
@@ -131,21 +136,15 @@ public final class PhysicalChannelConfig implements Parcelable {
         this.mPhysicalCellId = builder.mPhysicalCellId;
     }
 
+    /* loaded from: classes.dex */
     public static final class Builder {
-        /* access modifiers changed from: private */
-        public int mCellBandwidthDownlinkKhz = 0;
-        /* access modifiers changed from: private */
-        public int mCellConnectionStatus = Integer.MAX_VALUE;
-        /* access modifiers changed from: private */
-        public int mChannelNumber = Integer.MAX_VALUE;
-        /* access modifiers changed from: private */
-        public int[] mContextIds = new int[0];
-        /* access modifiers changed from: private */
-        public int mFrequencyRange = -1;
-        /* access modifiers changed from: private */
-        public int mPhysicalCellId = Integer.MAX_VALUE;
-        /* access modifiers changed from: private */
-        public int mRat = 0;
+        private int mRat = 0;
+        private int mFrequencyRange = -1;
+        private int mChannelNumber = Integer.MAX_VALUE;
+        private int mCellBandwidthDownlinkKhz = 0;
+        private int mCellConnectionStatus = Integer.MAX_VALUE;
+        private int[] mContextIds = new int[0];
+        private int mPhysicalCellId = Integer.MAX_VALUE;
 
         public PhysicalChannelConfig build() {
             return new PhysicalChannelConfig(this);

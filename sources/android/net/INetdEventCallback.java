@@ -1,11 +1,12 @@
 package android.net;
 
-import android.os.Binder;
-import android.os.IBinder;
-import android.os.IInterface;
-import android.os.Parcel;
-import android.os.RemoteException;
+import android.p007os.Binder;
+import android.p007os.IBinder;
+import android.p007os.IInterface;
+import android.p007os.Parcel;
+import android.p007os.RemoteException;
 
+/* loaded from: classes3.dex */
 public interface INetdEventCallback extends IInterface {
     public static final int CALLBACK_CALLER_CONNECTIVITY_SERVICE = 0;
     public static final int CALLBACK_CALLER_DEVICE_POLICY = 1;
@@ -19,24 +20,31 @@ public interface INetdEventCallback extends IInterface {
 
     void onPrivateDnsValidationEvent(int i, String str, String str2, boolean z) throws RemoteException;
 
+    /* loaded from: classes3.dex */
     public static class Default implements INetdEventCallback {
+        @Override // android.net.INetdEventCallback
         public void onDnsEvent(int netId, int eventType, int returnCode, String hostname, String[] ipAddresses, int ipAddressesCount, long timestamp, int uid) throws RemoteException {
         }
 
+        @Override // android.net.INetdEventCallback
         public void onNat64PrefixEvent(int netId, boolean added, String prefixString, int prefixLength) throws RemoteException {
         }
 
+        @Override // android.net.INetdEventCallback
         public void onPrivateDnsValidationEvent(int netId, String ipAddress, String hostname, boolean validated) throws RemoteException {
         }
 
+        @Override // android.net.INetdEventCallback
         public void onConnectEvent(String ipAddr, int port, long timestamp, int uid) throws RemoteException {
         }
 
+        @Override // android.p007os.IInterface
         public IBinder asBinder() {
             return null;
         }
     }
 
+    /* loaded from: classes3.dex */
     public static abstract class Stub extends Binder implements INetdEventCallback {
         private static final String DESCRIPTOR = "android.net.INetdEventCallback";
         static final int TRANSACTION_onConnectEvent = 4;
@@ -53,12 +61,13 @@ public interface INetdEventCallback extends IInterface {
                 return null;
             }
             IInterface iin = obj.queryLocalInterface(DESCRIPTOR);
-            if (iin == null || !(iin instanceof INetdEventCallback)) {
-                return new Proxy(obj);
+            if (iin != null && (iin instanceof INetdEventCallback)) {
+                return (INetdEventCallback) iin;
             }
-            return (INetdEventCallback) iin;
+            return new Proxy(obj);
         }
 
+        @Override // android.p007os.IInterface
         public IBinder asBinder() {
             return this;
         }
@@ -78,51 +87,59 @@ public interface INetdEventCallback extends IInterface {
             }
         }
 
+        @Override // android.p007os.Binder
         public String getTransactionName(int transactionCode) {
             return getDefaultTransactionName(transactionCode);
         }
 
+        @Override // android.p007os.Binder
         public boolean onTransact(int code, Parcel data, Parcel reply, int flags) throws RemoteException {
-            int i = code;
-            Parcel parcel = data;
-            if (i != 1598968902) {
-                boolean _arg3 = false;
-                switch (i) {
-                    case 1:
-                        parcel.enforceInterface(DESCRIPTOR);
-                        onDnsEvent(data.readInt(), data.readInt(), data.readInt(), data.readString(), data.createStringArray(), data.readInt(), data.readLong(), data.readInt());
-                        return true;
-                    case 2:
-                        parcel.enforceInterface(DESCRIPTOR);
-                        int _arg0 = data.readInt();
-                        if (data.readInt() != 0) {
-                            _arg3 = true;
-                        }
-                        onNat64PrefixEvent(_arg0, _arg3, data.readString(), data.readInt());
-                        return true;
-                    case 3:
-                        parcel.enforceInterface(DESCRIPTOR);
-                        int _arg02 = data.readInt();
-                        String _arg1 = data.readString();
-                        String _arg2 = data.readString();
-                        if (data.readInt() != 0) {
-                            _arg3 = true;
-                        }
-                        onPrivateDnsValidationEvent(_arg02, _arg1, _arg2, _arg3);
-                        return true;
-                    case 4:
-                        parcel.enforceInterface(DESCRIPTOR);
-                        onConnectEvent(data.readString(), data.readInt(), data.readLong(), data.readInt());
-                        return true;
-                    default:
-                        return super.onTransact(code, data, reply, flags);
-                }
-            } else {
+            boolean _arg3;
+            if (code == 1598968902) {
                 reply.writeString(DESCRIPTOR);
                 return true;
             }
+            switch (code) {
+                case 1:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg0 = data.readInt();
+                    int _arg1 = data.readInt();
+                    int _arg2 = data.readInt();
+                    String _arg32 = data.readString();
+                    String[] _arg4 = data.createStringArray();
+                    int _arg5 = data.readInt();
+                    long _arg6 = data.readLong();
+                    int _arg7 = data.readInt();
+                    onDnsEvent(_arg0, _arg1, _arg2, _arg32, _arg4, _arg5, _arg6, _arg7);
+                    return true;
+                case 2:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg02 = data.readInt();
+                    _arg3 = data.readInt() != 0;
+                    String _arg22 = data.readString();
+                    onNat64PrefixEvent(_arg02, _arg3, _arg22, data.readInt());
+                    return true;
+                case 3:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg03 = data.readInt();
+                    String _arg12 = data.readString();
+                    String _arg23 = data.readString();
+                    _arg3 = data.readInt() != 0;
+                    onPrivateDnsValidationEvent(_arg03, _arg12, _arg23, _arg3);
+                    return true;
+                case 4:
+                    data.enforceInterface(DESCRIPTOR);
+                    String _arg04 = data.readString();
+                    int _arg13 = data.readInt();
+                    long _arg24 = data.readLong();
+                    onConnectEvent(_arg04, _arg13, _arg24, data.readInt());
+                    return true;
+                default:
+                    return super.onTransact(code, data, reply, flags);
+            }
         }
 
+        /* loaded from: classes3.dex */
         private static class Proxy implements INetdEventCallback {
             public static INetdEventCallback sDefaultImpl;
             private IBinder mRemote;
@@ -131,6 +148,7 @@ public interface INetdEventCallback extends IInterface {
                 this.mRemote = remote;
             }
 
+            @Override // android.p007os.IInterface
             public IBinder asBinder() {
                 return this.mRemote;
             }
@@ -139,76 +157,66 @@ public interface INetdEventCallback extends IInterface {
                 return Stub.DESCRIPTOR;
             }
 
+            @Override // android.net.INetdEventCallback
             public void onDnsEvent(int netId, int eventType, int returnCode, String hostname, String[] ipAddresses, int ipAddressesCount, long timestamp, int uid) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    try {
-                        _data.writeInt(netId);
-                    } catch (Throwable th) {
-                        th = th;
-                        int i = eventType;
-                        int i2 = returnCode;
-                        String str = hostname;
+                } catch (Throwable th) {
+                    th = th;
+                }
+                try {
+                    _data.writeInt(netId);
+                } catch (Throwable th2) {
+                    th = th2;
+                    _data.recycle();
+                    throw th;
+                }
+                try {
+                    _data.writeInt(eventType);
+                } catch (Throwable th3) {
+                    th = th3;
+                    _data.recycle();
+                    throw th;
+                }
+                try {
+                    _data.writeInt(returnCode);
+                } catch (Throwable th4) {
+                    th = th4;
+                    _data.recycle();
+                    throw th;
+                }
+                try {
+                    _data.writeString(hostname);
+                    _data.writeStringArray(ipAddresses);
+                    _data.writeInt(ipAddressesCount);
+                    _data.writeLong(timestamp);
+                    _data.writeInt(uid);
+                    boolean _status = this.mRemote.transact(1, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().onDnsEvent(netId, eventType, returnCode, hostname, ipAddresses, ipAddressesCount, timestamp, uid);
                         _data.recycle();
-                        throw th;
+                        return;
                     }
-                    try {
-                        _data.writeInt(eventType);
-                        try {
-                            _data.writeInt(returnCode);
-                        } catch (Throwable th2) {
-                            th = th2;
-                            String str2 = hostname;
-                            _data.recycle();
-                            throw th;
-                        }
-                        try {
-                            _data.writeString(hostname);
-                            _data.writeStringArray(ipAddresses);
-                            _data.writeInt(ipAddressesCount);
-                            _data.writeLong(timestamp);
-                            _data.writeInt(uid);
-                            if (this.mRemote.transact(1, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                                _data.recycle();
-                                return;
-                            }
-                            Stub.getDefaultImpl().onDnsEvent(netId, eventType, returnCode, hostname, ipAddresses, ipAddressesCount, timestamp, uid);
-                            _data.recycle();
-                        } catch (Throwable th3) {
-                            th = th3;
-                            _data.recycle();
-                            throw th;
-                        }
-                    } catch (Throwable th4) {
-                        th = th4;
-                        int i22 = returnCode;
-                        String str22 = hostname;
-                        _data.recycle();
-                        throw th;
-                    }
+                    _data.recycle();
                 } catch (Throwable th5) {
                     th = th5;
-                    int i3 = netId;
-                    int i4 = eventType;
-                    int i222 = returnCode;
-                    String str222 = hostname;
                     _data.recycle();
                     throw th;
                 }
             }
 
+            @Override // android.net.INetdEventCallback
             public void onNat64PrefixEvent(int netId, boolean added, String prefixString, int prefixLength) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeInt(netId);
-                    _data.writeInt(added);
+                    _data.writeInt(added ? 1 : 0);
                     _data.writeString(prefixString);
                     _data.writeInt(prefixLength);
-                    if (this.mRemote.transact(2, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    boolean _status = this.mRemote.transact(2, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().onNat64PrefixEvent(netId, added, prefixString, prefixLength);
                     }
                 } finally {
@@ -216,6 +224,7 @@ public interface INetdEventCallback extends IInterface {
                 }
             }
 
+            @Override // android.net.INetdEventCallback
             public void onPrivateDnsValidationEvent(int netId, String ipAddress, String hostname, boolean validated) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
@@ -223,10 +232,9 @@ public interface INetdEventCallback extends IInterface {
                     _data.writeInt(netId);
                     _data.writeString(ipAddress);
                     _data.writeString(hostname);
-                    _data.writeInt(validated);
-                    if (this.mRemote.transact(3, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    _data.writeInt(validated ? 1 : 0);
+                    boolean _status = this.mRemote.transact(3, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().onPrivateDnsValidationEvent(netId, ipAddress, hostname, validated);
                     }
                 } finally {
@@ -234,6 +242,7 @@ public interface INetdEventCallback extends IInterface {
                 }
             }
 
+            @Override // android.net.INetdEventCallback
             public void onConnectEvent(String ipAddr, int port, long timestamp, int uid) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
@@ -242,9 +251,8 @@ public interface INetdEventCallback extends IInterface {
                     _data.writeInt(port);
                     _data.writeLong(timestamp);
                     _data.writeInt(uid);
-                    if (this.mRemote.transact(4, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    boolean _status = this.mRemote.transact(4, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().onConnectEvent(ipAddr, port, timestamp, uid);
                     }
                 } finally {
@@ -254,11 +262,11 @@ public interface INetdEventCallback extends IInterface {
         }
 
         public static boolean setDefaultImpl(INetdEventCallback impl) {
-            if (Proxy.sDefaultImpl != null || impl == null) {
-                return false;
+            if (Proxy.sDefaultImpl == null && impl != null) {
+                Proxy.sDefaultImpl = impl;
+                return true;
             }
-            Proxy.sDefaultImpl = impl;
-            return true;
+            return false;
         }
 
         public static INetdEventCallback getDefaultImpl() {

@@ -1,11 +1,12 @@
 package android.text.style;
 
-import android.os.Parcel;
-import android.os.PersistableBundle;
+import android.p007os.Parcel;
+import android.p007os.PersistableBundle;
 import android.text.ParcelableSpan;
 import java.text.NumberFormat;
 import java.util.Locale;
 
+/* loaded from: classes4.dex */
 public class TtsSpan implements ParcelableSpan {
     public static final String ANIMACY_ANIMATE = "android.animate";
     public static final String ANIMACY_INANIMATE = "android.inanimate";
@@ -108,27 +109,33 @@ public class TtsSpan implements ParcelableSpan {
         return this.mArgs;
     }
 
+    @Override // android.p007os.Parcelable
     public int describeContents() {
         return 0;
     }
 
+    @Override // android.p007os.Parcelable
     public void writeToParcel(Parcel dest, int flags) {
         writeToParcelInternal(dest, flags);
     }
 
+    @Override // android.text.ParcelableSpan
     public void writeToParcelInternal(Parcel dest, int flags) {
         dest.writeString(this.mType);
         dest.writePersistableBundle(this.mArgs);
     }
 
+    @Override // android.text.ParcelableSpan
     public int getSpanTypeId() {
         return getSpanTypeIdInternal();
     }
 
+    @Override // android.text.ParcelableSpan
     public int getSpanTypeIdInternal() {
         return 24;
     }
 
+    /* loaded from: classes4.dex */
     public static class Builder<C extends Builder<?>> {
         private PersistableBundle mArgs = new PersistableBundle();
         private final String mType;
@@ -141,44 +148,49 @@ public class TtsSpan implements ParcelableSpan {
             return new TtsSpan(this.mType, this.mArgs);
         }
 
+        /* JADX WARN: Multi-variable type inference failed */
         public C setStringArgument(String arg, String value) {
             this.mArgs.putString(arg, value);
             return this;
         }
 
+        /* JADX WARN: Multi-variable type inference failed */
         public C setIntArgument(String arg, int value) {
             this.mArgs.putInt(arg, value);
             return this;
         }
 
+        /* JADX WARN: Multi-variable type inference failed */
         public C setLongArgument(String arg, long value) {
             this.mArgs.putLong(arg, value);
             return this;
         }
     }
 
+    /* loaded from: classes4.dex */
     public static class SemioticClassBuilder<C extends SemioticClassBuilder<?>> extends Builder<C> {
         public SemioticClassBuilder(String type) {
             super(type);
         }
 
         public C setGender(String gender) {
-            return (SemioticClassBuilder) setStringArgument(TtsSpan.ARG_GENDER, gender);
+            return (C) setStringArgument(TtsSpan.ARG_GENDER, gender);
         }
 
         public C setAnimacy(String animacy) {
-            return (SemioticClassBuilder) setStringArgument(TtsSpan.ARG_ANIMACY, animacy);
+            return (C) setStringArgument(TtsSpan.ARG_ANIMACY, animacy);
         }
 
         public C setMultiplicity(String multiplicity) {
-            return (SemioticClassBuilder) setStringArgument(TtsSpan.ARG_MULTIPLICITY, multiplicity);
+            return (C) setStringArgument(TtsSpan.ARG_MULTIPLICITY, multiplicity);
         }
 
         public C setCase(String grammaticalCase) {
-            return (SemioticClassBuilder) setStringArgument(TtsSpan.ARG_CASE, grammaticalCase);
+            return (C) setStringArgument(TtsSpan.ARG_CASE, grammaticalCase);
         }
     }
 
+    /* loaded from: classes4.dex */
     public static class TextBuilder extends SemioticClassBuilder<TextBuilder> {
         public TextBuilder() {
             super(TtsSpan.TYPE_TEXT);
@@ -194,6 +206,7 @@ public class TtsSpan implements ParcelableSpan {
         }
     }
 
+    /* loaded from: classes4.dex */
     public static class CardinalBuilder extends SemioticClassBuilder<CardinalBuilder> {
         public CardinalBuilder() {
             super(TtsSpan.TYPE_CARDINAL);
@@ -218,6 +231,7 @@ public class TtsSpan implements ParcelableSpan {
         }
     }
 
+    /* loaded from: classes4.dex */
     public static class OrdinalBuilder extends SemioticClassBuilder<OrdinalBuilder> {
         public OrdinalBuilder() {
             super(TtsSpan.TYPE_ORDINAL);
@@ -242,6 +256,7 @@ public class TtsSpan implements ParcelableSpan {
         }
     }
 
+    /* loaded from: classes4.dex */
     public static class DecimalBuilder extends SemioticClassBuilder<DecimalBuilder> {
         public DecimalBuilder() {
             super(TtsSpan.TYPE_DECIMAL);
@@ -287,6 +302,7 @@ public class TtsSpan implements ParcelableSpan {
         }
     }
 
+    /* loaded from: classes4.dex */
     public static class FractionBuilder extends SemioticClassBuilder<FractionBuilder> {
         public FractionBuilder() {
             super(TtsSpan.TYPE_FRACTION);
@@ -324,6 +340,7 @@ public class TtsSpan implements ParcelableSpan {
         }
     }
 
+    /* loaded from: classes4.dex */
     public static class MeasureBuilder extends SemioticClassBuilder<MeasureBuilder> {
         public MeasureBuilder() {
             super(TtsSpan.TYPE_MEASURE);
@@ -370,6 +387,7 @@ public class TtsSpan implements ParcelableSpan {
         }
     }
 
+    /* loaded from: classes4.dex */
     public static class TimeBuilder extends SemioticClassBuilder<TimeBuilder> {
         public TimeBuilder() {
             super(TtsSpan.TYPE_TIME);
@@ -390,6 +408,7 @@ public class TtsSpan implements ParcelableSpan {
         }
     }
 
+    /* loaded from: classes4.dex */
     public static class DateBuilder extends SemioticClassBuilder<DateBuilder> {
         public DateBuilder() {
             super(TtsSpan.TYPE_DATE);
@@ -428,6 +447,7 @@ public class TtsSpan implements ParcelableSpan {
         }
     }
 
+    /* loaded from: classes4.dex */
     public static class MoneyBuilder extends SemioticClassBuilder<MoneyBuilder> {
         public MoneyBuilder() {
             super(TtsSpan.TYPE_MONEY);
@@ -454,6 +474,7 @@ public class TtsSpan implements ParcelableSpan {
         }
     }
 
+    /* loaded from: classes4.dex */
     public static class TelephoneBuilder extends SemioticClassBuilder<TelephoneBuilder> {
         public TelephoneBuilder() {
             super(TtsSpan.TYPE_TELEPHONE);
@@ -477,6 +498,7 @@ public class TtsSpan implements ParcelableSpan {
         }
     }
 
+    /* loaded from: classes4.dex */
     public static class ElectronicBuilder extends SemioticClassBuilder<ElectronicBuilder> {
         public ElectronicBuilder() {
             super(TtsSpan.TYPE_ELECTRONIC);
@@ -519,6 +541,7 @@ public class TtsSpan implements ParcelableSpan {
         }
     }
 
+    /* loaded from: classes4.dex */
     public static class DigitsBuilder extends SemioticClassBuilder<DigitsBuilder> {
         public DigitsBuilder() {
             super(TtsSpan.TYPE_DIGITS);
@@ -534,6 +557,7 @@ public class TtsSpan implements ParcelableSpan {
         }
     }
 
+    /* loaded from: classes4.dex */
     public static class VerbatimBuilder extends SemioticClassBuilder<VerbatimBuilder> {
         public VerbatimBuilder() {
             super(TtsSpan.TYPE_VERBATIM);

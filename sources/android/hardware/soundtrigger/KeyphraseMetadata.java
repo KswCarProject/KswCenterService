@@ -3,21 +3,24 @@ package android.hardware.soundtrigger;
 import android.util.ArraySet;
 import java.util.Locale;
 
+/* loaded from: classes.dex */
 public class KeyphraseMetadata {
-    public final int id;
+
+    /* renamed from: id */
+    public final int f104id;
     public final String keyphrase;
     public final int recognitionModeFlags;
     public final ArraySet<Locale> supportedLocales;
 
-    public KeyphraseMetadata(int id2, String keyphrase2, ArraySet<Locale> supportedLocales2, int recognitionModeFlags2) {
-        this.id = id2;
-        this.keyphrase = keyphrase2;
-        this.supportedLocales = supportedLocales2;
-        this.recognitionModeFlags = recognitionModeFlags2;
+    public KeyphraseMetadata(int id, String keyphrase, ArraySet<Locale> supportedLocales, int recognitionModeFlags) {
+        this.f104id = id;
+        this.keyphrase = keyphrase;
+        this.supportedLocales = supportedLocales;
+        this.recognitionModeFlags = recognitionModeFlags;
     }
 
     public String toString() {
-        return "id=" + this.id + ", keyphrase=" + this.keyphrase + ", supported-locales=" + this.supportedLocales + ", recognition-modes=" + this.recognitionModeFlags;
+        return "id=" + this.f104id + ", keyphrase=" + this.keyphrase + ", supported-locales=" + this.supportedLocales + ", recognition-modes=" + this.recognitionModeFlags;
     }
 
     public boolean supportsPhrase(String phrase) {

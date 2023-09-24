@@ -1,17 +1,22 @@
 package android.app.servertransaction;
 
 import android.app.ClientTransactionHandler;
-import android.os.IBinder;
-import android.os.Parcel;
-import android.os.Parcelable;
-import android.os.Trace;
+import android.p007os.IBinder;
+import android.p007os.Parcel;
+import android.p007os.Parcelable;
+import android.p007os.Trace;
 
+/* loaded from: classes.dex */
 public class DestroyActivityItem extends ActivityLifecycleItem {
-    public static final Parcelable.Creator<DestroyActivityItem> CREATOR = new Parcelable.Creator<DestroyActivityItem>() {
+    public static final Parcelable.Creator<DestroyActivityItem> CREATOR = new Parcelable.Creator<DestroyActivityItem>() { // from class: android.app.servertransaction.DestroyActivityItem.1
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public DestroyActivityItem createFromParcel(Parcel in) {
             return new DestroyActivityItem(in);
         }
 
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public DestroyActivityItem[] newArray(int size) {
             return new DestroyActivityItem[size];
         }
@@ -19,16 +24,19 @@ public class DestroyActivityItem extends ActivityLifecycleItem {
     private int mConfigChanges;
     private boolean mFinished;
 
+    @Override // android.app.servertransaction.BaseClientRequest
     public void preExecute(ClientTransactionHandler client, IBinder token) {
         client.getActivitiesToBeDestroyed().put(token, this);
     }
 
+    @Override // android.app.servertransaction.BaseClientRequest
     public void execute(ClientTransactionHandler client, IBinder token, PendingTransactionActions pendingActions) {
-        Trace.traceBegin(64, "activityDestroy");
+        Trace.traceBegin(64L, "activityDestroy");
         client.handleDestroyActivity(token, this.mFinished, this.mConfigChanges, false, "DestroyActivityItem");
-        Trace.traceEnd(64);
+        Trace.traceEnd(64L);
     }
 
+    @Override // android.app.servertransaction.ActivityLifecycleItem
     public int getTargetState() {
         return 6;
     }
@@ -46,6 +54,7 @@ public class DestroyActivityItem extends ActivityLifecycleItem {
         return instance;
     }
 
+    @Override // android.app.servertransaction.ActivityLifecycleItem, android.app.servertransaction.ObjectPoolItem
     public void recycle() {
         super.recycle();
         this.mFinished = false;
@@ -53,6 +62,7 @@ public class DestroyActivityItem extends ActivityLifecycleItem {
         ObjectPool.recycle(this);
     }
 
+    @Override // android.p007os.Parcelable
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeBoolean(this.mFinished);
         dest.writeInt(this.mConfigChanges);
@@ -78,7 +88,8 @@ public class DestroyActivityItem extends ActivityLifecycleItem {
     }
 
     public int hashCode() {
-        return (((17 * 31) + (this.mFinished ? 1 : 0)) * 31) + this.mConfigChanges;
+        int result = (17 * 31) + (this.mFinished ? 1 : 0);
+        return (result * 31) + this.mConfigChanges;
     }
 
     public String toString() {

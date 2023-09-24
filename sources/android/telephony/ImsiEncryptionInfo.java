@@ -1,7 +1,7 @@
 package android.telephony;
 
-import android.os.Parcel;
-import android.os.Parcelable;
+import android.p007os.Parcel;
+import android.p007os.Parcelable;
 import android.security.keystore.KeyProperties;
 import android.util.Log;
 import java.security.KeyFactory;
@@ -11,12 +11,17 @@ import java.security.spec.InvalidKeySpecException;
 import java.security.spec.X509EncodedKeySpec;
 import java.util.Date;
 
+/* loaded from: classes.dex */
 public final class ImsiEncryptionInfo implements Parcelable {
-    public static final Parcelable.Creator<ImsiEncryptionInfo> CREATOR = new Parcelable.Creator<ImsiEncryptionInfo>() {
+    public static final Parcelable.Creator<ImsiEncryptionInfo> CREATOR = new Parcelable.Creator<ImsiEncryptionInfo>() { // from class: android.telephony.ImsiEncryptionInfo.1
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public ImsiEncryptionInfo createFromParcel(Parcel in) {
             return new ImsiEncryptionInfo(in);
         }
 
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public ImsiEncryptionInfo[] newArray(int size) {
             return new ImsiEncryptionInfo[size];
         }
@@ -29,21 +34,22 @@ public final class ImsiEncryptionInfo implements Parcelable {
     private final String mnc;
     private final PublicKey publicKey;
 
-    public ImsiEncryptionInfo(String mcc2, String mnc2, int keyType2, String keyIdentifier2, byte[] key, Date expirationTime2) {
-        this(mcc2, mnc2, keyType2, keyIdentifier2, makeKeyObject(key), expirationTime2);
+    public ImsiEncryptionInfo(String mcc, String mnc, int keyType, String keyIdentifier, byte[] key, Date expirationTime) {
+        this(mcc, mnc, keyType, keyIdentifier, makeKeyObject(key), expirationTime);
     }
 
-    public ImsiEncryptionInfo(String mcc2, String mnc2, int keyType2, String keyIdentifier2, PublicKey publicKey2, Date expirationTime2) {
-        this.mcc = mcc2;
-        this.mnc = mnc2;
-        this.keyType = keyType2;
-        this.publicKey = publicKey2;
-        this.keyIdentifier = keyIdentifier2;
-        this.expirationTime = expirationTime2;
+    public ImsiEncryptionInfo(String mcc, String mnc, int keyType, String keyIdentifier, PublicKey publicKey, Date expirationTime) {
+        this.mcc = mcc;
+        this.mnc = mnc;
+        this.keyType = keyType;
+        this.publicKey = publicKey;
+        this.keyIdentifier = keyIdentifier;
+        this.expirationTime = expirationTime;
     }
 
     public ImsiEncryptionInfo(Parcel in) {
-        byte[] b = new byte[in.readInt()];
+        int length = in.readInt();
+        byte[] b = new byte[length];
         in.readByteArray(b);
         this.publicKey = makeKeyObject(b);
         this.mcc = in.readString();
@@ -79,17 +85,20 @@ public final class ImsiEncryptionInfo implements Parcelable {
 
     private static PublicKey makeKeyObject(byte[] publicKeyBytes) {
         try {
-            return KeyFactory.getInstance(KeyProperties.KEY_ALGORITHM_RSA).generatePublic(new X509EncodedKeySpec(publicKeyBytes));
+            X509EncodedKeySpec pubKeySpec = new X509EncodedKeySpec(publicKeyBytes);
+            return KeyFactory.getInstance(KeyProperties.KEY_ALGORITHM_RSA).generatePublic(pubKeySpec);
         } catch (NoSuchAlgorithmException | InvalidKeySpecException ex) {
-            Log.e(LOG_TAG, "Error makeKeyObject: unable to convert into PublicKey", ex);
+            Log.m69e(LOG_TAG, "Error makeKeyObject: unable to convert into PublicKey", ex);
             throw new IllegalArgumentException();
         }
     }
 
+    @Override // android.p007os.Parcelable
     public int describeContents() {
         return 0;
     }
 
+    @Override // android.p007os.Parcelable
     public void writeToParcel(Parcel dest, int flags) {
         byte[] b = this.publicKey.getEncoded();
         dest.writeInt(b.length);

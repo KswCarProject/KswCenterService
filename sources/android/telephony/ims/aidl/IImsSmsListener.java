@@ -1,11 +1,12 @@
 package android.telephony.ims.aidl;
 
-import android.os.Binder;
-import android.os.IBinder;
-import android.os.IInterface;
-import android.os.Parcel;
-import android.os.RemoteException;
+import android.p007os.Binder;
+import android.p007os.IBinder;
+import android.p007os.IInterface;
+import android.p007os.Parcel;
+import android.p007os.RemoteException;
 
+/* loaded from: classes4.dex */
 public interface IImsSmsListener extends IInterface {
     void onSendSmsResult(int i, int i2, int i3, int i4) throws RemoteException;
 
@@ -13,21 +14,27 @@ public interface IImsSmsListener extends IInterface {
 
     void onSmsStatusReportReceived(int i, int i2, String str, byte[] bArr) throws RemoteException;
 
+    /* loaded from: classes4.dex */
     public static class Default implements IImsSmsListener {
+        @Override // android.telephony.ims.aidl.IImsSmsListener
         public void onSendSmsResult(int token, int messageRef, int status, int reason) throws RemoteException {
         }
 
+        @Override // android.telephony.ims.aidl.IImsSmsListener
         public void onSmsStatusReportReceived(int token, int messageRef, String format, byte[] pdu) throws RemoteException {
         }
 
+        @Override // android.telephony.ims.aidl.IImsSmsListener
         public void onSmsReceived(int token, String format, byte[] pdu) throws RemoteException {
         }
 
+        @Override // android.p007os.IInterface
         public IBinder asBinder() {
             return null;
         }
     }
 
+    /* loaded from: classes4.dex */
     public static abstract class Stub extends Binder implements IImsSmsListener {
         private static final String DESCRIPTOR = "android.telephony.ims.aidl.IImsSmsListener";
         static final int TRANSACTION_onSendSmsResult = 1;
@@ -43,12 +50,13 @@ public interface IImsSmsListener extends IInterface {
                 return null;
             }
             IInterface iin = obj.queryLocalInterface(DESCRIPTOR);
-            if (iin == null || !(iin instanceof IImsSmsListener)) {
-                return new Proxy(obj);
+            if (iin != null && (iin instanceof IImsSmsListener)) {
+                return (IImsSmsListener) iin;
             }
-            return (IImsSmsListener) iin;
+            return new Proxy(obj);
         }
 
+        @Override // android.p007os.IInterface
         public IBinder asBinder() {
             return this;
         }
@@ -66,34 +74,47 @@ public interface IImsSmsListener extends IInterface {
             }
         }
 
+        @Override // android.p007os.Binder
         public String getTransactionName(int transactionCode) {
             return getDefaultTransactionName(transactionCode);
         }
 
+        @Override // android.p007os.Binder
         public boolean onTransact(int code, Parcel data, Parcel reply, int flags) throws RemoteException {
-            if (code != 1598968902) {
-                switch (code) {
-                    case 1:
-                        data.enforceInterface(DESCRIPTOR);
-                        onSendSmsResult(data.readInt(), data.readInt(), data.readInt(), data.readInt());
-                        return true;
-                    case 2:
-                        data.enforceInterface(DESCRIPTOR);
-                        onSmsStatusReportReceived(data.readInt(), data.readInt(), data.readString(), data.createByteArray());
-                        return true;
-                    case 3:
-                        data.enforceInterface(DESCRIPTOR);
-                        onSmsReceived(data.readInt(), data.readString(), data.createByteArray());
-                        return true;
-                    default:
-                        return super.onTransact(code, data, reply, flags);
-                }
-            } else {
+            if (code == 1598968902) {
                 reply.writeString(DESCRIPTOR);
                 return true;
             }
+            switch (code) {
+                case 1:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg0 = data.readInt();
+                    int _arg1 = data.readInt();
+                    int _arg2 = data.readInt();
+                    int _arg3 = data.readInt();
+                    onSendSmsResult(_arg0, _arg1, _arg2, _arg3);
+                    return true;
+                case 2:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg02 = data.readInt();
+                    int _arg12 = data.readInt();
+                    String _arg22 = data.readString();
+                    byte[] _arg32 = data.createByteArray();
+                    onSmsStatusReportReceived(_arg02, _arg12, _arg22, _arg32);
+                    return true;
+                case 3:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg03 = data.readInt();
+                    String _arg13 = data.readString();
+                    byte[] _arg23 = data.createByteArray();
+                    onSmsReceived(_arg03, _arg13, _arg23);
+                    return true;
+                default:
+                    return super.onTransact(code, data, reply, flags);
+            }
         }
 
+        /* loaded from: classes4.dex */
         private static class Proxy implements IImsSmsListener {
             public static IImsSmsListener sDefaultImpl;
             private IBinder mRemote;
@@ -102,6 +123,7 @@ public interface IImsSmsListener extends IInterface {
                 this.mRemote = remote;
             }
 
+            @Override // android.p007os.IInterface
             public IBinder asBinder() {
                 return this.mRemote;
             }
@@ -110,6 +132,7 @@ public interface IImsSmsListener extends IInterface {
                 return Stub.DESCRIPTOR;
             }
 
+            @Override // android.telephony.ims.aidl.IImsSmsListener
             public void onSendSmsResult(int token, int messageRef, int status, int reason) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
@@ -118,9 +141,8 @@ public interface IImsSmsListener extends IInterface {
                     _data.writeInt(messageRef);
                     _data.writeInt(status);
                     _data.writeInt(reason);
-                    if (this.mRemote.transact(1, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    boolean _status = this.mRemote.transact(1, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().onSendSmsResult(token, messageRef, status, reason);
                     }
                 } finally {
@@ -128,6 +150,7 @@ public interface IImsSmsListener extends IInterface {
                 }
             }
 
+            @Override // android.telephony.ims.aidl.IImsSmsListener
             public void onSmsStatusReportReceived(int token, int messageRef, String format, byte[] pdu) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
@@ -136,9 +159,8 @@ public interface IImsSmsListener extends IInterface {
                     _data.writeInt(messageRef);
                     _data.writeString(format);
                     _data.writeByteArray(pdu);
-                    if (this.mRemote.transact(2, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    boolean _status = this.mRemote.transact(2, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().onSmsStatusReportReceived(token, messageRef, format, pdu);
                     }
                 } finally {
@@ -146,6 +168,7 @@ public interface IImsSmsListener extends IInterface {
                 }
             }
 
+            @Override // android.telephony.ims.aidl.IImsSmsListener
             public void onSmsReceived(int token, String format, byte[] pdu) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
@@ -153,9 +176,8 @@ public interface IImsSmsListener extends IInterface {
                     _data.writeInt(token);
                     _data.writeString(format);
                     _data.writeByteArray(pdu);
-                    if (this.mRemote.transact(3, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    boolean _status = this.mRemote.transact(3, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().onSmsReceived(token, format, pdu);
                     }
                 } finally {
@@ -165,11 +187,11 @@ public interface IImsSmsListener extends IInterface {
         }
 
         public static boolean setDefaultImpl(IImsSmsListener impl) {
-            if (Proxy.sDefaultImpl != null || impl == null) {
-                return false;
+            if (Proxy.sDefaultImpl == null && impl != null) {
+                Proxy.sDefaultImpl = impl;
+                return true;
             }
-            Proxy.sDefaultImpl = impl;
-            return true;
+            return false;
         }
 
         public static IImsSmsListener getDefaultImpl() {

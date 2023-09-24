@@ -2,9 +2,9 @@ package android.telephony.ims;
 
 import android.annotation.SystemApi;
 import android.annotation.UnsupportedAppUsage;
-import android.os.Bundle;
-import android.os.Parcel;
-import android.os.Parcelable;
+import android.p007os.Bundle;
+import android.p007os.Parcel;
+import android.p007os.Parcelable;
 import android.telecom.VideoProfile;
 import android.telephony.emergency.EmergencyNumber;
 import android.util.Log;
@@ -15,6 +15,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @SystemApi
+/* loaded from: classes4.dex */
 public final class ImsCallProfile implements Parcelable {
     public static final int CALL_RESTRICT_CAUSE_DISABLED = 2;
     public static final int CALL_RESTRICT_CAUSE_HD = 3;
@@ -31,11 +32,15 @@ public final class ImsCallProfile implements Parcelable {
     public static final int CALL_TYPE_VT_NODIR = 7;
     public static final int CALL_TYPE_VT_RX = 6;
     public static final int CALL_TYPE_VT_TX = 5;
-    public static final Parcelable.Creator<ImsCallProfile> CREATOR = new Parcelable.Creator<ImsCallProfile>() {
+    public static final Parcelable.Creator<ImsCallProfile> CREATOR = new Parcelable.Creator<ImsCallProfile>() { // from class: android.telephony.ims.ImsCallProfile.1
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public ImsCallProfile createFromParcel(Parcel in) {
             return new ImsCallProfile(in);
         }
 
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public ImsCallProfile[] newArray(int size) {
             return new ImsCallProfile[size];
         }
@@ -89,6 +94,7 @@ public final class ImsCallProfile implements Parcelable {
     public int mServiceType;
 
     @Retention(RetentionPolicy.SOURCE)
+    /* loaded from: classes4.dex */
     public @interface CallRestrictCause {
     }
 
@@ -213,10 +219,12 @@ public final class ImsCallProfile implements Parcelable {
         return "{ serviceType=" + this.mServiceType + ", callType=" + this.mCallType + ", restrictCause=" + this.mRestrictCause + ", mediaProfile=" + this.mMediaProfile.toString() + ", emergencyServiceCategories=" + this.mEmergencyServiceCategories + ", emergencyUrns=" + this.mEmergencyUrns + ", emergencyCallRouting=" + this.mEmergencyCallRouting + ", emergencyCallTesting=" + this.mEmergencyCallTesting + ", hasKnownUserIntentEmergency=" + this.mHasKnownUserIntentEmergency + " }";
     }
 
+    @Override // android.p007os.Parcelable
     public int describeContents() {
         return 0;
     }
 
+    @Override // android.p007os.Parcelable
     public void writeToParcel(Parcel out, int flags) {
         Bundle filteredExtras = maybeCleanseExtras(this.mCallExtras);
         out.writeInt(this.mServiceType);
@@ -264,32 +272,33 @@ public final class ImsCallProfile implements Parcelable {
 
     public static int getVideoStateFromImsCallProfile(ImsCallProfile callProfile) {
         int videostate = getVideoStateFromCallType(callProfile.mCallType);
-        if (!callProfile.isVideoPaused() || VideoProfile.isAudioOnly(videostate)) {
-            return videostate & -5;
+        if (callProfile.isVideoPaused() && !VideoProfile.isAudioOnly(videostate)) {
+            return videostate | 4;
         }
-        return videostate | 4;
+        return videostate & (-5);
     }
 
     public static int getVideoStateFromCallType(int callType) {
-        if (callType == 2) {
-            return 0;
+        if (callType != 2) {
+            switch (callType) {
+                case 4:
+                    return 3;
+                case 5:
+                    return 1;
+                case 6:
+                    return 2;
+                default:
+                    return 0;
+            }
         }
-        switch (callType) {
-            case 4:
-                return 3;
-            case 5:
-                return 1;
-            case 6:
-                return 2;
-            default:
-                return 0;
-        }
+        return 0;
     }
 
     public static int getCallTypeFromVideoState(int videoState) {
         boolean videoTx = isVideoStateSet(videoState, 1);
         boolean videoRx = isVideoStateSet(videoState, 2);
-        if (isVideoStateSet(videoState, 4)) {
+        boolean isPaused = isVideoStateSet(videoState, 4);
+        if (isPaused) {
             return 7;
         }
         if (videoTx && !videoRx) {
@@ -355,7 +364,7 @@ public final class ImsCallProfile implements Parcelable {
         Bundle filtered = extras.filterValues();
         int endSize = filtered.size();
         if (startSize != endSize) {
-            Log.i(TAG, "maybeCleanseExtras: " + (startSize - endSize) + " extra values were removed - only primitive types and system parcelables are permitted.");
+            Log.m68i(TAG, "maybeCleanseExtras: " + (startSize - endSize) + " extra values were removed - only primitive types and system parcelables are permitted.");
         }
         return filtered;
     }

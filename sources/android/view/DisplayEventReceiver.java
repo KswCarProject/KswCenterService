@@ -1,12 +1,14 @@
 package android.view;
 
 import android.annotation.UnsupportedAppUsage;
-import android.os.Looper;
-import android.os.MessageQueue;
+import android.p007os.Looper;
+import android.p007os.MessageQueue;
 import android.util.Log;
+import dalvik.annotation.optimization.FastNative;
 import dalvik.system.CloseGuard;
 import java.lang.ref.WeakReference;
 
+/* loaded from: classes4.dex */
 public abstract class DisplayEventReceiver {
     private static final String TAG = "DisplayEventReceiver";
     public static final int VSYNC_SOURCE_APP = 0;
@@ -20,6 +22,7 @@ public abstract class DisplayEventReceiver {
 
     private static native long nativeInit(WeakReference<DisplayEventReceiver> weakReference, MessageQueue messageQueue, int i);
 
+    @FastNative
     private static native void nativeScheduleVsync(long j);
 
     @UnsupportedAppUsage
@@ -29,17 +32,15 @@ public abstract class DisplayEventReceiver {
 
     public DisplayEventReceiver(Looper looper, int vsyncSource) {
         this.mCloseGuard = CloseGuard.get();
-        if (looper != null) {
-            this.mMessageQueue = looper.getQueue();
-            this.mReceiverPtr = nativeInit(new WeakReference(this), this.mMessageQueue, vsyncSource);
-            this.mCloseGuard.open("dispose");
-            return;
+        if (looper == null) {
+            throw new IllegalArgumentException("looper must not be null");
         }
-        throw new IllegalArgumentException("looper must not be null");
+        this.mMessageQueue = looper.getQueue();
+        this.mReceiverPtr = nativeInit(new WeakReference(this), this.mMessageQueue, vsyncSource);
+        this.mCloseGuard.open("dispose");
     }
 
-    /* access modifiers changed from: protected */
-    public void finalize() throws Throwable {
+    protected void finalize() throws Throwable {
         try {
             dispose(true);
         } finally {
@@ -60,7 +61,7 @@ public abstract class DisplayEventReceiver {
         }
         if (this.mReceiverPtr != 0) {
             nativeDispose(this.mReceiverPtr);
-            this.mReceiverPtr = 0;
+            this.mReceiverPtr = 0L;
         }
         this.mMessageQueue = null;
     }
@@ -79,7 +80,7 @@ public abstract class DisplayEventReceiver {
     @UnsupportedAppUsage
     public void scheduleVsync() {
         if (this.mReceiverPtr == 0) {
-            Log.w(TAG, "Attempted to schedule a vertical sync pulse but the display event receiver has already been disposed.");
+            Log.m64w(TAG, "Attempted to schedule a vertical sync pulse but the display event receiver has already been disposed.");
         } else {
             nativeScheduleVsync(this.mReceiverPtr);
         }

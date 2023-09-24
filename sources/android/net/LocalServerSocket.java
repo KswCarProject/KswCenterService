@@ -4,6 +4,7 @@ import java.io.Closeable;
 import java.io.FileDescriptor;
 import java.io.IOException;
 
+/* loaded from: classes3.dex */
 public class LocalServerSocket implements Closeable {
     private static final int LISTEN_BACKLOG = 50;
     private final LocalSocketImpl impl;
@@ -37,6 +38,7 @@ public class LocalServerSocket implements Closeable {
         return this.impl.getFileDescriptor();
     }
 
+    @Override // java.io.Closeable, java.lang.AutoCloseable
     public void close() throws IOException {
         this.impl.close();
     }

@@ -1,23 +1,18 @@
 package android.net.wifi.aware;
 
+/* loaded from: classes3.dex */
 public class PeerHandle {
     public int peerId;
 
-    public PeerHandle(int peerId2) {
-        this.peerId = peerId2;
+    public PeerHandle(int peerId) {
+        this.peerId = peerId;
     }
 
     public boolean equals(Object o) {
         if (this == o) {
             return true;
         }
-        if (!(o instanceof PeerHandle)) {
-            return false;
-        }
-        if (this.peerId == ((PeerHandle) o).peerId) {
-            return true;
-        }
-        return false;
+        return (o instanceof PeerHandle) && this.peerId == ((PeerHandle) o).peerId;
     }
 
     public int hashCode() {

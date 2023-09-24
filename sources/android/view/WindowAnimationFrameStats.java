@@ -1,15 +1,20 @@
 package android.view;
 
 import android.annotation.UnsupportedAppUsage;
-import android.os.Parcel;
-import android.os.Parcelable;
+import android.p007os.Parcel;
+import android.p007os.Parcelable;
 
+/* loaded from: classes4.dex */
 public final class WindowAnimationFrameStats extends FrameStats implements Parcelable {
-    public static final Parcelable.Creator<WindowAnimationFrameStats> CREATOR = new Parcelable.Creator<WindowAnimationFrameStats>() {
+    public static final Parcelable.Creator<WindowAnimationFrameStats> CREATOR = new Parcelable.Creator<WindowAnimationFrameStats>() { // from class: android.view.WindowAnimationFrameStats.1
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public WindowAnimationFrameStats createFromParcel(Parcel parcel) {
             return new WindowAnimationFrameStats(parcel);
         }
 
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public WindowAnimationFrameStats[] newArray(int size) {
             return new WindowAnimationFrameStats[size];
         }
@@ -29,10 +34,12 @@ public final class WindowAnimationFrameStats extends FrameStats implements Parce
         this.mFramesPresentedTimeNano = parcel.createLongArray();
     }
 
+    @Override // android.p007os.Parcelable
     public int describeContents() {
         return 0;
     }
 
+    @Override // android.p007os.Parcelable
     public void writeToParcel(Parcel parcel, int flags) {
         parcel.writeLong(this.mRefreshPeriodNano);
         parcel.writeLongArray(this.mFramesPresentedTimeNano);

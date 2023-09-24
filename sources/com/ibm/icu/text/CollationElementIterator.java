@@ -13,6 +13,7 @@ import java.text.CharacterIterator;
 import java.util.HashMap;
 import java.util.Map;
 
+/* loaded from: classes5.dex */
 public final class CollationElementIterator {
     static final /* synthetic */ boolean $assertionsDisabled = false;
     public static final int IGNORABLE = 0;
@@ -36,17 +37,17 @@ public final class CollationElementIterator {
         return ce & 255;
     }
 
-    /* access modifiers changed from: private */
+    /* JADX INFO: Access modifiers changed from: private */
     public static final int getFirstHalf(long p, int lower32) {
-        return (((int) p) & -65536) | ((lower32 >> 16) & 65280) | ((lower32 >> 8) & 255);
+        return (((int) p) & (-65536)) | ((lower32 >> 16) & 65280) | ((lower32 >> 8) & 255);
     }
 
-    /* access modifiers changed from: private */
+    /* JADX INFO: Access modifiers changed from: private */
     public static final int getSecondHalf(long p, int lower32) {
         return (((int) p) << 16) | ((lower32 >> 8) & 65280) | (lower32 & 63);
     }
 
-    /* access modifiers changed from: private */
+    /* JADX INFO: Access modifiers changed from: private */
     public static final boolean ceNeedsTwoParts(long ce) {
         return (281470698455103L & ce) != 0;
     }
@@ -55,7 +56,7 @@ public final class CollationElementIterator {
         this.iter_ = null;
         this.rbc_ = collator;
         this.otherHalf_ = 0;
-        this.dir_ = 0;
+        this.dir_ = (byte) 0;
         this.offsets_ = null;
     }
 
@@ -75,14 +76,14 @@ public final class CollationElementIterator {
     }
 
     public int getOffset() {
-        if (this.dir_ >= 0 || this.offsets_ == null || this.offsets_.isEmpty()) {
-            return this.iter_.getOffset();
+        if (this.dir_ < 0 && this.offsets_ != null && !this.offsets_.isEmpty()) {
+            int i = this.iter_.getCEsLength();
+            if (this.otherHalf_ != 0) {
+                i++;
+            }
+            return this.offsets_.elementAti(i);
         }
-        int i = this.iter_.getCEsLength();
-        if (this.otherHalf_ != 0) {
-            i++;
-        }
-        return this.offsets_.elementAti(i);
+        return this.iter_.getOffset();
     }
 
     public int next() {
@@ -92,12 +93,15 @@ public final class CollationElementIterator {
                 this.otherHalf_ = 0;
                 return oh;
             }
-        } else if (this.dir_ == 1) {
-            this.dir_ = 2;
-        } else if (this.dir_ == 0) {
-            this.dir_ = 2;
         } else {
-            throw new IllegalStateException("Illegal change of direction");
+            int oh2 = this.dir_;
+            if (oh2 == 1) {
+                this.dir_ = (byte) 2;
+            } else if (this.dir_ == 0) {
+                this.dir_ = (byte) 2;
+            } else {
+                throw new IllegalStateException("Illegal change of direction");
+            }
         }
         this.iter_.clearCEsIfNoneRemaining();
         long ce = this.iter_.nextCE();
@@ -115,28 +119,27 @@ public final class CollationElementIterator {
     }
 
     public int previous() {
-        int i = 0;
         if (this.dir_ < 0) {
             if (this.otherHalf_ != 0) {
                 int oh = this.otherHalf_;
                 this.otherHalf_ = 0;
                 return oh;
             }
-        } else if (this.dir_ == 0) {
-            this.iter_.resetToOffset(this.string_.length());
-            this.dir_ = -1;
-        } else if (this.dir_ == 1) {
-            this.dir_ = -1;
         } else {
-            throw new IllegalStateException("Illegal change of direction");
+            int oh2 = this.dir_;
+            if (oh2 == 0) {
+                this.iter_.resetToOffset(this.string_.length());
+                this.dir_ = (byte) -1;
+            } else if (this.dir_ == 1) {
+                this.dir_ = (byte) -1;
+            } else {
+                throw new IllegalStateException("Illegal change of direction");
+            }
         }
         if (this.offsets_ == null) {
             this.offsets_ = new UVector32();
         }
-        if (this.iter_.getCEsLength() == 0) {
-            i = this.iter_.getOffset();
-        }
-        int limitOffset = i;
+        int limitOffset = this.iter_.getCEsLength() == 0 ? this.iter_.getOffset() : 0;
         long ce = this.iter_.previousCE(this.offsets_);
         if (ce == 4311744768L) {
             return -1;
@@ -145,137 +148,108 @@ public final class CollationElementIterator {
         int lower32 = (int) ce;
         int firstHalf = getFirstHalf(p, lower32);
         int secondHalf = getSecondHalf(p, lower32);
-        if (secondHalf == 0) {
-            return firstHalf;
+        if (secondHalf != 0) {
+            if (this.offsets_.isEmpty()) {
+                this.offsets_.addElement(this.iter_.getOffset());
+                this.offsets_.addElement(limitOffset);
+            }
+            this.otherHalf_ = firstHalf;
+            return secondHalf | 192;
         }
-        if (this.offsets_.isEmpty()) {
-            this.offsets_.addElement(this.iter_.getOffset());
-            this.offsets_.addElement(limitOffset);
-        }
-        this.otherHalf_ = firstHalf;
-        return secondHalf | 192;
+        return firstHalf;
     }
 
     public void reset() {
         this.iter_.resetToOffset(0);
         this.otherHalf_ = 0;
-        this.dir_ = 0;
+        this.dir_ = (byte) 0;
     }
 
-    /* JADX WARNING: Removed duplicated region for block: B:13:0x0034  */
-    /* Code decompiled incorrectly, please refer to instructions dump. */
-    public void setOffset(int r5) {
-        /*
-            r4 = this;
-            if (r5 <= 0) goto L_0x004e
-            java.lang.String r0 = r4.string_
-            int r0 = r0.length()
-            if (r5 >= r0) goto L_0x004e
-            r0 = r5
-        L_0x000b:
-            java.lang.String r1 = r4.string_
-            char r1 = r1.charAt(r0)
-            com.ibm.icu.text.RuleBasedCollator r2 = r4.rbc_
-            boolean r2 = r2.isUnsafe(r1)
-            if (r2 == 0) goto L_0x0032
-            boolean r2 = java.lang.Character.isHighSurrogate(r1)
-            if (r2 == 0) goto L_0x002e
-            com.ibm.icu.text.RuleBasedCollator r2 = r4.rbc_
-            java.lang.String r3 = r4.string_
-            int r3 = r3.codePointAt(r0)
-            boolean r2 = r2.isUnsafe(r3)
-            if (r2 != 0) goto L_0x002e
-            goto L_0x0032
-        L_0x002e:
-            int r0 = r0 + -1
-            if (r0 > 0) goto L_0x000b
-        L_0x0032:
-            if (r0 >= r5) goto L_0x004e
-            r1 = r0
-        L_0x0035:
-            com.ibm.icu.impl.coll.CollationIterator r2 = r4.iter_
-            r2.resetToOffset(r0)
-        L_0x003a:
-            com.ibm.icu.impl.coll.CollationIterator r2 = r4.iter_
-            r2.nextCE()
-            com.ibm.icu.impl.coll.CollationIterator r2 = r4.iter_
-            int r2 = r2.getOffset()
-            r1 = r2
-            if (r2 == r0) goto L_0x003a
-            if (r1 > r5) goto L_0x004b
-            r0 = r1
-        L_0x004b:
-            if (r1 < r5) goto L_0x0035
-            r5 = r0
-        L_0x004e:
-            com.ibm.icu.impl.coll.CollationIterator r0 = r4.iter_
-            r0.resetToOffset(r5)
-            r0 = 0
-            r4.otherHalf_ = r0
-            r0 = 1
-            r4.dir_ = r0
-            return
-        */
-        throw new UnsupportedOperationException("Method not decompiled: com.ibm.icu.text.CollationElementIterator.setOffset(int):void");
+    public void setOffset(int newOffset) {
+        int offset;
+        if (newOffset > 0 && newOffset < this.string_.length()) {
+            int offset2 = newOffset;
+            do {
+                char c = this.string_.charAt(offset2);
+                if (!this.rbc_.isUnsafe(c) || (Character.isHighSurrogate(c) && !this.rbc_.isUnsafe(this.string_.codePointAt(offset2)))) {
+                    break;
+                }
+                offset2--;
+            } while (offset2 > 0);
+            if (offset2 < newOffset) {
+                do {
+                    this.iter_.resetToOffset(offset2);
+                    do {
+                        this.iter_.nextCE();
+                        offset = this.iter_.getOffset();
+                    } while (offset == offset2);
+                    if (offset <= newOffset) {
+                        offset2 = offset;
+                        continue;
+                    }
+                } while (offset < newOffset);
+                newOffset = offset2;
+            }
+        }
+        this.iter_.resetToOffset(newOffset);
+        this.otherHalf_ = 0;
+        this.dir_ = (byte) 1;
     }
 
     public void setText(String source) {
-        CollationIterator newIter;
+        UTF16CollationIterator fCDUTF16CollationIterator;
         this.string_ = source;
         boolean numeric = this.rbc_.settings.readOnly().isNumeric();
         if (this.rbc_.settings.readOnly().dontCheckFCD()) {
-            newIter = new UTF16CollationIterator(this.rbc_.data, numeric, this.string_, 0);
+            fCDUTF16CollationIterator = new UTF16CollationIterator(this.rbc_.data, numeric, this.string_, 0);
         } else {
-            newIter = new FCDUTF16CollationIterator(this.rbc_.data, numeric, this.string_, 0);
+            fCDUTF16CollationIterator = new FCDUTF16CollationIterator(this.rbc_.data, numeric, this.string_, 0);
         }
-        this.iter_ = newIter;
+        this.iter_ = fCDUTF16CollationIterator;
         this.otherHalf_ = 0;
-        this.dir_ = 0;
+        this.dir_ = (byte) 0;
     }
 
     public void setText(UCharacterIterator source) {
-        CollationIterator newIter;
+        IterCollationIterator fCDIterCollationIterator;
         this.string_ = source.getText();
         try {
             UCharacterIterator src = (UCharacterIterator) source.clone();
             src.setToStart();
             boolean numeric = this.rbc_.settings.readOnly().isNumeric();
             if (this.rbc_.settings.readOnly().dontCheckFCD()) {
-                newIter = new IterCollationIterator(this.rbc_.data, numeric, src);
+                fCDIterCollationIterator = new IterCollationIterator(this.rbc_.data, numeric, src);
             } else {
-                newIter = new FCDIterCollationIterator(this.rbc_.data, numeric, src, 0);
+                fCDIterCollationIterator = new FCDIterCollationIterator(this.rbc_.data, numeric, src, 0);
             }
-            this.iter_ = newIter;
+            this.iter_ = fCDIterCollationIterator;
             this.otherHalf_ = 0;
-            this.dir_ = 0;
+            this.dir_ = (byte) 0;
         } catch (CloneNotSupportedException e) {
             setText(source.getText());
         }
     }
 
     public void setText(CharacterIterator source) {
-        CollationIterator newIter;
-        UCharacterIterator src = new CharacterIteratorWrapper(source);
-        src.setToStart();
-        this.string_ = src.getText();
+        IterCollationIterator fCDIterCollationIterator;
+        CharacterIteratorWrapper characterIteratorWrapper = new CharacterIteratorWrapper(source);
+        characterIteratorWrapper.setToStart();
+        this.string_ = characterIteratorWrapper.getText();
         boolean numeric = this.rbc_.settings.readOnly().isNumeric();
         if (this.rbc_.settings.readOnly().dontCheckFCD()) {
-            newIter = new IterCollationIterator(this.rbc_.data, numeric, src);
+            fCDIterCollationIterator = new IterCollationIterator(this.rbc_.data, numeric, characterIteratorWrapper);
         } else {
-            newIter = new FCDIterCollationIterator(this.rbc_.data, numeric, src, 0);
+            fCDIterCollationIterator = new FCDIterCollationIterator(this.rbc_.data, numeric, characterIteratorWrapper, 0);
         }
-        this.iter_ = newIter;
+        this.iter_ = fCDIterCollationIterator;
         this.otherHalf_ = 0;
-        this.dir_ = 0;
+        this.dir_ = (byte) 0;
     }
 
+    /* loaded from: classes5.dex */
     private static final class MaxExpSink implements ContractionsAndExpansions.CESink {
         static final /* synthetic */ boolean $assertionsDisabled = false;
         private Map<Integer, Integer> maxExpansions;
-
-        static {
-            Class<CollationElementIterator> cls = CollationElementIterator.class;
-        }
 
         MaxExpSink(Map<Integer, Integer> h) {
             this.maxExpansions = h;
@@ -286,31 +260,34 @@ public final class CollationElementIterator {
 
         public void handleExpansion(long[] ces, int start, int length) {
             int lastHalf;
-            if (length > 1) {
-                int count = 0;
-                for (int i = 0; i < length; i++) {
-                    count += CollationElementIterator.ceNeedsTwoParts(ces[start + i]) ? 2 : 1;
-                }
-                long ce = ces[(start + length) - 1];
-                long p = ce >>> 32;
-                int lower32 = (int) ce;
-                int lastHalf2 = CollationElementIterator.getSecondHalf(p, lower32);
-                if (lastHalf2 == 0) {
-                    lastHalf = CollationElementIterator.getFirstHalf(p, lower32);
-                } else {
-                    lastHalf = lastHalf2 | 192;
-                }
-                Integer oldCount = this.maxExpansions.get(Integer.valueOf(lastHalf));
-                if (oldCount == null || count > oldCount.intValue()) {
-                    this.maxExpansions.put(Integer.valueOf(lastHalf), Integer.valueOf(count));
-                }
+            if (length <= 1) {
+                return;
+            }
+            int count = 0;
+            for (int i = 0; i < length; i++) {
+                count += CollationElementIterator.ceNeedsTwoParts(ces[start + i]) ? 2 : 1;
+            }
+            int i2 = start + length;
+            long ce = ces[i2 - 1];
+            long p = ce >>> 32;
+            int lower32 = (int) ce;
+            int lastHalf2 = CollationElementIterator.getSecondHalf(p, lower32);
+            if (lastHalf2 == 0) {
+                lastHalf = CollationElementIterator.getFirstHalf(p, lower32);
+            } else {
+                lastHalf = lastHalf2 | 192;
+            }
+            Integer oldCount = this.maxExpansions.get(Integer.valueOf(lastHalf));
+            if (oldCount == null || count > oldCount.intValue()) {
+                this.maxExpansions.put(Integer.valueOf(lastHalf), Integer.valueOf(count));
             }
         }
     }
 
     static final Map<Integer, Integer> computeMaxExpansions(CollationData data) {
         Map<Integer, Integer> maxExpansions = new HashMap<>();
-        new ContractionsAndExpansions((UnicodeSet) null, (UnicodeSet) null, new MaxExpSink(maxExpansions), true).forData(data);
+        MaxExpSink sink = new MaxExpSink(maxExpansions);
+        new ContractionsAndExpansions((UnicodeSet) null, (UnicodeSet) null, sink, true).forData(data);
         return maxExpansions;
     }
 
@@ -319,25 +296,22 @@ public final class CollationElementIterator {
     }
 
     static int getMaxExpansion(Map<Integer, Integer> maxExpansions, int order) {
+        Integer max;
         if (order == 0) {
             return 1;
         }
-        if (maxExpansions != null) {
-            Integer num = maxExpansions.get(Integer.valueOf(order));
-            Integer max = num;
-            if (num != null) {
-                return max.intValue();
-            }
+        if (maxExpansions != null && (max = maxExpansions.get(Integer.valueOf(order))) != null) {
+            return max.intValue();
         }
-        if ((order & 192) == 192) {
-            return 2;
+        if ((order & 192) != 192) {
+            return 1;
         }
-        return 1;
+        return 2;
     }
 
     private byte normalizeDir() {
         if (this.dir_ == 1) {
-            return 0;
+            return (byte) 0;
         }
         return this.dir_;
     }
@@ -346,14 +320,11 @@ public final class CollationElementIterator {
         if (that == this) {
             return true;
         }
-        if (!(that instanceof CollationElementIterator)) {
-            return false;
+        if (that instanceof CollationElementIterator) {
+            CollationElementIterator thatceiter = (CollationElementIterator) that;
+            return this.rbc_.equals(thatceiter.rbc_) && this.otherHalf_ == thatceiter.otherHalf_ && normalizeDir() == thatceiter.normalizeDir() && this.string_.equals(thatceiter.string_) && this.iter_.equals(thatceiter.iter_);
         }
-        CollationElementIterator thatceiter = (CollationElementIterator) that;
-        if (!this.rbc_.equals(thatceiter.rbc_) || this.otherHalf_ != thatceiter.otherHalf_ || normalizeDir() != thatceiter.normalizeDir() || !this.string_.equals(thatceiter.string_) || !this.iter_.equals(thatceiter.iter_)) {
-            return false;
-        }
-        return true;
+        return false;
     }
 
     public int hashCode() {

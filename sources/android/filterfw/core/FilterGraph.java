@@ -13,6 +13,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.Stack;
 
+/* loaded from: classes.dex */
 public class FilterGraph {
     public static final int AUTOBRANCH_OFF = 0;
     public static final int AUTOBRANCH_SYNCED = 1;
@@ -20,23 +21,23 @@ public class FilterGraph {
     public static final int TYPECHECK_DYNAMIC = 1;
     public static final int TYPECHECK_OFF = 0;
     public static final int TYPECHECK_STRICT = 2;
-    private String TAG = "FilterGraph";
-    private int mAutoBranchMode = 0;
-    private boolean mDiscardUnconnectedOutputs = false;
     private HashSet<Filter> mFilters = new HashSet<>();
-    private boolean mIsReady = false;
-    private boolean mLogVerbose = Log.isLoggable(this.TAG, 2);
     private HashMap<String, Filter> mNameMap = new HashMap<>();
     private HashMap<OutputPort, LinkedList<InputPort>> mPreconnections = new HashMap<>();
+    private boolean mIsReady = false;
+    private int mAutoBranchMode = 0;
     private int mTypeCheckMode = 2;
+    private boolean mDiscardUnconnectedOutputs = false;
+    private String TAG = "FilterGraph";
+    private boolean mLogVerbose = Log.isLoggable(this.TAG, 2);
 
     public boolean addFilter(Filter filter) {
-        if (containsFilter(filter)) {
-            return false;
+        if (!containsFilter(filter)) {
+            this.mFilters.add(filter);
+            this.mNameMap.put(filter.getName(), filter);
+            return true;
         }
-        this.mFilters.add(filter);
-        this.mNameMap.put(filter.getName(), filter);
-        return true;
+        return false;
     }
 
     public boolean containsFilter(Filter filter) {
@@ -51,18 +52,18 @@ public class FilterGraph {
     public void connect(Filter source, String outputName, Filter target, String inputName) {
         if (source == null || target == null) {
             throw new IllegalArgumentException("Passing null Filter in connect()!");
-        } else if (!containsFilter(source) || !containsFilter(target)) {
+        }
+        if (!containsFilter(source) || !containsFilter(target)) {
             throw new RuntimeException("Attempting to connect filter not in graph!");
+        }
+        OutputPort outPort = source.getOutputPort(outputName);
+        InputPort inPort = target.getInputPort(inputName);
+        if (outPort == null) {
+            throw new RuntimeException("Unknown output port '" + outputName + "' on Filter " + source + "!");
+        } else if (inPort == null) {
+            throw new RuntimeException("Unknown input port '" + inputName + "' on Filter " + target + "!");
         } else {
-            OutputPort outPort = source.getOutputPort(outputName);
-            InputPort inPort = target.getInputPort(inputName);
-            if (outPort == null) {
-                throw new RuntimeException("Unknown output port '" + outputName + "' on Filter " + source + "!");
-            } else if (inPort != null) {
-                preconnect(outPort, inPort);
-            } else {
-                throw new RuntimeException("Unknown input port '" + inputName + "' on Filter " + target + "!");
-            }
+            preconnect(outPort, inPort);
         }
     }
 
@@ -71,10 +72,10 @@ public class FilterGraph {
         Filter target = getFilter(targetName);
         if (source == null) {
             throw new RuntimeException("Attempting to connect unknown source filter '" + sourceName + "'!");
-        } else if (target != null) {
-            connect(source, outputName, target, inputName);
-        } else {
+        } else if (target == null) {
             throw new RuntimeException("Attempting to connect unknown target filter '" + targetName + "'!");
+        } else {
+            connect(source, outputName, target, inputName);
         }
     }
 
@@ -84,11 +85,12 @@ public class FilterGraph {
 
     public void beginProcessing() {
         if (this.mLogVerbose) {
-            Log.v(this.TAG, "Opening all filter connections...");
+            Log.m66v(this.TAG, "Opening all filter connections...");
         }
         Iterator<Filter> it = this.mFilters.iterator();
         while (it.hasNext()) {
-            it.next().openOutputs();
+            Filter filter = it.next();
+            filter.openOutputs();
         }
         this.mIsReady = true;
     }
@@ -96,17 +98,19 @@ public class FilterGraph {
     public void flushFrames() {
         Iterator<Filter> it = this.mFilters.iterator();
         while (it.hasNext()) {
-            it.next().clearOutputs();
+            Filter filter = it.next();
+            filter.clearOutputs();
         }
     }
 
     public void closeFilters(FilterContext context) {
         if (this.mLogVerbose) {
-            Log.v(this.TAG, "Closing all filters...");
+            Log.m66v(this.TAG, "Closing all filters...");
         }
         Iterator<Filter> it = this.mFilters.iterator();
         while (it.hasNext()) {
-            it.next().performClose(context);
+            Filter filter = it.next();
+            filter.performClose(context);
         }
         this.mIsReady = false;
     }
@@ -133,7 +137,8 @@ public class FilterGraph {
             flushFrames();
             Iterator<Filter> it = this.mFilters.iterator();
             while (it.hasNext()) {
-                it.next().performTearDown(context);
+                Filter filter = it.next();
+                filter.performTearDown(context);
             }
             this.mFilters.clear();
             this.mNameMap.clear();
@@ -164,7 +169,7 @@ public class FilterGraph {
             updateOutputs(filter);
             if (this.mLogVerbose) {
                 String str = this.TAG;
-                Log.v(str, "Running type check on " + filter + Session.TRUNCATE_STRING);
+                Log.m66v(str, "Running type check on " + filter + Session.TRUNCATE_STRING);
             }
             runTypeCheckOn(filter);
             for (OutputPort port : filter.getOutputPorts()) {
@@ -183,12 +188,12 @@ public class FilterGraph {
         for (OutputPort outputPort : filter.getOutputPorts()) {
             InputPort inputPort = outputPort.getBasePort();
             if (inputPort != null) {
-                FrameFormat outputFormat = filter.getOutputFormat(outputPort.getName(), inputPort.getSourceFormat());
-                if (outputFormat != null) {
-                    outputPort.setPortFormat(outputFormat);
-                } else {
+                FrameFormat inputFormat = inputPort.getSourceFormat();
+                FrameFormat outputFormat = filter.getOutputFormat(outputPort.getName(), inputFormat);
+                if (outputFormat == null) {
                     throw new RuntimeException("Filter did not return an output format for " + outputPort + "!");
                 }
+                outputPort.setPortFormat(outputFormat);
             }
         }
     }
@@ -197,14 +202,14 @@ public class FilterGraph {
         for (InputPort inputPort : filter.getInputPorts()) {
             if (this.mLogVerbose) {
                 String str = this.TAG;
-                Log.v(str, "Type checking port " + inputPort);
+                Log.m66v(str, "Type checking port " + inputPort);
             }
             FrameFormat sourceFormat = inputPort.getSourceFormat();
             FrameFormat targetFormat = inputPort.getPortFormat();
-            if (!(sourceFormat == null || targetFormat == null)) {
+            if (sourceFormat != null && targetFormat != null) {
                 if (this.mLogVerbose) {
                     String str2 = this.TAG;
-                    Log.v(str2, "Checking " + sourceFormat + " against " + targetFormat + ".");
+                    Log.m66v(str2, "Checking " + sourceFormat + " against " + targetFormat + ".");
                 }
                 boolean compatible = true;
                 switch (this.mTypeCheckMode) {
@@ -240,7 +245,7 @@ public class FilterGraph {
                 if (!port.isConnected()) {
                     if (this.mLogVerbose) {
                         String str = this.TAG;
-                        Log.v(str, "Autoconnecting unconnected " + port + " to Null filter.");
+                        Log.m66v(str, "Autoconnecting unconnected " + port + " to Null filter.");
                     }
                     NullFilter nullFilter = new NullFilter(filter.getName() + "ToNull" + id);
                     nullFilter.init();
@@ -250,9 +255,9 @@ public class FilterGraph {
                 }
             }
         }
-        Iterator it2 = addedFilters.iterator();
+        Iterator<Filter> it2 = addedFilters.iterator();
         while (it2.hasNext()) {
-            addFilter((Filter) it2.next());
+            addFilter(it2.next());
         }
     }
 
@@ -277,10 +282,12 @@ public class FilterGraph {
             LinkedList<InputPort> inputPorts = connection.getValue();
             if (inputPorts.size() == 1) {
                 outputPort.connectTo(inputPorts.get(0));
-            } else if (this.mAutoBranchMode != 0) {
+            } else if (this.mAutoBranchMode == 0) {
+                throw new RuntimeException("Attempting to connect " + outputPort + " to multiple filter ports! Enable auto-branching to allow this.");
+            } else {
                 if (this.mLogVerbose) {
                     String str = this.TAG;
-                    Log.v(str, "Creating branch for " + outputPort + "!");
+                    Log.m66v(str, "Creating branch for " + outputPort + "!");
                 }
                 if (this.mAutoBranchMode == 1) {
                     StringBuilder sb = new StringBuilder();
@@ -300,8 +307,6 @@ public class FilterGraph {
                 } else {
                     throw new RuntimeException("TODO: Unsynced branches not implemented yet!");
                 }
-            } else {
-                throw new RuntimeException("Attempting to connect " + outputPort + " to multiple filter ports! Enable auto-branching to allow this.");
             }
         }
         this.mPreconnections.clear();
@@ -313,7 +318,7 @@ public class FilterGraph {
             if (filter.getNumberOfConnectedInputs() == 0) {
                 if (this.mLogVerbose) {
                     String str = this.TAG;
-                    Log.v(str, "Found source filter: " + filter);
+                    Log.m66v(str, "Found source filter: " + filter);
                 }
                 sourceFilters.add(filter);
             }
@@ -321,8 +326,7 @@ public class FilterGraph {
         return sourceFilters;
     }
 
-    /* access modifiers changed from: package-private */
-    public void setupFilters() {
+    void setupFilters() {
         if (this.mDiscardUnconnectedOutputs) {
             discardUnconnectedOutputs();
         }

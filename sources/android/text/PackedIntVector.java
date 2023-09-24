@@ -5,17 +5,18 @@ import com.android.internal.util.ArrayUtils;
 import com.android.internal.util.GrowingArrayUtils;
 
 @VisibleForTesting(visibility = VisibleForTesting.Visibility.PACKAGE)
+/* loaded from: classes4.dex */
 public class PackedIntVector {
     private final int mColumns;
-    private int mRowGapLength = this.mRows;
-    private int mRowGapStart = 0;
-    private int mRows = 0;
     private int[] mValueGap;
+    private int mRows = 0;
+    private int mRowGapStart = 0;
+    private int mRowGapLength = this.mRows;
     private int[] mValues = null;
 
     public PackedIntVector(int columns) {
         this.mColumns = columns;
-        this.mValueGap = new int[(columns * 2)];
+        this.mValueGap = new int[columns * 2];
     }
 
     public int getValue(int row, int column) {
@@ -75,7 +76,9 @@ public class PackedIntVector {
     public void insertAt(int row, int[] values) {
         if (row < 0 || row > size()) {
             throw new IndexOutOfBoundsException("row " + row);
-        } else if (values == null || values.length >= width()) {
+        } else if (values != null && values.length < width()) {
+            throw new IndexOutOfBoundsException("value count " + values.length);
+        } else {
             moveRowGapTo(row);
             if (this.mRowGapLength == 0) {
                 growBuffer();
@@ -88,11 +91,10 @@ public class PackedIntVector {
                 }
                 return;
             }
-            for (int i2 = this.mColumns - 1; i2 >= 0; i2--) {
-                setValueInternal(row, i2, values[i2]);
+            int i2 = this.mColumns;
+            for (int i3 = i2 - 1; i3 >= 0; i3--) {
+                setValueInternal(row, i3, values[i3]);
             }
-        } else {
-            throw new IndexOutOfBoundsException("value count " + values.length);
         }
     }
 
@@ -136,7 +138,8 @@ public class PackedIntVector {
                 }
                 i = i2 + 1;
             } else {
-                this.mRowGapLength += newsize - this.mRows;
+                int i3 = this.mRowGapLength;
+                this.mRowGapLength = i3 + (newsize - this.mRows);
                 this.mRows = newsize;
                 this.mValues = newvalues;
                 return;
@@ -148,64 +151,66 @@ public class PackedIntVector {
         int[] valuegap = this.mValueGap;
         int[] values = this.mValues;
         int columns = this.mColumns;
-        if (where != valuegap[column]) {
-            if (where > valuegap[column]) {
-                for (int i = valuegap[column]; i < where; i++) {
-                    int i2 = (i * columns) + column;
-                    values[i2] = values[i2] + valuegap[column + columns];
-                }
-            } else {
-                for (int i3 = where; i3 < valuegap[column]; i3++) {
-                    int i4 = (i3 * columns) + column;
-                    values[i4] = values[i4] - valuegap[column + columns];
-                }
-            }
-            valuegap[column] = where;
+        if (where == valuegap[column]) {
+            return;
         }
+        if (where > valuegap[column]) {
+            for (int i = valuegap[column]; i < where; i++) {
+                int i2 = (i * columns) + column;
+                values[i2] = values[i2] + valuegap[column + columns];
+            }
+        } else {
+            for (int i3 = where; i3 < valuegap[column]; i3++) {
+                int i4 = (i3 * columns) + column;
+                values[i4] = values[i4] - valuegap[column + columns];
+            }
+        }
+        valuegap[column] = where;
     }
 
     private final void moveRowGapTo(int where) {
-        if (where != this.mRowGapStart) {
-            if (where > this.mRowGapStart) {
-                int moving = (this.mRowGapLength + where) - (this.mRowGapStart + this.mRowGapLength);
-                int columns = this.mColumns;
-                int[] valuegap = this.mValueGap;
-                int[] values = this.mValues;
-                int gapend = this.mRowGapStart + this.mRowGapLength;
-                for (int i = gapend; i < gapend + moving; i++) {
-                    int destrow = (i - gapend) + this.mRowGapStart;
-                    for (int j = 0; j < columns; j++) {
-                        int val = values[(i * columns) + j];
-                        if (i >= valuegap[j]) {
-                            val += valuegap[j + columns];
-                        }
-                        if (destrow >= valuegap[j]) {
-                            val -= valuegap[j + columns];
-                        }
-                        values[(destrow * columns) + j] = val;
+        if (where == this.mRowGapStart) {
+            return;
+        }
+        if (where > this.mRowGapStart) {
+            int moving = (this.mRowGapLength + where) - (this.mRowGapStart + this.mRowGapLength);
+            int columns = this.mColumns;
+            int[] valuegap = this.mValueGap;
+            int[] values = this.mValues;
+            int gapend = this.mRowGapStart + this.mRowGapLength;
+            for (int i = gapend; i < gapend + moving; i++) {
+                int destrow = (i - gapend) + this.mRowGapStart;
+                for (int j = 0; j < columns; j++) {
+                    int val = values[(i * columns) + j];
+                    if (i >= valuegap[j]) {
+                        val += valuegap[j + columns];
                     }
-                }
-            } else {
-                int moving2 = this.mRowGapStart - where;
-                int columns2 = this.mColumns;
-                int[] valuegap2 = this.mValueGap;
-                int[] values2 = this.mValues;
-                int gapend2 = this.mRowGapStart + this.mRowGapLength;
-                for (int i2 = (where + moving2) - 1; i2 >= where; i2--) {
-                    int destrow2 = ((i2 - where) + gapend2) - moving2;
-                    for (int j2 = 0; j2 < columns2; j2++) {
-                        int val2 = values2[(i2 * columns2) + j2];
-                        if (i2 >= valuegap2[j2]) {
-                            val2 += valuegap2[j2 + columns2];
-                        }
-                        if (destrow2 >= valuegap2[j2]) {
-                            val2 -= valuegap2[j2 + columns2];
-                        }
-                        values2[(destrow2 * columns2) + j2] = val2;
+                    if (destrow >= valuegap[j]) {
+                        val -= valuegap[j + columns];
                     }
+                    values[(destrow * columns) + j] = val;
                 }
             }
-            this.mRowGapStart = where;
+        } else {
+            int moving2 = this.mRowGapStart - where;
+            int columns2 = this.mColumns;
+            int[] valuegap2 = this.mValueGap;
+            int[] values2 = this.mValues;
+            int gapend2 = this.mRowGapStart + this.mRowGapLength;
+            for (int i2 = (where + moving2) - 1; i2 >= where; i2--) {
+                int destrow2 = ((i2 - where) + gapend2) - moving2;
+                for (int j2 = 0; j2 < columns2; j2++) {
+                    int val2 = values2[(i2 * columns2) + j2];
+                    if (i2 >= valuegap2[j2]) {
+                        val2 += valuegap2[j2 + columns2];
+                    }
+                    if (destrow2 >= valuegap2[j2]) {
+                        val2 -= valuegap2[j2 + columns2];
+                    }
+                    values2[(destrow2 * columns2) + j2] = val2;
+                }
+            }
         }
+        this.mRowGapStart = where;
     }
 }

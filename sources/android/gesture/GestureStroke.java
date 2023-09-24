@@ -9,6 +9,7 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 
+/* loaded from: classes.dex */
 public class GestureStroke {
     static final float TOUCH_TOLERANCE = 3.0f;
     public final RectF boundingBox;
@@ -17,28 +18,28 @@ public class GestureStroke {
     public final float[] points;
     private final long[] timestamps;
 
-    public GestureStroke(ArrayList<GesturePoint> points2) {
-        int count = points2.size();
-        float[] tmpPoints = new float[(count * 2)];
+    public GestureStroke(ArrayList<GesturePoint> points) {
+        int count = points.size();
+        float[] tmpPoints = new float[count * 2];
         long[] times = new long[count];
         RectF bx = null;
         float len = 0.0f;
         int index = 0;
         for (int i = 0; i < count; i++) {
-            GesturePoint p = points2.get(i);
-            tmpPoints[i * 2] = p.x;
-            tmpPoints[(i * 2) + 1] = p.y;
+            GesturePoint p = points.get(i);
+            tmpPoints[i * 2] = p.f41x;
+            tmpPoints[(i * 2) + 1] = p.f42y;
             times[index] = p.timestamp;
             if (bx == null) {
                 bx = new RectF();
-                bx.top = p.y;
-                bx.left = p.x;
-                bx.right = p.x;
-                bx.bottom = p.y;
+                bx.top = p.f42y;
+                bx.left = p.f41x;
+                bx.right = p.f41x;
+                bx.bottom = p.f42y;
                 len = 0.0f;
             } else {
-                len = (float) (((double) len) + Math.hypot((double) (p.x - tmpPoints[(i - 1) * 2]), (double) (p.y - tmpPoints[((i - 1) * 2) + 1])));
-                bx.union(p.x, p.y);
+                len = (float) (len + Math.hypot(p.f41x - tmpPoints[(i - 1) * 2], p.f42y - tmpPoints[((i - 1) * 2) + 1]));
+                bx.union(p.f41x, p.f42y);
             }
             index++;
         }
@@ -59,8 +60,7 @@ public class GestureStroke {
         return new GestureStroke(this.boundingBox, this.length, this.points, this.timestamps);
     }
 
-    /* access modifiers changed from: package-private */
-    public void draw(Canvas canvas, Paint paint) {
+    void draw(Canvas canvas, Paint paint) {
         if (this.mCachedPath == null) {
             makePath();
         }
@@ -113,8 +113,7 @@ public class GestureStroke {
         float mY = 0.0f;
         Path path = null;
         int count = pts.length;
-        int i = 0;
-        while (i < count) {
+        for (int i = 0; i < count; i += 2) {
             float x = pts[i];
             float y = pts[i + 1];
             if (path == null) {
@@ -131,14 +130,11 @@ public class GestureStroke {
                     mY = y;
                 }
             }
-            i += 2;
-            int i2 = numSample;
         }
         return path;
     }
 
-    /* access modifiers changed from: package-private */
-    public void serialize(DataOutputStream out) throws IOException {
+    void serialize(DataOutputStream out) throws IOException {
         float[] pts = this.points;
         long[] times = this.timestamps;
         int count = this.points.length;
@@ -152,11 +148,11 @@ public class GestureStroke {
 
     static GestureStroke deserialize(DataInputStream in) throws IOException {
         int count = in.readInt();
-        ArrayList<GesturePoint> points2 = new ArrayList<>(count);
+        ArrayList<GesturePoint> points = new ArrayList<>(count);
         for (int i = 0; i < count; i++) {
-            points2.add(GesturePoint.deserialize(in));
+            points.add(GesturePoint.deserialize(in));
         }
-        return new GestureStroke(points2);
+        return new GestureStroke(points);
     }
 
     public void clearPath() {

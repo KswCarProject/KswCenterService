@@ -4,6 +4,7 @@ import java.nio.Buffer;
 import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
 
+/* loaded from: classes3.dex */
 public class GLES10 {
     public static final int GL_ADD = 260;
     public static final int GL_ALIASED_LINE_WIDTH_RANGE = 33902;
@@ -501,11 +502,10 @@ public class GLES10 {
 
     public static void glColorPointer(int size, int type, int stride, Buffer pointer) {
         glColorPointerBounds(size, type, stride, pointer, pointer.remaining());
-        if (size != 4) {
-            return;
-        }
-        if ((type == 5126 || type == 5121 || type == 5132) && stride >= 0) {
-            _colorPointer = pointer;
+        if (size == 4) {
+            if ((type == 5126 || type == 5121 || type == 5132) && stride >= 0) {
+                _colorPointer = pointer;
+            }
         }
     }
 
@@ -518,21 +518,19 @@ public class GLES10 {
 
     public static void glTexCoordPointer(int size, int type, int stride, Buffer pointer) {
         glTexCoordPointerBounds(size, type, stride, pointer, pointer.remaining());
-        if (size != 2 && size != 3 && size != 4) {
-            return;
-        }
-        if ((type == 5126 || type == 5120 || type == 5122 || type == 5132) && stride >= 0) {
-            _texCoordPointer = pointer;
+        if (size == 2 || size == 3 || size == 4) {
+            if ((type == 5126 || type == 5120 || type == 5122 || type == 5132) && stride >= 0) {
+                _texCoordPointer = pointer;
+            }
         }
     }
 
     public static void glVertexPointer(int size, int type, int stride, Buffer pointer) {
         glVertexPointerBounds(size, type, stride, pointer, pointer.remaining());
-        if (size != 2 && size != 3 && size != 4) {
-            return;
-        }
-        if ((type == 5126 || type == 5120 || type == 5122 || type == 5132) && stride >= 0) {
-            _vertexPointer = pointer;
+        if (size == 2 || size == 3 || size == 4) {
+            if ((type == 5126 || type == 5120 || type == 5122 || type == 5132) && stride >= 0) {
+                _vertexPointer = pointer;
+            }
         }
     }
 }

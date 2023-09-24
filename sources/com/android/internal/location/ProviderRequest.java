@@ -2,21 +2,20 @@ package com.android.internal.location;
 
 import android.annotation.UnsupportedAppUsage;
 import android.location.LocationRequest;
-import android.os.Parcel;
-import android.os.Parcelable;
+import android.p007os.Parcel;
+import android.p007os.Parcelable;
 import android.util.TimeUtils;
 import java.util.ArrayList;
 import java.util.List;
 
+/* loaded from: classes4.dex */
 public final class ProviderRequest implements Parcelable {
-    public static final Parcelable.Creator<ProviderRequest> CREATOR = new Parcelable.Creator<ProviderRequest>() {
+    public static final Parcelable.Creator<ProviderRequest> CREATOR = new Parcelable.Creator<ProviderRequest>() { // from class: com.android.internal.location.ProviderRequest.1
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public ProviderRequest createFromParcel(Parcel in) {
             ProviderRequest request = new ProviderRequest();
-            boolean z = true;
-            if (in.readInt() != 1) {
-                z = false;
-            }
-            request.reportLocation = z;
+            request.reportLocation = in.readInt() == 1;
             request.interval = in.readLong();
             request.lowPowerMode = in.readBoolean();
             request.locationSettingsIgnored = in.readBoolean();
@@ -27,23 +26,27 @@ public final class ProviderRequest implements Parcelable {
             return request;
         }
 
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public ProviderRequest[] newArray(int size) {
             return new ProviderRequest[size];
         }
     };
     @UnsupportedAppUsage
-    public long interval = Long.MAX_VALUE;
+    public boolean reportLocation = false;
     @UnsupportedAppUsage
-    public final List<LocationRequest> locationRequests = new ArrayList();
+    public long interval = Long.MAX_VALUE;
     public boolean locationSettingsIgnored = false;
     public boolean lowPowerMode = false;
     @UnsupportedAppUsage
-    public boolean reportLocation = false;
+    public final List<LocationRequest> locationRequests = new ArrayList();
 
+    @Override // android.p007os.Parcelable
     public int describeContents() {
         return 0;
     }
 
+    @Override // android.p007os.Parcelable
     public void writeToParcel(Parcel parcel, int flags) {
         parcel.writeInt(this.reportLocation ? 1 : 0);
         parcel.writeLong(this.interval);

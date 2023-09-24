@@ -1,15 +1,20 @@
 package android.hardware.input;
 
-import android.os.LocaleList;
-import android.os.Parcel;
-import android.os.Parcelable;
+import android.p007os.LocaleList;
+import android.p007os.Parcel;
+import android.p007os.Parcelable;
 
+/* loaded from: classes.dex */
 public final class KeyboardLayout implements Parcelable, Comparable<KeyboardLayout> {
-    public static final Parcelable.Creator<KeyboardLayout> CREATOR = new Parcelable.Creator<KeyboardLayout>() {
+    public static final Parcelable.Creator<KeyboardLayout> CREATOR = new Parcelable.Creator<KeyboardLayout>() { // from class: android.hardware.input.KeyboardLayout.1
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public KeyboardLayout createFromParcel(Parcel source) {
             return new KeyboardLayout(source);
         }
 
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public KeyboardLayout[] newArray(int size) {
             return new KeyboardLayout[size];
         }
@@ -66,10 +71,12 @@ public final class KeyboardLayout implements Parcelable, Comparable<KeyboardLayo
         return this.mProductId;
     }
 
+    @Override // android.p007os.Parcelable
     public int describeContents() {
         return 0;
     }
 
+    @Override // android.p007os.Parcelable
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeString(this.mDescriptor);
         dest.writeString(this.mLabel);
@@ -80,6 +87,7 @@ public final class KeyboardLayout implements Parcelable, Comparable<KeyboardLayo
         dest.writeInt(this.mProductId);
     }
 
+    @Override // java.lang.Comparable
     public int compareTo(KeyboardLayout another) {
         int result = Integer.compare(another.mPriority, this.mPriority);
         if (result == 0) {

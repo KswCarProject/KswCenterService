@@ -2,6 +2,7 @@ package android.hardware.contexthub.V1_0;
 
 import java.util.ArrayList;
 
+/* loaded from: classes.dex */
 public final class HubMemoryFlag {
     public static final int EXEC = 4;
     public static final int READ = 1;

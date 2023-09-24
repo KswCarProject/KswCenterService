@@ -1,15 +1,22 @@
 package android.telephony;
 
-import android.os.Parcel;
-import android.os.Parcelable;
+import android.p007os.Parcel;
+import android.p007os.Parcelable;
 import android.text.TextUtils;
 
+/* loaded from: classes.dex */
 public final class UssdResponse implements Parcelable {
-    public static final Parcelable.Creator<UssdResponse> CREATOR = new Parcelable.Creator<UssdResponse>() {
+    public static final Parcelable.Creator<UssdResponse> CREATOR = new Parcelable.Creator<UssdResponse>() { // from class: android.telephony.UssdResponse.1
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public UssdResponse createFromParcel(Parcel in) {
-            return new UssdResponse(in.readString(), TextUtils.CHAR_SEQUENCE_CREATOR.createFromParcel(in));
+            String request = in.readString();
+            CharSequence message = TextUtils.CHAR_SEQUENCE_CREATOR.createFromParcel(in);
+            return new UssdResponse(request, message);
         }
 
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public UssdResponse[] newArray(int size) {
             return new UssdResponse[size];
         }
@@ -17,6 +24,7 @@ public final class UssdResponse implements Parcelable {
     private CharSequence mReturnMessage;
     private String mUssdRequest;
 
+    @Override // android.p007os.Parcelable
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeString(this.mUssdRequest);
         TextUtils.writeToParcel(this.mReturnMessage, dest, 0);
@@ -30,6 +38,7 @@ public final class UssdResponse implements Parcelable {
         return this.mReturnMessage;
     }
 
+    @Override // android.p007os.Parcelable
     public int describeContents() {
         return 0;
     }

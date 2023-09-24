@@ -3,10 +3,11 @@ package android.nfc.dta;
 import android.content.Context;
 import android.nfc.INfcDta;
 import android.nfc.NfcAdapter;
-import android.os.RemoteException;
+import android.p007os.RemoteException;
 import android.util.Log;
 import java.util.HashMap;
 
+/* loaded from: classes3.dex */
 public final class NfcDta {
     private static final String TAG = "NfcDta";
     private static HashMap<Context, NfcDta> sNfcDtas = new HashMap<>();
@@ -21,26 +22,23 @@ public final class NfcDta {
     public static synchronized NfcDta getInstance(NfcAdapter adapter) {
         NfcDta manager;
         synchronized (NfcDta.class) {
-            if (adapter != null) {
-                Context context = adapter.getContext();
-                if (context != null) {
-                    manager = sNfcDtas.get(context);
-                    if (manager == null) {
-                        INfcDta service = adapter.getNfcDtaInterface();
-                        if (service != null) {
-                            manager = new NfcDta(context, service);
-                            sNfcDtas.put(context, manager);
-                        } else {
-                            Log.e(TAG, "This device does not implement the INfcDta interface.");
-                            throw new UnsupportedOperationException();
-                        }
-                    }
-                } else {
-                    Log.e(TAG, "NfcAdapter context is null.");
+            if (adapter == null) {
+                throw new NullPointerException("NfcAdapter is null");
+            }
+            Context context = adapter.getContext();
+            if (context == null) {
+                Log.m70e(TAG, "NfcAdapter context is null.");
+                throw new UnsupportedOperationException();
+            }
+            manager = sNfcDtas.get(context);
+            if (manager == null) {
+                INfcDta service = adapter.getNfcDtaInterface();
+                if (service == null) {
+                    Log.m70e(TAG, "This device does not implement the INfcDta interface.");
                     throw new UnsupportedOperationException();
                 }
-            } else {
-                throw new NullPointerException("NfcAdapter is null");
+                manager = new NfcDta(context, service);
+                sNfcDtas.put(context, manager);
             }
         }
         return manager;

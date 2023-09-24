@@ -5,6 +5,8 @@ import android.content.Context;
 import android.content.res.Configuration;
 import android.content.res.TypedArray;
 import android.graphics.drawable.Drawable;
+import android.media.TtmlUtils;
+import android.security.keystore.KeyProperties;
 import android.util.AttributeSet;
 import android.view.ActionMode;
 import android.view.KeyEvent;
@@ -16,10 +18,11 @@ import android.view.inspector.InspectionCompanion;
 import android.view.inspector.PropertyMapper;
 import android.view.inspector.PropertyReader;
 import android.widget.SpinnerAdapter;
-import com.android.internal.R;
+import com.android.internal.C3132R;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 
+/* loaded from: classes.dex */
 public abstract class ActionBar {
     public static final int DISPLAY_HOME_AS_UP = 4;
     public static final int DISPLAY_SHOW_CUSTOM = 16;
@@ -36,23 +39,28 @@ public abstract class ActionBar {
     public static final int NAVIGATION_MODE_TABS = 2;
 
     @Retention(RetentionPolicy.SOURCE)
+    /* loaded from: classes.dex */
     public @interface DisplayOptions {
     }
 
     @Retention(RetentionPolicy.SOURCE)
+    /* loaded from: classes.dex */
     public @interface NavigationMode {
     }
 
+    /* loaded from: classes.dex */
     public interface OnMenuVisibilityListener {
         void onMenuVisibilityChanged(boolean z);
     }
 
     @Deprecated
+    /* loaded from: classes.dex */
     public interface OnNavigationListener {
         boolean onNavigationItemSelected(int i, long j);
     }
 
     @Deprecated
+    /* loaded from: classes.dex */
     public static abstract class Tab {
         public static final int INVALID_POSITION = -1;
 
@@ -92,6 +100,7 @@ public abstract class ActionBar {
     }
 
     @Deprecated
+    /* loaded from: classes.dex */
     public interface TabListener {
         void onTabReselected(Tab tab, FragmentTransaction fragmentTransaction);
 
@@ -212,32 +221,35 @@ public abstract class ActionBar {
 
     public abstract void show();
 
+    /* loaded from: classes.dex */
     public static class LayoutParams extends ViewGroup.MarginLayoutParams {
-        @ViewDebug.ExportedProperty(category = "layout", mapping = {@ViewDebug.IntToString(from = -1, to = "NONE"), @ViewDebug.IntToString(from = 0, to = "NONE"), @ViewDebug.IntToString(from = 48, to = "TOP"), @ViewDebug.IntToString(from = 80, to = "BOTTOM"), @ViewDebug.IntToString(from = 3, to = "LEFT"), @ViewDebug.IntToString(from = 5, to = "RIGHT"), @ViewDebug.IntToString(from = 8388611, to = "START"), @ViewDebug.IntToString(from = 8388613, to = "END"), @ViewDebug.IntToString(from = 16, to = "CENTER_VERTICAL"), @ViewDebug.IntToString(from = 112, to = "FILL_VERTICAL"), @ViewDebug.IntToString(from = 1, to = "CENTER_HORIZONTAL"), @ViewDebug.IntToString(from = 7, to = "FILL_HORIZONTAL"), @ViewDebug.IntToString(from = 17, to = "CENTER"), @ViewDebug.IntToString(from = 119, to = "FILL")})
+        @ViewDebug.ExportedProperty(category = TtmlUtils.TAG_LAYOUT, mapping = {@ViewDebug.IntToString(from = -1, m46to = KeyProperties.DIGEST_NONE), @ViewDebug.IntToString(from = 0, m46to = KeyProperties.DIGEST_NONE), @ViewDebug.IntToString(from = 48, m46to = "TOP"), @ViewDebug.IntToString(from = 80, m46to = "BOTTOM"), @ViewDebug.IntToString(from = 3, m46to = "LEFT"), @ViewDebug.IntToString(from = 5, m46to = "RIGHT"), @ViewDebug.IntToString(from = 8388611, m46to = "START"), @ViewDebug.IntToString(from = 8388613, m46to = "END"), @ViewDebug.IntToString(from = 16, m46to = "CENTER_VERTICAL"), @ViewDebug.IntToString(from = 112, m46to = "FILL_VERTICAL"), @ViewDebug.IntToString(from = 1, m46to = "CENTER_HORIZONTAL"), @ViewDebug.IntToString(from = 7, m46to = "FILL_HORIZONTAL"), @ViewDebug.IntToString(from = 17, m46to = "CENTER"), @ViewDebug.IntToString(from = 119, m46to = "FILL")})
         public int gravity;
 
+        /* loaded from: classes.dex */
         public final class InspectionCompanion implements android.view.inspector.InspectionCompanion<LayoutParams> {
             private int mLayout_gravityId;
             private boolean mPropertiesMapped = false;
 
+            @Override // android.view.inspector.InspectionCompanion
             public void mapProperties(PropertyMapper propertyMapper) {
                 this.mLayout_gravityId = propertyMapper.mapGravity("layout_gravity", 16842931);
                 this.mPropertiesMapped = true;
             }
 
+            @Override // android.view.inspector.InspectionCompanion
             public void readProperties(LayoutParams node, PropertyReader propertyReader) {
-                if (this.mPropertiesMapped) {
-                    propertyReader.readGravity(this.mLayout_gravityId, node.gravity);
-                    return;
+                if (!this.mPropertiesMapped) {
+                    throw new InspectionCompanion.UninitializedPropertyMapException();
                 }
-                throw new InspectionCompanion.UninitializedPropertyMapException();
+                propertyReader.readGravity(this.mLayout_gravityId, node.gravity);
             }
         }
 
         public LayoutParams(Context c, AttributeSet attrs) {
             super(c, attrs);
             this.gravity = 0;
-            TypedArray a = c.obtainStyledAttributes(attrs, R.styleable.ActionBar_LayoutParams);
+            TypedArray a = c.obtainStyledAttributes(attrs, C3132R.styleable.ActionBar_LayoutParams);
             this.gravity = a.getInt(0, 0);
             a.recycle();
         }
@@ -248,14 +260,14 @@ public abstract class ActionBar {
             this.gravity = 8388627;
         }
 
-        public LayoutParams(int width, int height, int gravity2) {
+        public LayoutParams(int width, int height, int gravity) {
             super(width, height);
             this.gravity = 0;
-            this.gravity = gravity2;
+            this.gravity = gravity;
         }
 
-        public LayoutParams(int gravity2) {
-            this(-2, -1, gravity2);
+        public LayoutParams(int gravity) {
+            this(-2, -1, gravity);
         }
 
         public LayoutParams(LayoutParams source) {
@@ -269,8 +281,8 @@ public abstract class ActionBar {
             this.gravity = 0;
         }
 
-        /* access modifiers changed from: protected */
-        public void encodeProperties(ViewHierarchyEncoder encoder) {
+        @Override // android.view.ViewGroup.MarginLayoutParams, android.view.ViewGroup.LayoutParams
+        protected void encodeProperties(ViewHierarchyEncoder encoder) {
             super.encodeProperties(encoder);
             encoder.addProperty("gravity", this.gravity);
         }

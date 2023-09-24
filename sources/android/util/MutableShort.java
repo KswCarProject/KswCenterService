@@ -1,10 +1,11 @@
 package android.util;
 
 @Deprecated
+/* loaded from: classes4.dex */
 public final class MutableShort {
     public short value;
 
-    public MutableShort(short value2) {
-        this.value = value2;
+    public MutableShort(short value) {
+        this.value = value;
     }
 }

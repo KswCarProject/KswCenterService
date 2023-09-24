@@ -9,6 +9,7 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Objects;
 
+/* loaded from: classes3.dex */
 public final class AudioPresentation {
     public static final int MASTERED_FOR_3D = 3;
     public static final int MASTERED_FOR_HEADPHONE = 4;
@@ -26,6 +27,7 @@ public final class AudioPresentation {
     private final boolean mSpokenSubtitlesAvailable;
 
     @Retention(RetentionPolicy.SOURCE)
+    /* loaded from: classes3.dex */
     public @interface MasteringIndicationType {
     }
 
@@ -88,18 +90,15 @@ public final class AudioPresentation {
         if (this == o) {
             return true;
         }
-        if (!(o instanceof AudioPresentation)) {
-            return false;
-        }
-        AudioPresentation obj = (AudioPresentation) o;
-        if (this.mPresentationId == obj.getPresentationId() && this.mProgramId == obj.getProgramId() && this.mLanguage.equals(obj.getULocale()) && this.mMasteringIndication == obj.getMasteringIndication() && this.mAudioDescriptionAvailable == obj.hasAudioDescription() && this.mSpokenSubtitlesAvailable == obj.hasSpokenSubtitles() && this.mDialogueEnhancementAvailable == obj.hasDialogueEnhancement() && this.mLabels.equals(obj.getULabels())) {
-            return true;
+        if (o instanceof AudioPresentation) {
+            AudioPresentation obj = (AudioPresentation) o;
+            return this.mPresentationId == obj.getPresentationId() && this.mProgramId == obj.getProgramId() && this.mLanguage.equals(obj.getULocale()) && this.mMasteringIndication == obj.getMasteringIndication() && this.mAudioDescriptionAvailable == obj.hasAudioDescription() && this.mSpokenSubtitlesAvailable == obj.hasSpokenSubtitles() && this.mDialogueEnhancementAvailable == obj.hasDialogueEnhancement() && this.mLabels.equals(obj.getULabels());
         }
         return false;
     }
 
     public int hashCode() {
-        return Objects.hash(new Object[]{Integer.valueOf(this.mPresentationId), Integer.valueOf(this.mProgramId), Integer.valueOf(this.mLanguage.hashCode()), Integer.valueOf(this.mMasteringIndication), Boolean.valueOf(this.mAudioDescriptionAvailable), Boolean.valueOf(this.mSpokenSubtitlesAvailable), Boolean.valueOf(this.mDialogueEnhancementAvailable), Integer.valueOf(this.mLabels.hashCode())});
+        return Objects.hash(Integer.valueOf(this.mPresentationId), Integer.valueOf(this.mProgramId), Integer.valueOf(this.mLanguage.hashCode()), Integer.valueOf(this.mMasteringIndication), Boolean.valueOf(this.mAudioDescriptionAvailable), Boolean.valueOf(this.mSpokenSubtitlesAvailable), Boolean.valueOf(this.mDialogueEnhancementAvailable), Integer.valueOf(this.mLabels.hashCode()));
     }
 
     public String toString() {
@@ -117,15 +116,16 @@ public final class AudioPresentation {
         return sb.toString();
     }
 
+    /* loaded from: classes3.dex */
     public static final class Builder {
-        private boolean mAudioDescriptionAvailable = false;
-        private boolean mDialogueEnhancementAvailable = false;
-        private Map<ULocale, CharSequence> mLabels = new HashMap();
-        private ULocale mLanguage = new ULocale("");
-        private int mMasteringIndication = 0;
         private final int mPresentationId;
         private int mProgramId = -1;
+        private ULocale mLanguage = new ULocale("");
+        private int mMasteringIndication = 0;
+        private boolean mAudioDescriptionAvailable = false;
         private boolean mSpokenSubtitlesAvailable = false;
+        private boolean mDialogueEnhancementAvailable = false;
+        private Map<ULocale, CharSequence> mLabels = new HashMap();
 
         public Builder(int presentationId) {
             this.mPresentationId = presentationId;
@@ -142,11 +142,11 @@ public final class AudioPresentation {
         }
 
         public Builder setMasteringIndication(int masteringIndication) {
-            if (masteringIndication == 0 || masteringIndication == 1 || masteringIndication == 2 || masteringIndication == 3 || masteringIndication == 4) {
-                this.mMasteringIndication = masteringIndication;
-                return this;
+            if (masteringIndication != 0 && masteringIndication != 1 && masteringIndication != 2 && masteringIndication != 3 && masteringIndication != 4) {
+                throw new IllegalArgumentException("Unknown mastering indication: " + masteringIndication);
             }
-            throw new IllegalArgumentException("Unknown mastering indication: " + masteringIndication);
+            this.mMasteringIndication = masteringIndication;
+            return this;
         }
 
         public Builder setLabels(Map<ULocale, CharSequence> labels) {

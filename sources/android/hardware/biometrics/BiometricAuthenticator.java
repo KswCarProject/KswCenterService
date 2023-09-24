@@ -1,15 +1,17 @@
 package android.hardware.biometrics;
 
-import android.os.CancellationSignal;
-import android.os.Parcelable;
+import android.p007os.CancellationSignal;
+import android.p007os.Parcelable;
 import java.util.concurrent.Executor;
 
+/* loaded from: classes.dex */
 public interface BiometricAuthenticator {
     public static final int TYPE_FACE = 4;
     public static final int TYPE_FINGERPRINT = 1;
     public static final int TYPE_IRIS = 2;
     public static final int TYPE_NONE = 0;
 
+    /* loaded from: classes.dex */
     public static abstract class Identifier implements Parcelable {
         private int mBiometricId;
         private long mDeviceId;
@@ -45,6 +47,7 @@ public interface BiometricAuthenticator {
         }
     }
 
+    /* loaded from: classes.dex */
     public static class AuthenticationResult {
         private CryptoObject mCryptoObject;
         private Identifier mIdentifier;
@@ -72,6 +75,7 @@ public interface BiometricAuthenticator {
         }
     }
 
+    /* loaded from: classes.dex */
     public static abstract class AuthenticationCallback {
         public void onAuthenticationError(int errorCode, CharSequence errString) {
         }
@@ -86,27 +90,27 @@ public interface BiometricAuthenticator {
         }
     }
 
-    boolean isHardwareDetected() {
+    default boolean isHardwareDetected() {
         throw new UnsupportedOperationException("Stub!");
     }
 
-    boolean hasEnrolledTemplates() {
+    default boolean hasEnrolledTemplates() {
         throw new UnsupportedOperationException("Stub!");
     }
 
-    boolean hasEnrolledTemplates(int userId) {
+    default boolean hasEnrolledTemplates(int userId) {
         throw new UnsupportedOperationException("Stub!");
     }
 
-    void setActiveUser(int userId) {
+    default void setActiveUser(int userId) {
         throw new UnsupportedOperationException("Stub!");
     }
 
-    void authenticate(CryptoObject crypto, CancellationSignal cancel, Executor executor, AuthenticationCallback callback) {
+    default void authenticate(CryptoObject crypto, CancellationSignal cancel, Executor executor, AuthenticationCallback callback) {
         throw new UnsupportedOperationException("Stub!");
     }
 
-    void authenticate(CancellationSignal cancel, Executor executor, AuthenticationCallback callback) {
+    default void authenticate(CancellationSignal cancel, Executor executor, AuthenticationCallback callback) {
         throw new UnsupportedOperationException("Stub!");
     }
 }

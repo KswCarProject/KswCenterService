@@ -3,8 +3,9 @@ package android.telecom;
 import android.annotation.SystemApi;
 import android.annotation.UnsupportedAppUsage;
 import android.net.Uri;
-import android.os.Bundle;
-import android.os.Handler;
+import android.p007os.Bundle;
+import android.p007os.Handler;
+import android.p007os.ParcelFileDescriptor;
 import android.telecom.Call;
 import android.telecom.InCallService;
 import com.android.internal.telephony.IccCardConstants;
@@ -13,13 +14,17 @@ import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.concurrent.CopyOnWriteArrayList;
 
+/* loaded from: classes3.dex */
 public final class Call {
     @Deprecated
     public static final String AVAILABLE_PHONE_ACCOUNTS = "selectPhoneAccountAccounts";
@@ -46,35 +51,34 @@ public final class Call {
     public static final int STATE_PULLING_CALL = 11;
     public static final int STATE_RINGING = 2;
     public static final int STATE_SELECT_PHONE_ACCOUNT = 8;
-    /* access modifiers changed from: private */
-    public final List<CallbackRecord<Callback>> mCallbackRecords = new CopyOnWriteArrayList();
+    private final List<CallbackRecord<Callback>> mCallbackRecords;
     private String mCallingPackage;
-    private List<String> mCannedTextResponses = null;
-    private final List<Call> mChildren = new ArrayList();
+    private List<String> mCannedTextResponses;
+    private final List<Call> mChildren;
     private boolean mChildrenCached;
-    private final List<String> mChildrenIds = new ArrayList();
-    private final List<Call> mConferenceableCalls = new ArrayList();
+    private final List<String> mChildrenIds;
+    private final List<Call> mConferenceableCalls;
     private Details mDetails;
     private Bundle mExtras;
     private final InCallAdapter mInCallAdapter;
-    private String mParentId = null;
-    /* access modifiers changed from: private */
-    public final Phone mPhone;
+    private String mParentId;
+    private final Phone mPhone;
     private String mRemainingPostDialSequence;
     private RttCall mRttCall;
     private int mState;
     private int mTargetSdkVersion;
     private final String mTelecomCallId;
-    private final List<Call> mUnmodifiableChildren = Collections.unmodifiableList(this.mChildren);
-    /* access modifiers changed from: private */
-    public final List<Call> mUnmodifiableConferenceableCalls = Collections.unmodifiableList(this.mConferenceableCalls);
+    private final List<Call> mUnmodifiableChildren;
+    private final List<Call> mUnmodifiableConferenceableCalls;
     private VideoCallImpl mVideoCallImpl;
 
     @SystemApi
     @Deprecated
+    /* loaded from: classes3.dex */
     public static abstract class Listener extends Callback {
     }
 
+    /* loaded from: classes3.dex */
     public static class Details {
         public static final int CAPABILITY_ADD_PARTICIPANT = 33554432;
         public static final int CAPABILITY_CANNOT_DOWNGRADE_VIDEO_TO_AUDIO = 4194304;
@@ -138,6 +142,7 @@ public final class Call {
         private final int mVideoState;
 
         @Retention(RetentionPolicy.SOURCE)
+        /* loaded from: classes3.dex */
         public @interface CallDirection {
         }
 
@@ -340,18 +345,15 @@ public final class Call {
         }
 
         public boolean equals(Object o) {
-            if (!(o instanceof Details)) {
-                return false;
+            if (o instanceof Details) {
+                Details d = (Details) o;
+                return Objects.equals(this.mHandle, d.mHandle) && Objects.equals(Integer.valueOf(this.mHandlePresentation), Integer.valueOf(d.mHandlePresentation)) && Objects.equals(this.mCallerDisplayName, d.mCallerDisplayName) && Objects.equals(Integer.valueOf(this.mCallerDisplayNamePresentation), Integer.valueOf(d.mCallerDisplayNamePresentation)) && Objects.equals(this.mAccountHandle, d.mAccountHandle) && Objects.equals(Integer.valueOf(this.mCallCapabilities), Integer.valueOf(d.mCallCapabilities)) && Objects.equals(Integer.valueOf(this.mCallProperties), Integer.valueOf(d.mCallProperties)) && Objects.equals(this.mDisconnectCause, d.mDisconnectCause) && Objects.equals(Long.valueOf(this.mConnectTimeMillis), Long.valueOf(d.mConnectTimeMillis)) && Objects.equals(this.mGatewayInfo, d.mGatewayInfo) && Objects.equals(Integer.valueOf(this.mVideoState), Integer.valueOf(d.mVideoState)) && Objects.equals(this.mStatusHints, d.mStatusHints) && Call.areBundlesEqual(this.mExtras, d.mExtras) && Call.areBundlesEqual(this.mIntentExtras, d.mIntentExtras) && Objects.equals(Long.valueOf(this.mCreationTimeMillis), Long.valueOf(d.mCreationTimeMillis)) && Objects.equals(Integer.valueOf(this.mCallDirection), Integer.valueOf(d.mCallDirection));
             }
-            Details d = (Details) o;
-            if (!Objects.equals(this.mHandle, d.mHandle) || !Objects.equals(Integer.valueOf(this.mHandlePresentation), Integer.valueOf(d.mHandlePresentation)) || !Objects.equals(this.mCallerDisplayName, d.mCallerDisplayName) || !Objects.equals(Integer.valueOf(this.mCallerDisplayNamePresentation), Integer.valueOf(d.mCallerDisplayNamePresentation)) || !Objects.equals(this.mAccountHandle, d.mAccountHandle) || !Objects.equals(Integer.valueOf(this.mCallCapabilities), Integer.valueOf(d.mCallCapabilities)) || !Objects.equals(Integer.valueOf(this.mCallProperties), Integer.valueOf(d.mCallProperties)) || !Objects.equals(this.mDisconnectCause, d.mDisconnectCause) || !Objects.equals(Long.valueOf(this.mConnectTimeMillis), Long.valueOf(d.mConnectTimeMillis)) || !Objects.equals(this.mGatewayInfo, d.mGatewayInfo) || !Objects.equals(Integer.valueOf(this.mVideoState), Integer.valueOf(d.mVideoState)) || !Objects.equals(this.mStatusHints, d.mStatusHints) || !Call.areBundlesEqual(this.mExtras, d.mExtras) || !Call.areBundlesEqual(this.mIntentExtras, d.mIntentExtras) || !Objects.equals(Long.valueOf(this.mCreationTimeMillis), Long.valueOf(d.mCreationTimeMillis)) || !Objects.equals(Integer.valueOf(this.mCallDirection), Integer.valueOf(d.mCallDirection))) {
-                return false;
-            }
-            return true;
+            return false;
         }
 
         public int hashCode() {
-            return Objects.hash(new Object[]{this.mHandle, Integer.valueOf(this.mHandlePresentation), this.mCallerDisplayName, Integer.valueOf(this.mCallerDisplayNamePresentation), this.mAccountHandle, Integer.valueOf(this.mCallCapabilities), Integer.valueOf(this.mCallProperties), this.mDisconnectCause, Long.valueOf(this.mConnectTimeMillis), this.mGatewayInfo, Integer.valueOf(this.mVideoState), this.mStatusHints, this.mExtras, this.mIntentExtras, Long.valueOf(this.mCreationTimeMillis), Integer.valueOf(this.mCallDirection)});
+            return Objects.hash(this.mHandle, Integer.valueOf(this.mHandlePresentation), this.mCallerDisplayName, Integer.valueOf(this.mCallerDisplayNamePresentation), this.mAccountHandle, Integer.valueOf(this.mCallCapabilities), Integer.valueOf(this.mCallProperties), this.mDisconnectCause, Long.valueOf(this.mConnectTimeMillis), this.mGatewayInfo, Integer.valueOf(this.mVideoState), this.mStatusHints, this.mExtras, this.mIntentExtras, Long.valueOf(this.mCreationTimeMillis), Integer.valueOf(this.mCallDirection));
         }
 
         public Details(String telecomCallId, Uri handle, int handlePresentation, String callerDisplayName, int callerDisplayNamePresentation, PhoneAccountHandle accountHandle, int capabilities, int properties, DisconnectCause disconnectCause, long connectTimeMillis, GatewayInfo gatewayInfo, int videoState, StatusHints statusHints, Bundle extras, Bundle intentExtras, long creationTimeMillis, int callDirection) {
@@ -383,6 +385,7 @@ public final class Call {
         }
     }
 
+    /* loaded from: classes3.dex */
     public static abstract class Callback {
         public static final int HANDOVER_FAILURE_DEST_APP_REJECTED = 1;
         public static final int HANDOVER_FAILURE_NOT_SUPPORTED = 2;
@@ -391,6 +394,7 @@ public final class Call {
         public static final int HANDOVER_FAILURE_USER_REJECTED = 3;
 
         @Retention(RetentionPolicy.SOURCE)
+        /* loaded from: classes3.dex */
         public @interface HandoverFailureErrors {
         }
 
@@ -400,13 +404,13 @@ public final class Call {
         public void onParentChanged(Call call, Call parent) {
         }
 
-        public void onChildrenChanged(Call call, List<Call> list) {
+        public void onChildrenChanged(Call call, List<Call> children) {
         }
 
         public void onDetailsChanged(Call call, Details details) {
         }
 
-        public void onCannedTextResponsesLoaded(Call call, List<String> list) {
+        public void onCannedTextResponsesLoaded(Call call, List<String> cannedTextResponses) {
         }
 
         public void onPostDialWait(Call call, String remainingPostDialSequence) {
@@ -418,7 +422,7 @@ public final class Call {
         public void onCallDestroyed(Call call) {
         }
 
-        public void onConferenceableCallsChanged(Call call, List<Call> list) {
+        public void onConferenceableCallsChanged(Call call, List<Call> conferenceableCalls) {
         }
 
         public void onConnectionEvent(Call call, String event, Bundle extras) {
@@ -443,6 +447,7 @@ public final class Call {
         }
     }
 
+    /* loaded from: classes3.dex */
     public static final class RttCall {
         private static final int READ_BUFFER_SIZE = 1000;
         public static final int RTT_MODE_FULL = 1;
@@ -457,6 +462,7 @@ public final class Call {
         private OutputStreamWriter mTransmitStream;
 
         @Retention(RetentionPolicy.SOURCE)
+        /* loaded from: classes3.dex */
         public @interface RttAudioMode {
         }
 
@@ -489,7 +495,7 @@ public final class Call {
                 }
                 return new String(this.mReadBuffer, 0, numRead);
             } catch (IOException e) {
-                Log.w((Object) this, "Exception encountered when reading from InputStreamReader: %s", e);
+                Log.m90w(this, "Exception encountered when reading from InputStreamReader: %s", e);
                 return null;
             }
         }
@@ -577,9 +583,10 @@ public final class Call {
     }
 
     public void pullExternalCall() {
-        if (this.mDetails.hasProperty(64)) {
-            this.mInCallAdapter.pullExternalCall(this.mTelecomCallId);
+        if (!this.mDetails.hasProperty(64)) {
+            return;
         }
+        this.mInCallAdapter.pullExternalCall(this.mTelecomCallId);
     }
 
     public void sendCallEvent(String event, Bundle extras) {
@@ -603,13 +610,14 @@ public final class Call {
     }
 
     public final void putExtras(Bundle extras) {
-        if (extras != null) {
-            if (this.mExtras == null) {
-                this.mExtras = new Bundle();
-            }
-            this.mExtras.putAll(extras);
-            this.mInCallAdapter.putExtras(this.mTelecomCallId, extras);
+        if (extras == null) {
+            return;
         }
+        if (this.mExtras == null) {
+            this.mExtras = new Bundle();
+        }
+        this.mExtras.putAll(extras);
+        this.mInCallAdapter.putExtras(this.mTelecomCallId, extras);
     }
 
     public final void putExtra(String key, boolean value) {
@@ -649,7 +657,7 @@ public final class Call {
     }
 
     public final void removeExtras(String... keys) {
-        removeExtras((List<String>) Arrays.asList(keys));
+        removeExtras(Arrays.asList(keys));
     }
 
     public Call getParent() {
@@ -710,7 +718,7 @@ public final class Call {
     public void registerCallback(Callback callback, Handler handler) {
         unregisterCallback(callback);
         if (callback != null && handler != null && this.mState != 7) {
-            this.mCallbackRecords.add(new CallbackRecord(callback, handler));
+            this.mCallbackRecords.add(new CallbackRecord<>(callback, handler));
         }
     }
 
@@ -741,6 +749,11 @@ public final class Call {
                 return "HOLDING";
             case 4:
                 return "ACTIVE";
+            case 5:
+            case 6:
+            default:
+                Log.m90w(Call.class, "Unknown state %d", Integer.valueOf(state));
+                return IccCardConstants.INTENT_VALUE_ICC_UNKNOWN;
             case 7:
                 return "DISCONNECTED";
             case 8:
@@ -749,9 +762,6 @@ public final class Call {
                 return "CONNECTING";
             case 10:
                 return "DISCONNECTING";
-            default:
-                Log.w((Object) Call.class, "Unknown state %d", Integer.valueOf(state));
-                return IccCardConstants.INTENT_VALUE_ICC_UNKNOWN;
         }
     }
 
@@ -768,6 +778,14 @@ public final class Call {
     }
 
     Call(Phone phone, String telecomCallId, InCallAdapter inCallAdapter, String callingPackage, int targetSdkVersion) {
+        this.mChildrenIds = new ArrayList();
+        this.mChildren = new ArrayList();
+        this.mUnmodifiableChildren = Collections.unmodifiableList(this.mChildren);
+        this.mCallbackRecords = new CopyOnWriteArrayList();
+        this.mConferenceableCalls = new ArrayList();
+        this.mUnmodifiableConferenceableCalls = Collections.unmodifiableList(this.mConferenceableCalls);
+        this.mParentId = null;
+        this.mCannedTextResponses = null;
         this.mPhone = phone;
         this.mTelecomCallId = telecomCallId;
         this.mInCallAdapter = inCallAdapter;
@@ -777,6 +795,14 @@ public final class Call {
     }
 
     Call(Phone phone, String telecomCallId, InCallAdapter inCallAdapter, int state, String callingPackage, int targetSdkVersion) {
+        this.mChildrenIds = new ArrayList();
+        this.mChildren = new ArrayList();
+        this.mUnmodifiableChildren = Collections.unmodifiableList(this.mChildren);
+        this.mCallbackRecords = new CopyOnWriteArrayList();
+        this.mConferenceableCalls = new ArrayList();
+        this.mUnmodifiableConferenceableCalls = Collections.unmodifiableList(this.mConferenceableCalls);
+        this.mParentId = null;
+        this.mCannedTextResponses = null;
         this.mPhone = phone;
         this.mTelecomCallId = telecomCallId;
         this.mInCallAdapter = inCallAdapter;
@@ -785,272 +811,183 @@ public final class Call {
         this.mTargetSdkVersion = targetSdkVersion;
     }
 
-    /* access modifiers changed from: package-private */
-    public final String internalGetCallId() {
+    final String internalGetCallId() {
         return this.mTelecomCallId;
     }
 
-    /* access modifiers changed from: package-private */
-    /* JADX WARNING: Removed duplicated region for block: B:66:0x018a  */
-    /* JADX WARNING: Removed duplicated region for block: B:68:0x0191  */
-    /* JADX WARNING: Removed duplicated region for block: B:70:0x0198  */
-    /* JADX WARNING: Removed duplicated region for block: B:72:0x019f  */
-    /* JADX WARNING: Removed duplicated region for block: B:74:0x01a6  */
-    /* JADX WARNING: Removed duplicated region for block: B:76:0x01af  */
-    /* JADX WARNING: Removed duplicated region for block: B:78:0x01b8  */
-    /* JADX WARNING: Removed duplicated region for block: B:84:0x01c6  */
-    /* JADX WARNING: Removed duplicated region for block: B:87:0x01d4  */
-    /* JADX WARNING: Removed duplicated region for block: B:92:? A[RETURN, SYNTHETIC] */
-    /* Code decompiled incorrectly, please refer to instructions dump. */
-    public final void internalUpdate(android.telecom.ParcelableCall r30, java.util.Map<java.lang.String, android.telecom.Call> r31) {
-        /*
-            r29 = this;
-            r0 = r29
-            r1 = r31
-            android.telecom.Call$Details r2 = android.telecom.Call.Details.createFromParcelableCall(r30)
-            android.telecom.Call$Details r3 = r0.mDetails
-            boolean r3 = java.util.Objects.equals(r3, r2)
-            r4 = 1
-            r3 = r3 ^ r4
-            if (r3 == 0) goto L_0x0014
-            r0.mDetails = r2
-        L_0x0014:
-            r5 = 0
-            java.util.List<java.lang.String> r6 = r0.mCannedTextResponses
-            if (r6 != 0) goto L_0x0035
-            java.util.List r6 = r30.getCannedSmsResponses()
-            if (r6 == 0) goto L_0x0035
-            java.util.List r6 = r30.getCannedSmsResponses()
-            boolean r6 = r6.isEmpty()
-            if (r6 != 0) goto L_0x0035
-            java.util.List r6 = r30.getCannedSmsResponses()
-            java.util.List r6 = java.util.Collections.unmodifiableList(r6)
-            r0.mCannedTextResponses = r6
-            r5 = 1
-        L_0x0035:
-            java.lang.String r6 = r0.mCallingPackage
-            int r7 = r0.mTargetSdkVersion
-            r8 = r30
-            android.telecom.VideoCallImpl r6 = r8.getVideoCallImpl(r6, r7)
-            boolean r7 = r30.isVideoCallProviderChanged()
-            if (r7 == 0) goto L_0x004f
-            android.telecom.VideoCallImpl r7 = r0.mVideoCallImpl
-            boolean r7 = java.util.Objects.equals(r7, r6)
-            if (r7 != 0) goto L_0x004f
-            r7 = r4
-            goto L_0x0050
-        L_0x004f:
-            r7 = 0
-        L_0x0050:
-            if (r7 == 0) goto L_0x0054
-            r0.mVideoCallImpl = r6
-        L_0x0054:
-            android.telecom.VideoCallImpl r10 = r0.mVideoCallImpl
-            if (r10 == 0) goto L_0x0065
-            android.telecom.VideoCallImpl r10 = r0.mVideoCallImpl
-            android.telecom.Call$Details r11 = r29.getDetails()
-            int r11 = r11.getVideoState()
-            r10.setVideoState(r11)
-        L_0x0065:
-            int r10 = r30.getState()
-            int r11 = r0.mState
-            if (r11 == r10) goto L_0x006f
-            r11 = r4
-            goto L_0x0070
-        L_0x006f:
-            r11 = 0
-        L_0x0070:
-            if (r11 == 0) goto L_0x0074
-            r0.mState = r10
-        L_0x0074:
-            java.lang.String r12 = r30.getParentCallId()
-            java.lang.String r13 = r0.mParentId
-            boolean r13 = java.util.Objects.equals(r13, r12)
-            r13 = r13 ^ r4
-            if (r13 == 0) goto L_0x0083
-            r0.mParentId = r12
-        L_0x0083:
-            java.util.List r14 = r30.getChildCallIds()
-            java.util.List<java.lang.String> r15 = r0.mChildrenIds
-            boolean r15 = java.util.Objects.equals(r14, r15)
-            r15 = r15 ^ r4
-            if (r15 == 0) goto L_0x00a2
-            java.util.List<java.lang.String> r4 = r0.mChildrenIds
-            r4.clear()
-            java.util.List<java.lang.String> r4 = r0.mChildrenIds
-            java.util.List r9 = r30.getChildCallIds()
-            r4.addAll(r9)
-            r4 = 0
-            r0.mChildrenCached = r4
-            goto L_0x00a3
-        L_0x00a2:
-            r4 = 0
-        L_0x00a3:
-            java.util.List r9 = r30.getConferenceableCallIds()
-            java.util.ArrayList r4 = new java.util.ArrayList
-            r17 = r2
-            int r2 = r9.size()
-            r4.<init>(r2)
-            r2 = r4
-            java.util.Iterator r4 = r9.iterator()
-        L_0x00b7:
-            boolean r16 = r4.hasNext()
-            if (r16 == 0) goto L_0x00de
-            java.lang.Object r16 = r4.next()
-            r18 = r4
-            r4 = r16
-            java.lang.String r4 = (java.lang.String) r4
-            boolean r16 = r1.containsKey(r4)
-            if (r16 == 0) goto L_0x00d8
-            java.lang.Object r16 = r1.get(r4)
-            r1 = r16
-            android.telecom.Call r1 = (android.telecom.Call) r1
-            r2.add(r1)
-        L_0x00d8:
-            r4 = r18
-            r1 = r31
-            goto L_0x00b7
-        L_0x00de:
-            java.util.List<android.telecom.Call> r1 = r0.mConferenceableCalls
-            boolean r1 = java.util.Objects.equals(r1, r2)
-            if (r1 != 0) goto L_0x00f3
-            java.util.List<android.telecom.Call> r1 = r0.mConferenceableCalls
-            r1.clear()
-            java.util.List<android.telecom.Call> r1 = r0.mConferenceableCalls
-            r1.addAll(r2)
-            r29.fireConferenceableCallsChanged()
-        L_0x00f3:
-            r1 = 0
-            r4 = 0
-            boolean r16 = r30.getIsRttCallChanged()
-            if (r16 == 0) goto L_0x016a
-            r19 = r1
-            android.telecom.Call$Details r1 = r0.mDetails
-            r20 = r2
-            r2 = 1024(0x400, float:1.435E-42)
-            boolean r1 = r1.hasProperty(r2)
-            if (r1 == 0) goto L_0x0165
-            android.telecom.ParcelableRttCall r1 = r30.getParcelableRttCall()
-            java.io.InputStreamReader r2 = new java.io.InputStreamReader
-            r27 = r4
-            android.os.ParcelFileDescriptor$AutoCloseInputStream r4 = new android.os.ParcelFileDescriptor$AutoCloseInputStream
-            r28 = r6
-            android.os.ParcelFileDescriptor r6 = r1.getReceiveStream()
-            r4.<init>(r6)
-            java.nio.charset.Charset r6 = java.nio.charset.StandardCharsets.UTF_8
-            r2.<init>(r4, r6)
-            r23 = r2
-            java.io.OutputStreamWriter r2 = new java.io.OutputStreamWriter
-            android.os.ParcelFileDescriptor$AutoCloseOutputStream r4 = new android.os.ParcelFileDescriptor$AutoCloseOutputStream
-            android.os.ParcelFileDescriptor r6 = r1.getTransmitStream()
-            r4.<init>(r6)
-            java.nio.charset.Charset r6 = java.nio.charset.StandardCharsets.UTF_8
-            r2.<init>(r4, r6)
-            r24 = r2
-            android.telecom.Call$RttCall r2 = new android.telecom.Call$RttCall
-            java.lang.String r4 = r0.mTelecomCallId
-            int r25 = r1.getRttMode()
-            android.telecom.InCallAdapter r6 = r0.mInCallAdapter
-            r21 = r2
-            r22 = r4
-            r26 = r6
-            r21.<init>(r22, r23, r24, r25, r26)
-            android.telecom.Call$RttCall r4 = r0.mRttCall
-            if (r4 != 0) goto L_0x0152
-            r4 = 1
-            r19 = r4
-        L_0x014f:
-            r4 = r27
-            goto L_0x015f
-        L_0x0152:
-            android.telecom.Call$RttCall r4 = r0.mRttCall
-            int r4 = r4.getRttAudioMode()
-            int r6 = r2.getRttAudioMode()
-            if (r4 == r6) goto L_0x014f
-            r4 = 1
-        L_0x015f:
-            r0.mRttCall = r2
-            r27 = r4
-            goto L_0x0188
-        L_0x0165:
-            r27 = r4
-            r28 = r6
-            goto L_0x0172
-        L_0x016a:
-            r19 = r1
-            r20 = r2
-            r27 = r4
-            r28 = r6
-        L_0x0172:
-            android.telecom.Call$RttCall r1 = r0.mRttCall
-            if (r1 == 0) goto L_0x0188
-            android.telecom.ParcelableRttCall r1 = r30.getParcelableRttCall()
-            if (r1 != 0) goto L_0x0188
-            boolean r1 = r30.getIsRttCallChanged()
-            if (r1 == 0) goto L_0x0188
-            r1 = 1
-            r2 = 0
-            r0.mRttCall = r2
-            r19 = r1
-        L_0x0188:
-            if (r11 == 0) goto L_0x018f
-            int r1 = r0.mState
-            r0.fireStateChanged(r1)
-        L_0x018f:
-            if (r3 == 0) goto L_0x0196
-            android.telecom.Call$Details r1 = r0.mDetails
-            r0.fireDetailsChanged(r1)
-        L_0x0196:
-            if (r5 == 0) goto L_0x019d
-            java.util.List<java.lang.String> r1 = r0.mCannedTextResponses
-            r0.fireCannedTextResponsesLoaded(r1)
-        L_0x019d:
-            if (r7 == 0) goto L_0x01a4
-            android.telecom.VideoCallImpl r1 = r0.mVideoCallImpl
-            r0.fireVideoCallChanged(r1)
-        L_0x01a4:
-            if (r13 == 0) goto L_0x01ad
-            android.telecom.Call r1 = r29.getParent()
-            r0.fireParentChanged(r1)
-        L_0x01ad:
-            if (r15 == 0) goto L_0x01b6
-            java.util.List r1 = r29.getChildren()
-            r0.fireChildrenChanged(r1)
-        L_0x01b6:
-            if (r19 == 0) goto L_0x01c4
-            android.telecom.Call$RttCall r1 = r0.mRttCall
-            if (r1 == 0) goto L_0x01be
-            r1 = 1
-            goto L_0x01bf
-        L_0x01be:
-            r1 = 0
-        L_0x01bf:
-            android.telecom.Call$RttCall r2 = r0.mRttCall
-            r0.fireOnIsRttChanged(r1, r2)
-        L_0x01c4:
-            if (r27 == 0) goto L_0x01cf
-            android.telecom.Call$RttCall r1 = r0.mRttCall
-            int r1 = r1.getRttAudioMode()
-            r0.fireOnRttModeChanged(r1)
-        L_0x01cf:
-            int r1 = r0.mState
-            r2 = 7
-            if (r1 != r2) goto L_0x01d7
-            r29.fireCallDestroyed()
-        L_0x01d7:
-            return
-        */
-        throw new UnsupportedOperationException("Method not decompiled: android.telecom.Call.internalUpdate(android.telecom.ParcelableCall, java.util.Map):void");
+    /* JADX WARN: Removed duplicated region for block: B:68:0x018a  */
+    /* JADX WARN: Removed duplicated region for block: B:70:0x0191  */
+    /* JADX WARN: Removed duplicated region for block: B:72:0x0198  */
+    /* JADX WARN: Removed duplicated region for block: B:74:0x019f  */
+    /* JADX WARN: Removed duplicated region for block: B:76:0x01a6  */
+    /* JADX WARN: Removed duplicated region for block: B:78:0x01af  */
+    /* JADX WARN: Removed duplicated region for block: B:80:0x01b8  */
+    /* JADX WARN: Removed duplicated region for block: B:86:0x01c6  */
+    /* JADX WARN: Removed duplicated region for block: B:89:0x01d4  */
+    /* JADX WARN: Removed duplicated region for block: B:94:? A[RETURN, SYNTHETIC] */
+    /*
+        Code decompiled incorrectly, please refer to instructions dump.
+    */
+    final void internalUpdate(ParcelableCall parcelableCall, Map<String, Call> callIdMap) {
+        boolean isRttChanged;
+        boolean rttModeChanged;
+        boolean rttModeChanged2;
+        Map<String, Call> map = callIdMap;
+        Details details = Details.createFromParcelableCall(parcelableCall);
+        boolean detailsChanged = !Objects.equals(this.mDetails, details);
+        if (detailsChanged) {
+            this.mDetails = details;
+        }
+        boolean cannedTextResponsesChanged = false;
+        if (this.mCannedTextResponses == null && parcelableCall.getCannedSmsResponses() != null && !parcelableCall.getCannedSmsResponses().isEmpty()) {
+            this.mCannedTextResponses = Collections.unmodifiableList(parcelableCall.getCannedSmsResponses());
+            cannedTextResponsesChanged = true;
+        }
+        VideoCallImpl newVideoCallImpl = parcelableCall.getVideoCallImpl(this.mCallingPackage, this.mTargetSdkVersion);
+        boolean videoCallChanged = parcelableCall.isVideoCallProviderChanged() && !Objects.equals(this.mVideoCallImpl, newVideoCallImpl);
+        if (videoCallChanged) {
+            this.mVideoCallImpl = newVideoCallImpl;
+        }
+        if (this.mVideoCallImpl != null) {
+            this.mVideoCallImpl.setVideoState(getDetails().getVideoState());
+        }
+        int state = parcelableCall.getState();
+        boolean stateChanged = this.mState != state;
+        if (stateChanged) {
+            this.mState = state;
+        }
+        String parentId = parcelableCall.getParentCallId();
+        boolean parentChanged = !Objects.equals(this.mParentId, parentId);
+        if (parentChanged) {
+            this.mParentId = parentId;
+        }
+        List<String> childCallIds = parcelableCall.getChildCallIds();
+        boolean childrenChanged = !Objects.equals(childCallIds, this.mChildrenIds);
+        if (childrenChanged) {
+            this.mChildrenIds.clear();
+            this.mChildrenIds.addAll(parcelableCall.getChildCallIds());
+            this.mChildrenCached = false;
+        }
+        List<String> conferenceableCallIds = parcelableCall.getConferenceableCallIds();
+        List<Call> conferenceableCalls = new ArrayList<>(conferenceableCallIds.size());
+        Iterator<String> it = conferenceableCallIds.iterator();
+        while (it.hasNext()) {
+            Iterator<String> it2 = it;
+            String otherId = it.next();
+            if (map.containsKey(otherId)) {
+                conferenceableCalls.add(map.get(otherId));
+            }
+            it = it2;
+            map = callIdMap;
+        }
+        if (!Objects.equals(this.mConferenceableCalls, conferenceableCalls)) {
+            this.mConferenceableCalls.clear();
+            this.mConferenceableCalls.addAll(conferenceableCalls);
+            fireConferenceableCallsChanged();
+        }
+        if (parcelableCall.getIsRttCallChanged()) {
+            isRttChanged = false;
+            if (this.mDetails.hasProperty(1024)) {
+                ParcelableRttCall parcelableRttCall = parcelableCall.getParcelableRttCall();
+                InputStreamReader receiveStream = new InputStreamReader(new ParcelFileDescriptor.AutoCloseInputStream(parcelableRttCall.getReceiveStream()), StandardCharsets.UTF_8);
+                OutputStreamWriter transmitStream = new OutputStreamWriter(new ParcelFileDescriptor.AutoCloseOutputStream(parcelableRttCall.getTransmitStream()), StandardCharsets.UTF_8);
+                RttCall newRttCall = new RttCall(this.mTelecomCallId, receiveStream, transmitStream, parcelableRttCall.getRttMode(), this.mInCallAdapter);
+                if (this.mRttCall != null) {
+                    if (this.mRttCall.getRttAudioMode() != newRttCall.getRttAudioMode()) {
+                        rttModeChanged2 = true;
+                        this.mRttCall = newRttCall;
+                        rttModeChanged = rttModeChanged2;
+                        if (stateChanged) {
+                            fireStateChanged(this.mState);
+                        }
+                        if (detailsChanged) {
+                            fireDetailsChanged(this.mDetails);
+                        }
+                        if (cannedTextResponsesChanged) {
+                            fireCannedTextResponsesLoaded(this.mCannedTextResponses);
+                        }
+                        if (videoCallChanged) {
+                            fireVideoCallChanged(this.mVideoCallImpl);
+                        }
+                        if (parentChanged) {
+                            fireParentChanged(getParent());
+                        }
+                        if (childrenChanged) {
+                            fireChildrenChanged(getChildren());
+                        }
+                        if (isRttChanged) {
+                            fireOnIsRttChanged(this.mRttCall != null, this.mRttCall);
+                        }
+                        if (rttModeChanged) {
+                            fireOnRttModeChanged(this.mRttCall.getRttAudioMode());
+                        }
+                        if (this.mState == 7) {
+                            fireCallDestroyed();
+                            return;
+                        }
+                        return;
+                    }
+                } else {
+                    isRttChanged = true;
+                }
+                rttModeChanged2 = false;
+                this.mRttCall = newRttCall;
+                rttModeChanged = rttModeChanged2;
+                if (stateChanged) {
+                }
+                if (detailsChanged) {
+                }
+                if (cannedTextResponsesChanged) {
+                }
+                if (videoCallChanged) {
+                }
+                if (parentChanged) {
+                }
+                if (childrenChanged) {
+                }
+                if (isRttChanged) {
+                }
+                if (rttModeChanged) {
+                }
+                if (this.mState == 7) {
+                }
+            } else {
+                rttModeChanged = false;
+            }
+        } else {
+            isRttChanged = false;
+            rttModeChanged = false;
+        }
+        if (this.mRttCall != null && parcelableCall.getParcelableRttCall() == null && parcelableCall.getIsRttCallChanged()) {
+            this.mRttCall = null;
+            isRttChanged = true;
+        }
+        if (stateChanged) {
+        }
+        if (detailsChanged) {
+        }
+        if (cannedTextResponsesChanged) {
+        }
+        if (videoCallChanged) {
+        }
+        if (parentChanged) {
+        }
+        if (childrenChanged) {
+        }
+        if (isRttChanged) {
+        }
+        if (rttModeChanged) {
+        }
+        if (this.mState == 7) {
+        }
     }
 
-    /* access modifiers changed from: package-private */
-    public final void internalSetPostDialWait(String remaining) {
+    final void internalSetPostDialWait(String remaining) {
         this.mRemainingPostDialSequence = remaining;
         firePostDialWait(this.mRemainingPostDialSequence);
     }
 
-    /* access modifiers changed from: package-private */
-    public final void internalSetDisconnected() {
+    final void internalSetDisconnected() {
         if (this.mState != 7) {
             this.mState = 7;
             fireStateChanged(this.mState);
@@ -1058,80 +995,53 @@ public final class Call {
         }
     }
 
-    /* access modifiers changed from: package-private */
-    public final void internalOnConnectionEvent(String event, Bundle extras) {
+    final void internalOnConnectionEvent(String event, Bundle extras) {
         fireOnConnectionEvent(event, extras);
     }
 
-    /* access modifiers changed from: package-private */
-    public final void internalOnRttUpgradeRequest(int requestId) {
+    final void internalOnRttUpgradeRequest(final int requestId) {
         for (CallbackRecord<Callback> record : this.mCallbackRecords) {
-            record.getHandler().post(new Runnable(this, requestId) {
-                private final /* synthetic */ Call f$1;
-                private final /* synthetic */ int f$2;
-
-                {
-                    this.f$1 = r2;
-                    this.f$2 = r3;
-                }
-
+            final Callback callback = record.getCallback();
+            record.getHandler().post(new Runnable() { // from class: android.telecom.-$$Lambda$Call$hgXdGxKbb9IRpCeFrYieOwUuElE
+                @Override // java.lang.Runnable
                 public final void run() {
-                    Call.Callback.this.onRttRequest(this.f$1, this.f$2);
+                    Call.Callback.this.onRttRequest(call, requestId);
                 }
             });
         }
     }
 
-    /* access modifiers changed from: package-private */
-    public final void internalOnRttInitiationFailure(int reason) {
+    final void internalOnRttInitiationFailure(final int reason) {
         for (CallbackRecord<Callback> record : this.mCallbackRecords) {
-            record.getHandler().post(new Runnable(this, reason) {
-                private final /* synthetic */ Call f$1;
-                private final /* synthetic */ int f$2;
-
-                {
-                    this.f$1 = r2;
-                    this.f$2 = r3;
-                }
-
+            final Callback callback = record.getCallback();
+            record.getHandler().post(new Runnable() { // from class: android.telecom.-$$Lambda$Call$JyYlHynNNc3DTrfrP5aXatJNft4
+                @Override // java.lang.Runnable
                 public final void run() {
-                    Call.Callback.this.onRttInitiationFailure(this.f$1, this.f$2);
+                    Call.Callback.this.onRttInitiationFailure(call, reason);
                 }
             });
         }
     }
 
-    /* access modifiers changed from: package-private */
-    public final void internalOnHandoverFailed(int error) {
+    final void internalOnHandoverFailed(final int error) {
         for (CallbackRecord<Callback> record : this.mCallbackRecords) {
-            record.getHandler().post(new Runnable(this, error) {
-                private final /* synthetic */ Call f$1;
-                private final /* synthetic */ int f$2;
-
-                {
-                    this.f$1 = r2;
-                    this.f$2 = r3;
-                }
-
+            final Callback callback = record.getCallback();
+            record.getHandler().post(new Runnable() { // from class: android.telecom.-$$Lambda$Call$aPdcAxyKfpxcuraTjET8ce3xApc
+                @Override // java.lang.Runnable
                 public final void run() {
-                    Call.Callback.this.onHandoverFailed(this.f$1, this.f$2);
+                    Call.Callback.this.onHandoverFailed(call, error);
                 }
             });
         }
     }
 
-    /* access modifiers changed from: package-private */
-    public final void internalOnHandoverComplete() {
+    final void internalOnHandoverComplete() {
         for (CallbackRecord<Callback> record : this.mCallbackRecords) {
-            record.getHandler().post(new Runnable(this) {
-                private final /* synthetic */ Call f$1;
-
-                {
-                    this.f$1 = r2;
-                }
-
+            final Callback callback = record.getCallback();
+            record.getHandler().post(new Runnable() { // from class: android.telecom.-$$Lambda$Call$bt1B6cq3ylYqEtzOXnJWMeJ-ojc
+                @Override // java.lang.Runnable
                 public final void run() {
-                    Call.Callback.this.onHandoverComplete(this.f$1);
+                    Call.Callback.this.onHandoverComplete(call);
                 }
             });
         }
@@ -1140,9 +1050,10 @@ public final class Call {
     private void fireStateChanged(final int newState) {
         for (CallbackRecord<Callback> record : this.mCallbackRecords) {
             final Callback callback = record.getCallback();
-            record.getHandler().post(new Runnable() {
+            record.getHandler().post(new Runnable() { // from class: android.telecom.Call.1
+                @Override // java.lang.Runnable
                 public void run() {
-                    callback.onStateChanged(this, newState);
+                    callback.onStateChanged(call, newState);
                 }
             });
         }
@@ -1151,9 +1062,10 @@ public final class Call {
     private void fireParentChanged(final Call newParent) {
         for (CallbackRecord<Callback> record : this.mCallbackRecords) {
             final Callback callback = record.getCallback();
-            record.getHandler().post(new Runnable() {
+            record.getHandler().post(new Runnable() { // from class: android.telecom.Call.2
+                @Override // java.lang.Runnable
                 public void run() {
-                    callback.onParentChanged(this, newParent);
+                    callback.onParentChanged(call, newParent);
                 }
             });
         }
@@ -1162,9 +1074,10 @@ public final class Call {
     private void fireChildrenChanged(final List<Call> children) {
         for (CallbackRecord<Callback> record : this.mCallbackRecords) {
             final Callback callback = record.getCallback();
-            record.getHandler().post(new Runnable() {
+            record.getHandler().post(new Runnable() { // from class: android.telecom.Call.3
+                @Override // java.lang.Runnable
                 public void run() {
-                    callback.onChildrenChanged(this, children);
+                    callback.onChildrenChanged(call, children);
                 }
             });
         }
@@ -1173,9 +1086,10 @@ public final class Call {
     private void fireDetailsChanged(final Details details) {
         for (CallbackRecord<Callback> record : this.mCallbackRecords) {
             final Callback callback = record.getCallback();
-            record.getHandler().post(new Runnable() {
+            record.getHandler().post(new Runnable() { // from class: android.telecom.Call.4
+                @Override // java.lang.Runnable
                 public void run() {
-                    callback.onDetailsChanged(this, details);
+                    callback.onDetailsChanged(call, details);
                 }
             });
         }
@@ -1184,9 +1098,10 @@ public final class Call {
     private void fireCannedTextResponsesLoaded(final List<String> cannedTextResponses) {
         for (CallbackRecord<Callback> record : this.mCallbackRecords) {
             final Callback callback = record.getCallback();
-            record.getHandler().post(new Runnable() {
+            record.getHandler().post(new Runnable() { // from class: android.telecom.Call.5
+                @Override // java.lang.Runnable
                 public void run() {
-                    callback.onCannedTextResponsesLoaded(this, cannedTextResponses);
+                    callback.onCannedTextResponsesLoaded(call, cannedTextResponses);
                 }
             });
         }
@@ -1195,9 +1110,10 @@ public final class Call {
     private void fireVideoCallChanged(final InCallService.VideoCall videoCall) {
         for (CallbackRecord<Callback> record : this.mCallbackRecords) {
             final Callback callback = record.getCallback();
-            record.getHandler().post(new Runnable() {
+            record.getHandler().post(new Runnable() { // from class: android.telecom.Call.6
+                @Override // java.lang.Runnable
                 public void run() {
-                    callback.onVideoCallChanged(this, videoCall);
+                    callback.onVideoCallChanged(call, videoCall);
                 }
             });
         }
@@ -1206,9 +1122,10 @@ public final class Call {
     private void firePostDialWait(final String remainingPostDialSequence) {
         for (CallbackRecord<Callback> record : this.mCallbackRecords) {
             final Callback callback = record.getCallback();
-            record.getHandler().post(new Runnable() {
+            record.getHandler().post(new Runnable() { // from class: android.telecom.Call.7
+                @Override // java.lang.Runnable
                 public void run() {
-                    callback.onPostDialWait(this, remainingPostDialSequence);
+                    callback.onPostDialWait(call, remainingPostDialSequence);
                 }
             });
         }
@@ -1220,12 +1137,13 @@ public final class Call {
         }
         for (final CallbackRecord<Callback> record : this.mCallbackRecords) {
             final Callback callback = record.getCallback();
-            record.getHandler().post(new Runnable() {
+            record.getHandler().post(new Runnable() { // from class: android.telecom.Call.8
+                @Override // java.lang.Runnable
                 public void run() {
                     boolean isFinalRemoval = false;
                     RuntimeException toThrow = null;
                     try {
-                        callback.onCallDestroyed(this);
+                        callback.onCallDestroyed(call);
                     } catch (RuntimeException e) {
                         toThrow = e;
                     }
@@ -1236,7 +1154,7 @@ public final class Call {
                         }
                     }
                     if (isFinalRemoval) {
-                        Call.this.mPhone.internalRemoveCall(this);
+                        Call.this.mPhone.internalRemoveCall(call);
                     }
                     if (toThrow != null) {
                         throw toThrow;
@@ -1249,78 +1167,65 @@ public final class Call {
     private void fireConferenceableCallsChanged() {
         for (CallbackRecord<Callback> record : this.mCallbackRecords) {
             final Callback callback = record.getCallback();
-            record.getHandler().post(new Runnable() {
+            record.getHandler().post(new Runnable() { // from class: android.telecom.Call.9
+                @Override // java.lang.Runnable
                 public void run() {
-                    callback.onConferenceableCallsChanged(this, Call.this.mUnmodifiableConferenceableCalls);
+                    callback.onConferenceableCallsChanged(call, Call.this.mUnmodifiableConferenceableCalls);
                 }
             });
         }
     }
 
-    private void fireOnConnectionEvent(String event, Bundle extras) {
+    private void fireOnConnectionEvent(final String event, final Bundle extras) {
         for (CallbackRecord<Callback> record : this.mCallbackRecords) {
             final Callback callback = record.getCallback();
-            final String str = event;
-            final Bundle bundle = extras;
-            record.getHandler().post(new Runnable() {
+            record.getHandler().post(new Runnable() { // from class: android.telecom.Call.10
+                @Override // java.lang.Runnable
                 public void run() {
-                    callback.onConnectionEvent(this, str, bundle);
+                    callback.onConnectionEvent(call, event, extras);
                 }
             });
         }
     }
 
-    private void fireOnIsRttChanged(boolean enabled, RttCall rttCall) {
+    private void fireOnIsRttChanged(final boolean enabled, final RttCall rttCall) {
         for (CallbackRecord<Callback> record : this.mCallbackRecords) {
-            record.getHandler().post(new Runnable(this, enabled, rttCall) {
-                private final /* synthetic */ Call f$1;
-                private final /* synthetic */ boolean f$2;
-                private final /* synthetic */ Call.RttCall f$3;
-
-                {
-                    this.f$1 = r2;
-                    this.f$2 = r3;
-                    this.f$3 = r4;
-                }
-
+            final Callback callback = record.getCallback();
+            record.getHandler().post(new Runnable() { // from class: android.telecom.-$$Lambda$Call$5JdbCgV1DP_WhiljnHJKKAJdCu0
+                @Override // java.lang.Runnable
                 public final void run() {
-                    Call.Callback.this.onRttStatusChanged(this.f$1, this.f$2, this.f$3);
+                    Call.Callback.this.onRttStatusChanged(call, enabled, rttCall);
                 }
             });
         }
     }
 
-    private void fireOnRttModeChanged(int mode) {
+    private void fireOnRttModeChanged(final int mode) {
         for (CallbackRecord<Callback> record : this.mCallbackRecords) {
-            record.getHandler().post(new Runnable(this, mode) {
-                private final /* synthetic */ Call f$1;
-                private final /* synthetic */ int f$2;
-
-                {
-                    this.f$1 = r2;
-                    this.f$2 = r3;
-                }
-
+            final Callback callback = record.getCallback();
+            record.getHandler().post(new Runnable() { // from class: android.telecom.-$$Lambda$Call$qjo4awib5yVZC_4Qe_hhqUSk7ho
+                @Override // java.lang.Runnable
                 public final void run() {
-                    Call.Callback.this.onRttModeChanged(this.f$1, this.f$2);
+                    Call.Callback.this.onRttModeChanged(call, mode);
                 }
             });
         }
     }
 
-    /* access modifiers changed from: private */
+    /* JADX INFO: Access modifiers changed from: private */
     public static boolean areBundlesEqual(Bundle bundle, Bundle newBundle) {
         if (bundle == null || newBundle == null) {
-            if (bundle == newBundle) {
-                return true;
-            }
-            return false;
+            return bundle == newBundle;
         } else if (bundle.size() != newBundle.size()) {
             return false;
         } else {
             for (String key : bundle.keySet()) {
-                if (key != null && !Objects.equals(bundle.get(key), newBundle.get(key))) {
-                    return false;
+                if (key != null) {
+                    Object value = bundle.get(key);
+                    Object newValue = newBundle.get(key);
+                    if (!Objects.equals(value, newValue)) {
+                        return false;
+                    }
                 }
             }
             return true;

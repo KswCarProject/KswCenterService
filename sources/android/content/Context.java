@@ -5,8 +5,8 @@ import android.annotation.UnsupportedAppUsage;
 import android.app.IApplicationThread;
 import android.app.IServiceConnection;
 import android.content.IntentSender;
-import android.content.pm.ApplicationInfo;
-import android.content.pm.PackageManager;
+import android.content.p002pm.ApplicationInfo;
+import android.content.p002pm.PackageManager;
 import android.content.res.AssetManager;
 import android.content.res.ColorStateList;
 import android.content.res.Configuration;
@@ -17,14 +17,14 @@ import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
-import android.os.Build;
-import android.os.Bundle;
-import android.os.Handler;
-import android.os.HandlerExecutor;
-import android.os.IBinder;
-import android.os.Looper;
-import android.os.Process;
-import android.os.UserHandle;
+import android.p007os.Build;
+import android.p007os.Bundle;
+import android.p007os.Handler;
+import android.p007os.HandlerExecutor;
+import android.p007os.IBinder;
+import android.p007os.Looper;
+import android.p007os.Process;
+import android.p007os.UserHandle;
 import android.util.AttributeSet;
 import android.view.Display;
 import android.view.DisplayAdjustments;
@@ -41,6 +41,7 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.util.concurrent.Executor;
 
+/* loaded from: classes.dex */
 public abstract class Context {
     public static final String ACCESSIBILITY_SERVICE = "accessibility";
     public static final String ACCOUNT_SERVICE = "account";
@@ -240,30 +241,37 @@ public abstract class Context {
     private static int sLastAutofillId = -1;
 
     @Retention(RetentionPolicy.SOURCE)
+    /* loaded from: classes.dex */
     public @interface BindServiceFlags {
     }
 
     @Retention(RetentionPolicy.SOURCE)
+    /* loaded from: classes.dex */
     public @interface CreatePackageOptions {
     }
 
     @Retention(RetentionPolicy.SOURCE)
+    /* loaded from: classes.dex */
     public @interface DatabaseMode {
     }
 
     @Retention(RetentionPolicy.SOURCE)
+    /* loaded from: classes.dex */
     public @interface FileMode {
     }
 
     @Retention(RetentionPolicy.SOURCE)
+    /* loaded from: classes.dex */
     public @interface PreferencesMode {
     }
 
     @Retention(RetentionPolicy.SOURCE)
+    /* loaded from: classes.dex */
     public @interface RegisterReceiverFlags {
     }
 
     @Retention(RetentionPolicy.SOURCE)
+    /* loaded from: classes.dex */
     public @interface ServiceName {
     }
 
@@ -633,8 +641,8 @@ public abstract class Context {
         throw new RuntimeException("Not implemented. Must override in a subclass.");
     }
 
-    @Deprecated
     @UnsupportedAppUsage
+    @Deprecated
     public File getSharedPrefsFile(String name) {
         return getSharedPreferencesPath(name);
     }
@@ -688,17 +696,17 @@ public abstract class Context {
     public final <T> T getSystemService(Class<T> serviceClass) {
         String serviceName = getSystemServiceName(serviceClass);
         if (serviceName != null) {
-            return getSystemService(serviceName);
+            return (T) getSystemService(serviceName);
         }
         return null;
     }
 
     @SystemApi
     public Context createPackageContextAsUser(String packageName, int flags, UserHandle user) throws PackageManager.NameNotFoundException {
-        if (!Build.IS_ENG) {
-            return this;
+        if (Build.IS_ENG) {
+            throw new IllegalStateException("createPackageContextAsUser not overridden!");
         }
-        throw new IllegalStateException("createPackageContextAsUser not overridden!");
+        return this;
     }
 
     public UserHandle getUser() {

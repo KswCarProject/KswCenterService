@@ -1,21 +1,26 @@
 package android.app.prediction;
 
 import android.annotation.SystemApi;
-import android.os.Parcel;
-import android.os.Parcelable;
+import android.p007os.Parcel;
+import android.p007os.Parcelable;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 
 @SystemApi
+/* loaded from: classes.dex */
 public final class AppTargetEvent implements Parcelable {
     public static final int ACTION_DISMISS = 2;
     public static final int ACTION_LAUNCH = 1;
     public static final int ACTION_PIN = 3;
-    public static final Parcelable.Creator<AppTargetEvent> CREATOR = new Parcelable.Creator<AppTargetEvent>() {
+    public static final Parcelable.Creator<AppTargetEvent> CREATOR = new Parcelable.Creator<AppTargetEvent>() { // from class: android.app.prediction.AppTargetEvent.1
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public AppTargetEvent createFromParcel(Parcel parcel) {
             return new AppTargetEvent(parcel);
         }
 
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public AppTargetEvent[] newArray(int size) {
             return new AppTargetEvent[size];
         }
@@ -25,6 +30,7 @@ public final class AppTargetEvent implements Parcelable {
     private final AppTarget mTarget;
 
     @Retention(RetentionPolicy.SOURCE)
+    /* loaded from: classes.dex */
     public @interface ActionType {
     }
 
@@ -35,7 +41,7 @@ public final class AppTargetEvent implements Parcelable {
     }
 
     private AppTargetEvent(Parcel parcel) {
-        this.mTarget = (AppTarget) parcel.readParcelable((ClassLoader) null);
+        this.mTarget = (AppTarget) parcel.readParcelable(null);
         this.mLocation = parcel.readString();
         this.mAction = parcel.readInt();
     }
@@ -53,20 +59,19 @@ public final class AppTargetEvent implements Parcelable {
     }
 
     public boolean equals(Object o) {
-        if (!getClass().equals(o != null ? o.getClass() : null)) {
-            return false;
+        if (getClass().equals(o != null ? o.getClass() : null)) {
+            AppTargetEvent other = (AppTargetEvent) o;
+            return this.mTarget.equals(other.mTarget) && this.mLocation.equals(other.mLocation) && this.mAction == other.mAction;
         }
-        AppTargetEvent other = (AppTargetEvent) o;
-        if (!this.mTarget.equals(other.mTarget) || !this.mLocation.equals(other.mLocation) || this.mAction != other.mAction) {
-            return false;
-        }
-        return true;
+        return false;
     }
 
+    @Override // android.p007os.Parcelable
     public int describeContents() {
         return 0;
     }
 
+    @Override // android.p007os.Parcelable
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeParcelable(this.mTarget, 0);
         dest.writeString(this.mLocation);
@@ -74,6 +79,7 @@ public final class AppTargetEvent implements Parcelable {
     }
 
     @SystemApi
+    /* loaded from: classes.dex */
     public static final class Builder {
         private int mAction;
         private String mLocation;

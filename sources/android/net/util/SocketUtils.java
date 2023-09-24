@@ -13,6 +13,7 @@ import java.net.SocketAddress;
 import libcore.io.IoBridge;
 
 @SystemApi
+/* loaded from: classes3.dex */
 public final class SocketUtils {
     public static void bindSocketToInterface(FileDescriptor socket, String iface) throws ErrnoException {
         Os.setsockoptIfreq(socket, OsConstants.SOL_SOCKET, OsConstants.SO_BINDTODEVICE, iface);

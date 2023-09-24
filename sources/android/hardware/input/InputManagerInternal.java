@@ -4,6 +4,7 @@ import android.hardware.display.DisplayViewport;
 import android.view.InputEvent;
 import java.util.List;
 
+/* loaded from: classes.dex */
 public abstract class InputManagerInternal {
     public abstract boolean injectInputEvent(InputEvent inputEvent, int i);
 

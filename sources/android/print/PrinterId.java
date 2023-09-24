@@ -2,16 +2,21 @@ package android.print;
 
 import android.annotation.UnsupportedAppUsage;
 import android.content.ComponentName;
-import android.os.Parcel;
-import android.os.Parcelable;
+import android.p007os.Parcel;
+import android.p007os.Parcelable;
 import com.android.internal.util.Preconditions;
 
+/* loaded from: classes3.dex */
 public final class PrinterId implements Parcelable {
-    public static final Parcelable.Creator<PrinterId> CREATOR = new Parcelable.Creator<PrinterId>() {
+    public static final Parcelable.Creator<PrinterId> CREATOR = new Parcelable.Creator<PrinterId>() { // from class: android.print.PrinterId.1
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public PrinterId createFromParcel(Parcel parcel) {
             return new PrinterId(parcel);
         }
 
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public PrinterId[] newArray(int size) {
             return new PrinterId[size];
         }
@@ -25,7 +30,7 @@ public final class PrinterId implements Parcelable {
     }
 
     private PrinterId(Parcel parcel) {
-        this.mServiceName = (ComponentName) Preconditions.checkNotNull((ComponentName) parcel.readParcelable((ClassLoader) null));
+        this.mServiceName = (ComponentName) Preconditions.checkNotNull((ComponentName) parcel.readParcelable(null));
         this.mLocalId = (String) Preconditions.checkNotNull(parcel.readString());
     }
 
@@ -38,10 +43,12 @@ public final class PrinterId implements Parcelable {
         return this.mLocalId;
     }
 
+    @Override // android.p007os.Parcelable
     public int describeContents() {
         return 0;
     }
 
+    @Override // android.p007os.Parcelable
     public void writeToParcel(Parcel parcel, int flags) {
         parcel.writeParcelable(this.mServiceName, flags);
         parcel.writeString(this.mLocalId);
@@ -62,10 +69,11 @@ public final class PrinterId implements Parcelable {
     }
 
     public int hashCode() {
-        return (((1 * 31) + this.mServiceName.hashCode()) * 31) + this.mLocalId.hashCode();
+        int hashCode = (1 * 31) + this.mServiceName.hashCode();
+        return (hashCode * 31) + this.mLocalId.hashCode();
     }
 
     public String toString() {
-        return "PrinterId{" + "serviceName=" + this.mServiceName.flattenToString() + ", localId=" + this.mLocalId + '}';
+        return "PrinterId{serviceName=" + this.mServiceName.flattenToString() + ", localId=" + this.mLocalId + '}';
     }
 }

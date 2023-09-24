@@ -7,6 +7,7 @@ import android.filterfw.core.FrameFormat;
 import android.filterfw.core.GenerateFieldPort;
 import android.filterfw.format.ObjectFormat;
 
+/* loaded from: classes.dex */
 public class StringSource extends Filter {
     private FrameFormat mOutputFormat;
     @GenerateFieldPort(name = "stringValue")
@@ -16,15 +17,17 @@ public class StringSource extends Filter {
         super(name);
     }
 
+    @Override // android.filterfw.core.Filter
     public void setupPorts() {
         this.mOutputFormat = ObjectFormat.fromClass(String.class, 1);
         addOutputPort("string", this.mOutputFormat);
     }
 
+    @Override // android.filterfw.core.Filter
     public void process(FilterContext env) {
         Frame output = env.getFrameManager().newFrame(this.mOutputFormat);
         output.setObjectValue(this.mString);
-        output.setTimestamp(-1);
+        output.setTimestamp(-1L);
         pushOutput("string", output);
         closeOutputPort("string");
     }

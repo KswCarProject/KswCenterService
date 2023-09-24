@@ -3,8 +3,9 @@ package android.filterfw.core;
 import android.graphics.Bitmap;
 import java.nio.ByteBuffer;
 
+/* loaded from: classes.dex */
 public class NativeFrame extends Frame {
-    private int nativeFrameId = -1;
+    private int nativeFrameId;
 
     private native boolean getNativeBitmap(Bitmap bitmap, int i, int i2);
 
@@ -40,26 +41,29 @@ public class NativeFrame extends Frame {
 
     NativeFrame(FrameFormat format, FrameManager frameManager) {
         super(format, frameManager);
+        this.nativeFrameId = -1;
         int capacity = format.getSize();
         nativeAllocate(capacity);
         setReusable(capacity != 0);
     }
 
-    /* access modifiers changed from: protected */
-    public synchronized void releaseNativeAllocation() {
+    @Override // android.filterfw.core.Frame
+    protected synchronized void releaseNativeAllocation() {
         nativeDeallocate();
         this.nativeFrameId = -1;
     }
 
-    /* access modifiers changed from: protected */
-    public synchronized boolean hasNativeAllocation() {
+    @Override // android.filterfw.core.Frame
+    protected synchronized boolean hasNativeAllocation() {
         return this.nativeFrameId != -1;
     }
 
+    @Override // android.filterfw.core.Frame
     public int getCapacity() {
         return getNativeCapacity();
     }
 
+    @Override // android.filterfw.core.Frame
     public Object getObjectValue() {
         if (getFormat().getBaseType() != 8) {
             return getData();
@@ -67,22 +71,23 @@ public class NativeFrame extends Frame {
         Class structClass = getFormat().getObjectClass();
         if (structClass == null) {
             throw new RuntimeException("Attempting to get object data from frame that does not specify a structure object class!");
-        } else if (NativeBuffer.class.isAssignableFrom(structClass)) {
-            try {
-                NativeBuffer structData = (NativeBuffer) structClass.newInstance();
-                if (getNativeBuffer(structData)) {
-                    structData.attachToFrame(this);
-                    return structData;
-                }
-                throw new RuntimeException("Could not get the native structured data for frame!");
-            } catch (Exception e) {
-                throw new RuntimeException("Could not instantiate new structure instance of type '" + structClass + "'!");
-            }
-        } else {
+        }
+        if (!NativeBuffer.class.isAssignableFrom(structClass)) {
             throw new RuntimeException("NativeFrame object class must be a subclass of NativeBuffer!");
+        }
+        try {
+            NativeBuffer structData = (NativeBuffer) structClass.newInstance();
+            if (!getNativeBuffer(structData)) {
+                throw new RuntimeException("Could not get the native structured data for frame!");
+            }
+            structData.attachToFrame(this);
+            return structData;
+        } catch (Exception e) {
+            throw new RuntimeException("Could not instantiate new structure instance of type '" + structClass + "'!");
         }
     }
 
+    @Override // android.filterfw.core.Frame
     public void setInts(int[] ints) {
         assertFrameMutable();
         if (ints.length * nativeIntSize() > getFormat().getSize()) {
@@ -92,10 +97,12 @@ public class NativeFrame extends Frame {
         }
     }
 
+    @Override // android.filterfw.core.Frame
     public int[] getInts() {
         return getNativeInts(getFormat().getSize());
     }
 
+    @Override // android.filterfw.core.Frame
     public void setFloats(float[] floats) {
         assertFrameMutable();
         if (floats.length * nativeFloatSize() > getFormat().getSize()) {
@@ -105,10 +112,12 @@ public class NativeFrame extends Frame {
         }
     }
 
+    @Override // android.filterfw.core.Frame
     public float[] getFloats() {
         return getNativeFloats(getFormat().getSize());
     }
 
+    @Override // android.filterfw.core.Frame
     public void setData(ByteBuffer buffer, int offset, int length) {
         assertFrameMutable();
         byte[] bytes = buffer.array();
@@ -121,6 +130,7 @@ public class NativeFrame extends Frame {
         }
     }
 
+    @Override // android.filterfw.core.Frame
     public ByteBuffer getData() {
         byte[] data = getNativeData(getFormat().getSize());
         if (data == null) {
@@ -129,31 +139,38 @@ public class NativeFrame extends Frame {
         return ByteBuffer.wrap(data);
     }
 
+    @Override // android.filterfw.core.Frame
     public void setBitmap(Bitmap bitmap) {
         assertFrameMutable();
         if (getFormat().getNumberOfDimensions() != 2) {
             throw new RuntimeException("Attempting to set Bitmap for non 2-dimensional native frame!");
-        } else if (getFormat().getWidth() == bitmap.getWidth() && getFormat().getHeight() == bitmap.getHeight()) {
-            Bitmap rgbaBitmap = convertBitmapToRGBA(bitmap);
-            if (!setNativeBitmap(rgbaBitmap, rgbaBitmap.getByteCount(), getFormat().getBytesPerSample())) {
-                throw new RuntimeException("Could not set native frame bitmap data!");
-            }
-        } else {
+        }
+        if (getFormat().getWidth() != bitmap.getWidth() || getFormat().getHeight() != bitmap.getHeight()) {
             throw new RuntimeException("Bitmap dimensions do not match native frame dimensions!");
         }
+        Bitmap rgbaBitmap = convertBitmapToRGBA(bitmap);
+        int byteCount = rgbaBitmap.getByteCount();
+        int bps = getFormat().getBytesPerSample();
+        if (!setNativeBitmap(rgbaBitmap, byteCount, bps)) {
+            throw new RuntimeException("Could not set native frame bitmap data!");
+        }
     }
 
+    @Override // android.filterfw.core.Frame
     public Bitmap getBitmap() {
-        if (getFormat().getNumberOfDimensions() == 2) {
-            Bitmap result = Bitmap.createBitmap(getFormat().getWidth(), getFormat().getHeight(), Bitmap.Config.ARGB_8888);
-            if (getNativeBitmap(result, result.getByteCount(), getFormat().getBytesPerSample())) {
-                return result;
-            }
+        if (getFormat().getNumberOfDimensions() != 2) {
+            throw new RuntimeException("Attempting to get Bitmap for non 2-dimensional native frame!");
+        }
+        Bitmap result = Bitmap.createBitmap(getFormat().getWidth(), getFormat().getHeight(), Bitmap.Config.ARGB_8888);
+        int byteCount = result.getByteCount();
+        int bps = getFormat().getBytesPerSample();
+        if (!getNativeBitmap(result, byteCount, bps)) {
             throw new RuntimeException("Could not get bitmap data from native frame!");
         }
-        throw new RuntimeException("Attempting to get Bitmap for non 2-dimensional native frame!");
+        return result;
     }
 
+    @Override // android.filterfw.core.Frame
     public void setDataFromFrame(Frame frame) {
         if (getFormat().getSize() < frame.getFormat().getSize()) {
             throw new RuntimeException("Attempting to assign frame of size " + frame.getFormat().getSize() + " to smaller native frame of size " + getFormat().getSize() + "!");

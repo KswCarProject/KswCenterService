@@ -1,8 +1,8 @@
 package android.net.wifi.aware;
 
 import android.net.wifi.aware.TlvBufferUtils;
-import android.os.Parcel;
-import android.os.Parcelable;
+import android.p007os.Parcel;
+import android.p007os.Parcelable;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.nio.charset.StandardCharsets;
@@ -11,14 +11,26 @@ import java.util.List;
 import java.util.Objects;
 import libcore.util.HexEncoding;
 
+/* loaded from: classes3.dex */
 public final class PublishConfig implements Parcelable {
-    public static final Parcelable.Creator<PublishConfig> CREATOR = new Parcelable.Creator<PublishConfig>() {
+    public static final Parcelable.Creator<PublishConfig> CREATOR = new Parcelable.Creator<PublishConfig>() { // from class: android.net.wifi.aware.PublishConfig.1
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public PublishConfig[] newArray(int size) {
             return new PublishConfig[size];
         }
 
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public PublishConfig createFromParcel(Parcel in) {
-            return new PublishConfig(in.createByteArray(), in.createByteArray(), in.createByteArray(), in.readInt(), in.readInt(), in.readInt() != 0, in.readInt() != 0);
+            byte[] serviceName = in.createByteArray();
+            byte[] ssi = in.createByteArray();
+            byte[] matchFilter = in.createByteArray();
+            int publishType = in.readInt();
+            int ttlSec = in.readInt();
+            boolean enableTerminateNotification = in.readInt() != 0;
+            boolean enableRanging = in.readInt() != 0;
+            return new PublishConfig(serviceName, ssi, matchFilter, publishType, ttlSec, enableTerminateNotification, enableRanging);
         }
     };
     public static final int PUBLISH_TYPE_SOLICITED = 1;
@@ -32,6 +44,7 @@ public final class PublishConfig implements Parcelable {
     public final int mTtlSec;
 
     @Retention(RetentionPolicy.SOURCE)
+    /* loaded from: classes3.dex */
     public @interface PublishTypes {
     }
 
@@ -50,7 +63,6 @@ public final class PublishConfig implements Parcelable {
         sb.append("PublishConfig [mServiceName='");
         sb.append(this.mServiceName == null ? "<null>" : String.valueOf(HexEncoding.encode(this.mServiceName)));
         sb.append(", mServiceName.length=");
-        int i = 0;
         sb.append(this.mServiceName == null ? 0 : this.mServiceName.length);
         sb.append(", mServiceSpecificInfo='");
         sb.append(this.mServiceSpecificInfo == null ? "<null>" : String.valueOf(HexEncoding.encode(this.mServiceSpecificInfo)));
@@ -59,10 +71,7 @@ public final class PublishConfig implements Parcelable {
         sb.append(", mMatchFilter=");
         sb.append(new TlvBufferUtils.TlvIterable(0, 1, this.mMatchFilter).toString());
         sb.append(", mMatchFilter.length=");
-        if (this.mMatchFilter != null) {
-            i = this.mMatchFilter.length;
-        }
-        sb.append(i);
+        sb.append(this.mMatchFilter != null ? this.mMatchFilter.length : 0);
         sb.append(", mPublishType=");
         sb.append(this.mPublishType);
         sb.append(", mTtlSec=");
@@ -75,10 +84,12 @@ public final class PublishConfig implements Parcelable {
         return sb.toString();
     }
 
+    @Override // android.p007os.Parcelable
     public int describeContents() {
         return 0;
     }
 
+    @Override // android.p007os.Parcelable
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeByteArray(this.mServiceName);
         dest.writeByteArray(this.mServiceSpecificInfo);
@@ -93,66 +104,63 @@ public final class PublishConfig implements Parcelable {
         if (this == o) {
             return true;
         }
-        if (!(o instanceof PublishConfig)) {
-            return false;
-        }
-        PublishConfig lhs = (PublishConfig) o;
-        if (Arrays.equals(this.mServiceName, lhs.mServiceName) && Arrays.equals(this.mServiceSpecificInfo, lhs.mServiceSpecificInfo) && Arrays.equals(this.mMatchFilter, lhs.mMatchFilter) && this.mPublishType == lhs.mPublishType && this.mTtlSec == lhs.mTtlSec && this.mEnableTerminateNotification == lhs.mEnableTerminateNotification && this.mEnableRanging == lhs.mEnableRanging) {
-            return true;
+        if (o instanceof PublishConfig) {
+            PublishConfig lhs = (PublishConfig) o;
+            return Arrays.equals(this.mServiceName, lhs.mServiceName) && Arrays.equals(this.mServiceSpecificInfo, lhs.mServiceSpecificInfo) && Arrays.equals(this.mMatchFilter, lhs.mMatchFilter) && this.mPublishType == lhs.mPublishType && this.mTtlSec == lhs.mTtlSec && this.mEnableTerminateNotification == lhs.mEnableTerminateNotification && this.mEnableRanging == lhs.mEnableRanging;
         }
         return false;
     }
 
     public int hashCode() {
-        return Objects.hash(new Object[]{Integer.valueOf(Arrays.hashCode(this.mServiceName)), Integer.valueOf(Arrays.hashCode(this.mServiceSpecificInfo)), Integer.valueOf(Arrays.hashCode(this.mMatchFilter)), Integer.valueOf(this.mPublishType), Integer.valueOf(this.mTtlSec), Boolean.valueOf(this.mEnableTerminateNotification), Boolean.valueOf(this.mEnableRanging)});
+        return Objects.hash(Integer.valueOf(Arrays.hashCode(this.mServiceName)), Integer.valueOf(Arrays.hashCode(this.mServiceSpecificInfo)), Integer.valueOf(Arrays.hashCode(this.mMatchFilter)), Integer.valueOf(this.mPublishType), Integer.valueOf(this.mTtlSec), Boolean.valueOf(this.mEnableTerminateNotification), Boolean.valueOf(this.mEnableRanging));
     }
 
     public void assertValid(Characteristics characteristics, boolean rttSupported) throws IllegalArgumentException {
         WifiAwareUtils.validateServiceName(this.mServiceName);
         if (!TlvBufferUtils.isValid(this.mMatchFilter, 0, 1)) {
             throw new IllegalArgumentException("Invalid txFilter configuration - LV fields do not match up to length");
-        } else if (this.mPublishType < 0 || this.mPublishType > 1) {
+        }
+        if (this.mPublishType < 0 || this.mPublishType > 1) {
             throw new IllegalArgumentException("Invalid publishType - " + this.mPublishType);
-        } else if (this.mTtlSec >= 0) {
+        } else if (this.mTtlSec < 0) {
+            throw new IllegalArgumentException("Invalid ttlSec - must be non-negative");
+        } else {
             if (characteristics != null) {
                 int maxServiceNameLength = characteristics.getMaxServiceNameLength();
-                if (maxServiceNameLength == 0 || this.mServiceName.length <= maxServiceNameLength) {
-                    int maxServiceSpecificInfoLength = characteristics.getMaxServiceSpecificInfoLength();
-                    if (maxServiceSpecificInfoLength == 0 || this.mServiceSpecificInfo == null || this.mServiceSpecificInfo.length <= maxServiceSpecificInfoLength) {
-                        int maxMatchFilterLength = characteristics.getMaxMatchFilterLength();
-                        if (!(maxMatchFilterLength == 0 || this.mMatchFilter == null || this.mMatchFilter.length <= maxMatchFilterLength)) {
-                            throw new IllegalArgumentException("Match filter longer than supported by device characteristics");
-                        }
-                    } else {
-                        throw new IllegalArgumentException("Service specific info longer than supported by device characteristics");
-                    }
-                } else {
+                if (maxServiceNameLength != 0 && this.mServiceName.length > maxServiceNameLength) {
                     throw new IllegalArgumentException("Service name longer than supported by device characteristics");
+                }
+                int maxServiceSpecificInfoLength = characteristics.getMaxServiceSpecificInfoLength();
+                if (maxServiceSpecificInfoLength != 0 && this.mServiceSpecificInfo != null && this.mServiceSpecificInfo.length > maxServiceSpecificInfoLength) {
+                    throw new IllegalArgumentException("Service specific info longer than supported by device characteristics");
+                }
+                int maxMatchFilterLength = characteristics.getMaxMatchFilterLength();
+                if (maxMatchFilterLength != 0 && this.mMatchFilter != null && this.mMatchFilter.length > maxMatchFilterLength) {
+                    throw new IllegalArgumentException("Match filter longer than supported by device characteristics");
                 }
             }
             if (!rttSupported && this.mEnableRanging) {
                 throw new IllegalArgumentException("Ranging is not supported");
             }
-        } else {
-            throw new IllegalArgumentException("Invalid ttlSec - must be non-negative");
         }
     }
 
+    /* loaded from: classes3.dex */
     public static final class Builder {
-        private boolean mEnableRanging = false;
-        private boolean mEnableTerminateNotification = true;
         private byte[] mMatchFilter;
-        private int mPublishType = 0;
         private byte[] mServiceName;
         private byte[] mServiceSpecificInfo;
+        private int mPublishType = 0;
         private int mTtlSec = 0;
+        private boolean mEnableTerminateNotification = true;
+        private boolean mEnableRanging = false;
 
         public Builder setServiceName(String serviceName) {
-            if (serviceName != null) {
-                this.mServiceName = serviceName.getBytes(StandardCharsets.UTF_8);
-                return this;
+            if (serviceName == null) {
+                throw new IllegalArgumentException("Invalid service name - must be non-null");
             }
-            throw new IllegalArgumentException("Invalid service name - must be non-null");
+            this.mServiceName = serviceName.getBytes(StandardCharsets.UTF_8);
+            return this;
         }
 
         public Builder setServiceSpecificInfo(byte[] serviceSpecificInfo) {
@@ -174,11 +182,11 @@ public final class PublishConfig implements Parcelable {
         }
 
         public Builder setTtlSec(int ttlSec) {
-            if (ttlSec >= 0) {
-                this.mTtlSec = ttlSec;
-                return this;
+            if (ttlSec < 0) {
+                throw new IllegalArgumentException("Invalid ttlSec - must be non-negative");
             }
-            throw new IllegalArgumentException("Invalid ttlSec - must be non-negative");
+            this.mTtlSec = ttlSec;
+            return this;
         }
 
         public Builder setTerminateNotificationEnabled(boolean enable) {

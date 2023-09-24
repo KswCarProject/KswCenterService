@@ -1,9 +1,11 @@
 package com.google.gson;
 
+/* loaded from: classes4.dex */
 public final class JsonNull extends JsonElement {
     public static final JsonNull INSTANCE = new JsonNull();
 
-    /* access modifiers changed from: package-private */
+    /* JADX INFO: Access modifiers changed from: package-private */
+    @Override // com.google.gson.JsonElement
     public JsonNull deepCopy() {
         return INSTANCE;
     }

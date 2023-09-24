@@ -2,6 +2,7 @@ package android.filterfw.core;
 
 import android.annotation.UnsupportedAppUsage;
 
+/* loaded from: classes.dex */
 public abstract class FrameManager {
     private FilterContext mContext;
 
@@ -44,8 +45,7 @@ public abstract class FrameManager {
     public void tearDown() {
     }
 
-    /* access modifiers changed from: package-private */
-    public void setContext(FilterContext context) {
+    void setContext(FilterContext context) {
         this.mContext = context;
     }
 }

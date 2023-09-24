@@ -6,10 +6,10 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.hardware.soundtrigger.SoundTrigger;
 import android.media.soundtrigger.SoundTriggerDetector;
-import android.os.Bundle;
-import android.os.Handler;
-import android.os.ParcelUuid;
-import android.os.RemoteException;
+import android.p007os.Bundle;
+import android.p007os.Handler;
+import android.p007os.ParcelUuid;
+import android.p007os.RemoteException;
 import android.provider.Settings;
 import android.util.Slog;
 import com.android.internal.app.ISoundTriggerService;
@@ -18,6 +18,7 @@ import java.util.HashMap;
 import java.util.UUID;
 
 @SystemApi
+/* loaded from: classes3.dex */
 public final class SoundTriggerManager {
     private static final boolean DBG = false;
     public static final String EXTRA_MESSAGE_TYPE = "android.media.soundtrigger.MESSAGE_TYPE";
@@ -66,12 +67,13 @@ public final class SoundTriggerManager {
         if (soundModelId == null) {
             return null;
         }
-        SoundTriggerDetector soundTriggerDetector = this.mReceiverInstanceMap.get(soundModelId);
+        this.mReceiverInstanceMap.get(soundModelId);
         SoundTriggerDetector newInstance = new SoundTriggerDetector(this.mSoundTriggerService, soundModelId, callback, handler);
         this.mReceiverInstanceMap.put(soundModelId, newInstance);
         return newInstance;
     }
 
+    /* loaded from: classes3.dex */
     public static class Model {
         private SoundTrigger.GenericSoundModel mGenericSoundModel;
 
@@ -95,8 +97,7 @@ public final class SoundTriggerManager {
             return this.mGenericSoundModel.data;
         }
 
-        /* access modifiers changed from: package-private */
-        public SoundTrigger.GenericSoundModel getGenericSoundModel() {
+        SoundTrigger.GenericSoundModel getGenericSoundModel() {
             return this.mGenericSoundModel;
         }
     }
@@ -113,7 +114,7 @@ public final class SoundTriggerManager {
                 case 1:
                     return this.mSoundTriggerService.loadGenericSoundModel((SoundTrigger.GenericSoundModel) soundModel);
                 default:
-                    Slog.e(TAG, "Unkown model type");
+                    Slog.m56e(TAG, "Unkown model type");
                     return Integer.MIN_VALUE;
             }
         } catch (RemoteException e) {

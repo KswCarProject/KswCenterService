@@ -3,14 +3,16 @@ package android.database;
 import android.net.Uri;
 import java.util.Iterator;
 
+/* loaded from: classes.dex */
 public class ContentObservable extends Observable<ContentObserver> {
+    @Override // android.database.Observable
     public void registerObserver(ContentObserver observer) {
-        super.registerObserver(observer);
+        super.registerObserver((ContentObservable) observer);
     }
 
     @Deprecated
     public void dispatchChange(boolean selfChange) {
-        dispatchChange(selfChange, (Uri) null);
+        dispatchChange(selfChange, null);
     }
 
     public void dispatchChange(boolean selfChange, Uri uri) {
@@ -30,7 +32,8 @@ public class ContentObservable extends Observable<ContentObserver> {
         synchronized (this.mObservers) {
             Iterator it = this.mObservers.iterator();
             while (it.hasNext()) {
-                ((ContentObserver) it.next()).onChange(selfChange, (Uri) null);
+                ContentObserver observer = (ContentObserver) it.next();
+                observer.onChange(selfChange, null);
             }
         }
     }

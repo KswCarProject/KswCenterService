@@ -1,30 +1,36 @@
 package android.service.autofill;
 
 import android.content.IntentSender;
-import android.os.Binder;
-import android.os.IBinder;
-import android.os.IInterface;
-import android.os.Parcel;
-import android.os.RemoteException;
+import android.p007os.Binder;
+import android.p007os.IBinder;
+import android.p007os.IInterface;
+import android.p007os.Parcel;
+import android.p007os.RemoteException;
 import android.text.TextUtils;
 
+/* loaded from: classes3.dex */
 public interface ISaveCallback extends IInterface {
     void onFailure(CharSequence charSequence) throws RemoteException;
 
     void onSuccess(IntentSender intentSender) throws RemoteException;
 
+    /* loaded from: classes3.dex */
     public static class Default implements ISaveCallback {
+        @Override // android.service.autofill.ISaveCallback
         public void onSuccess(IntentSender intentSender) throws RemoteException {
         }
 
+        @Override // android.service.autofill.ISaveCallback
         public void onFailure(CharSequence message) throws RemoteException {
         }
 
+        @Override // android.p007os.IInterface
         public IBinder asBinder() {
             return null;
         }
     }
 
+    /* loaded from: classes3.dex */
     public static abstract class Stub extends Binder implements ISaveCallback {
         private static final String DESCRIPTOR = "android.service.autofill.ISaveCallback";
         static final int TRANSACTION_onFailure = 2;
@@ -39,12 +45,13 @@ public interface ISaveCallback extends IInterface {
                 return null;
             }
             IInterface iin = obj.queryLocalInterface(DESCRIPTOR);
-            if (iin == null || !(iin instanceof ISaveCallback)) {
-                return new Proxy(obj);
+            if (iin != null && (iin instanceof ISaveCallback)) {
+                return (ISaveCallback) iin;
             }
-            return (ISaveCallback) iin;
+            return new Proxy(obj);
         }
 
+        @Override // android.p007os.IInterface
         public IBinder asBinder() {
             return this;
         }
@@ -60,66 +67,36 @@ public interface ISaveCallback extends IInterface {
             }
         }
 
+        @Override // android.p007os.Binder
         public String getTransactionName(int transactionCode) {
             return getDefaultTransactionName(transactionCode);
         }
 
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r1v2, resolved type: android.content.IntentSender} */
-        /* JADX WARNING: type inference failed for: r1v1 */
-        /* JADX WARNING: type inference failed for: r1v6, types: [java.lang.CharSequence] */
-        /* JADX WARNING: type inference failed for: r1v11 */
-        /* JADX WARNING: type inference failed for: r1v12 */
-        /* JADX WARNING: Multi-variable type inference failed */
-        /* Code decompiled incorrectly, please refer to instructions dump. */
-        public boolean onTransact(int r5, android.os.Parcel r6, android.os.Parcel r7, int r8) throws android.os.RemoteException {
-            /*
-                r4 = this;
-                java.lang.String r0 = "android.service.autofill.ISaveCallback"
-                r1 = 1598968902(0x5f4e5446, float:1.4867585E19)
-                r2 = 1
-                if (r5 == r1) goto L_0x0045
-                r1 = 0
-                switch(r5) {
-                    case 1: goto L_0x002b;
-                    case 2: goto L_0x0011;
-                    default: goto L_0x000c;
-                }
-            L_0x000c:
-                boolean r1 = super.onTransact(r5, r6, r7, r8)
-                return r1
-            L_0x0011:
-                r6.enforceInterface(r0)
-                int r3 = r6.readInt()
-                if (r3 == 0) goto L_0x0023
-                android.os.Parcelable$Creator<java.lang.CharSequence> r1 = android.text.TextUtils.CHAR_SEQUENCE_CREATOR
-                java.lang.Object r1 = r1.createFromParcel(r6)
-                java.lang.CharSequence r1 = (java.lang.CharSequence) r1
-                goto L_0x0024
-            L_0x0023:
-            L_0x0024:
-                r4.onFailure(r1)
-                r7.writeNoException()
-                return r2
-            L_0x002b:
-                r6.enforceInterface(r0)
-                int r3 = r6.readInt()
-                if (r3 == 0) goto L_0x003d
-                android.os.Parcelable$Creator<android.content.IntentSender> r1 = android.content.IntentSender.CREATOR
-                java.lang.Object r1 = r1.createFromParcel(r6)
-                android.content.IntentSender r1 = (android.content.IntentSender) r1
-                goto L_0x003e
-            L_0x003d:
-            L_0x003e:
-                r4.onSuccess(r1)
-                r7.writeNoException()
-                return r2
-            L_0x0045:
-                r7.writeString(r0)
-                return r2
-            */
-            throw new UnsupportedOperationException("Method not decompiled: android.service.autofill.ISaveCallback.Stub.onTransact(int, android.os.Parcel, android.os.Parcel, int):boolean");
+        @Override // android.p007os.Binder
+        public boolean onTransact(int code, Parcel data, Parcel reply, int flags) throws RemoteException {
+            if (code == 1598968902) {
+                reply.writeString(DESCRIPTOR);
+                return true;
+            }
+            switch (code) {
+                case 1:
+                    data.enforceInterface(DESCRIPTOR);
+                    IntentSender _arg0 = data.readInt() != 0 ? IntentSender.CREATOR.createFromParcel(data) : null;
+                    onSuccess(_arg0);
+                    reply.writeNoException();
+                    return true;
+                case 2:
+                    data.enforceInterface(DESCRIPTOR);
+                    CharSequence _arg02 = data.readInt() != 0 ? TextUtils.CHAR_SEQUENCE_CREATOR.createFromParcel(data) : null;
+                    onFailure(_arg02);
+                    reply.writeNoException();
+                    return true;
+                default:
+                    return super.onTransact(code, data, reply, flags);
+            }
         }
 
+        /* loaded from: classes3.dex */
         private static class Proxy implements ISaveCallback {
             public static ISaveCallback sDefaultImpl;
             private IBinder mRemote;
@@ -128,6 +105,7 @@ public interface ISaveCallback extends IInterface {
                 this.mRemote = remote;
             }
 
+            @Override // android.p007os.IInterface
             public IBinder asBinder() {
                 return this.mRemote;
             }
@@ -136,6 +114,7 @@ public interface ISaveCallback extends IInterface {
                 return Stub.DESCRIPTOR;
             }
 
+            @Override // android.service.autofill.ISaveCallback
             public void onSuccess(IntentSender intentSender) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -147,19 +126,19 @@ public interface ISaveCallback extends IInterface {
                     } else {
                         _data.writeInt(0);
                     }
-                    if (this.mRemote.transact(1, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(1, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().onSuccess(intentSender);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().onSuccess(intentSender);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.service.autofill.ISaveCallback
             public void onFailure(CharSequence message) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -171,13 +150,12 @@ public interface ISaveCallback extends IInterface {
                     } else {
                         _data.writeInt(0);
                     }
-                    if (this.mRemote.transact(2, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(2, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().onFailure(message);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().onFailure(message);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
@@ -186,11 +164,11 @@ public interface ISaveCallback extends IInterface {
         }
 
         public static boolean setDefaultImpl(ISaveCallback impl) {
-            if (Proxy.sDefaultImpl != null || impl == null) {
-                return false;
+            if (Proxy.sDefaultImpl == null && impl != null) {
+                Proxy.sDefaultImpl = impl;
+                return true;
             }
-            Proxy.sDefaultImpl = impl;
-            return true;
+            return false;
         }
 
         public static ISaveCallback getDefaultImpl() {

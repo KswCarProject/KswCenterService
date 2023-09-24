@@ -3,30 +3,35 @@ package android.app;
 import android.annotation.UnsupportedAppUsage;
 import android.content.ComponentName;
 import android.content.Context;
-import android.content.pm.ActivityInfo;
-import android.content.pm.PackageManager;
-import android.content.pm.ProviderInfo;
+import android.content.p002pm.ActivityInfo;
+import android.content.p002pm.PackageManager;
+import android.content.p002pm.ProviderInfo;
 import android.content.res.TypedArray;
 import android.content.res.XmlResourceParser;
-import android.os.Parcel;
-import android.os.Parcelable;
-import android.os.UserHandle;
+import android.p007os.Parcel;
+import android.p007os.Parcelable;
+import android.p007os.UserHandle;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.util.Xml;
-import com.android.internal.R;
+import com.android.internal.C3132R;
 import com.ibm.icu.text.PluralRules;
 import java.io.IOException;
 import java.util.HashMap;
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
 
+/* loaded from: classes.dex */
 public final class SearchableInfo implements Parcelable {
-    public static final Parcelable.Creator<SearchableInfo> CREATOR = new Parcelable.Creator<SearchableInfo>() {
+    public static final Parcelable.Creator<SearchableInfo> CREATOR = new Parcelable.Creator<SearchableInfo>() { // from class: android.app.SearchableInfo.1
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public SearchableInfo createFromParcel(Parcel in) {
             return new SearchableInfo(in);
         }
 
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public SearchableInfo[] newArray(int size) {
             return new SearchableInfo[size];
         }
@@ -128,12 +133,13 @@ public final class SearchableInfo implements Parcelable {
 
     private static Context createActivityContext(Context context, ComponentName activity) {
         try {
-            return context.createPackageContext(activity.getPackageName(), 0);
+            Context theirContext = context.createPackageContext(activity.getPackageName(), 0);
+            return theirContext;
         } catch (PackageManager.NameNotFoundException e) {
-            Log.e(LOG_TAG, "Package not found " + activity.getPackageName());
+            Log.m70e(LOG_TAG, "Package not found " + activity.getPackageName());
             return null;
         } catch (SecurityException e2) {
-            Log.e(LOG_TAG, "Can't make context for " + activity.getPackageName(), e2);
+            Log.m69e(LOG_TAG, "Can't make context for " + activity.getPackageName(), e2);
             return null;
         }
     }
@@ -147,17 +153,19 @@ public final class SearchableInfo implements Parcelable {
             return null;
         }
         try {
-            return context.createPackageContext(this.mSuggestProviderPackage, 0);
-        } catch (PackageManager.NameNotFoundException | SecurityException e) {
+            Context theirContext = context.createPackageContext(this.mSuggestProviderPackage, 0);
+            return theirContext;
+        } catch (PackageManager.NameNotFoundException e) {
+            return null;
+        } catch (SecurityException e2) {
             return null;
         }
     }
 
     @UnsupportedAppUsage
     private SearchableInfo(Context activityContext, AttributeSet attr, ComponentName cName) {
-        ProviderInfo pi;
         this.mSearchActivity = cName;
-        TypedArray a = activityContext.obtainStyledAttributes(attr, R.styleable.Searchable);
+        TypedArray a = activityContext.obtainStyledAttributes(attr, C3132R.styleable.Searchable);
         this.mSearchMode = a.getInt(3, 0);
         this.mLabelId = a.getResourceId(0, 0);
         this.mHintId = a.getResourceId(2, 0);
@@ -182,8 +190,12 @@ public final class SearchableInfo implements Parcelable {
         this.mVoiceMaxResults = a.getInt(15, 0);
         a.recycle();
         String suggestProviderPackage = null;
-        if (!(this.mSuggestAuthority == null || (pi = activityContext.getPackageManager().resolveContentProvider(this.mSuggestAuthority, 268435456)) == null)) {
-            suggestProviderPackage = pi.packageName;
+        if (this.mSuggestAuthority != null) {
+            PackageManager pm = activityContext.getPackageManager();
+            ProviderInfo pi = pm.resolveContentProvider(this.mSuggestAuthority, 268435456);
+            if (pi != null) {
+                suggestProviderPackage = pi.packageName;
+            }
         }
         this.mSuggestProviderPackage = suggestProviderPackage;
         if (this.mLabelId == 0) {
@@ -191,6 +203,7 @@ public final class SearchableInfo implements Parcelable {
         }
     }
 
+    /* loaded from: classes.dex */
     public static class ActionKeyInfo implements Parcelable {
         private final int mKeyCode;
         private final String mQueryActionMsg;
@@ -198,7 +211,7 @@ public final class SearchableInfo implements Parcelable {
         private final String mSuggestActionMsgColumn;
 
         ActionKeyInfo(Context activityContext, AttributeSet attr) {
-            TypedArray a = activityContext.obtainStyledAttributes(attr, R.styleable.SearchableActionKey);
+            TypedArray a = activityContext.obtainStyledAttributes(attr, C3132R.styleable.SearchableActionKey);
             this.mKeyCode = a.getInt(0, 0);
             this.mQueryActionMsg = a.getString(1);
             this.mSuggestActionMsg = a.getString(2);
@@ -206,7 +219,8 @@ public final class SearchableInfo implements Parcelable {
             a.recycle();
             if (this.mKeyCode == 0) {
                 throw new IllegalArgumentException("No keycode.");
-            } else if (this.mQueryActionMsg == null && this.mSuggestActionMsg == null && this.mSuggestActionMsgColumn == null) {
+            }
+            if (this.mQueryActionMsg == null && this.mSuggestActionMsg == null && this.mSuggestActionMsgColumn == null) {
                 throw new IllegalArgumentException("No message information.");
             }
         }
@@ -237,10 +251,12 @@ public final class SearchableInfo implements Parcelable {
             return this.mSuggestActionMsgColumn;
         }
 
+        @Override // android.p007os.Parcelable
         public int describeContents() {
             return 0;
         }
 
+        @Override // android.p007os.Parcelable
         public void writeToParcel(Parcel dest, int flags) {
             dest.writeInt(this.mKeyCode);
             dest.writeString(this.mQueryActionMsg);
@@ -271,11 +287,12 @@ public final class SearchableInfo implements Parcelable {
             if (xml == null) {
                 return null;
             }
-            SearchableInfo searchable = getActivityMetaData(userContext, (XmlPullParser) xml, new ComponentName(activityInfo.packageName, activityInfo.name));
+            ComponentName cName = new ComponentName(activityInfo.packageName, activityInfo.name);
+            SearchableInfo searchable = getActivityMetaData(userContext, xml, cName);
             xml.close();
             return searchable;
         } catch (PackageManager.NameNotFoundException e) {
-            Log.e(LOG_TAG, "Couldn't create package context for user " + userId);
+            Log.m70e(LOG_TAG, "Couldn't create package context for user " + userId);
             return null;
         }
     }
@@ -296,7 +313,7 @@ public final class SearchableInfo implements Parcelable {
                             try {
                                 result = new SearchableInfo(activityContext, attr, cName);
                             } catch (IllegalArgumentException ex) {
-                                Log.w(LOG_TAG, "Invalid searchable metadata for " + cName.flattenToShortString() + PluralRules.KEYWORD_RULE_SEPARATOR + ex.getMessage());
+                                Log.m64w(LOG_TAG, "Invalid searchable metadata for " + cName.flattenToShortString() + PluralRules.KEYWORD_RULE_SEPARATOR + ex.getMessage());
                                 return null;
                             }
                         }
@@ -309,7 +326,7 @@ public final class SearchableInfo implements Parcelable {
                             try {
                                 result.addActionKey(new ActionKeyInfo(activityContext, attr2));
                             } catch (IllegalArgumentException ex2) {
-                                Log.w(LOG_TAG, "Invalid action key for " + cName.flattenToShortString() + PluralRules.KEYWORD_RULE_SEPARATOR + ex2.getMessage());
+                                Log.m64w(LOG_TAG, "Invalid action key for " + cName.flattenToShortString() + PluralRules.KEYWORD_RULE_SEPARATOR + ex2.getMessage());
                                 return null;
                             }
                         }
@@ -318,11 +335,11 @@ public final class SearchableInfo implements Parcelable {
                 tagType = xml.next();
             }
             return result;
-        } catch (XmlPullParserException e) {
-            Log.w(LOG_TAG, "Reading searchable metadata for " + cName.flattenToShortString(), e);
+        } catch (IOException e) {
+            Log.m63w(LOG_TAG, "Reading searchable metadata for " + cName.flattenToShortString(), e);
             return null;
-        } catch (IOException e2) {
-            Log.w(LOG_TAG, "Reading searchable metadata for " + cName.flattenToShortString(), e2);
+        } catch (XmlPullParserException e2) {
+            Log.m63w(LOG_TAG, "Reading searchable metadata for " + cName.flattenToShortString(), e2);
             return null;
         }
     }
@@ -402,10 +419,9 @@ public final class SearchableInfo implements Parcelable {
         this.mSearchButtonText = in.readInt();
         this.mSearchInputType = in.readInt();
         this.mSearchImeOptions = in.readInt();
-        boolean z = false;
         this.mIncludeInGlobalSearch = in.readInt() != 0;
         this.mQueryAfterZeroResults = in.readInt() != 0;
-        this.mAutoUrlDetect = in.readInt() != 0 ? true : z;
+        this.mAutoUrlDetect = in.readInt() != 0;
         this.mSettingsDescriptionId = in.readInt();
         this.mSuggestAuthority = in.readString();
         this.mSuggestPath = in.readString();
@@ -424,10 +440,12 @@ public final class SearchableInfo implements Parcelable {
         this.mVoiceMaxResults = in.readInt();
     }
 
+    @Override // android.p007os.Parcelable
     public int describeContents() {
         return 0;
     }
 
+    @Override // android.p007os.Parcelable
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeInt(this.mLabelId);
         this.mSearchActivity.writeToParcel(dest, flags);

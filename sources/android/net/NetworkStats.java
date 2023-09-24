@@ -1,9 +1,9 @@
 package android.net;
 
 import android.annotation.UnsupportedAppUsage;
-import android.os.Parcel;
-import android.os.Parcelable;
-import android.os.SystemClock;
+import android.p007os.Parcel;
+import android.p007os.Parcelable;
+import android.p007os.SystemClock;
 import android.util.Slog;
 import android.util.SparseBooleanArray;
 import com.android.internal.annotations.VisibleForTesting;
@@ -17,23 +17,12 @@ import java.util.Map;
 import java.util.Objects;
 import libcore.util.EmptyArray;
 
+/* loaded from: classes3.dex */
 public class NetworkStats implements Parcelable {
     private static final String CLATD_INTERFACE_PREFIX = "v4-";
-    @UnsupportedAppUsage
-    public static final Parcelable.Creator<NetworkStats> CREATOR = new Parcelable.Creator<NetworkStats>() {
-        public NetworkStats createFromParcel(Parcel in) {
-            return new NetworkStats(in);
-        }
-
-        public NetworkStats[] newArray(int size) {
-            return new NetworkStats[size];
-        }
-    };
     public static final int DEFAULT_NETWORK_ALL = -1;
     public static final int DEFAULT_NETWORK_NO = 0;
     public static final int DEFAULT_NETWORK_YES = 1;
-    public static final String IFACE_ALL = null;
-    public static final String[] INTERFACES_ALL = null;
     private static final int IPV4V6_HEADER_DELTA = 20;
     public static final int METERED_ALL = -1;
     public static final int METERED_NO = 0;
@@ -82,13 +71,31 @@ public class NetworkStats implements Parcelable {
     private long[] txPackets;
     @UnsupportedAppUsage
     private int[] uid;
+    public static final String IFACE_ALL = null;
+    public static final String[] INTERFACES_ALL = null;
+    @UnsupportedAppUsage
+    public static final Parcelable.Creator<NetworkStats> CREATOR = new Parcelable.Creator<NetworkStats>() { // from class: android.net.NetworkStats.1
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
+        public NetworkStats createFromParcel(Parcel in) {
+            return new NetworkStats(in);
+        }
 
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
+        public NetworkStats[] newArray(int size) {
+            return new NetworkStats[size];
+        }
+    };
+
+    /* loaded from: classes3.dex */
     public interface NonMonotonicObserver<C> {
         void foundNonMonotonic(NetworkStats networkStats, int i, NetworkStats networkStats2, int i2, C c);
 
         void foundNonMonotonic(NetworkStats networkStats, int i, C c);
     }
 
+    /* loaded from: classes3.dex */
     public static class Entry {
         public int defaultNetwork;
         @UnsupportedAppUsage
@@ -113,30 +120,30 @@ public class NetworkStats implements Parcelable {
 
         @UnsupportedAppUsage
         public Entry() {
-            this(NetworkStats.IFACE_ALL, -1, 0, 0, 0, 0, 0, 0, 0);
+            this(NetworkStats.IFACE_ALL, -1, 0, 0, 0L, 0L, 0L, 0L, 0L);
         }
 
-        public Entry(long rxBytes2, long rxPackets2, long txBytes2, long txPackets2, long operations2) {
-            this(NetworkStats.IFACE_ALL, -1, 0, 0, rxBytes2, rxPackets2, txBytes2, txPackets2, operations2);
+        public Entry(long rxBytes, long rxPackets, long txBytes, long txPackets, long operations) {
+            this(NetworkStats.IFACE_ALL, -1, 0, 0, rxBytes, rxPackets, txBytes, txPackets, operations);
         }
 
-        public Entry(String iface2, int uid2, int set2, int tag2, long rxBytes2, long rxPackets2, long txBytes2, long txPackets2, long operations2) {
-            this(iface2, uid2, set2, tag2, 0, 0, 0, rxBytes2, rxPackets2, txBytes2, txPackets2, operations2);
+        public Entry(String iface, int uid, int set, int tag, long rxBytes, long rxPackets, long txBytes, long txPackets, long operations) {
+            this(iface, uid, set, tag, 0, 0, 0, rxBytes, rxPackets, txBytes, txPackets, operations);
         }
 
-        public Entry(String iface2, int uid2, int set2, int tag2, int metered2, int roaming2, int defaultNetwork2, long rxBytes2, long rxPackets2, long txBytes2, long txPackets2, long operations2) {
-            this.iface = iface2;
-            this.uid = uid2;
-            this.set = set2;
-            this.tag = tag2;
-            this.metered = metered2;
-            this.roaming = roaming2;
-            this.defaultNetwork = defaultNetwork2;
-            this.rxBytes = rxBytes2;
-            this.rxPackets = rxPackets2;
-            this.txBytes = txBytes2;
-            this.txPackets = txPackets2;
-            this.operations = operations2;
+        public Entry(String iface, int uid, int set, int tag, int metered, int roaming, int defaultNetwork, long rxBytes, long rxPackets, long txBytes, long txPackets, long operations) {
+            this.iface = iface;
+            this.uid = uid;
+            this.set = set;
+            this.tag = tag;
+            this.metered = metered;
+            this.roaming = roaming;
+            this.defaultNetwork = defaultNetwork;
+            this.rxBytes = rxBytes;
+            this.rxPackets = rxPackets;
+            this.txBytes = txBytes;
+            this.txPackets = txPackets;
+            this.operations = operations;
         }
 
         public boolean isNegative() {
@@ -160,24 +167,21 @@ public class NetworkStats implements Parcelable {
         }
 
         public boolean equals(Object o) {
-            if (!(o instanceof Entry)) {
-                return false;
-            }
-            Entry e = (Entry) o;
-            if (this.uid == e.uid && this.set == e.set && this.tag == e.tag && this.metered == e.metered && this.roaming == e.roaming && this.defaultNetwork == e.defaultNetwork && this.rxBytes == e.rxBytes && this.rxPackets == e.rxPackets && this.txBytes == e.txBytes && this.txPackets == e.txPackets && this.operations == e.operations && this.iface.equals(e.iface)) {
-                return true;
+            if (o instanceof Entry) {
+                Entry e = (Entry) o;
+                return this.uid == e.uid && this.set == e.set && this.tag == e.tag && this.metered == e.metered && this.roaming == e.roaming && this.defaultNetwork == e.defaultNetwork && this.rxBytes == e.rxBytes && this.rxPackets == e.rxPackets && this.txBytes == e.txBytes && this.txPackets == e.txPackets && this.operations == e.operations && this.iface.equals(e.iface);
             }
             return false;
         }
 
         public int hashCode() {
-            return Objects.hash(new Object[]{Integer.valueOf(this.uid), Integer.valueOf(this.set), Integer.valueOf(this.tag), Integer.valueOf(this.metered), Integer.valueOf(this.roaming), Integer.valueOf(this.defaultNetwork), this.iface});
+            return Objects.hash(Integer.valueOf(this.uid), Integer.valueOf(this.set), Integer.valueOf(this.tag), Integer.valueOf(this.metered), Integer.valueOf(this.roaming), Integer.valueOf(this.defaultNetwork), this.iface);
         }
     }
 
     @UnsupportedAppUsage
-    public NetworkStats(long elapsedRealtime2, int initialSize) {
-        this.elapsedRealtime = elapsedRealtime2;
+    public NetworkStats(long elapsedRealtime, int initialSize) {
+        this.elapsedRealtime = elapsedRealtime;
         this.size = 0;
         if (initialSize > 0) {
             this.capacity = initialSize;
@@ -217,6 +221,7 @@ public class NetworkStats implements Parcelable {
         this.operations = parcel.createLongArray();
     }
 
+    @Override // android.p007os.Parcelable
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeLong(this.elapsedRealtime);
         dest.writeInt(this.size);
@@ -235,7 +240,8 @@ public class NetworkStats implements Parcelable {
         dest.writeLongArray(this.operations);
     }
 
-    public NetworkStats clone() {
+    /* renamed from: clone */
+    public NetworkStats m163clone() {
         NetworkStats clone = new NetworkStats(this.elapsedRealtime, this.size);
         Entry entry = null;
         for (int i = 0; i < this.size; i++) {
@@ -262,20 +268,18 @@ public class NetworkStats implements Parcelable {
     }
 
     @VisibleForTesting
-    public NetworkStats addIfaceValues(String iface2, long rxBytes2, long rxPackets2, long txBytes2, long txPackets2) {
-        return addValues(iface2, -1, 0, 0, rxBytes2, rxPackets2, txBytes2, txPackets2, 0);
+    public NetworkStats addIfaceValues(String iface, long rxBytes, long rxPackets, long txBytes, long txPackets) {
+        return addValues(iface, -1, 0, 0, rxBytes, rxPackets, txBytes, txPackets, 0L);
     }
 
     @VisibleForTesting
-    public NetworkStats addValues(String iface2, int uid2, int set2, int tag2, long rxBytes2, long rxPackets2, long txBytes2, long txPackets2, long operations2) {
-        return addValues(new Entry(iface2, uid2, set2, tag2, rxBytes2, rxPackets2, txBytes2, txPackets2, operations2));
+    public NetworkStats addValues(String iface, int uid, int set, int tag, long rxBytes, long rxPackets, long txBytes, long txPackets, long operations) {
+        return addValues(new Entry(iface, uid, set, tag, rxBytes, rxPackets, txBytes, txPackets, operations));
     }
 
     @VisibleForTesting
-    public NetworkStats addValues(String iface2, int uid2, int set2, int tag2, int metered2, int roaming2, int defaultNetwork2, long rxBytes2, long rxPackets2, long txBytes2, long txPackets2, long operations2) {
-        Entry entry = r0;
-        Entry entry2 = new Entry(iface2, uid2, set2, tag2, metered2, roaming2, defaultNetwork2, rxBytes2, rxPackets2, txBytes2, txPackets2, operations2);
-        return addValues(entry);
+    public NetworkStats addValues(String iface, int uid, int set, int tag, int metered, int roaming, int defaultNetwork, long rxBytes, long rxPackets, long txBytes, long txPackets, long operations) {
+        return addValues(new Entry(iface, uid, set, tag, metered, roaming, defaultNetwork, rxBytes, rxPackets, txBytes, txPackets, operations));
     }
 
     public NetworkStats addValues(Entry entry) {
@@ -334,20 +338,21 @@ public class NetworkStats implements Parcelable {
     }
 
     private void maybeCopyEntry(int dest, int src) {
-        if (dest != src) {
-            this.iface[dest] = this.iface[src];
-            this.uid[dest] = this.uid[src];
-            this.set[dest] = this.set[src];
-            this.tag[dest] = this.tag[src];
-            this.metered[dest] = this.metered[src];
-            this.roaming[dest] = this.roaming[src];
-            this.defaultNetwork[dest] = this.defaultNetwork[src];
-            this.rxBytes[dest] = this.rxBytes[src];
-            this.rxPackets[dest] = this.rxPackets[src];
-            this.txBytes[dest] = this.txBytes[src];
-            this.txPackets[dest] = this.txPackets[src];
-            this.operations[dest] = this.operations[src];
+        if (dest == src) {
+            return;
         }
+        this.iface[dest] = this.iface[src];
+        this.uid[dest] = this.uid[src];
+        this.set[dest] = this.set[src];
+        this.tag[dest] = this.tag[src];
+        this.metered[dest] = this.metered[src];
+        this.roaming[dest] = this.roaming[src];
+        this.defaultNetwork[dest] = this.defaultNetwork[src];
+        this.rxBytes[dest] = this.rxBytes[src];
+        this.rxPackets[dest] = this.rxPackets[src];
+        this.txBytes[dest] = this.txBytes[src];
+        this.txPackets[dest] = this.txPackets[src];
+        this.operations[dest] = this.operations[src];
     }
 
     public long getElapsedRealtime() {
@@ -373,12 +378,12 @@ public class NetworkStats implements Parcelable {
     }
 
     @Deprecated
-    public NetworkStats combineValues(String iface2, int uid2, int tag2, long rxBytes2, long rxPackets2, long txBytes2, long txPackets2, long operations2) {
-        return combineValues(iface2, uid2, 0, tag2, rxBytes2, rxPackets2, txBytes2, txPackets2, operations2);
+    public NetworkStats combineValues(String iface, int uid, int tag, long rxBytes, long rxPackets, long txBytes, long txPackets, long operations) {
+        return combineValues(iface, uid, 0, tag, rxBytes, rxPackets, txBytes, txPackets, operations);
     }
 
-    public NetworkStats combineValues(String iface2, int uid2, int set2, int tag2, long rxBytes2, long rxPackets2, long txBytes2, long txPackets2, long operations2) {
-        return combineValues(new Entry(iface2, uid2, set2, tag2, rxBytes2, rxPackets2, txBytes2, txPackets2, operations2));
+    public NetworkStats combineValues(String iface, int uid, int set, int tag, long rxBytes, long rxPackets, long txBytes, long txPackets, long operations) {
+        return combineValues(new Entry(iface, uid, set, tag, rxBytes, rxPackets, txBytes, txPackets, operations));
     }
 
     @UnsupportedAppUsage
@@ -410,9 +415,9 @@ public class NetworkStats implements Parcelable {
         }
     }
 
-    public int findIndex(String iface2, int uid2, int set2, int tag2, int metered2, int roaming2, int defaultNetwork2) {
+    public int findIndex(String iface, int uid, int set, int tag, int metered, int roaming, int defaultNetwork) {
         for (int i = 0; i < this.size; i++) {
-            if (uid2 == this.uid[i] && set2 == this.set[i] && tag2 == this.tag[i] && metered2 == this.metered[i] && roaming2 == this.roaming[i] && defaultNetwork2 == this.defaultNetwork[i] && Objects.equals(iface2, this.iface[i])) {
+            if (uid == this.uid[i] && set == this.set[i] && tag == this.tag[i] && metered == this.metered[i] && roaming == this.roaming[i] && defaultNetwork == this.defaultNetwork[i] && Objects.equals(iface, this.iface[i])) {
                 return i;
             }
         }
@@ -420,7 +425,7 @@ public class NetworkStats implements Parcelable {
     }
 
     @VisibleForTesting
-    public int findIndexHinted(String iface2, int uid2, int set2, int tag2, int metered2, int roaming2, int defaultNetwork2, int hintIndex) {
+    public int findIndexHinted(String iface, int uid, int set, int tag, int metered, int roaming, int defaultNetwork, int hintIndex) {
         int i;
         for (int offset = 0; offset < this.size; offset++) {
             int halfOffset = offset / 2;
@@ -429,7 +434,7 @@ public class NetworkStats implements Parcelable {
             } else {
                 i = (((this.size + hintIndex) - halfOffset) - 1) % this.size;
             }
-            if (uid2 == this.uid[i] && set2 == this.set[i] && tag2 == this.tag[i] && metered2 == this.metered[i] && roaming2 == this.roaming[i] && defaultNetwork2 == this.defaultNetwork[i] && Objects.equals(iface2, this.iface[i])) {
+            if (uid == this.uid[i] && set == this.set[i] && tag == this.tag[i] && metered == this.metered[i] && roaming == this.roaming[i] && defaultNetwork == this.defaultNetwork[i] && Objects.equals(iface, this.iface[i])) {
                 return i;
             }
         }
@@ -448,10 +453,11 @@ public class NetworkStats implements Parcelable {
     }
 
     public String[] getUniqueIfaces() {
+        String[] strArr;
         HashSet<String> ifaces = new HashSet<>();
-        for (String iface2 : this.iface) {
-            if (iface2 != IFACE_ALL) {
-                ifaces.add(iface2);
+        for (String iface : this.iface) {
+            if (iface != IFACE_ALL) {
+                ifaces.add(iface);
             }
         }
         return (String[]) ifaces.toArray(new String[ifaces.size()]);
@@ -459,13 +465,14 @@ public class NetworkStats implements Parcelable {
 
     @UnsupportedAppUsage
     public int[] getUniqueUids() {
+        int[] iArr;
         SparseBooleanArray uids = new SparseBooleanArray();
-        for (int uid2 : this.uid) {
-            uids.put(uid2, true);
+        for (int uid : this.uid) {
+            uids.put(uid, true);
         }
-        int size2 = uids.size();
-        int[] result = new int[size2];
-        for (int i = 0; i < size2; i++) {
+        int size = uids.size();
+        int[] result = new int[size];
+        for (int i = 0; i < size; i++) {
             result[i] = uids.keyAt(i);
         }
         return result;
@@ -473,18 +480,18 @@ public class NetworkStats implements Parcelable {
 
     @UnsupportedAppUsage
     public long getTotalBytes() {
-        Entry entry = getTotal((Entry) null);
+        Entry entry = getTotal(null);
         return entry.rxBytes + entry.txBytes;
     }
 
     @UnsupportedAppUsage
     public Entry getTotal(Entry recycle) {
-        return getTotal(recycle, (HashSet<String>) null, -1, false);
+        return getTotal(recycle, null, -1, false);
     }
 
     @UnsupportedAppUsage
     public Entry getTotal(Entry recycle, int limitUid) {
-        return getTotal(recycle, (HashSet<String>) null, limitUid, false);
+        return getTotal(recycle, null, limitUid, false);
     }
 
     public Entry getTotal(Entry recycle, HashSet<String> limitIface) {
@@ -493,10 +500,11 @@ public class NetworkStats implements Parcelable {
 
     @UnsupportedAppUsage
     public Entry getTotalIncludingTags(Entry recycle) {
-        return getTotal(recycle, (HashSet<String>) null, -1, true);
+        return getTotal(recycle, null, -1, true);
     }
 
     private Entry getTotal(Entry recycle, HashSet<String> limitIface, int limitUid, boolean includeTags) {
+        boolean matchesUid;
         Entry entry = recycle != null ? recycle : new Entry();
         entry.iface = IFACE_ALL;
         entry.uid = limitUid;
@@ -505,14 +513,18 @@ public class NetworkStats implements Parcelable {
         entry.metered = -1;
         entry.roaming = -1;
         entry.defaultNetwork = -1;
-        entry.rxBytes = 0;
-        entry.rxPackets = 0;
-        entry.txBytes = 0;
-        entry.txPackets = 0;
-        entry.operations = 0;
+        entry.rxBytes = 0L;
+        entry.rxPackets = 0L;
+        entry.txBytes = 0L;
+        entry.txPackets = 0L;
+        entry.operations = 0L;
         for (int i = 0; i < this.size; i++) {
             boolean matchesIface = true;
-            boolean matchesUid = limitUid == -1 || limitUid == this.uid[i];
+            if (limitUid != -1 && limitUid != this.uid[i]) {
+                matchesUid = false;
+            } else {
+                matchesUid = true;
+            }
             if (limitIface != null && !limitIface.contains(this.iface[i])) {
                 matchesIface = false;
             }
@@ -536,24 +548,22 @@ public class NetworkStats implements Parcelable {
     }
 
     public NetworkStats subtract(NetworkStats right) {
-        return subtract(this, right, (NonMonotonicObserver) null, (Object) null);
+        return subtract(this, right, null, null);
     }
 
     public static <C> NetworkStats subtract(NetworkStats left, NetworkStats right, NonMonotonicObserver<C> observer, C cookie) {
-        return subtract(left, right, observer, cookie, (NetworkStats) null);
+        return subtract(left, right, observer, cookie, null);
     }
 
     public static <C> NetworkStats subtract(NetworkStats left, NetworkStats right, NonMonotonicObserver<C> observer, C cookie, NetworkStats recycle) {
         NetworkStats result;
-        long deltaRealtime;
-        Entry entry;
-        NetworkStats result2;
         int i;
+        Entry entry;
+        long deltaRealtime;
+        NetworkStats result2;
         long j;
-        NetworkStats networkStats = left;
-        NetworkStats networkStats2 = right;
-        NetworkStats networkStats3 = recycle;
-        long deltaRealtime2 = networkStats.elapsedRealtime - networkStats2.elapsedRealtime;
+        NetworkStats networkStats = right;
+        long deltaRealtime2 = left.elapsedRealtime - networkStats.elapsedRealtime;
         if (deltaRealtime2 < 0) {
             if (observer != null) {
                 observer.foundNonMonotonic(left, -1, right, -1, cookie);
@@ -563,38 +573,39 @@ public class NetworkStats implements Parcelable {
         long deltaRealtime3 = deltaRealtime2;
         Entry entry2 = new Entry();
         int i2 = 0;
-        if (networkStats3 == null || networkStats3.capacity < networkStats.size) {
-            result = new NetworkStats(deltaRealtime3, networkStats.size);
-        } else {
+        if (recycle != null && recycle.capacity >= left.size) {
             result = recycle;
             result.size = 0;
             result.elapsedRealtime = deltaRealtime3;
+        } else {
+            result = new NetworkStats(deltaRealtime3, left.size);
         }
         NetworkStats result3 = result;
         while (true) {
             int i3 = i2;
-            if (i3 < networkStats.size) {
-                entry2.iface = networkStats.iface[i3];
-                entry2.uid = networkStats.uid[i3];
-                entry2.set = networkStats.set[i3];
-                entry2.tag = networkStats.tag[i3];
-                entry2.metered = networkStats.metered[i3];
-                entry2.roaming = networkStats.roaming[i3];
-                entry2.defaultNetwork = networkStats.defaultNetwork[i3];
-                entry2.rxBytes = networkStats.rxBytes[i3];
-                entry2.rxPackets = networkStats.rxPackets[i3];
-                entry2.txBytes = networkStats.txBytes[i3];
-                entry2.txPackets = networkStats.txPackets[i3];
-                entry2.operations = networkStats.operations[i3];
+            int i4 = left.size;
+            if (i3 < i4) {
+                entry2.iface = left.iface[i3];
+                entry2.uid = left.uid[i3];
+                entry2.set = left.set[i3];
+                entry2.tag = left.tag[i3];
+                entry2.metered = left.metered[i3];
+                entry2.roaming = left.roaming[i3];
+                entry2.defaultNetwork = left.defaultNetwork[i3];
+                entry2.rxBytes = left.rxBytes[i3];
+                entry2.rxPackets = left.rxPackets[i3];
+                entry2.txBytes = left.txBytes[i3];
+                entry2.txPackets = left.txPackets[i3];
+                entry2.operations = left.operations[i3];
                 NetworkStats result4 = result3;
-                NetworkStats networkStats4 = networkStats2;
+                NetworkStats networkStats2 = networkStats;
                 int j2 = right.findIndexHinted(entry2.iface, entry2.uid, entry2.set, entry2.tag, entry2.metered, entry2.roaming, entry2.defaultNetwork, i3);
                 if (j2 != -1) {
-                    entry2.rxBytes -= networkStats4.rxBytes[j2];
-                    entry2.rxPackets -= networkStats4.rxPackets[j2];
-                    entry2.txBytes -= networkStats4.txBytes[j2];
-                    entry2.txPackets -= networkStats4.txPackets[j2];
-                    entry2.operations -= networkStats4.operations[j2];
+                    entry2.rxBytes -= networkStats2.rxBytes[j2];
+                    entry2.rxPackets -= networkStats2.rxPackets[j2];
+                    entry2.txBytes -= networkStats2.txBytes[j2];
+                    entry2.txPackets -= networkStats2.txPackets[j2];
+                    entry2.operations -= networkStats2.operations[j2];
                 }
                 if (entry2.isNegative()) {
                     if (observer != null) {
@@ -610,11 +621,11 @@ public class NetworkStats implements Parcelable {
                         result2 = result4;
                     }
                     j = 0;
-                    entry.rxBytes = Math.max(entry.rxBytes, 0);
-                    entry.rxPackets = Math.max(entry.rxPackets, 0);
-                    entry.txBytes = Math.max(entry.txBytes, 0);
-                    entry.txPackets = Math.max(entry.txPackets, 0);
-                    entry.operations = Math.max(entry.operations, 0);
+                    entry.rxBytes = Math.max(entry.rxBytes, 0L);
+                    entry.rxPackets = Math.max(entry.rxPackets, 0L);
+                    entry.txBytes = Math.max(entry.txBytes, 0L);
+                    entry.txPackets = Math.max(entry.txPackets, 0L);
+                    entry.operations = Math.max(entry.operations, 0L);
                 } else {
                     i = i3;
                     entry = entry2;
@@ -624,31 +635,23 @@ public class NetworkStats implements Parcelable {
                 }
                 result2.addValues(entry);
                 i2 = i + 1;
-                networkStats2 = right;
-                NetworkStats networkStats5 = recycle;
+                networkStats = right;
                 deltaRealtime3 = deltaRealtime;
-                long j3 = j;
                 result3 = result2;
                 entry2 = entry;
             } else {
-                Entry entry3 = entry2;
-                long j4 = deltaRealtime3;
                 return result3;
             }
         }
     }
 
     public static void apply464xlatAdjustments(NetworkStats baseTraffic, NetworkStats stackedTraffic, Map<String, String> stackedIfaces, boolean useBpfStats) {
-        NetworkStats networkStats = baseTraffic;
-        NetworkStats networkStats2 = stackedTraffic;
-        NetworkStats adjustments = new NetworkStats(0, stackedIfaces.size());
-        Entry adjust = new Entry(IFACE_ALL, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+        NetworkStats adjustments = new NetworkStats(0L, stackedIfaces.size());
+        Entry adjust = new Entry(IFACE_ALL, 0, 0, 0, 0, 0, 0, 0L, 0L, 0L, 0L, 0L);
         Entry entry = null;
-        for (int i = 0; i < networkStats2.size; i++) {
-            entry = networkStats2.getValues(i, entry);
-            if (entry.iface == null || !entry.iface.startsWith(CLATD_INTERFACE_PREFIX)) {
-                Map<String, String> map = stackedIfaces;
-            } else {
+        for (int i = 0; i < stackedTraffic.size; i++) {
+            entry = stackedTraffic.getValues(i, entry);
+            if (entry.iface != null && entry.iface.startsWith(CLATD_INTERFACE_PREFIX)) {
                 String baseIface = stackedIfaces.get(entry.iface);
                 if (baseIface != null) {
                     adjust.iface = baseIface;
@@ -659,13 +662,12 @@ public class NetworkStats implements Parcelable {
                     adjustments.combineValues(adjust);
                     entry.rxBytes += entry.rxPackets * 20;
                     entry.txBytes += entry.txPackets * 20;
-                    networkStats2.setValues(i, entry);
+                    stackedTraffic.setValues(i, entry);
                 }
             }
         }
-        Map<String, String> map2 = stackedIfaces;
-        networkStats.removeUids(new int[]{1029});
-        networkStats.combineAllValues(adjustments);
+        baseTraffic.removeUids(new int[]{1029});
+        baseTraffic.combineAllValues(adjustments);
     }
 
     public void apply464xlatAdjustments(Map<String, String> stackedIfaces, boolean useBpfStats) {
@@ -682,21 +684,23 @@ public class NetworkStats implements Parcelable {
         entry.metered = -1;
         entry.roaming = -1;
         entry.defaultNetwork = -1;
-        entry.operations = 0;
+        entry.operations = 0L;
         while (true) {
             int i2 = i;
-            if (i2 >= this.size) {
+            int i3 = this.size;
+            if (i2 < i3) {
+                if (this.tag[i2] == 0) {
+                    entry.iface = this.iface[i2];
+                    entry.rxBytes = this.rxBytes[i2];
+                    entry.rxPackets = this.rxPackets[i2];
+                    entry.txBytes = this.txBytes[i2];
+                    entry.txPackets = this.txPackets[i2];
+                    stats.combineValues(entry);
+                }
+                i = i2 + 1;
+            } else {
                 return stats;
             }
-            if (this.tag[i2] == 0) {
-                entry.iface = this.iface[i2];
-                entry.rxBytes = this.rxBytes[i2];
-                entry.rxPackets = this.rxPackets[i2];
-                entry.txBytes = this.txBytes[i2];
-                entry.txPackets = this.txPackets[i2];
-                stats.combineValues(entry);
-            }
-            i = i2 + 1;
         }
     }
 
@@ -712,19 +716,21 @@ public class NetworkStats implements Parcelable {
         entry.defaultNetwork = -1;
         while (true) {
             int i2 = i;
-            if (i2 >= this.size) {
+            int i3 = this.size;
+            if (i2 < i3) {
+                if (this.tag[i2] == 0) {
+                    entry.uid = this.uid[i2];
+                    entry.rxBytes = this.rxBytes[i2];
+                    entry.rxPackets = this.rxPackets[i2];
+                    entry.txBytes = this.txBytes[i2];
+                    entry.txPackets = this.txPackets[i2];
+                    entry.operations = this.operations[i2];
+                    stats.combineValues(entry);
+                }
+                i = i2 + 1;
+            } else {
                 return stats;
             }
-            if (this.tag[i2] == 0) {
-                entry.uid = this.uid[i2];
-                entry.rxBytes = this.rxBytes[i2];
-                entry.rxPackets = this.rxPackets[i2];
-                entry.txBytes = this.txBytes[i2];
-                entry.txPackets = this.txPackets[i2];
-                entry.operations = this.operations[i2];
-                stats.combineValues(entry);
-            }
-            i = i2 + 1;
         }
     }
 
@@ -740,18 +746,21 @@ public class NetworkStats implements Parcelable {
     }
 
     public void filter(int limitUid, String[] limitIfaces, int limitTag) {
-        if (limitUid != -1 || limitTag != -1 || limitIfaces != INTERFACES_ALL) {
-            int nextOutputEntry = 0;
-            Entry entry = new Entry();
-            for (int i = 0; i < this.size; i++) {
-                entry = getValues(i, entry);
-                if ((limitUid == -1 || limitUid == entry.uid) && (limitTag == -1 || limitTag == entry.tag) && (limitIfaces == INTERFACES_ALL || ArrayUtils.contains((T[]) limitIfaces, entry.iface))) {
-                    setValues(nextOutputEntry, entry);
-                    nextOutputEntry++;
-                }
-            }
-            this.size = nextOutputEntry;
+        if (limitUid == -1 && limitTag == -1 && limitIfaces == INTERFACES_ALL) {
+            return;
         }
+        Entry entry = new Entry();
+        int nextOutputEntry = 0;
+        Entry entry2 = entry;
+        for (int i = 0; i < this.size; i++) {
+            entry2 = getValues(i, entry2);
+            boolean matches = (limitUid == -1 || limitUid == entry2.uid) && (limitTag == -1 || limitTag == entry2.tag) && (limitIfaces == INTERFACES_ALL || ArrayUtils.contains(limitIfaces, entry2.iface));
+            if (matches) {
+                setValues(nextOutputEntry, entry2);
+                nextOutputEntry++;
+            }
+        }
+        this.size = nextOutputEntry;
     }
 
     public void dump(String prefix, PrintWriter pw) {
@@ -790,8 +799,8 @@ public class NetworkStats implements Parcelable {
         }
     }
 
-    public static String setToString(int set2) {
-        switch (set2) {
+    public static String setToString(int set) {
+        switch (set) {
             case -1:
                 return "ALL";
             case 0:
@@ -799,7 +808,7 @@ public class NetworkStats implements Parcelable {
             case 1:
                 return "FOREGROUND";
             default:
-                switch (set2) {
+                switch (set) {
                     case 1001:
                         return "DBG_VPN_IN";
                     case 1002:
@@ -810,8 +819,8 @@ public class NetworkStats implements Parcelable {
         }
     }
 
-    public static String setToCheckinString(int set2) {
-        switch (set2) {
+    public static String setToCheckinString(int set) {
+        switch (set) {
             case -1:
                 return "all";
             case 0:
@@ -819,7 +828,7 @@ public class NetworkStats implements Parcelable {
             case 1:
                 return "fg";
             default:
-                switch (set2) {
+                switch (set) {
                     case 1001:
                         return "vpnin";
                     case 1002:
@@ -834,18 +843,15 @@ public class NetworkStats implements Parcelable {
         if (querySet == dataSet) {
             return true;
         }
-        if (querySet != -1 || dataSet >= 1000) {
-            return false;
-        }
-        return true;
+        return querySet == -1 && dataSet < 1000;
     }
 
-    public static String tagToString(int tag2) {
-        return "0x" + Integer.toHexString(tag2);
+    public static String tagToString(int tag) {
+        return "0x" + Integer.toHexString(tag);
     }
 
-    public static String meteredToString(int metered2) {
-        switch (metered2) {
+    public static String meteredToString(int metered) {
+        switch (metered) {
             case -1:
                 return "ALL";
             case 0:
@@ -857,8 +863,8 @@ public class NetworkStats implements Parcelable {
         }
     }
 
-    public static String roamingToString(int roaming2) {
-        switch (roaming2) {
+    public static String roamingToString(int roaming) {
+        switch (roaming) {
             case -1:
                 return "ALL";
             case 0:
@@ -870,8 +876,8 @@ public class NetworkStats implements Parcelable {
         }
     }
 
-    public static String defaultNetworkToString(int defaultNetwork2) {
-        switch (defaultNetwork2) {
+    public static String defaultNetworkToString(int defaultNetwork) {
+        switch (defaultNetwork) {
             case -1:
                 return "ALL";
             case 0:
@@ -889,6 +895,7 @@ public class NetworkStats implements Parcelable {
         return writer.toString();
     }
 
+    @Override // android.p007os.Parcelable
     public int describeContents() {
         return 0;
     }
@@ -912,21 +919,19 @@ public class NetworkStats implements Parcelable {
 
     private void tunAdjustmentInit(int tunUid, String tunIface, String underlyingIface, Entry tunIfaceTotal, Entry underlyingIfaceTotal) {
         Entry recycle = new Entry();
-        int i = 0;
-        while (i < this.size) {
+        for (int i = 0; i < this.size; i++) {
             getValues(i, recycle);
             if (recycle.uid == -1) {
                 throw new IllegalStateException("Cannot adjust VPN accounting on an iface aggregated NetworkStats.");
-            } else if (recycle.set == 1001 || recycle.set == 1002) {
+            }
+            if (recycle.set == 1001 || recycle.set == 1002) {
                 throw new IllegalStateException("Cannot adjust VPN accounting on a NetworkStats containing SET_DBG_VPN_*");
-            } else {
-                if (recycle.uid == tunUid && recycle.tag == 0 && Objects.equals(underlyingIface, recycle.iface)) {
-                    underlyingIfaceTotal.add(recycle);
-                }
-                if (recycle.uid != tunUid && recycle.tag == 0 && Objects.equals(tunIface, recycle.iface)) {
-                    tunIfaceTotal.add(recycle);
-                }
-                i++;
+            }
+            if (recycle.uid == tunUid && recycle.tag == 0 && Objects.equals(underlyingIface, recycle.iface)) {
+                underlyingIfaceTotal.add(recycle);
+            }
+            if (recycle.uid != tunUid && recycle.tag == 0 && Objects.equals(tunIface, recycle.iface)) {
+                tunIfaceTotal.add(recycle);
             }
         }
     }
@@ -950,27 +955,27 @@ public class NetworkStats implements Parcelable {
                 if (tunIfaceTotal.rxBytes > 0) {
                     tmpEntry.rxBytes = (pool.rxBytes * this.rxBytes[i]) / tunIfaceTotal.rxBytes;
                 } else {
-                    tmpEntry.rxBytes = 0;
+                    tmpEntry.rxBytes = 0L;
                 }
                 if (tunIfaceTotal.rxPackets > 0) {
                     tmpEntry.rxPackets = (pool.rxPackets * this.rxPackets[i]) / tunIfaceTotal.rxPackets;
                 } else {
-                    tmpEntry.rxPackets = 0;
+                    tmpEntry.rxPackets = 0L;
                 }
                 if (tunIfaceTotal.txBytes > 0) {
                     tmpEntry.txBytes = (pool.txBytes * this.txBytes[i]) / tunIfaceTotal.txBytes;
                 } else {
-                    tmpEntry.txBytes = 0;
+                    tmpEntry.txBytes = 0L;
                 }
                 if (tunIfaceTotal.txPackets > 0) {
                     tmpEntry.txPackets = (pool.txPackets * this.txPackets[i]) / tunIfaceTotal.txPackets;
                 } else {
-                    tmpEntry.txPackets = 0;
+                    tmpEntry.txPackets = 0L;
                 }
                 if (tunIfaceTotal.operations > 0) {
                     tmpEntry.operations = (pool.operations * this.operations[i]) / tunIfaceTotal.operations;
                 } else {
-                    tmpEntry.operations = 0;
+                    tmpEntry.operations = 0L;
                 }
                 tmpEntry.uid = this.uid[i];
                 tmpEntry.tag = this.tag[i];
@@ -1009,21 +1014,21 @@ public class NetworkStats implements Parcelable {
     }
 
     private static void tunSubtract(int i, NetworkStats left, Entry right) {
-        long rxBytes2 = Math.min(left.rxBytes[i], right.rxBytes);
+        long rxBytes = Math.min(left.rxBytes[i], right.rxBytes);
         long[] jArr = left.rxBytes;
-        jArr[i] = jArr[i] - rxBytes2;
-        right.rxBytes -= rxBytes2;
-        long rxPackets2 = Math.min(left.rxPackets[i], right.rxPackets);
+        jArr[i] = jArr[i] - rxBytes;
+        right.rxBytes -= rxBytes;
+        long rxPackets = Math.min(left.rxPackets[i], right.rxPackets);
         long[] jArr2 = left.rxPackets;
-        jArr2[i] = jArr2[i] - rxPackets2;
-        right.rxPackets -= rxPackets2;
-        long txBytes2 = Math.min(left.txBytes[i], right.txBytes);
+        jArr2[i] = jArr2[i] - rxPackets;
+        right.rxPackets -= rxPackets;
+        long txBytes = Math.min(left.txBytes[i], right.txBytes);
         long[] jArr3 = left.txBytes;
-        jArr3[i] = jArr3[i] - txBytes2;
-        right.txBytes -= txBytes2;
-        long txPackets2 = Math.min(left.txPackets[i], right.txPackets);
+        jArr3[i] = jArr3[i] - txBytes;
+        right.txBytes -= txBytes;
+        long txPackets = Math.min(left.txPackets[i], right.txPackets);
         long[] jArr4 = left.txPackets;
-        jArr4[i] = jArr4[i] - txPackets2;
-        right.txPackets -= txPackets2;
+        jArr4[i] = jArr4[i] - txPackets;
+        right.txPackets -= txPackets;
     }
 }

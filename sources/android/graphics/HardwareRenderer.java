@@ -1,10 +1,10 @@
 package android.graphics;
 
 import android.app.ActivityManager;
-import android.os.IBinder;
-import android.os.ParcelFileDescriptor;
-import android.os.RemoteException;
-import android.os.ServiceManager;
+import android.p007os.IBinder;
+import android.p007os.ParcelFileDescriptor;
+import android.p007os.RemoteException;
+import android.p007os.ServiceManager;
 import android.util.Log;
 import android.util.TimeUtils;
 import android.view.FrameMetricsObserver;
@@ -22,6 +22,7 @@ import java.lang.annotation.RetentionPolicy;
 import java.util.concurrent.Executor;
 import sun.misc.Cleaner;
 
+/* loaded from: classes.dex */
 public class HardwareRenderer {
     private static final String CACHE_PATH_SHADERS = "com.android.opengl.shaders_cache";
     private static final String CACHE_PATH_SKIASHADERS = "com.android.skia.shaders_cache";
@@ -34,31 +35,35 @@ public class HardwareRenderer {
     public static final int SYNC_LOST_SURFACE_REWARD_IF_FOUND = 2;
     public static final int SYNC_OK = 0;
     public static final int SYNC_REDRAW_REQUESTED = 1;
-    private boolean mForceDark = false;
-    private boolean mIsWideGamut = false;
     private final long mNativeProxy;
     private boolean mOpaque = true;
-    /* access modifiers changed from: private */
-    public FrameRenderRequest mRenderRequest = new FrameRenderRequest();
+    private boolean mForceDark = false;
+    private boolean mIsWideGamut = false;
+    private FrameRenderRequest mRenderRequest = new FrameRenderRequest();
     protected RenderNode mRootNode = RenderNode.adopt(nCreateRootRenderNode());
 
     @Retention(RetentionPolicy.SOURCE)
+    /* loaded from: classes.dex */
     public @interface DumpFlags {
     }
 
+    /* loaded from: classes.dex */
     public interface FrameCompleteCallback {
         void onFrameComplete(long j);
     }
 
+    /* loaded from: classes.dex */
     public interface FrameDrawingCallback {
         void onFrameDraw(long j);
     }
 
+    /* loaded from: classes.dex */
     public interface PictureCapturedCallback {
         void onPictureCaptured(Picture picture);
     }
 
     @Retention(RetentionPolicy.SOURCE)
+    /* loaded from: classes.dex */
     public @interface SyncAndDrawResult {
     }
 
@@ -86,7 +91,7 @@ public class HardwareRenderer {
 
     private static native long nCreateTextureLayer(long j);
 
-    /* access modifiers changed from: private */
+    /* JADX INFO: Access modifiers changed from: private */
     public static native void nDeleteProxy(long j);
 
     private static native void nDestroy(long j, long j2);
@@ -101,7 +106,7 @@ public class HardwareRenderer {
 
     private static native void nFence(long j);
 
-    /* access modifiers changed from: private */
+    /* JADX INFO: Access modifiers changed from: private */
     public static native int nGetRenderThreadTid(long j);
 
     private static native void nHackySetRTAnimationsEnabled(boolean z);
@@ -126,7 +131,7 @@ public class HardwareRenderer {
 
     private static native void nRemoveRenderNode(long j, long j2);
 
-    /* access modifiers changed from: private */
+    /* JADX INFO: Access modifiers changed from: private */
     public static native void nRotateProcessStatsBuffer();
 
     private static native void nSetContentDrawBounds(long j, int i, int i2, int i3, int i4);
@@ -155,7 +160,7 @@ public class HardwareRenderer {
 
     private static native void nSetPictureCaptureCallback(long j, PictureCapturedCallback pictureCapturedCallback);
 
-    /* access modifiers changed from: private */
+    /* JADX INFO: Access modifiers changed from: private */
     public static native void nSetProcessStatsBuffer(int i);
 
     private static native void nSetStopped(long j, boolean z);
@@ -177,12 +182,11 @@ public class HardwareRenderer {
     public HardwareRenderer() {
         this.mRootNode.setClipToBounds(false);
         this.mNativeProxy = nCreateProxy(true ^ this.mOpaque, this.mRootNode.mNativeRenderNode);
-        if (this.mNativeProxy != 0) {
-            Cleaner.create(this, new DestroyContextRunnable(this.mNativeProxy));
-            ProcessInitializer.sInstance.init(this.mNativeProxy);
-            return;
+        if (this.mNativeProxy == 0) {
+            throw new OutOfMemoryError("Unable to create hardware renderer");
         }
-        throw new OutOfMemoryError("Unable to create hardware renderer");
+        Cleaner.create(this, new DestroyContextRunnable(this.mNativeProxy));
+        ProcessInitializer.sInstance.init(this.mNativeProxy);
     }
 
     public void destroy() {
@@ -216,13 +220,13 @@ public class HardwareRenderer {
     }
 
     public void setSurface(Surface surface) {
-        if (surface == null || surface.isValid()) {
-            nSetSurface(this.mNativeProxy, surface);
-            return;
+        if (surface != null && !surface.isValid()) {
+            throw new IllegalArgumentException("Surface is invalid. surface.isValid() == false.");
         }
-        throw new IllegalArgumentException("Surface is invalid. surface.isValid() == false.");
+        nSetSurface(this.mNativeProxy, surface);
     }
 
+    /* loaded from: classes.dex */
     public final class FrameRenderRequest {
         private FrameInfo mFrameInfo;
         private boolean mWaitForPresent;
@@ -231,7 +235,7 @@ public class HardwareRenderer {
             this.mFrameInfo = new FrameInfo();
         }
 
-        /* access modifiers changed from: private */
+        /* JADX INFO: Access modifiers changed from: private */
         public void reset() {
             this.mWaitForPresent = false;
             HardwareRenderer.this.mRenderRequest.setVsyncTime(AnimationUtils.currentAnimationTimeMillis() * TimeUtils.NANOS_PER_MS);
@@ -243,22 +247,15 @@ public class HardwareRenderer {
 
         public FrameRenderRequest setVsyncTime(long vsyncTime) {
             this.mFrameInfo.setVsync(vsyncTime, vsyncTime);
-            this.mFrameInfo.addFlags(4);
+            this.mFrameInfo.addFlags(4L);
             return this;
         }
 
-        public FrameRenderRequest setFrameCommitCallback(Executor executor, Runnable frameCommitCallback) {
-            HardwareRenderer.this.setFrameCompleteCallback(new FrameCompleteCallback(executor, frameCommitCallback) {
-                private final /* synthetic */ Executor f$0;
-                private final /* synthetic */ Runnable f$1;
-
-                {
-                    this.f$0 = r1;
-                    this.f$1 = r2;
-                }
-
+        public FrameRenderRequest setFrameCommitCallback(final Executor executor, final Runnable frameCommitCallback) {
+            HardwareRenderer.this.setFrameCompleteCallback(new FrameCompleteCallback() { // from class: android.graphics.-$$Lambda$HardwareRenderer$FrameRenderRequest$dejdYejpuxp3nc7eP6FZ2zBu778
+                @Override // android.graphics.HardwareRenderer.FrameCompleteCallback
                 public final void onFrameComplete(long j) {
-                    this.f$0.execute(this.f$1);
+                    executor.execute(frameCommitCallback);
                 }
             });
             return this;
@@ -308,12 +305,12 @@ public class HardwareRenderer {
     }
 
     public boolean setForceDark(boolean enable) {
-        if (this.mForceDark == enable) {
-            return false;
+        if (this.mForceDark != enable) {
+            this.mForceDark = enable;
+            nSetForceDark(this.mNativeProxy, enable);
+            return true;
         }
-        this.mForceDark = enable;
-        nSetForceDark(this.mNativeProxy, enable);
-        return true;
+        return false;
     }
 
     public void allocateBuffers() {
@@ -340,7 +337,8 @@ public class HardwareRenderer {
     }
 
     public void addFrameMetricsObserver(FrameMetricsObserver observer) {
-        observer.mNative = new VirtualRefBasePtr(nAddFrameMetricsObserver(this.mNativeProxy, observer));
+        long nativeObserver = nAddFrameMetricsObserver(this.mNativeProxy, observer);
+        observer.mNative = new VirtualRefBasePtr(nativeObserver);
     }
 
     public void removeFrameMetricsObserver(FrameMetricsObserver observer) {
@@ -370,7 +368,8 @@ public class HardwareRenderer {
     }
 
     public TextureLayer createTextureLayer() {
-        return TextureLayer.adoptTextureLayer(this, nCreateTextureLayer(this.mNativeProxy));
+        long layer = nCreateTextureLayer(this.mNativeProxy);
+        return TextureLayer.adoptTextureLayer(this, layer);
     }
 
     public void detachSurfaceTexture(long hardwareLayer) {
@@ -432,7 +431,8 @@ public class HardwareRenderer {
     }
 
     static void invokePictureCapturedCallback(long picturePtr, PictureCapturedCallback callback) {
-        callback.onPictureCaptured(new Picture(picturePtr));
+        Picture picture = new Picture(picturePtr);
+        callback.onPictureCaptured(picture);
     }
 
     private static void validateAlpha(float alpha, String argumentName) {
@@ -458,11 +458,7 @@ public class HardwareRenderer {
     }
 
     public static void setFPSDivisor(int divisor) {
-        boolean z = true;
-        if (divisor > 1) {
-            z = false;
-        }
-        nHackySetRTAnimationsEnabled(z);
+        nHackySetRTAnimationsEnabled(divisor <= 1);
     }
 
     public static void setContextPriority(int priority) {
@@ -511,6 +507,7 @@ public class HardwareRenderer {
         ProcessInitializer.sInstance.setPackageName(packageName);
     }
 
+    /* loaded from: classes.dex */
     private static final class DestroyContextRunnable implements Runnable {
         private final long mNativeInstance;
 
@@ -518,64 +515,70 @@ public class HardwareRenderer {
             this.mNativeInstance = nativeInstance;
         }
 
+        @Override // java.lang.Runnable
         public void run() {
             HardwareRenderer.nDeleteProxy(this.mNativeInstance);
         }
     }
 
+    /* loaded from: classes.dex */
     private static class ProcessInitializer {
         static ProcessInitializer sInstance = new ProcessInitializer();
-        private IGraphicsStatsCallback mGraphicsStatsCallback = new IGraphicsStatsCallback.Stub() {
+        private IGraphicsStats mGraphicsStatsService;
+        private String mPackageName;
+        private boolean mInitialized = false;
+        private IGraphicsStatsCallback mGraphicsStatsCallback = new IGraphicsStatsCallback.Stub() { // from class: android.graphics.HardwareRenderer.ProcessInitializer.1
+            @Override // android.view.IGraphicsStatsCallback
             public void onRotateGraphicsStatsBuffer() throws RemoteException {
                 ProcessInitializer.this.rotateBuffer();
             }
         };
-        private IGraphicsStats mGraphicsStatsService;
-        private boolean mInitialized = false;
-        private String mPackageName;
 
         private ProcessInitializer() {
         }
 
-        /* access modifiers changed from: package-private */
-        public synchronized void setPackageName(String name) {
-            if (!this.mInitialized) {
-                this.mPackageName = name;
+        synchronized void setPackageName(String name) {
+            if (this.mInitialized) {
+                return;
             }
+            this.mPackageName = name;
         }
 
-        /* access modifiers changed from: package-private */
-        public synchronized void init(long renderProxy) {
-            if (!this.mInitialized) {
-                this.mInitialized = true;
-                initSched(renderProxy);
-                initGraphicsStats();
+        synchronized void init(long renderProxy) {
+            if (this.mInitialized) {
+                return;
             }
+            this.mInitialized = true;
+            initSched(renderProxy);
+            initGraphicsStats();
         }
 
         private void initSched(long renderProxy) {
             try {
-                ActivityManager.getService().setRenderThread(HardwareRenderer.nGetRenderThreadTid(renderProxy));
+                int tid = HardwareRenderer.nGetRenderThreadTid(renderProxy);
+                ActivityManager.getService().setRenderThread(tid);
             } catch (Throwable t) {
-                Log.w(HardwareRenderer.LOG_TAG, "Failed to set scheduler for RenderThread", t);
+                Log.m63w(HardwareRenderer.LOG_TAG, "Failed to set scheduler for RenderThread", t);
             }
         }
 
         private void initGraphicsStats() {
-            if (this.mPackageName != null) {
-                try {
-                    IBinder binder = ServiceManager.getService("graphicsstats");
-                    if (binder != null) {
-                        this.mGraphicsStatsService = IGraphicsStats.Stub.asInterface(binder);
-                        requestBuffer();
-                    }
-                } catch (Throwable t) {
-                    Log.w(HardwareRenderer.LOG_TAG, "Could not acquire gfx stats buffer", t);
+            if (this.mPackageName == null) {
+                return;
+            }
+            try {
+                IBinder binder = ServiceManager.getService("graphicsstats");
+                if (binder == null) {
+                    return;
                 }
+                this.mGraphicsStatsService = IGraphicsStats.Stub.asInterface(binder);
+                requestBuffer();
+            } catch (Throwable t) {
+                Log.m63w(HardwareRenderer.LOG_TAG, "Could not acquire gfx stats buffer", t);
             }
         }
 
-        /* access modifiers changed from: private */
+        /* JADX INFO: Access modifiers changed from: private */
         public void rotateBuffer() {
             HardwareRenderer.nRotateProcessStatsBuffer();
             requestBuffer();
@@ -587,7 +590,7 @@ public class HardwareRenderer {
                 HardwareRenderer.nSetProcessStatsBuffer(pfd.getFd());
                 pfd.close();
             } catch (Throwable t) {
-                Log.w(HardwareRenderer.LOG_TAG, "Could not acquire gfx stats buffer", t);
+                Log.m63w(HardwareRenderer.LOG_TAG, "Could not acquire gfx stats buffer", t);
             }
         }
     }

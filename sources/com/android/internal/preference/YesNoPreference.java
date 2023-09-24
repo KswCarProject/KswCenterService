@@ -2,12 +2,13 @@ package com.android.internal.preference;
 
 import android.content.Context;
 import android.content.res.TypedArray;
-import android.os.Parcel;
-import android.os.Parcelable;
+import android.p007os.Parcel;
+import android.p007os.Parcelable;
 import android.preference.DialogPreference;
 import android.preference.Preference;
 import android.util.AttributeSet;
 
+/* loaded from: classes4.dex */
 public class YesNoPreference extends DialogPreference {
     private boolean mWasPositiveResult;
 
@@ -24,11 +25,11 @@ public class YesNoPreference extends DialogPreference {
     }
 
     public YesNoPreference(Context context) {
-        this(context, (AttributeSet) null);
+        this(context, null);
     }
 
-    /* access modifiers changed from: protected */
-    public void onDialogClosed(boolean positiveResult) {
+    @Override // android.preference.DialogPreference
+    protected void onDialogClosed(boolean positiveResult) {
         super.onDialogClosed(positiveResult);
         if (callChangeListener(Boolean.valueOf(positiveResult))) {
             setValue(positiveResult);
@@ -45,28 +46,23 @@ public class YesNoPreference extends DialogPreference {
         return this.mWasPositiveResult;
     }
 
-    /* access modifiers changed from: protected */
-    public Object onGetDefaultValue(TypedArray a, int index) {
+    @Override // android.preference.Preference
+    protected Object onGetDefaultValue(TypedArray a, int index) {
         return Boolean.valueOf(a.getBoolean(index, false));
     }
 
-    /* access modifiers changed from: protected */
-    public void onSetInitialValue(boolean restorePersistedValue, Object defaultValue) {
-        boolean z;
-        if (restorePersistedValue) {
-            z = getPersistedBoolean(this.mWasPositiveResult);
-        } else {
-            z = ((Boolean) defaultValue).booleanValue();
-        }
-        setValue(z);
+    @Override // android.preference.Preference
+    protected void onSetInitialValue(boolean restorePersistedValue, Object defaultValue) {
+        setValue(restorePersistedValue ? getPersistedBoolean(this.mWasPositiveResult) : ((Boolean) defaultValue).booleanValue());
     }
 
+    @Override // android.preference.Preference
     public boolean shouldDisableDependents() {
         return !this.mWasPositiveResult || super.shouldDisableDependents();
     }
 
-    /* access modifiers changed from: protected */
-    public Parcelable onSaveInstanceState() {
+    @Override // android.preference.DialogPreference, android.preference.Preference
+    protected Parcelable onSaveInstanceState() {
         Parcelable superState = super.onSaveInstanceState();
         if (isPersistent()) {
             return superState;
@@ -76,8 +72,8 @@ public class YesNoPreference extends DialogPreference {
         return myState;
     }
 
-    /* access modifiers changed from: protected */
-    public void onRestoreInstanceState(Parcelable state) {
+    @Override // android.preference.DialogPreference, android.preference.Preference
+    protected void onRestoreInstanceState(Parcelable state) {
         if (!state.getClass().equals(SavedState.class)) {
             super.onRestoreInstanceState(state);
             return;
@@ -87,12 +83,17 @@ public class YesNoPreference extends DialogPreference {
         setValue(myState.wasPositiveResult);
     }
 
+    /* loaded from: classes4.dex */
     private static class SavedState extends Preference.BaseSavedState {
-        public static final Parcelable.Creator<SavedState> CREATOR = new Parcelable.Creator<SavedState>() {
+        public static final Parcelable.Creator<SavedState> CREATOR = new Parcelable.Creator<SavedState>() { // from class: com.android.internal.preference.YesNoPreference.SavedState.1
+            /* JADX WARN: Can't rename method to resolve collision */
+            @Override // android.p007os.Parcelable.Creator
             public SavedState createFromParcel(Parcel in) {
                 return new SavedState(in);
             }
 
+            /* JADX WARN: Can't rename method to resolve collision */
+            @Override // android.p007os.Parcelable.Creator
             public SavedState[] newArray(int size) {
                 return new SavedState[size];
             }
@@ -101,9 +102,10 @@ public class YesNoPreference extends DialogPreference {
 
         public SavedState(Parcel source) {
             super(source);
-            this.wasPositiveResult = source.readInt() != 1 ? false : true;
+            this.wasPositiveResult = source.readInt() == 1;
         }
 
+        @Override // android.view.AbsSavedState, android.p007os.Parcelable
         public void writeToParcel(Parcel dest, int flags) {
             super.writeToParcel(dest, flags);
             dest.writeInt(this.wasPositiveResult ? 1 : 0);

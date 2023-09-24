@@ -25,45 +25,50 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.function.Consumer;
+import java.util.function.ToLongFunction;
 
+/* loaded from: classes3.dex */
 public class EventManager {
-    public static final DateTimeFormatter DATE_TIME_FORMATTER = DateTimeFormatter.ofPattern("HH:mm:ss.SSS");
     @VisibleForTesting
     public static final int DEFAULT_EVENTS_TO_CACHE = 10;
     public static final String TAG = "Logging.Events";
-    private static final Object mSync = new Object();
-    /* access modifiers changed from: private */
-    public final Map<Loggable, EventRecord> mCallEventRecordMap = new HashMap();
-    private List<EventListener> mEventListeners = new ArrayList();
-    private LinkedBlockingQueue<EventRecord> mEventRecords = new LinkedBlockingQueue<>(10);
     private SessionManager.ISessionIdQueryHandler mSessionIdHandler;
-    /* access modifiers changed from: private */
-    public final Map<String, List<TimedEventPair>> requestResponsePairs = new HashMap();
+    public static final DateTimeFormatter DATE_TIME_FORMATTER = DateTimeFormatter.ofPattern("HH:mm:ss.SSS");
+    private static final Object mSync = new Object();
+    private final Map<Loggable, EventRecord> mCallEventRecordMap = new HashMap();
+    private LinkedBlockingQueue<EventRecord> mEventRecords = new LinkedBlockingQueue<>(10);
+    private List<EventListener> mEventListeners = new ArrayList();
+    private final Map<String, List<TimedEventPair>> requestResponsePairs = new HashMap();
 
+    /* loaded from: classes3.dex */
     public interface EventListener {
         void eventRecordAdded(EventRecord eventRecord);
     }
 
+    /* loaded from: classes3.dex */
     public interface Loggable {
         String getDescription();
 
         String getId();
     }
 
+    /* loaded from: classes3.dex */
     public static class TimedEventPair {
         private static final long DEFAULT_TIMEOUT = 3000;
         String mName;
         String mRequest;
         String mResponse;
-        long mTimeoutMillis = DEFAULT_TIMEOUT;
+        long mTimeoutMillis;
 
         public TimedEventPair(String request, String response, String name) {
+            this.mTimeoutMillis = DEFAULT_TIMEOUT;
             this.mRequest = request;
             this.mResponse = response;
             this.mName = name;
         }
 
         public TimedEventPair(String request, String response, String name, long timeoutMillis) {
+            this.mTimeoutMillis = DEFAULT_TIMEOUT;
             this.mRequest = request;
             this.mResponse = response;
             this.mName = name;
@@ -81,6 +86,7 @@ public class EventManager {
         this.requestResponsePairs.put(p.mRequest, responses);
     }
 
+    /* loaded from: classes3.dex */
     public static class Event {
         public Object data;
         public String eventId;
@@ -88,48 +94,53 @@ public class EventManager {
         public long time;
         public final String timestampString;
 
-        public Event(String eventId2, String sessionId2, long time2, Object data2) {
-            this.eventId = eventId2;
-            this.sessionId = sessionId2;
-            this.time = time2;
-            this.timestampString = ZonedDateTime.ofInstant(Instant.ofEpochMilli(time2), ZoneId.systemDefault()).format(EventManager.DATE_TIME_FORMATTER);
-            this.data = data2;
+        public Event(String eventId, String sessionId, long time, Object data) {
+            this.eventId = eventId;
+            this.sessionId = sessionId;
+            this.time = time;
+            this.timestampString = ZonedDateTime.ofInstant(Instant.ofEpochMilli(time), ZoneId.systemDefault()).format(EventManager.DATE_TIME_FORMATTER);
+            this.data = data;
         }
     }
 
+    /* loaded from: classes3.dex */
     public class EventRecord {
         private final List<Event> mEvents = Collections.synchronizedList(new LinkedList());
         private final Loggable mRecordEntry;
 
+        /* loaded from: classes3.dex */
         public class EventTiming extends TimedEvent<String> {
             public String name;
             public long time;
 
-            public EventTiming(String name2, long time2) {
-                this.name = name2;
-                this.time = time2;
+            public EventTiming(String name, long time) {
+                this.name = name;
+                this.time = time;
             }
 
+            @Override // android.telecom.Logging.TimedEvent
             public String getKey() {
                 return this.name;
             }
 
+            @Override // android.telecom.Logging.TimedEvent
             public long getTime() {
                 return this.time;
             }
         }
 
+        /* loaded from: classes3.dex */
         private class PendingResponse {
             String name;
             String requestEventId;
             long requestEventTimeMillis;
             long timeoutMillis;
 
-            public PendingResponse(String requestEventId2, long requestEventTimeMillis2, long timeoutMillis2, String name2) {
-                this.requestEventId = requestEventId2;
-                this.requestEventTimeMillis = requestEventTimeMillis2;
-                this.timeoutMillis = timeoutMillis2;
-                this.name = name2;
+            public PendingResponse(String requestEventId, long requestEventTimeMillis, long timeoutMillis, String name) {
+                this.requestEventId = requestEventId;
+                this.requestEventTimeMillis = requestEventTimeMillis;
+                this.timeoutMillis = timeoutMillis;
+                this.name = name;
             }
         }
 
@@ -143,7 +154,7 @@ public class EventManager {
 
         public void addEvent(String event, String sessionId, Object data) {
             this.mEvents.add(new Event(event, sessionId, System.currentTimeMillis(), data));
-            Log.i("Event", "RecordEntry %s: %s, %s", this.mRecordEntry.getId(), event, data);
+            Log.m93i("Event", "RecordEntry %s: %s, %s", this.mRecordEntry.getId(), event, data);
         }
 
         public List<Event> getEvents() {
@@ -161,28 +172,21 @@ public class EventManager {
                 while (it.hasNext()) {
                     Event event = it.next();
                     if (EventManager.this.requestResponsePairs.containsKey(event.eventId)) {
-                        Iterator it2 = ((List) EventManager.this.requestResponsePairs.get(event.eventId)).iterator();
-                        while (it2.hasNext()) {
+                        for (Iterator it2 = ((List) EventManager.this.requestResponsePairs.get(event.eventId)).iterator(); it2.hasNext(); it2 = it2) {
                             TimedEventPair p = (TimedEventPair) it2.next();
-                            String str = p.mResponse;
-                            Iterator<Event> it3 = it;
-                            PendingResponse pendingResponse = r1;
-                            Iterator it4 = it2;
-                            PendingResponse pendingResponse2 = new PendingResponse(event.eventId, event.time, p.mTimeoutMillis, p.mName);
-                            pendingResponses.put(str, pendingResponse);
-                            it = it3;
-                            it2 = it4;
+                            pendingResponses.put(p.mResponse, new PendingResponse(event.eventId, event.time, p.mTimeoutMillis, p.mName));
+                            it = it;
                         }
                     }
-                    Iterator<Event> it5 = it;
-                    PendingResponse pendingResponse3 = pendingResponses.remove(event.eventId);
-                    if (pendingResponse3 != null) {
-                        long elapsedTime = event.time - pendingResponse3.requestEventTimeMillis;
-                        if (elapsedTime < pendingResponse3.timeoutMillis) {
-                            result.add(new EventTiming(pendingResponse3.name, elapsedTime));
+                    Iterator<Event> it3 = it;
+                    PendingResponse pendingResponse = pendingResponses.remove(event.eventId);
+                    if (pendingResponse != null) {
+                        long elapsedTime = event.time - pendingResponse.requestEventTimeMillis;
+                        if (elapsedTime < pendingResponse.timeoutMillis) {
+                            result.add(new EventTiming(pendingResponse.name, elapsedTime));
                         }
                     }
-                    it = it5;
+                    it = it3;
                 }
             }
             return result;
@@ -217,7 +221,7 @@ public class EventManager {
             List<String> eventNames = new ArrayList<>(avgEventTimings.keySet());
             Collections.sort(eventNames);
             for (String eventName : eventNames) {
-                pw.printf("%s: %.2f\n", new Object[]{eventName, avgEventTimings.get(eventName)});
+                pw.printf("%s: %.2f\n", eventName, avgEventTimings.get(eventName));
             }
             pw.decreaseIndent();
             pw.decreaseIndent();
@@ -231,14 +235,16 @@ public class EventManager {
     public void event(Loggable recordEntry, String event, Object data) {
         String currentSessionID = this.mSessionIdHandler.getSessionId();
         if (recordEntry == null) {
-            Log.i(TAG, "Non-call EVENT: %s, %s", event, data);
+            Log.m93i(TAG, "Non-call EVENT: %s, %s", event, data);
             return;
         }
         synchronized (this.mEventRecords) {
             if (!this.mCallEventRecordMap.containsKey(recordEntry)) {
-                addEventRecord(new EventRecord(recordEntry));
+                EventRecord newRecord = new EventRecord(recordEntry);
+                addEventRecord(newRecord);
             }
-            this.mCallEventRecordMap.get(recordEntry).addEvent(event, currentSessionID, data);
+            EventRecord record = this.mCallEventRecordMap.get(recordEntry);
+            record.addEvent(event, currentSessionID, data);
         }
     }
 
@@ -246,13 +252,13 @@ public class EventManager {
         String msg;
         if (args != null) {
             try {
-                if (args.length != 0) {
-                    msg = String.format(Locale.US, format, args);
-                    event(recordEntry, event, msg);
-                }
             } catch (IllegalFormatException ife) {
-                Log.e((Object) this, (Throwable) ife, "IllegalFormatException: formatString='%s' numArgs=%d", format, Integer.valueOf(args.length));
+                Log.m96e(this, ife, "IllegalFormatException: formatString='%s' numArgs=%d", format, Integer.valueOf(args.length));
                 msg = format + " (An error occurred while formatting the message.)";
+            }
+            if (args.length != 0) {
+                msg = String.format(Locale.US, format, args);
+                event(recordEntry, event, msg);
             }
         }
         msg = format;
@@ -264,7 +270,8 @@ public class EventManager {
         pw.increaseIndent();
         Iterator<EventRecord> it = this.mEventRecords.iterator();
         while (it.hasNext()) {
-            it.next().dump(pw);
+            EventRecord eventRecord = it.next();
+            eventRecord.dump(pw);
         }
         pw.decreaseIndent();
     }
@@ -276,10 +283,18 @@ public class EventManager {
         while (it.hasNext()) {
             EventRecord er = it.next();
             for (Event ev : er.getEvents()) {
-                events.add(new Pair(er.getRecordEntry(), ev));
+                events.add(new Pair<>(er.getRecordEntry(), ev));
             }
         }
-        events.sort(Comparator.comparingLong($$Lambda$EventManager$weOtitr8e1cZeiy1aDSqzNoKaY8.INSTANCE));
+        Comparator<Pair<Loggable, Event>> byEventTime = Comparator.comparingLong(new ToLongFunction() { // from class: android.telecom.Logging.-$$Lambda$EventManager$weOtitr8e1cZeiy1aDSqzNoKaY8
+            @Override // java.util.function.ToLongFunction
+            public final long applyAsLong(Object obj) {
+                long j;
+                j = ((EventManager.Event) ((Pair) obj).second).time;
+                return j;
+            }
+        });
+        events.sort(byEventTime);
         pw.increaseIndent();
         for (Pair<Loggable, Event> event : events) {
             pw.print(((Event) event.second).timestampString);
@@ -297,7 +312,8 @@ public class EventManager {
         LinkedBlockingQueue<EventRecord> oldEventLog = this.mEventRecords;
         this.mEventRecords = new LinkedBlockingQueue<>(newSize);
         this.mCallEventRecordMap.clear();
-        oldEventLog.forEach(new Consumer() {
+        oldEventLog.forEach(new Consumer() { // from class: android.telecom.Logging.-$$Lambda$EventManager$uddp6XAJ90VBwdTiuzBdSYelntQ
+            @Override // java.util.function.Consumer
             public final void accept(Object obj) {
                 EventManager.lambda$changeEventCacheSize$1(EventManager.this, (EventManager.EventRecord) obj);
             }

@@ -2,8 +2,8 @@ package android.content;
 
 import android.annotation.UnsupportedAppUsage;
 import android.net.wifi.WifiEnterpriseConfig;
-import android.os.Parcel;
-import android.os.Parcelable;
+import android.p007os.Parcel;
+import android.p007os.Parcelable;
 import android.util.ArrayMap;
 import android.util.Log;
 import com.android.internal.util.Preconditions;
@@ -13,20 +13,25 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
 
+/* loaded from: classes.dex */
 public final class ContentValues implements Parcelable {
-    public static final Parcelable.Creator<ContentValues> CREATOR = new Parcelable.Creator<ContentValues>() {
+    public static final Parcelable.Creator<ContentValues> CREATOR = new Parcelable.Creator<ContentValues>() { // from class: android.content.ContentValues.1
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public ContentValues createFromParcel(Parcel in) {
             return new ContentValues(in);
         }
 
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public ContentValues[] newArray(int size) {
             return new ContentValues[size];
         }
     };
     public static final String TAG = "ContentValues";
     private final ArrayMap<String, Object> mMap;
-    @Deprecated
     @UnsupportedAppUsage
+    @Deprecated
     private HashMap<String, Object> mValues;
 
     public ContentValues() {
@@ -43,8 +48,8 @@ public final class ContentValues implements Parcelable {
         this.mMap = new ArrayMap<>(from.mMap);
     }
 
-    @Deprecated
     @UnsupportedAppUsage
+    @Deprecated
     private ContentValues(HashMap<String, Object> from) {
         this.mMap = new ArrayMap<>();
         this.mMap.putAll(from);
@@ -52,7 +57,7 @@ public final class ContentValues implements Parcelable {
 
     private ContentValues(Parcel in) {
         this.mMap = new ArrayMap<>(in.readInt());
-        in.readArrayMap(this.mMap, (ClassLoader) null);
+        in.readArrayMap(this.mMap, null);
     }
 
     public boolean equals(Object object) {
@@ -75,7 +80,7 @@ public final class ContentValues implements Parcelable {
     }
 
     public void putAll(ContentValues other) {
-        this.mMap.putAll(other.mMap);
+        this.mMap.putAll((ArrayMap<? extends String, ? extends Object>) other.mMap);
     }
 
     public void put(String key, Byte value) {
@@ -158,13 +163,12 @@ public final class ContentValues implements Parcelable {
                 try {
                     return Long.valueOf(value.toString());
                 } catch (NumberFormatException e2) {
-                    Log.e(TAG, "Cannot parse Long value for " + value + " at key " + key);
+                    Log.m70e(TAG, "Cannot parse Long value for " + value + " at key " + key);
                     return null;
                 }
-            } else {
-                Log.e(TAG, "Cannot cast value for " + key + " to a Long: " + value, e);
-                return null;
             }
+            Log.m69e(TAG, "Cannot cast value for " + key + " to a Long: " + value, e);
+            return null;
         }
     }
 
@@ -180,13 +184,12 @@ public final class ContentValues implements Parcelable {
                 try {
                     return Integer.valueOf(value.toString());
                 } catch (NumberFormatException e2) {
-                    Log.e(TAG, "Cannot parse Integer value for " + value + " at key " + key);
+                    Log.m70e(TAG, "Cannot parse Integer value for " + value + " at key " + key);
                     return null;
                 }
-            } else {
-                Log.e(TAG, "Cannot cast value for " + key + " to a Integer: " + value, e);
-                return null;
             }
+            Log.m69e(TAG, "Cannot cast value for " + key + " to a Integer: " + value, e);
+            return null;
         }
     }
 
@@ -202,13 +205,12 @@ public final class ContentValues implements Parcelable {
                 try {
                     return Short.valueOf(value.toString());
                 } catch (NumberFormatException e2) {
-                    Log.e(TAG, "Cannot parse Short value for " + value + " at key " + key);
+                    Log.m70e(TAG, "Cannot parse Short value for " + value + " at key " + key);
                     return null;
                 }
-            } else {
-                Log.e(TAG, "Cannot cast value for " + key + " to a Short: " + value, e);
-                return null;
             }
+            Log.m69e(TAG, "Cannot cast value for " + key + " to a Short: " + value, e);
+            return null;
         }
     }
 
@@ -224,13 +226,12 @@ public final class ContentValues implements Parcelable {
                 try {
                     return Byte.valueOf(value.toString());
                 } catch (NumberFormatException e2) {
-                    Log.e(TAG, "Cannot parse Byte value for " + value + " at key " + key);
+                    Log.m70e(TAG, "Cannot parse Byte value for " + value + " at key " + key);
                     return null;
                 }
-            } else {
-                Log.e(TAG, "Cannot cast value for " + key + " to a Byte: " + value, e);
-                return null;
             }
+            Log.m69e(TAG, "Cannot cast value for " + key + " to a Byte: " + value, e);
+            return null;
         }
     }
 
@@ -246,13 +247,12 @@ public final class ContentValues implements Parcelable {
                 try {
                     return Double.valueOf(value.toString());
                 } catch (NumberFormatException e2) {
-                    Log.e(TAG, "Cannot parse Double value for " + value + " at key " + key);
+                    Log.m70e(TAG, "Cannot parse Double value for " + value + " at key " + key);
                     return null;
                 }
-            } else {
-                Log.e(TAG, "Cannot cast value for " + key + " to a Double: " + value, e);
-                return null;
             }
+            Log.m69e(TAG, "Cannot cast value for " + key + " to a Double: " + value, e);
+            return null;
         }
     }
 
@@ -268,13 +268,12 @@ public final class ContentValues implements Parcelable {
                 try {
                     return Float.valueOf(value.toString());
                 } catch (NumberFormatException e2) {
-                    Log.e(TAG, "Cannot parse Float value for " + value + " at key " + key);
+                    Log.m70e(TAG, "Cannot parse Float value for " + value + " at key " + key);
                     return null;
                 }
-            } else {
-                Log.e(TAG, "Cannot cast value for " + key + " to a Float: " + value, e);
-                return null;
             }
+            Log.m69e(TAG, "Cannot cast value for " + key + " to a Float: " + value, e);
+            return null;
         }
     }
 
@@ -283,19 +282,15 @@ public final class ContentValues implements Parcelable {
         try {
             return (Boolean) value;
         } catch (ClassCastException e) {
-            boolean z = false;
             if (value instanceof CharSequence) {
                 if (Boolean.valueOf(value.toString()).booleanValue() || "1".equals(value)) {
-                    z = true;
+                    r3 = true;
                 }
-                return Boolean.valueOf(z);
+                return Boolean.valueOf(r3);
             } else if (value instanceof Number) {
-                if (((Number) value).intValue() != 0) {
-                    z = true;
-                }
-                return Boolean.valueOf(z);
+                return Boolean.valueOf(((Number) value).intValue() != 0);
             } else {
-                Log.e(TAG, "Cannot cast value for " + key + " to a Boolean: " + value, e);
+                Log.m69e(TAG, "Cannot cast value for " + key + " to a Boolean: " + value, e);
                 return null;
             }
         }
@@ -317,23 +312,25 @@ public final class ContentValues implements Parcelable {
         return this.mMap.keySet();
     }
 
+    @Override // android.p007os.Parcelable
     public int describeContents() {
         return 0;
     }
 
+    @Override // android.p007os.Parcelable
     public void writeToParcel(Parcel parcel, int flags) {
         parcel.writeInt(this.mMap.size());
         parcel.writeArrayMap(this.mMap);
     }
 
-    @Deprecated
     @UnsupportedAppUsage
+    @Deprecated
     public void putStringArrayList(String key, ArrayList<String> value) {
         this.mMap.put(key, value);
     }
 
-    @Deprecated
     @UnsupportedAppUsage
+    @Deprecated
     public ArrayList<String> getStringArrayList(String key) {
         return (ArrayList) this.mMap.get(key);
     }

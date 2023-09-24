@@ -2,18 +2,21 @@ package android.view;
 
 import android.graphics.Matrix;
 import android.graphics.Rect;
-import android.os.Bundle;
-import android.os.LocaleList;
+import android.p007os.Bundle;
+import android.p007os.LocaleList;
 import android.util.Pair;
 import android.view.autofill.AutofillId;
 import android.view.autofill.AutofillValue;
 import com.android.internal.util.Preconditions;
 import java.util.List;
 
+/* loaded from: classes4.dex */
 public abstract class ViewStructure {
 
+    /* loaded from: classes4.dex */
     public static abstract class HtmlInfo {
 
+        /* loaded from: classes4.dex */
         public static abstract class Builder {
             public abstract Builder addAttribute(String str, String str2);
 

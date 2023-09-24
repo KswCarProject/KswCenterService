@@ -5,9 +5,10 @@ import android.content.res.Resources;
 import android.graphics.Rect;
 import android.hardware.display.DisplayManager;
 import android.view.DisplayInfo;
-import com.android.internal.R;
+import com.android.internal.C3132R;
 import java.util.ArrayList;
 
+/* loaded from: classes4.dex */
 public class DividerSnapAlgorithm {
     private static final int MIN_DISMISS_VELOCITY_DP_PER_SECOND = 600;
     private static final int MIN_FLING_VELOCITY_DP_PER_SECOND = 400;
@@ -36,17 +37,9 @@ public class DividerSnapAlgorithm {
     public static DividerSnapAlgorithm create(Context ctx, Rect insets) {
         DisplayInfo displayInfo = new DisplayInfo();
         ((DisplayManager) ctx.getSystemService(DisplayManager.class)).getDisplay(0).getDisplayInfo(displayInfo);
-        int dividerWindowWidth = ctx.getResources().getDimensionPixelSize(R.dimen.docked_stack_divider_thickness);
-        int dividerInsets = ctx.getResources().getDimensionPixelSize(R.dimen.docked_stack_divider_insets);
-        Resources resources = ctx.getResources();
-        int i = displayInfo.logicalWidth;
-        int i2 = displayInfo.logicalHeight;
-        int i3 = dividerWindowWidth - (dividerInsets * 2);
-        boolean z = true;
-        if (ctx.getApplicationContext().getResources().getConfiguration().orientation != 1) {
-            z = false;
-        }
-        return new DividerSnapAlgorithm(resources, i, i2, i3, z, insets);
+        int dividerWindowWidth = ctx.getResources().getDimensionPixelSize(C3132R.dimen.docked_stack_divider_thickness);
+        int dividerInsets = ctx.getResources().getDimensionPixelSize(C3132R.dimen.docked_stack_divider_insets);
+        return new DividerSnapAlgorithm(ctx.getResources(), displayInfo.logicalWidth, displayInfo.logicalHeight, dividerWindowWidth - (dividerInsets * 2), ctx.getApplicationContext().getResources().getConfiguration().orientation == 1, insets);
     }
 
     public DividerSnapAlgorithm(Resources res, int displayWidth, int displayHeight, int dividerSize, boolean isHorizontalDivision, Rect insets) {
@@ -58,7 +51,6 @@ public class DividerSnapAlgorithm {
     }
 
     public DividerSnapAlgorithm(Resources res, int displayWidth, int displayHeight, int dividerSize, boolean isHorizontalDivision, Rect insets, int dockSide, boolean isMinimizedMode) {
-        int i;
         this.mTargets = new ArrayList<>();
         this.mInsets = new Rect();
         this.mMinFlingVelocityPxPerSecond = res.getDisplayMetrics().density * 400.0f;
@@ -68,15 +60,10 @@ public class DividerSnapAlgorithm {
         this.mDisplayHeight = displayHeight;
         this.mIsHorizontalDivision = isHorizontalDivision;
         this.mInsets.set(insets);
-        if (isMinimizedMode) {
-            i = 3;
-        } else {
-            i = res.getInteger(R.integer.config_dockedStackDividerSnapMode);
-        }
-        this.mSnapMode = i;
-        this.mFixedRatio = res.getFraction(R.fraction.docked_stack_divider_fixed_ratio, 1, 1);
-        this.mMinimalSizeResizableTask = res.getDimensionPixelSize(R.dimen.default_minimal_size_resizable_task);
-        this.mTaskHeightInMinimizedMode = res.getDimensionPixelSize(R.dimen.task_height_of_minimized_mode);
+        this.mSnapMode = isMinimizedMode ? 3 : res.getInteger(C3132R.integer.config_dockedStackDividerSnapMode);
+        this.mFixedRatio = res.getFraction(C3132R.fraction.docked_stack_divider_fixed_ratio, 1, 1);
+        this.mMinimalSizeResizableTask = res.getDimensionPixelSize(C3132R.dimen.default_minimal_size_resizable_task);
+        this.mTaskHeightInMinimizedMode = res.getDimensionPixelSize(C3132R.dimen.task_height_of_minimized_mode);
         calculateTargets(isHorizontalDivision, dockSide);
         this.mFirstSplitTarget = this.mTargets.get(1);
         this.mLastSplitTarget = this.mTargets.get(this.mTargets.size() - 2);
@@ -95,7 +82,8 @@ public class DividerSnapAlgorithm {
         } else {
             size = this.mDisplayWidth;
         }
-        return (((size - navBarSize) - statusBarSize) - this.mDividerSize) / 2 >= this.mMinimalSizeResizableTask;
+        int availableSpace = ((size - navBarSize) - statusBarSize) - this.mDividerSize;
+        return availableSpace / 2 >= this.mMinimalSizeResizableTask;
     }
 
     public SnapTarget calculateSnapTarget(int position, float velocity) {
@@ -131,10 +119,10 @@ public class DividerSnapAlgorithm {
 
     public float calculateDismissingFraction(int position) {
         if (position < this.mFirstSplitTarget.position) {
-            return 1.0f - (((float) (position - getStartInset())) / ((float) (this.mFirstSplitTarget.position - getStartInset())));
+            return 1.0f - ((position - getStartInset()) / (this.mFirstSplitTarget.position - getStartInset()));
         }
         if (position > this.mLastSplitTarget.position) {
-            return ((float) (position - this.mLastSplitTarget.position)) / ((float) ((this.mDismissEndTarget.position - this.mLastSplitTarget.position) - this.mDividerSize));
+            return (position - this.mLastSplitTarget.position) / ((this.mDismissEndTarget.position - this.mLastSplitTarget.position) - this.mDividerSize);
         }
         return 0.0f;
     }
@@ -188,7 +176,7 @@ public class DividerSnapAlgorithm {
         int size = this.mTargets.size();
         for (int i = 0; i < size; i++) {
             SnapTarget target = this.mTargets.get(i);
-            float distance = (float) Math.abs(position - target.position);
+            float distance = Math.abs(position - target.position);
             if (hardDismiss) {
                 distance /= target.distanceMultiplier;
             }
@@ -245,8 +233,10 @@ public class DividerSnapAlgorithm {
         } else {
             end = this.mDisplayWidth - this.mInsets.right;
         }
-        int size = ((int) (this.mFixedRatio * ((float) (end - start)))) - (this.mDividerSize / 2);
-        addNonDismissingTargets(isHorizontalDivision, start + size, (end - size) - this.mDividerSize, dividerMax);
+        int size = ((int) (this.mFixedRatio * (end - start))) - (this.mDividerSize / 2);
+        int topPosition = start + size;
+        int bottomPosition = (end - size) - this.mDividerSize;
+        addNonDismissingTargets(isHorizontalDivision, topPosition, bottomPosition, dividerMax);
     }
 
     private void addRatio16_9Targets(boolean isHorizontalDivision, int dividerMax) {
@@ -264,8 +254,11 @@ public class DividerSnapAlgorithm {
         } else {
             endOther = this.mDisplayHeight - this.mInsets.bottom;
         }
-        int sizeInt = (int) Math.floor((double) (((float) (endOther - startOther)) * 0.5625f));
-        addNonDismissingTargets(isHorizontalDivision, start + sizeInt, (end - sizeInt) - this.mDividerSize, dividerMax);
+        float size = (endOther - startOther) * 0.5625f;
+        int sizeInt = (int) Math.floor(size);
+        int topPosition = start + sizeInt;
+        int bottomPosition = (end - sizeInt) - this.mDividerSize;
+        addNonDismissingTargets(isHorizontalDivision, topPosition, bottomPosition, dividerMax);
     }
 
     private void maybeAddTarget(int position, int smallerSize) {
@@ -297,22 +290,22 @@ public class DividerSnapAlgorithm {
 
     public SnapTarget getNextTarget(SnapTarget snapTarget) {
         int index = this.mTargets.indexOf(snapTarget);
-        if (index == -1 || index >= this.mTargets.size() - 1) {
-            return snapTarget;
+        if (index != -1 && index < this.mTargets.size() - 1) {
+            return this.mTargets.get(index + 1);
         }
-        return this.mTargets.get(index + 1);
+        return snapTarget;
     }
 
     public SnapTarget getPreviousTarget(SnapTarget snapTarget) {
         int index = this.mTargets.indexOf(snapTarget);
-        if (index == -1 || index <= 0) {
-            return snapTarget;
+        if (index != -1 && index > 0) {
+            return this.mTargets.get(index - 1);
         }
-        return this.mTargets.get(index - 1);
+        return snapTarget;
     }
 
     public boolean showMiddleSplitTargetForAccessibility() {
-        return this.mTargets.size() + -2 > 1;
+        return this.mTargets.size() + (-2) > 1;
     }
 
     public boolean isFirstSplitTargetAvailable() {
@@ -325,39 +318,39 @@ public class DividerSnapAlgorithm {
 
     public SnapTarget cycleNonDismissTarget(SnapTarget snapTarget, int increment) {
         int index = this.mTargets.indexOf(snapTarget);
-        if (index == -1) {
-            return snapTarget;
+        if (index != -1) {
+            SnapTarget newTarget = this.mTargets.get(((this.mTargets.size() + index) + increment) % this.mTargets.size());
+            if (newTarget == this.mDismissStartTarget) {
+                return this.mLastSplitTarget;
+            }
+            if (newTarget == this.mDismissEndTarget) {
+                return this.mFirstSplitTarget;
+            }
+            return newTarget;
         }
-        SnapTarget newTarget = this.mTargets.get(((this.mTargets.size() + index) + increment) % this.mTargets.size());
-        if (newTarget == this.mDismissStartTarget) {
-            return this.mLastSplitTarget;
-        }
-        if (newTarget == this.mDismissEndTarget) {
-            return this.mFirstSplitTarget;
-        }
-        return newTarget;
+        return snapTarget;
     }
 
+    /* loaded from: classes4.dex */
     public static class SnapTarget {
         public static final int FLAG_DISMISS_END = 2;
         public static final int FLAG_DISMISS_START = 1;
         public static final int FLAG_NONE = 0;
-        /* access modifiers changed from: private */
-        public final float distanceMultiplier;
+        private final float distanceMultiplier;
         public final int flag;
         public boolean isMiddleTarget;
         public final int position;
         public final int taskPosition;
 
-        public SnapTarget(int position2, int taskPosition2, int flag2) {
-            this(position2, taskPosition2, flag2, 1.0f);
+        public SnapTarget(int position, int taskPosition, int flag) {
+            this(position, taskPosition, flag, 1.0f);
         }
 
-        public SnapTarget(int position2, int taskPosition2, int flag2, float distanceMultiplier2) {
-            this.position = position2;
-            this.taskPosition = taskPosition2;
-            this.flag = flag2;
-            this.distanceMultiplier = distanceMultiplier2;
+        public SnapTarget(int position, int taskPosition, int flag, float distanceMultiplier) {
+            this.position = position;
+            this.taskPosition = taskPosition;
+            this.flag = flag;
+            this.distanceMultiplier = distanceMultiplier;
         }
     }
 }

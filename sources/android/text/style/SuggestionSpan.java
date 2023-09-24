@@ -3,25 +3,29 @@ package android.text.style;
 import android.annotation.UnsupportedAppUsage;
 import android.content.Context;
 import android.content.res.TypedArray;
-import android.os.Parcel;
-import android.os.Parcelable;
-import android.os.SystemClock;
+import android.p007os.Parcel;
+import android.p007os.Parcelable;
+import android.p007os.SystemClock;
 import android.text.ParcelableSpan;
 import android.text.TextPaint;
-import android.util.AttributeSet;
 import android.util.Log;
-import com.android.internal.R;
+import com.android.internal.C3132R;
 import java.util.Arrays;
 import java.util.Locale;
 
+/* loaded from: classes4.dex */
 public class SuggestionSpan extends CharacterStyle implements ParcelableSpan {
     @Deprecated
     public static final String ACTION_SUGGESTION_PICKED = "android.text.style.SUGGESTION_PICKED";
-    public static final Parcelable.Creator<SuggestionSpan> CREATOR = new Parcelable.Creator<SuggestionSpan>() {
+    public static final Parcelable.Creator<SuggestionSpan> CREATOR = new Parcelable.Creator<SuggestionSpan>() { // from class: android.text.style.SuggestionSpan.1
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public SuggestionSpan createFromParcel(Parcel source) {
             return new SuggestionSpan(source);
         }
 
+        /* JADX WARN: Can't rename method to resolve collision */
+        @Override // android.p007os.Parcelable.Creator
         public SuggestionSpan[] newArray(int size) {
             return new SuggestionSpan[size];
         }
@@ -52,23 +56,24 @@ public class SuggestionSpan extends CharacterStyle implements ParcelableSpan {
     private final String[] mSuggestions;
 
     public SuggestionSpan(Context context, String[] suggestions, int flags) {
-        this(context, (Locale) null, suggestions, flags, (Class<?>) null);
+        this(context, null, suggestions, flags, null);
     }
 
     public SuggestionSpan(Locale locale, String[] suggestions, int flags) {
-        this((Context) null, locale, suggestions, flags, (Class<?>) null);
+        this(null, locale, suggestions, flags, null);
     }
 
-    public SuggestionSpan(Context context, Locale locale, String[] suggestions, int flags, Class<?> cls) {
+    public SuggestionSpan(Context context, Locale locale, String[] suggestions, int flags, Class<?> notificationTargetClass) {
         Locale sourceLocale;
-        this.mSuggestions = (String[]) Arrays.copyOf(suggestions, Math.min(5, suggestions.length));
+        int N = Math.min(5, suggestions.length);
+        this.mSuggestions = (String[]) Arrays.copyOf(suggestions, N);
         this.mFlags = flags;
         if (locale != null) {
             sourceLocale = locale;
         } else if (context != null) {
             sourceLocale = context.getResources().getConfiguration().locale;
         } else {
-            Log.e(TAG, "No locale or context specified in SuggestionSpan constructor");
+            Log.m70e(TAG, "No locale or context specified in SuggestionSpan constructor");
             sourceLocale = null;
         }
         this.mLocaleStringForCompatibility = sourceLocale == null ? "" : sourceLocale.toString();
@@ -87,13 +92,13 @@ public class SuggestionSpan extends CharacterStyle implements ParcelableSpan {
             this.mAutoCorrectionUnderlineColor = -16777216;
             return;
         }
-        TypedArray typedArray = context.obtainStyledAttributes((AttributeSet) null, R.styleable.SuggestionSpan, R.attr.textAppearanceMisspelledSuggestion, 0);
+        TypedArray typedArray = context.obtainStyledAttributes(null, C3132R.styleable.SuggestionSpan, C3132R.attr.textAppearanceMisspelledSuggestion, 0);
         this.mMisspelledUnderlineThickness = typedArray.getDimension(1, 0.0f);
         this.mMisspelledUnderlineColor = typedArray.getColor(0, -16777216);
-        TypedArray typedArray2 = context.obtainStyledAttributes((AttributeSet) null, R.styleable.SuggestionSpan, R.attr.textAppearanceEasyCorrectSuggestion, 0);
+        TypedArray typedArray2 = context.obtainStyledAttributes(null, C3132R.styleable.SuggestionSpan, C3132R.attr.textAppearanceEasyCorrectSuggestion, 0);
         this.mEasyCorrectUnderlineThickness = typedArray2.getDimension(1, 0.0f);
         this.mEasyCorrectUnderlineColor = typedArray2.getColor(0, -16777216);
-        TypedArray typedArray3 = context.obtainStyledAttributes((AttributeSet) null, R.styleable.SuggestionSpan, R.attr.textAppearanceAutoCorrectionSuggestion, 0);
+        TypedArray typedArray3 = context.obtainStyledAttributes(null, C3132R.styleable.SuggestionSpan, C3132R.attr.textAppearanceAutoCorrectionSuggestion, 0);
         this.mAutoCorrectionUnderlineThickness = typedArray3.getDimension(1, 0.0f);
         this.mAutoCorrectionUnderlineColor = typedArray3.getColor(0, -16777216);
     }
@@ -128,8 +133,8 @@ public class SuggestionSpan extends CharacterStyle implements ParcelableSpan {
         return Locale.forLanguageTag(this.mLanguageTag);
     }
 
-    @Deprecated
     @UnsupportedAppUsage
+    @Deprecated
     public String getNotificationTargetClassName() {
         return null;
     }
@@ -142,14 +147,17 @@ public class SuggestionSpan extends CharacterStyle implements ParcelableSpan {
         this.mFlags = flags;
     }
 
+    @Override // android.p007os.Parcelable
     public int describeContents() {
         return 0;
     }
 
+    @Override // android.p007os.Parcelable
     public void writeToParcel(Parcel dest, int flags) {
         writeToParcelInternal(dest, flags);
     }
 
+    @Override // android.text.ParcelableSpan
     public void writeToParcelInternal(Parcel dest, int flags) {
         dest.writeStringArray(this.mSuggestions);
         dest.writeInt(this.mFlags);
@@ -164,19 +172,18 @@ public class SuggestionSpan extends CharacterStyle implements ParcelableSpan {
         dest.writeFloat(this.mAutoCorrectionUnderlineThickness);
     }
 
+    @Override // android.text.ParcelableSpan
     public int getSpanTypeId() {
         return getSpanTypeIdInternal();
     }
 
+    @Override // android.text.ParcelableSpan
     public int getSpanTypeIdInternal() {
         return 19;
     }
 
     public boolean equals(Object o) {
-        if (!(o instanceof SuggestionSpan) || ((SuggestionSpan) o).hashCode() != this.mHashCode) {
-            return false;
-        }
-        return true;
+        return (o instanceof SuggestionSpan) && ((SuggestionSpan) o).hashCode() == this.mHashCode;
     }
 
     public int hashCode() {
@@ -187,13 +194,11 @@ public class SuggestionSpan extends CharacterStyle implements ParcelableSpan {
         return Arrays.hashCode(new Object[]{Long.valueOf(SystemClock.uptimeMillis()), suggestions, languageTag, localeStringForCompatibility});
     }
 
+    @Override // android.text.style.CharacterStyle
     public void updateDrawState(TextPaint tp) {
-        boolean autoCorrection = false;
         boolean misspelled = (this.mFlags & 2) != 0;
         boolean easy = (this.mFlags & 1) != 0;
-        if ((this.mFlags & 4) != 0) {
-            autoCorrection = true;
-        }
+        boolean autoCorrection = (this.mFlags & 4) != 0;
         if (easy) {
             if (!misspelled) {
                 tp.setUnderlineText(this.mEasyCorrectUnderlineColor, this.mEasyCorrectUnderlineThickness);
@@ -206,12 +211,9 @@ public class SuggestionSpan extends CharacterStyle implements ParcelableSpan {
     }
 
     public int getUnderlineColor() {
-        boolean autoCorrection = true;
         boolean misspelled = (this.mFlags & 2) != 0;
         boolean easy = (this.mFlags & 1) != 0;
-        if ((this.mFlags & 4) == 0) {
-            autoCorrection = false;
-        }
+        boolean autoCorrection = (this.mFlags & 4) != 0;
         if (easy) {
             if (!misspelled) {
                 return this.mEasyCorrectUnderlineColor;
@@ -224,9 +226,9 @@ public class SuggestionSpan extends CharacterStyle implements ParcelableSpan {
         }
     }
 
-    @Deprecated
     @UnsupportedAppUsage
+    @Deprecated
     public void notifySelection(Context context, String original, int index) {
-        Log.w(TAG, "notifySelection() is deprecated.  Does nothing.");
+        Log.m64w(TAG, "notifySelection() is deprecated.  Does nothing.");
     }
 }

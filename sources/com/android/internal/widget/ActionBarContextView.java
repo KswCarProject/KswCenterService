@@ -15,9 +15,10 @@ import android.widget.ActionMenuPresenter;
 import android.widget.ActionMenuView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import com.android.internal.R;
+import com.android.internal.C3132R;
 import com.android.internal.view.menu.MenuBuilder;
 
+/* loaded from: classes4.dex */
 public class ActionBarContextView extends AbsActionBarView {
     private static final String TAG = "ActionBarContextView";
     private View mClose;
@@ -34,7 +35,7 @@ public class ActionBarContextView extends AbsActionBarView {
     private TextView mTitleView;
 
     public ActionBarContextView(Context context) {
-        this(context, (AttributeSet) null);
+        this(context, null);
     }
 
     @UnsupportedAppUsage
@@ -48,16 +49,17 @@ public class ActionBarContextView extends AbsActionBarView {
 
     public ActionBarContextView(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
         super(context, attrs, defStyleAttr, defStyleRes);
-        TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.ActionMode, defStyleAttr, defStyleRes);
+        TypedArray a = context.obtainStyledAttributes(attrs, C3132R.styleable.ActionMode, defStyleAttr, defStyleRes);
         setBackground(a.getDrawable(0));
         this.mTitleStyleRes = a.getResourceId(2, 0);
         this.mSubtitleStyleRes = a.getResourceId(3, 0);
         this.mContentHeight = a.getLayoutDimension(1, 0);
         this.mSplitBackground = a.getDrawable(4);
-        this.mCloseItemLayout = a.getResourceId(5, R.layout.action_mode_close_item);
+        this.mCloseItemLayout = a.getResourceId(5, C3132R.layout.action_mode_close_item);
         a.recycle();
     }
 
+    @Override // android.view.ViewGroup, android.view.View
     public void onDetachedFromWindow() {
         super.onDetachedFromWindow();
         if (this.mActionMenuPresenter != null) {
@@ -66,18 +68,19 @@ public class ActionBarContextView extends AbsActionBarView {
         }
     }
 
+    @Override // com.android.internal.widget.AbsActionBarView
     public void setSplitToolbar(boolean split) {
         if (this.mSplitActionBar != split) {
             if (this.mActionMenuPresenter != null) {
                 ViewGroup.LayoutParams layoutParams = new ViewGroup.LayoutParams(-2, -1);
                 if (!split) {
                     this.mMenuView = (ActionMenuView) this.mActionMenuPresenter.getMenuView(this);
-                    this.mMenuView.setBackground((Drawable) null);
+                    this.mMenuView.setBackground(null);
                     ViewGroup oldParent = (ViewGroup) this.mMenuView.getParent();
                     if (oldParent != null) {
                         oldParent.removeView(this.mMenuView);
                     }
-                    addView((View) this.mMenuView, layoutParams);
+                    addView(this.mMenuView, layoutParams);
                 } else {
                     this.mActionMenuPresenter.setWidthLimit(getContext().getResources().getDisplayMetrics().widthPixels, true);
                     this.mActionMenuPresenter.setItemLimit(Integer.MAX_VALUE);
@@ -89,13 +92,14 @@ public class ActionBarContextView extends AbsActionBarView {
                     if (oldParent2 != null) {
                         oldParent2.removeView(this.mMenuView);
                     }
-                    this.mSplitView.addView((View) this.mMenuView, layoutParams);
+                    this.mSplitView.addView(this.mMenuView, layoutParams);
                 }
             }
             super.setSplitToolbar(split);
         }
     }
 
+    @Override // com.android.internal.widget.AbsActionBarView
     public void setContentHeight(int height) {
         this.mContentHeight = height;
     }
@@ -105,7 +109,7 @@ public class ActionBarContextView extends AbsActionBarView {
             removeView(this.mCustomView);
         }
         this.mCustomView = view;
-        if (!(view == null || this.mTitleLayout == null)) {
+        if (view != null && this.mTitleLayout != null) {
             removeView(this.mTitleLayout);
             this.mTitleLayout = null;
         }
@@ -135,10 +139,11 @@ public class ActionBarContextView extends AbsActionBarView {
 
     private void initTitle() {
         if (this.mTitleLayout == null) {
-            LayoutInflater.from(getContext()).inflate((int) R.layout.action_bar_title_item, (ViewGroup) this);
+            LayoutInflater inflater = LayoutInflater.from(getContext());
+            inflater.inflate(C3132R.layout.action_bar_title_item, this);
             this.mTitleLayout = (LinearLayout) getChildAt(getChildCount() - 1);
-            this.mTitleView = (TextView) this.mTitleLayout.findViewById(R.id.action_bar_title);
-            this.mSubtitleView = (TextView) this.mTitleLayout.findViewById(R.id.action_bar_subtitle);
+            this.mTitleView = (TextView) this.mTitleLayout.findViewById(C3132R.C3134id.action_bar_title);
+            this.mSubtitleView = (TextView) this.mTitleLayout.findViewById(C3132R.C3134id.action_bar_subtitle);
             if (this.mTitleStyleRes != 0) {
                 this.mTitleView.setTextAppearance(this.mTitleStyleRes);
             }
@@ -164,12 +169,15 @@ public class ActionBarContextView extends AbsActionBarView {
 
     public void initForMode(final ActionMode mode) {
         if (this.mClose == null) {
-            this.mClose = LayoutInflater.from(this.mContext).inflate(this.mCloseItemLayout, (ViewGroup) this, false);
+            LayoutInflater inflater = LayoutInflater.from(this.mContext);
+            this.mClose = inflater.inflate(this.mCloseItemLayout, (ViewGroup) this, false);
             addView(this.mClose);
         } else if (this.mClose.getParent() == null) {
             addView(this.mClose);
         }
-        this.mClose.findViewById(R.id.action_mode_close_button).setOnClickListener(new View.OnClickListener() {
+        View closeButton = this.mClose.findViewById(C3132R.C3134id.action_mode_close_button);
+        closeButton.setOnClickListener(new View.OnClickListener() { // from class: com.android.internal.widget.ActionBarContextView.1
+            @Override // android.view.View.OnClickListener
             public void onClick(View v) {
                 mode.finish();
             }
@@ -184,8 +192,8 @@ public class ActionBarContextView extends AbsActionBarView {
         if (!this.mSplitActionBar) {
             menu.addMenuPresenter(this.mActionMenuPresenter, this.mPopupContext);
             this.mMenuView = (ActionMenuView) this.mActionMenuPresenter.getMenuView(this);
-            this.mMenuView.setBackground((Drawable) null);
-            addView((View) this.mMenuView, layoutParams);
+            this.mMenuView.setBackground(null);
+            addView(this.mMenuView, layoutParams);
             return;
         }
         this.mActionMenuPresenter.setWidthLimit(getContext().getResources().getDisplayMetrics().widthPixels, true);
@@ -195,7 +203,7 @@ public class ActionBarContextView extends AbsActionBarView {
         menu.addMenuPresenter(this.mActionMenuPresenter, this.mPopupContext);
         this.mMenuView = (ActionMenuView) this.mActionMenuPresenter.getMenuView(this);
         this.mMenuView.setBackgroundDrawable(this.mSplitBackground);
-        this.mSplitView.addView((View) this.mMenuView, layoutParams);
+        this.mSplitView.addView(this.mMenuView, layoutParams);
     }
 
     public void closeMode() {
@@ -213,6 +221,7 @@ public class ActionBarContextView extends AbsActionBarView {
         this.mMenuView = null;
     }
 
+    @Override // com.android.internal.widget.AbsActionBarView
     public boolean showOverflowMenu() {
         if (this.mActionMenuPresenter != null) {
             return this.mActionMenuPresenter.showOverflowMenu();
@@ -220,6 +229,7 @@ public class ActionBarContextView extends AbsActionBarView {
         return false;
     }
 
+    @Override // com.android.internal.widget.AbsActionBarView
     public boolean hideOverflowMenu() {
         if (this.mActionMenuPresenter != null) {
             return this.mActionMenuPresenter.hideOverflowMenu();
@@ -227,6 +237,7 @@ public class ActionBarContextView extends AbsActionBarView {
         return false;
     }
 
+    @Override // com.android.internal.widget.AbsActionBarView
     public boolean isOverflowMenuShowing() {
         if (this.mActionMenuPresenter != null) {
             return this.mActionMenuPresenter.isOverflowMenuShowing();
@@ -234,110 +245,132 @@ public class ActionBarContextView extends AbsActionBarView {
         return false;
     }
 
-    /* access modifiers changed from: protected */
-    public ViewGroup.LayoutParams generateDefaultLayoutParams() {
+    @Override // android.view.ViewGroup
+    protected ViewGroup.LayoutParams generateDefaultLayoutParams() {
         return new ViewGroup.MarginLayoutParams(-1, -2);
     }
 
+    @Override // android.view.ViewGroup
     public ViewGroup.LayoutParams generateLayoutParams(AttributeSet attrs) {
         return new ViewGroup.MarginLayoutParams(getContext(), attrs);
     }
 
-    /* access modifiers changed from: protected */
-    public void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
+    @Override // android.view.View
+    protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
+        int customWidthMode;
+        int i;
         int widthMode = View.MeasureSpec.getMode(widthMeasureSpec);
         if (widthMode != 1073741824) {
             throw new IllegalStateException(getClass().getSimpleName() + " can only be used with android:layout_width=\"match_parent\" (or fill_parent)");
-        } else if (View.MeasureSpec.getMode(heightMeasureSpec) != 0) {
-            int contentWidth = View.MeasureSpec.getSize(widthMeasureSpec);
-            int maxHeight = this.mContentHeight > 0 ? this.mContentHeight : View.MeasureSpec.getSize(heightMeasureSpec);
-            int verticalPadding = getPaddingTop() + getPaddingBottom();
-            int availableWidth = (contentWidth - getPaddingLeft()) - getPaddingRight();
-            int height = maxHeight - verticalPadding;
-            int childSpecHeight = View.MeasureSpec.makeMeasureSpec(height, Integer.MIN_VALUE);
-            if (this.mClose != null) {
-                int availableWidth2 = measureChildView(this.mClose, availableWidth, childSpecHeight, 0);
-                ViewGroup.MarginLayoutParams lp = (ViewGroup.MarginLayoutParams) this.mClose.getLayoutParams();
-                availableWidth = availableWidth2 - (lp.leftMargin + lp.rightMargin);
-            }
-            if (this.mMenuView != null && this.mMenuView.getParent() == this) {
-                availableWidth = measureChildView(this.mMenuView, availableWidth, childSpecHeight, 0);
-            }
-            if (this.mTitleLayout != null && this.mCustomView == null) {
-                if (this.mTitleOptional) {
-                    this.mTitleLayout.measure(View.MeasureSpec.makeSafeMeasureSpec(contentWidth, 0), childSpecHeight);
-                    int titleWidth = this.mTitleLayout.getMeasuredWidth();
-                    boolean titleFits = titleWidth <= availableWidth;
-                    if (titleFits) {
-                        availableWidth -= titleWidth;
-                    }
-                    this.mTitleLayout.setVisibility(titleFits ? 0 : 8);
-                } else {
-                    availableWidth = measureChildView(this.mTitleLayout, availableWidth, childSpecHeight, 0);
-                }
-            }
-            if (this.mCustomView != null) {
-                ViewGroup.LayoutParams lp2 = this.mCustomView.getLayoutParams();
-                int customWidthMode = lp2.width != -2 ? 1073741824 : Integer.MIN_VALUE;
-                int i = widthMode;
-                this.mCustomView.measure(View.MeasureSpec.makeMeasureSpec(lp2.width >= 0 ? Math.min(lp2.width, availableWidth) : availableWidth, customWidthMode), View.MeasureSpec.makeMeasureSpec(lp2.height >= 0 ? Math.min(lp2.height, height) : height, lp2.height != -2 ? 1073741824 : Integer.MIN_VALUE));
-            }
-            if (this.mContentHeight <= 0) {
-                int measuredHeight = 0;
-                int count = getChildCount();
-                int i2 = 0;
-                while (true) {
-                    int i3 = i2;
-                    if (i3 < count) {
-                        int paddedViewHeight = getChildAt(i3).getMeasuredHeight() + verticalPadding;
-                        if (paddedViewHeight > measuredHeight) {
-                            measuredHeight = paddedViewHeight;
-                        }
-                        i2 = i3 + 1;
-                    } else {
-                        setMeasuredDimension(contentWidth, measuredHeight);
-                        return;
-                    }
-                }
+        }
+        int heightMode = View.MeasureSpec.getMode(heightMeasureSpec);
+        if (heightMode == 0) {
+            throw new IllegalStateException(getClass().getSimpleName() + " can only be used with android:layout_height=\"wrap_content\"");
+        }
+        int contentWidth = View.MeasureSpec.getSize(widthMeasureSpec);
+        int maxHeight = this.mContentHeight > 0 ? this.mContentHeight : View.MeasureSpec.getSize(heightMeasureSpec);
+        int verticalPadding = getPaddingTop() + getPaddingBottom();
+        int availableWidth = (contentWidth - getPaddingLeft()) - getPaddingRight();
+        int height = maxHeight - verticalPadding;
+        int childSpecHeight = View.MeasureSpec.makeMeasureSpec(height, Integer.MIN_VALUE);
+        if (this.mClose != null) {
+            int availableWidth2 = measureChildView(this.mClose, availableWidth, childSpecHeight, 0);
+            ViewGroup.MarginLayoutParams lp = (ViewGroup.MarginLayoutParams) this.mClose.getLayoutParams();
+            availableWidth = availableWidth2 - (lp.leftMargin + lp.rightMargin);
+        }
+        if (this.mMenuView != null && this.mMenuView.getParent() == this) {
+            availableWidth = measureChildView(this.mMenuView, availableWidth, childSpecHeight, 0);
+        }
+        if (this.mTitleLayout != null && this.mCustomView == null) {
+            if (!this.mTitleOptional) {
+                availableWidth = measureChildView(this.mTitleLayout, availableWidth, childSpecHeight, 0);
             } else {
-                setMeasuredDimension(contentWidth, maxHeight);
+                int titleWidthSpec = View.MeasureSpec.makeSafeMeasureSpec(contentWidth, 0);
+                this.mTitleLayout.measure(titleWidthSpec, childSpecHeight);
+                int titleWidth = this.mTitleLayout.getMeasuredWidth();
+                boolean titleFits = titleWidth <= availableWidth;
+                if (titleFits) {
+                    availableWidth -= titleWidth;
+                }
+                this.mTitleLayout.setVisibility(titleFits ? 0 : 8);
+            }
+        }
+        if (this.mCustomView != null) {
+            ViewGroup.LayoutParams lp2 = this.mCustomView.getLayoutParams();
+            if (lp2.width == -2) {
+                customWidthMode = Integer.MIN_VALUE;
+            } else {
+                customWidthMode = 1073741824;
+            }
+            int customWidth = lp2.width >= 0 ? Math.min(lp2.width, availableWidth) : availableWidth;
+            if (lp2.height == -2) {
+                i = Integer.MIN_VALUE;
+            } else {
+                i = 1073741824;
+            }
+            int customHeightMode = i;
+            int customHeight = lp2.height >= 0 ? Math.min(lp2.height, height) : height;
+            View view = this.mCustomView;
+            int makeMeasureSpec = View.MeasureSpec.makeMeasureSpec(customWidth, customWidthMode);
+            int widthMode2 = View.MeasureSpec.makeMeasureSpec(customHeight, customHeightMode);
+            view.measure(makeMeasureSpec, widthMode2);
+        }
+        int widthMode3 = this.mContentHeight;
+        if (widthMode3 <= 0) {
+            int measuredHeight = 0;
+            int count = getChildCount();
+            int i2 = 0;
+            while (true) {
+                int i3 = i2;
+                if (i3 < count) {
+                    View v = getChildAt(i3);
+                    int paddedViewHeight = v.getMeasuredHeight() + verticalPadding;
+                    if (paddedViewHeight > measuredHeight) {
+                        measuredHeight = paddedViewHeight;
+                    }
+                    i2 = i3 + 1;
+                } else {
+                    setMeasuredDimension(contentWidth, measuredHeight);
+                    return;
+                }
             }
         } else {
-            throw new IllegalStateException(getClass().getSimpleName() + " can only be used with android:layout_height=\"wrap_content\"");
+            setMeasuredDimension(contentWidth, maxHeight);
         }
     }
 
-    /* access modifiers changed from: protected */
-    public void onLayout(boolean changed, int l, int t, int r, int b) {
+    @Override // android.view.ViewGroup, android.view.View
+    protected void onLayout(boolean changed, int l, int t, int r, int b) {
         boolean isLayoutRtl = isLayoutRtl();
         int x = isLayoutRtl ? (r - l) - getPaddingRight() : getPaddingLeft();
         int y = getPaddingTop();
         int contentHeight = ((b - t) - getPaddingTop()) - getPaddingBottom();
-        if (!(this.mClose == null || this.mClose.getVisibility() == 8)) {
+        if (this.mClose != null && this.mClose.getVisibility() != 8) {
             ViewGroup.MarginLayoutParams lp = (ViewGroup.MarginLayoutParams) this.mClose.getLayoutParams();
             int startMargin = isLayoutRtl ? lp.rightMargin : lp.leftMargin;
             int endMargin = isLayoutRtl ? lp.leftMargin : lp.rightMargin;
             int x2 = next(x, startMargin, isLayoutRtl);
-            int i = startMargin;
             x = next(positionChild(this.mClose, x2, y, contentHeight, isLayoutRtl) + x2, endMargin, isLayoutRtl);
         }
         int x3 = x;
-        if (!(this.mTitleLayout == null || this.mCustomView != null || this.mTitleLayout.getVisibility() == 8)) {
+        if (this.mTitleLayout != null && this.mCustomView == null && this.mTitleLayout.getVisibility() != 8) {
             x3 += positionChild(this.mTitleLayout, x3, y, contentHeight, isLayoutRtl);
         }
         if (this.mCustomView != null) {
-            int x4 = x3 + positionChild(this.mCustomView, x3, y, contentHeight, isLayoutRtl);
+            int positionChild = x3 + positionChild(this.mCustomView, x3, y, contentHeight, isLayoutRtl);
         }
-        int x5 = isLayoutRtl ? getPaddingLeft() : (r - l) - getPaddingRight();
+        int x4 = isLayoutRtl ? getPaddingLeft() : (r - l) - getPaddingRight();
         if (this.mMenuView != null) {
-            int x6 = x5 + positionChild(this.mMenuView, x5, y, contentHeight, !isLayoutRtl);
+            int positionChild2 = x4 + positionChild(this.mMenuView, x4, y, contentHeight, !isLayoutRtl);
         }
     }
 
+    @Override // android.view.ViewGroup
     public boolean shouldDelayChildPressedState() {
         return false;
     }
 
+    @Override // android.view.View
     public void onInitializeAccessibilityEventInternal(AccessibilityEvent event) {
         if (event.getEventType() == 32) {
             event.setSource(this);

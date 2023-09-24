@@ -1,12 +1,13 @@
 package android.net.lowpan;
 
 import android.net.IpPrefix;
-import android.os.Binder;
-import android.os.IBinder;
-import android.os.IInterface;
-import android.os.Parcel;
-import android.os.RemoteException;
+import android.p007os.Binder;
+import android.p007os.IBinder;
+import android.p007os.IInterface;
+import android.p007os.Parcel;
+import android.p007os.RemoteException;
 
+/* loaded from: classes3.dex */
 public interface ILowpanInterfaceListener extends IInterface {
     void onConnectedChanged(boolean z) throws RemoteException;
 
@@ -30,45 +31,59 @@ public interface ILowpanInterfaceListener extends IInterface {
 
     void onUpChanged(boolean z) throws RemoteException;
 
+    /* loaded from: classes3.dex */
     public static class Default implements ILowpanInterfaceListener {
+        @Override // android.net.lowpan.ILowpanInterfaceListener
         public void onEnabledChanged(boolean value) throws RemoteException {
         }
 
+        @Override // android.net.lowpan.ILowpanInterfaceListener
         public void onConnectedChanged(boolean value) throws RemoteException {
         }
 
+        @Override // android.net.lowpan.ILowpanInterfaceListener
         public void onUpChanged(boolean value) throws RemoteException {
         }
 
+        @Override // android.net.lowpan.ILowpanInterfaceListener
         public void onRoleChanged(String value) throws RemoteException {
         }
 
+        @Override // android.net.lowpan.ILowpanInterfaceListener
         public void onStateChanged(String value) throws RemoteException {
         }
 
+        @Override // android.net.lowpan.ILowpanInterfaceListener
         public void onLowpanIdentityChanged(LowpanIdentity value) throws RemoteException {
         }
 
+        @Override // android.net.lowpan.ILowpanInterfaceListener
         public void onLinkNetworkAdded(IpPrefix value) throws RemoteException {
         }
 
+        @Override // android.net.lowpan.ILowpanInterfaceListener
         public void onLinkNetworkRemoved(IpPrefix value) throws RemoteException {
         }
 
+        @Override // android.net.lowpan.ILowpanInterfaceListener
         public void onLinkAddressAdded(String value) throws RemoteException {
         }
 
+        @Override // android.net.lowpan.ILowpanInterfaceListener
         public void onLinkAddressRemoved(String value) throws RemoteException {
         }
 
+        @Override // android.net.lowpan.ILowpanInterfaceListener
         public void onReceiveFromCommissioner(byte[] packet) throws RemoteException {
         }
 
+        @Override // android.p007os.IInterface
         public IBinder asBinder() {
             return null;
         }
     }
 
+    /* loaded from: classes3.dex */
     public static abstract class Stub extends Binder implements ILowpanInterfaceListener {
         private static final String DESCRIPTOR = "android.net.lowpan.ILowpanInterfaceListener";
         static final int TRANSACTION_onConnectedChanged = 2;
@@ -92,12 +107,13 @@ public interface ILowpanInterfaceListener extends IInterface {
                 return null;
             }
             IInterface iin = obj.queryLocalInterface(DESCRIPTOR);
-            if (iin == null || !(iin instanceof ILowpanInterfaceListener)) {
-                return new Proxy(obj);
+            if (iin != null && (iin instanceof ILowpanInterfaceListener)) {
+                return (ILowpanInterfaceListener) iin;
             }
-            return (ILowpanInterfaceListener) iin;
+            return new Proxy(obj);
         }
 
+        @Override // android.p007os.IInterface
         public IBinder asBinder() {
             return this;
         }
@@ -131,140 +147,79 @@ public interface ILowpanInterfaceListener extends IInterface {
             }
         }
 
+        @Override // android.p007os.Binder
         public String getTransactionName(int transactionCode) {
             return getDefaultTransactionName(transactionCode);
         }
 
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r1v10, resolved type: android.net.lowpan.LowpanIdentity} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r1v14, resolved type: android.net.IpPrefix} */
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r1v18, resolved type: android.net.IpPrefix} */
-        /* JADX WARNING: type inference failed for: r1v1 */
-        /* JADX WARNING: type inference failed for: r1v26 */
-        /* JADX WARNING: type inference failed for: r1v27 */
-        /* JADX WARNING: type inference failed for: r1v28 */
-        /* JADX WARNING: Multi-variable type inference failed */
-        /* Code decompiled incorrectly, please refer to instructions dump. */
-        public boolean onTransact(int r5, android.os.Parcel r6, android.os.Parcel r7, int r8) throws android.os.RemoteException {
-            /*
-                r4 = this;
-                java.lang.String r0 = "android.net.lowpan.ILowpanInterfaceListener"
-                r1 = 1598968902(0x5f4e5446, float:1.4867585E19)
-                r2 = 1
-                if (r5 == r1) goto L_0x00be
-                r1 = 0
-                r3 = 0
-                switch(r5) {
-                    case 1: goto L_0x00ae;
-                    case 2: goto L_0x009e;
-                    case 3: goto L_0x008e;
-                    case 4: goto L_0x0083;
-                    case 5: goto L_0x0078;
-                    case 6: goto L_0x0061;
-                    case 7: goto L_0x004a;
-                    case 8: goto L_0x0033;
-                    case 9: goto L_0x0028;
-                    case 10: goto L_0x001d;
-                    case 11: goto L_0x0012;
-                    default: goto L_0x000d;
-                }
-            L_0x000d:
-                boolean r1 = super.onTransact(r5, r6, r7, r8)
-                return r1
-            L_0x0012:
-                r6.enforceInterface(r0)
-                byte[] r1 = r6.createByteArray()
-                r4.onReceiveFromCommissioner(r1)
-                return r2
-            L_0x001d:
-                r6.enforceInterface(r0)
-                java.lang.String r1 = r6.readString()
-                r4.onLinkAddressRemoved(r1)
-                return r2
-            L_0x0028:
-                r6.enforceInterface(r0)
-                java.lang.String r1 = r6.readString()
-                r4.onLinkAddressAdded(r1)
-                return r2
-            L_0x0033:
-                r6.enforceInterface(r0)
-                int r3 = r6.readInt()
-                if (r3 == 0) goto L_0x0045
-                android.os.Parcelable$Creator<android.net.IpPrefix> r1 = android.net.IpPrefix.CREATOR
-                java.lang.Object r1 = r1.createFromParcel(r6)
-                android.net.IpPrefix r1 = (android.net.IpPrefix) r1
-                goto L_0x0046
-            L_0x0045:
-            L_0x0046:
-                r4.onLinkNetworkRemoved(r1)
-                return r2
-            L_0x004a:
-                r6.enforceInterface(r0)
-                int r3 = r6.readInt()
-                if (r3 == 0) goto L_0x005c
-                android.os.Parcelable$Creator<android.net.IpPrefix> r1 = android.net.IpPrefix.CREATOR
-                java.lang.Object r1 = r1.createFromParcel(r6)
-                android.net.IpPrefix r1 = (android.net.IpPrefix) r1
-                goto L_0x005d
-            L_0x005c:
-            L_0x005d:
-                r4.onLinkNetworkAdded(r1)
-                return r2
-            L_0x0061:
-                r6.enforceInterface(r0)
-                int r3 = r6.readInt()
-                if (r3 == 0) goto L_0x0073
-                android.os.Parcelable$Creator<android.net.lowpan.LowpanIdentity> r1 = android.net.lowpan.LowpanIdentity.CREATOR
-                java.lang.Object r1 = r1.createFromParcel(r6)
-                android.net.lowpan.LowpanIdentity r1 = (android.net.lowpan.LowpanIdentity) r1
-                goto L_0x0074
-            L_0x0073:
-            L_0x0074:
-                r4.onLowpanIdentityChanged(r1)
-                return r2
-            L_0x0078:
-                r6.enforceInterface(r0)
-                java.lang.String r1 = r6.readString()
-                r4.onStateChanged(r1)
-                return r2
-            L_0x0083:
-                r6.enforceInterface(r0)
-                java.lang.String r1 = r6.readString()
-                r4.onRoleChanged(r1)
-                return r2
-            L_0x008e:
-                r6.enforceInterface(r0)
-                int r1 = r6.readInt()
-                if (r1 == 0) goto L_0x0099
-                r3 = r2
-            L_0x0099:
-                r1 = r3
-                r4.onUpChanged(r1)
-                return r2
-            L_0x009e:
-                r6.enforceInterface(r0)
-                int r1 = r6.readInt()
-                if (r1 == 0) goto L_0x00a9
-                r3 = r2
-            L_0x00a9:
-                r1 = r3
-                r4.onConnectedChanged(r1)
-                return r2
-            L_0x00ae:
-                r6.enforceInterface(r0)
-                int r1 = r6.readInt()
-                if (r1 == 0) goto L_0x00b9
-                r3 = r2
-            L_0x00b9:
-                r1 = r3
-                r4.onEnabledChanged(r1)
-                return r2
-            L_0x00be:
-                r7.writeString(r0)
-                return r2
-            */
-            throw new UnsupportedOperationException("Method not decompiled: android.net.lowpan.ILowpanInterfaceListener.Stub.onTransact(int, android.os.Parcel, android.os.Parcel, int):boolean");
+        @Override // android.p007os.Binder
+        public boolean onTransact(int code, Parcel data, Parcel reply, int flags) throws RemoteException {
+            if (code == 1598968902) {
+                reply.writeString(DESCRIPTOR);
+                return true;
+            }
+            switch (code) {
+                case 1:
+                    data.enforceInterface(DESCRIPTOR);
+                    boolean _arg0 = data.readInt() != 0;
+                    onEnabledChanged(_arg0);
+                    return true;
+                case 2:
+                    data.enforceInterface(DESCRIPTOR);
+                    boolean _arg02 = data.readInt() != 0;
+                    onConnectedChanged(_arg02);
+                    return true;
+                case 3:
+                    data.enforceInterface(DESCRIPTOR);
+                    boolean _arg03 = data.readInt() != 0;
+                    onUpChanged(_arg03);
+                    return true;
+                case 4:
+                    data.enforceInterface(DESCRIPTOR);
+                    String _arg04 = data.readString();
+                    onRoleChanged(_arg04);
+                    return true;
+                case 5:
+                    data.enforceInterface(DESCRIPTOR);
+                    String _arg05 = data.readString();
+                    onStateChanged(_arg05);
+                    return true;
+                case 6:
+                    data.enforceInterface(DESCRIPTOR);
+                    LowpanIdentity _arg06 = data.readInt() != 0 ? LowpanIdentity.CREATOR.createFromParcel(data) : null;
+                    onLowpanIdentityChanged(_arg06);
+                    return true;
+                case 7:
+                    data.enforceInterface(DESCRIPTOR);
+                    IpPrefix _arg07 = data.readInt() != 0 ? IpPrefix.CREATOR.createFromParcel(data) : null;
+                    onLinkNetworkAdded(_arg07);
+                    return true;
+                case 8:
+                    data.enforceInterface(DESCRIPTOR);
+                    IpPrefix _arg08 = data.readInt() != 0 ? IpPrefix.CREATOR.createFromParcel(data) : null;
+                    onLinkNetworkRemoved(_arg08);
+                    return true;
+                case 9:
+                    data.enforceInterface(DESCRIPTOR);
+                    String _arg09 = data.readString();
+                    onLinkAddressAdded(_arg09);
+                    return true;
+                case 10:
+                    data.enforceInterface(DESCRIPTOR);
+                    String _arg010 = data.readString();
+                    onLinkAddressRemoved(_arg010);
+                    return true;
+                case 11:
+                    data.enforceInterface(DESCRIPTOR);
+                    byte[] _arg011 = data.createByteArray();
+                    onReceiveFromCommissioner(_arg011);
+                    return true;
+                default:
+                    return super.onTransact(code, data, reply, flags);
+            }
         }
 
+        /* loaded from: classes3.dex */
         private static class Proxy implements ILowpanInterfaceListener {
             public static ILowpanInterfaceListener sDefaultImpl;
             private IBinder mRemote;
@@ -273,6 +228,7 @@ public interface ILowpanInterfaceListener extends IInterface {
                 this.mRemote = remote;
             }
 
+            @Override // android.p007os.IInterface
             public IBinder asBinder() {
                 return this.mRemote;
             }
@@ -281,14 +237,14 @@ public interface ILowpanInterfaceListener extends IInterface {
                 return Stub.DESCRIPTOR;
             }
 
+            @Override // android.net.lowpan.ILowpanInterfaceListener
             public void onEnabledChanged(boolean value) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    _data.writeInt(value);
-                    if (this.mRemote.transact(1, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    _data.writeInt(value ? 1 : 0);
+                    boolean _status = this.mRemote.transact(1, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().onEnabledChanged(value);
                     }
                 } finally {
@@ -296,14 +252,14 @@ public interface ILowpanInterfaceListener extends IInterface {
                 }
             }
 
+            @Override // android.net.lowpan.ILowpanInterfaceListener
             public void onConnectedChanged(boolean value) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    _data.writeInt(value);
-                    if (this.mRemote.transact(2, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    _data.writeInt(value ? 1 : 0);
+                    boolean _status = this.mRemote.transact(2, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().onConnectedChanged(value);
                     }
                 } finally {
@@ -311,14 +267,14 @@ public interface ILowpanInterfaceListener extends IInterface {
                 }
             }
 
+            @Override // android.net.lowpan.ILowpanInterfaceListener
             public void onUpChanged(boolean value) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    _data.writeInt(value);
-                    if (this.mRemote.transact(3, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    _data.writeInt(value ? 1 : 0);
+                    boolean _status = this.mRemote.transact(3, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().onUpChanged(value);
                     }
                 } finally {
@@ -326,14 +282,14 @@ public interface ILowpanInterfaceListener extends IInterface {
                 }
             }
 
+            @Override // android.net.lowpan.ILowpanInterfaceListener
             public void onRoleChanged(String value) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeString(value);
-                    if (this.mRemote.transact(4, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    boolean _status = this.mRemote.transact(4, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().onRoleChanged(value);
                     }
                 } finally {
@@ -341,14 +297,14 @@ public interface ILowpanInterfaceListener extends IInterface {
                 }
             }
 
+            @Override // android.net.lowpan.ILowpanInterfaceListener
             public void onStateChanged(String value) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeString(value);
-                    if (this.mRemote.transact(5, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    boolean _status = this.mRemote.transact(5, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().onStateChanged(value);
                     }
                 } finally {
@@ -356,6 +312,7 @@ public interface ILowpanInterfaceListener extends IInterface {
                 }
             }
 
+            @Override // android.net.lowpan.ILowpanInterfaceListener
             public void onLowpanIdentityChanged(LowpanIdentity value) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
@@ -366,9 +323,8 @@ public interface ILowpanInterfaceListener extends IInterface {
                     } else {
                         _data.writeInt(0);
                     }
-                    if (this.mRemote.transact(6, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    boolean _status = this.mRemote.transact(6, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().onLowpanIdentityChanged(value);
                     }
                 } finally {
@@ -376,6 +332,7 @@ public interface ILowpanInterfaceListener extends IInterface {
                 }
             }
 
+            @Override // android.net.lowpan.ILowpanInterfaceListener
             public void onLinkNetworkAdded(IpPrefix value) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
@@ -386,9 +343,8 @@ public interface ILowpanInterfaceListener extends IInterface {
                     } else {
                         _data.writeInt(0);
                     }
-                    if (this.mRemote.transact(7, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    boolean _status = this.mRemote.transact(7, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().onLinkNetworkAdded(value);
                     }
                 } finally {
@@ -396,6 +352,7 @@ public interface ILowpanInterfaceListener extends IInterface {
                 }
             }
 
+            @Override // android.net.lowpan.ILowpanInterfaceListener
             public void onLinkNetworkRemoved(IpPrefix value) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
@@ -406,9 +363,8 @@ public interface ILowpanInterfaceListener extends IInterface {
                     } else {
                         _data.writeInt(0);
                     }
-                    if (this.mRemote.transact(8, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    boolean _status = this.mRemote.transact(8, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().onLinkNetworkRemoved(value);
                     }
                 } finally {
@@ -416,14 +372,14 @@ public interface ILowpanInterfaceListener extends IInterface {
                 }
             }
 
+            @Override // android.net.lowpan.ILowpanInterfaceListener
             public void onLinkAddressAdded(String value) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeString(value);
-                    if (this.mRemote.transact(9, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    boolean _status = this.mRemote.transact(9, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().onLinkAddressAdded(value);
                     }
                 } finally {
@@ -431,14 +387,14 @@ public interface ILowpanInterfaceListener extends IInterface {
                 }
             }
 
+            @Override // android.net.lowpan.ILowpanInterfaceListener
             public void onLinkAddressRemoved(String value) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeString(value);
-                    if (this.mRemote.transact(10, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    boolean _status = this.mRemote.transact(10, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().onLinkAddressRemoved(value);
                     }
                 } finally {
@@ -446,14 +402,14 @@ public interface ILowpanInterfaceListener extends IInterface {
                 }
             }
 
+            @Override // android.net.lowpan.ILowpanInterfaceListener
             public void onReceiveFromCommissioner(byte[] packet) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeByteArray(packet);
-                    if (this.mRemote.transact(11, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    boolean _status = this.mRemote.transact(11, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().onReceiveFromCommissioner(packet);
                     }
                 } finally {
@@ -463,11 +419,11 @@ public interface ILowpanInterfaceListener extends IInterface {
         }
 
         public static boolean setDefaultImpl(ILowpanInterfaceListener impl) {
-            if (Proxy.sDefaultImpl != null || impl == null) {
-                return false;
+            if (Proxy.sDefaultImpl == null && impl != null) {
+                Proxy.sDefaultImpl = impl;
+                return true;
             }
-            Proxy.sDefaultImpl = impl;
-            return true;
+            return false;
         }
 
         public static ILowpanInterfaceListener getDefaultImpl() {

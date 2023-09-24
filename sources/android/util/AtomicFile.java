@@ -1,16 +1,15 @@
 package android.util;
 
-import android.os.FileUtils;
-import android.os.SystemClock;
-import com.android.internal.logging.EventLogTags;
+import android.p007os.FileUtils;
+import android.p007os.SystemClock;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.function.Consumer;
-import libcore.io.IoUtils;
 
+/* loaded from: classes4.dex */
 public class AtomicFile {
     private final File mBackupName;
     private final File mBaseName;
@@ -18,7 +17,7 @@ public class AtomicFile {
     private long mStartTime;
 
     public AtomicFile(File baseName) {
-        this(baseName, (String) null);
+        this(baseName, null);
     }
 
     public AtomicFile(File baseName, String commitTag) {
@@ -37,31 +36,34 @@ public class AtomicFile {
     }
 
     public FileOutputStream startWrite() throws IOException {
-        return startWrite(this.mCommitTag != null ? SystemClock.uptimeMillis() : 0);
+        return startWrite(this.mCommitTag != null ? SystemClock.uptimeMillis() : 0L);
     }
 
     public FileOutputStream startWrite(long startTime) throws IOException {
         this.mStartTime = startTime;
         if (this.mBaseName.exists()) {
-            if (this.mBackupName.exists()) {
+            if (!this.mBackupName.exists()) {
+                if (!this.mBaseName.renameTo(this.mBackupName)) {
+                    Log.m64w("AtomicFile", "Couldn't rename file " + this.mBaseName + " to backup file " + this.mBackupName);
+                }
+            } else {
                 this.mBaseName.delete();
-            } else if (!this.mBaseName.renameTo(this.mBackupName)) {
-                Log.w("AtomicFile", "Couldn't rename file " + this.mBaseName + " to backup file " + this.mBackupName);
             }
         }
         try {
-            return new FileOutputStream(this.mBaseName);
+            FileOutputStream str = new FileOutputStream(this.mBaseName);
+            return str;
         } catch (FileNotFoundException e) {
             File parent = this.mBaseName.getParentFile();
-            if (parent.mkdirs()) {
-                FileUtils.setPermissions(parent.getPath(), 505, -1, -1);
-                try {
-                    return new FileOutputStream(this.mBaseName);
-                } catch (FileNotFoundException e2) {
-                    throw new IOException("Couldn't create " + this.mBaseName);
-                }
-            } else {
+            if (!parent.mkdirs()) {
                 throw new IOException("Couldn't create directory " + this.mBaseName);
+            }
+            FileUtils.setPermissions(parent.getPath(), 505, -1, -1);
+            try {
+                FileOutputStream str2 = new FileOutputStream(this.mBaseName);
+                return str2;
+            } catch (FileNotFoundException e2) {
+                throw new IOException("Couldn't create " + this.mBaseName);
             }
         }
     }
@@ -73,10 +75,10 @@ public class AtomicFile {
                 str.close();
                 this.mBackupName.delete();
             } catch (IOException e) {
-                Log.w("AtomicFile", "finishWrite: Got exception:", e);
+                Log.m63w("AtomicFile", "finishWrite: Got exception:", e);
             }
             if (this.mCommitTag != null) {
-                EventLogTags.writeCommitSysConfigFile(this.mCommitTag, SystemClock.uptimeMillis() - this.mStartTime);
+                com.android.internal.logging.EventLogTags.writeCommitSysConfigFile(this.mCommitTag, SystemClock.uptimeMillis() - this.mStartTime);
             }
         }
     }
@@ -89,7 +91,7 @@ public class AtomicFile {
                 this.mBaseName.delete();
                 this.mBackupName.renameTo(this.mBaseName);
             } catch (IOException e) {
-                Log.w("AtomicFile", "failWrite: Got exception:", e);
+                Log.m63w("AtomicFile", "failWrite: Got exception:", e);
             }
         }
     }
@@ -147,7 +149,7 @@ public class AtomicFile {
                 pos += amt;
                 int avail = stream.available();
                 if (avail > data.length - pos) {
-                    byte[] newData = new byte[(pos + avail)];
+                    byte[] newData = new byte[pos + avail];
                     System.arraycopy(data, 0, newData, 0, pos);
                     data = newData;
                 }
@@ -163,10 +165,7 @@ public class AtomicFile {
             out = startWrite();
             writeContent.accept(out);
             finishWrite(out);
-            IoUtils.closeQuietly(out);
-        } catch (Throwable th) {
-            IoUtils.closeQuietly(out);
-            throw th;
+        } finally {
         }
     }
 }

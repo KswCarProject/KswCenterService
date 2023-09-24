@@ -1,11 +1,11 @@
 package android.security.keystore;
 
 import android.app.slice.Slice;
-import android.os.Binder;
-import android.os.IBinder;
-import android.os.IInterface;
-import android.os.Parcel;
-import android.os.RemoteException;
+import android.p007os.Binder;
+import android.p007os.IBinder;
+import android.p007os.IInterface;
+import android.p007os.Parcel;
+import android.p007os.RemoteException;
 import android.security.keymaster.KeymasterArguments;
 import android.security.keymaster.KeymasterBlob;
 import android.security.keystore.IKeystoreCertificateChainCallback;
@@ -16,6 +16,7 @@ import android.security.keystore.IKeystoreResponseCallback;
 import java.util.ArrayList;
 import java.util.List;
 
+/* loaded from: classes3.dex */
 public interface IKeystoreService extends IInterface {
     int abort(IKeystoreResponseCallback iKeystoreResponseCallback, IBinder iBinder) throws RemoteException;
 
@@ -91,160 +92,200 @@ public interface IKeystoreService extends IInterface {
 
     int update(IKeystoreOperationResultCallback iKeystoreOperationResultCallback, IBinder iBinder, KeymasterArguments keymasterArguments, byte[] bArr) throws RemoteException;
 
+    /* loaded from: classes3.dex */
     public static class Default implements IKeystoreService {
+        @Override // android.security.keystore.IKeystoreService
         public int getState(int userId) throws RemoteException {
             return 0;
         }
 
+        @Override // android.security.keystore.IKeystoreService
         public byte[] get(String name, int uid) throws RemoteException {
             return null;
         }
 
+        @Override // android.security.keystore.IKeystoreService
         public int insert(String name, byte[] item, int uid, int flags) throws RemoteException {
             return 0;
         }
 
+        @Override // android.security.keystore.IKeystoreService
         public int del(String name, int uid) throws RemoteException {
             return 0;
         }
 
+        @Override // android.security.keystore.IKeystoreService
         public int exist(String name, int uid) throws RemoteException {
             return 0;
         }
 
+        @Override // android.security.keystore.IKeystoreService
         public String[] list(String namePrefix, int uid) throws RemoteException {
             return null;
         }
 
+        @Override // android.security.keystore.IKeystoreService
         public int reset() throws RemoteException {
             return 0;
         }
 
+        @Override // android.security.keystore.IKeystoreService
         public int onUserPasswordChanged(int userId, String newPassword) throws RemoteException {
             return 0;
         }
 
+        @Override // android.security.keystore.IKeystoreService
         public int lock(int userId) throws RemoteException {
             return 0;
         }
 
+        @Override // android.security.keystore.IKeystoreService
         public int unlock(int userId, String userPassword) throws RemoteException {
             return 0;
         }
 
+        @Override // android.security.keystore.IKeystoreService
         public int isEmpty(int userId) throws RemoteException {
             return 0;
         }
 
+        @Override // android.security.keystore.IKeystoreService
         public String grant(String name, int granteeUid) throws RemoteException {
             return null;
         }
 
+        @Override // android.security.keystore.IKeystoreService
         public int ungrant(String name, int granteeUid) throws RemoteException {
             return 0;
         }
 
+        @Override // android.security.keystore.IKeystoreService
         public long getmtime(String name, int uid) throws RemoteException {
-            return 0;
+            return 0L;
         }
 
+        @Override // android.security.keystore.IKeystoreService
         public int is_hardware_backed(String string) throws RemoteException {
             return 0;
         }
 
+        @Override // android.security.keystore.IKeystoreService
         public int clear_uid(long uid) throws RemoteException {
             return 0;
         }
 
+        @Override // android.security.keystore.IKeystoreService
         public int addRngEntropy(IKeystoreResponseCallback cb, byte[] data, int flags) throws RemoteException {
             return 0;
         }
 
+        @Override // android.security.keystore.IKeystoreService
         public int generateKey(IKeystoreKeyCharacteristicsCallback cb, String alias, KeymasterArguments arguments, byte[] entropy, int uid, int flags) throws RemoteException {
             return 0;
         }
 
+        @Override // android.security.keystore.IKeystoreService
         public int getKeyCharacteristics(IKeystoreKeyCharacteristicsCallback cb, String alias, KeymasterBlob clientId, KeymasterBlob appData, int uid) throws RemoteException {
             return 0;
         }
 
+        @Override // android.security.keystore.IKeystoreService
         public int importKey(IKeystoreKeyCharacteristicsCallback cb, String alias, KeymasterArguments arguments, int format, byte[] keyData, int uid, int flags) throws RemoteException {
             return 0;
         }
 
+        @Override // android.security.keystore.IKeystoreService
         public int exportKey(IKeystoreExportKeyCallback cb, String alias, int format, KeymasterBlob clientId, KeymasterBlob appData, int uid) throws RemoteException {
             return 0;
         }
 
+        @Override // android.security.keystore.IKeystoreService
         public int begin(IKeystoreOperationResultCallback cb, IBinder appToken, String alias, int purpose, boolean pruneable, KeymasterArguments params, byte[] entropy, int uid) throws RemoteException {
             return 0;
         }
 
+        @Override // android.security.keystore.IKeystoreService
         public int update(IKeystoreOperationResultCallback cb, IBinder token, KeymasterArguments params, byte[] input) throws RemoteException {
             return 0;
         }
 
+        @Override // android.security.keystore.IKeystoreService
         public int finish(IKeystoreOperationResultCallback cb, IBinder token, KeymasterArguments params, byte[] signature, byte[] entropy) throws RemoteException {
             return 0;
         }
 
+        @Override // android.security.keystore.IKeystoreService
         public int abort(IKeystoreResponseCallback cb, IBinder token) throws RemoteException {
             return 0;
         }
 
+        @Override // android.security.keystore.IKeystoreService
         public int addAuthToken(byte[] authToken) throws RemoteException {
             return 0;
         }
 
+        @Override // android.security.keystore.IKeystoreService
         public int onUserAdded(int userId, int parentId) throws RemoteException {
             return 0;
         }
 
+        @Override // android.security.keystore.IKeystoreService
         public int onUserRemoved(int userId) throws RemoteException {
             return 0;
         }
 
+        @Override // android.security.keystore.IKeystoreService
         public int attestKey(IKeystoreCertificateChainCallback cb, String alias, KeymasterArguments params) throws RemoteException {
             return 0;
         }
 
+        @Override // android.security.keystore.IKeystoreService
         public int attestDeviceIds(IKeystoreCertificateChainCallback cb, KeymasterArguments params) throws RemoteException {
             return 0;
         }
 
+        @Override // android.security.keystore.IKeystoreService
         public int onDeviceOffBody() throws RemoteException {
             return 0;
         }
 
+        @Override // android.security.keystore.IKeystoreService
         public int importWrappedKey(IKeystoreKeyCharacteristicsCallback cb, String wrappedKeyAlias, byte[] wrappedKey, String wrappingKeyAlias, byte[] maskingKey, KeymasterArguments arguments, long rootSid, long fingerprintSid) throws RemoteException {
             return 0;
         }
 
+        @Override // android.security.keystore.IKeystoreService
         public int presentConfirmationPrompt(IBinder listener, String promptText, byte[] extraData, String locale, int uiOptionsAsFlags) throws RemoteException {
             return 0;
         }
 
+        @Override // android.security.keystore.IKeystoreService
         public int cancelConfirmationPrompt(IBinder listener) throws RemoteException {
             return 0;
         }
 
+        @Override // android.security.keystore.IKeystoreService
         public boolean isConfirmationPromptSupported() throws RemoteException {
             return false;
         }
 
+        @Override // android.security.keystore.IKeystoreService
         public int onKeyguardVisibilityChanged(boolean isShowing, int userId) throws RemoteException {
             return 0;
         }
 
-        public int listUidsOfAuthBoundKeys(List<String> list) throws RemoteException {
+        @Override // android.security.keystore.IKeystoreService
+        public int listUidsOfAuthBoundKeys(List<String> uids) throws RemoteException {
             return 0;
         }
 
+        @Override // android.p007os.IInterface
         public IBinder asBinder() {
             return null;
         }
     }
 
+    /* loaded from: classes3.dex */
     public static abstract class Stub extends Binder implements IKeystoreService {
         private static final String DESCRIPTOR = "android.security.keystore.IKeystoreService";
         static final int TRANSACTION_abort = 25;
@@ -294,12 +335,13 @@ public interface IKeystoreService extends IInterface {
                 return null;
             }
             IInterface iin = obj.queryLocalInterface(DESCRIPTOR);
-            if (iin == null || !(iin instanceof IKeystoreService)) {
-                return new Proxy(obj);
+            if (iin != null && (iin instanceof IKeystoreService)) {
+                return (IKeystoreService) iin;
             }
-            return (IKeystoreService) iin;
+            return new Proxy(obj);
         }
 
+        @Override // android.p007os.IInterface
         public IBinder asBinder() {
             return this;
         }
@@ -385,343 +427,335 @@ public interface IKeystoreService extends IInterface {
             }
         }
 
+        @Override // android.p007os.Binder
         public String getTransactionName(int transactionCode) {
             return getDefaultTransactionName(transactionCode);
         }
 
+        @Override // android.p007os.Binder
         public boolean onTransact(int code, Parcel data, Parcel reply, int flags) throws RemoteException {
-            KeymasterArguments _arg2;
-            KeymasterBlob _arg22;
-            KeymasterBlob _arg3;
-            KeymasterArguments _arg23;
-            KeymasterBlob _arg32;
-            KeymasterBlob _arg4;
-            KeymasterArguments _arg5;
-            KeymasterArguments _arg24;
-            KeymasterArguments _arg52;
-            int i = code;
-            Parcel parcel = data;
-            Parcel parcel2 = reply;
-            if (i != 1598968902) {
-                boolean _arg0 = false;
-                KeymasterArguments _arg1 = null;
-                switch (i) {
-                    case 1:
-                        parcel.enforceInterface(DESCRIPTOR);
-                        int _result = getState(data.readInt());
-                        reply.writeNoException();
-                        parcel2.writeInt(_result);
-                        return true;
-                    case 2:
-                        parcel.enforceInterface(DESCRIPTOR);
-                        byte[] _result2 = get(data.readString(), data.readInt());
-                        reply.writeNoException();
-                        parcel2.writeByteArray(_result2);
-                        return true;
-                    case 3:
-                        parcel.enforceInterface(DESCRIPTOR);
-                        int _result3 = insert(data.readString(), data.createByteArray(), data.readInt(), data.readInt());
-                        reply.writeNoException();
-                        parcel2.writeInt(_result3);
-                        return true;
-                    case 4:
-                        parcel.enforceInterface(DESCRIPTOR);
-                        int _result4 = del(data.readString(), data.readInt());
-                        reply.writeNoException();
-                        parcel2.writeInt(_result4);
-                        return true;
-                    case 5:
-                        parcel.enforceInterface(DESCRIPTOR);
-                        int _result5 = exist(data.readString(), data.readInt());
-                        reply.writeNoException();
-                        parcel2.writeInt(_result5);
-                        return true;
-                    case 6:
-                        parcel.enforceInterface(DESCRIPTOR);
-                        String[] _result6 = list(data.readString(), data.readInt());
-                        reply.writeNoException();
-                        parcel2.writeStringArray(_result6);
-                        return true;
-                    case 7:
-                        parcel.enforceInterface(DESCRIPTOR);
-                        int _result7 = reset();
-                        reply.writeNoException();
-                        parcel2.writeInt(_result7);
-                        return true;
-                    case 8:
-                        parcel.enforceInterface(DESCRIPTOR);
-                        int _result8 = onUserPasswordChanged(data.readInt(), data.readString());
-                        reply.writeNoException();
-                        parcel2.writeInt(_result8);
-                        return true;
-                    case 9:
-                        parcel.enforceInterface(DESCRIPTOR);
-                        int _result9 = lock(data.readInt());
-                        reply.writeNoException();
-                        parcel2.writeInt(_result9);
-                        return true;
-                    case 10:
-                        parcel.enforceInterface(DESCRIPTOR);
-                        int _result10 = unlock(data.readInt(), data.readString());
-                        reply.writeNoException();
-                        parcel2.writeInt(_result10);
-                        return true;
-                    case 11:
-                        parcel.enforceInterface(DESCRIPTOR);
-                        int _result11 = isEmpty(data.readInt());
-                        reply.writeNoException();
-                        parcel2.writeInt(_result11);
-                        return true;
-                    case 12:
-                        parcel.enforceInterface(DESCRIPTOR);
-                        String _result12 = grant(data.readString(), data.readInt());
-                        reply.writeNoException();
-                        parcel2.writeString(_result12);
-                        return true;
-                    case 13:
-                        parcel.enforceInterface(DESCRIPTOR);
-                        int _result13 = ungrant(data.readString(), data.readInt());
-                        reply.writeNoException();
-                        parcel2.writeInt(_result13);
-                        return true;
-                    case 14:
-                        parcel.enforceInterface(DESCRIPTOR);
-                        long _result14 = getmtime(data.readString(), data.readInt());
-                        reply.writeNoException();
-                        parcel2.writeLong(_result14);
-                        return true;
-                    case 15:
-                        parcel.enforceInterface(DESCRIPTOR);
-                        int _result15 = is_hardware_backed(data.readString());
-                        reply.writeNoException();
-                        parcel2.writeInt(_result15);
-                        return true;
-                    case 16:
-                        parcel.enforceInterface(DESCRIPTOR);
-                        int _result16 = clear_uid(data.readLong());
-                        reply.writeNoException();
-                        parcel2.writeInt(_result16);
-                        return true;
-                    case 17:
-                        parcel.enforceInterface(DESCRIPTOR);
-                        int _result17 = addRngEntropy(IKeystoreResponseCallback.Stub.asInterface(data.readStrongBinder()), data.createByteArray(), data.readInt());
-                        reply.writeNoException();
-                        parcel2.writeInt(_result17);
-                        return true;
-                    case 18:
-                        parcel.enforceInterface(DESCRIPTOR);
-                        IKeystoreKeyCharacteristicsCallback _arg02 = IKeystoreKeyCharacteristicsCallback.Stub.asInterface(data.readStrongBinder());
-                        String _arg12 = data.readString();
-                        if (data.readInt() != 0) {
-                            _arg2 = KeymasterArguments.CREATOR.createFromParcel(parcel);
-                        } else {
-                            _arg2 = null;
-                        }
-                        int _result18 = generateKey(_arg02, _arg12, _arg2, data.createByteArray(), data.readInt(), data.readInt());
-                        reply.writeNoException();
-                        parcel2.writeInt(_result18);
-                        return true;
-                    case 19:
-                        parcel.enforceInterface(DESCRIPTOR);
-                        IKeystoreKeyCharacteristicsCallback _arg03 = IKeystoreKeyCharacteristicsCallback.Stub.asInterface(data.readStrongBinder());
-                        String _arg13 = data.readString();
-                        if (data.readInt() != 0) {
-                            _arg22 = KeymasterBlob.CREATOR.createFromParcel(parcel);
-                        } else {
-                            _arg22 = null;
-                        }
-                        if (data.readInt() != 0) {
-                            _arg3 = KeymasterBlob.CREATOR.createFromParcel(parcel);
-                        } else {
-                            _arg3 = null;
-                        }
-                        int _result19 = getKeyCharacteristics(_arg03, _arg13, _arg22, _arg3, data.readInt());
-                        reply.writeNoException();
-                        parcel2.writeInt(_result19);
-                        return true;
-                    case 20:
-                        parcel.enforceInterface(DESCRIPTOR);
-                        IKeystoreKeyCharacteristicsCallback _arg04 = IKeystoreKeyCharacteristicsCallback.Stub.asInterface(data.readStrongBinder());
-                        String _arg14 = data.readString();
-                        if (data.readInt() != 0) {
-                            _arg23 = KeymasterArguments.CREATOR.createFromParcel(parcel);
-                        } else {
-                            _arg23 = null;
-                        }
-                        int _result20 = importKey(_arg04, _arg14, _arg23, data.readInt(), data.createByteArray(), data.readInt(), data.readInt());
-                        reply.writeNoException();
-                        parcel2.writeInt(_result20);
-                        return true;
-                    case 21:
-                        parcel.enforceInterface(DESCRIPTOR);
-                        IKeystoreExportKeyCallback _arg05 = IKeystoreExportKeyCallback.Stub.asInterface(data.readStrongBinder());
-                        String _arg15 = data.readString();
-                        int _arg25 = data.readInt();
-                        if (data.readInt() != 0) {
-                            _arg32 = KeymasterBlob.CREATOR.createFromParcel(parcel);
-                        } else {
-                            _arg32 = null;
-                        }
-                        if (data.readInt() != 0) {
-                            _arg4 = KeymasterBlob.CREATOR.createFromParcel(parcel);
-                        } else {
-                            _arg4 = null;
-                        }
-                        int _result21 = exportKey(_arg05, _arg15, _arg25, _arg32, _arg4, data.readInt());
-                        reply.writeNoException();
-                        parcel2.writeInt(_result21);
-                        return true;
-                    case 22:
-                        parcel.enforceInterface(DESCRIPTOR);
-                        IKeystoreOperationResultCallback _arg06 = IKeystoreOperationResultCallback.Stub.asInterface(data.readStrongBinder());
-                        IBinder _arg16 = data.readStrongBinder();
-                        String _arg26 = data.readString();
-                        int _arg33 = data.readInt();
-                        boolean _arg42 = data.readInt() != 0;
-                        if (data.readInt() != 0) {
-                            _arg5 = KeymasterArguments.CREATOR.createFromParcel(parcel);
-                        } else {
-                            _arg5 = null;
-                        }
-                        int _result22 = begin(_arg06, _arg16, _arg26, _arg33, _arg42, _arg5, data.createByteArray(), data.readInt());
-                        reply.writeNoException();
-                        parcel2.writeInt(_result22);
-                        return true;
-                    case 23:
-                        parcel.enforceInterface(DESCRIPTOR);
-                        IKeystoreOperationResultCallback _arg07 = IKeystoreOperationResultCallback.Stub.asInterface(data.readStrongBinder());
-                        IBinder _arg17 = data.readStrongBinder();
-                        if (data.readInt() != 0) {
-                            _arg1 = KeymasterArguments.CREATOR.createFromParcel(parcel);
-                        }
-                        int _result23 = update(_arg07, _arg17, _arg1, data.createByteArray());
-                        reply.writeNoException();
-                        parcel2.writeInt(_result23);
-                        return true;
-                    case 24:
-                        parcel.enforceInterface(DESCRIPTOR);
-                        IKeystoreOperationResultCallback _arg08 = IKeystoreOperationResultCallback.Stub.asInterface(data.readStrongBinder());
-                        IBinder _arg18 = data.readStrongBinder();
-                        if (data.readInt() != 0) {
-                            _arg24 = KeymasterArguments.CREATOR.createFromParcel(parcel);
-                        } else {
-                            _arg24 = null;
-                        }
-                        int _result24 = finish(_arg08, _arg18, _arg24, data.createByteArray(), data.createByteArray());
-                        reply.writeNoException();
-                        parcel2.writeInt(_result24);
-                        return true;
-                    case 25:
-                        parcel.enforceInterface(DESCRIPTOR);
-                        int _result25 = abort(IKeystoreResponseCallback.Stub.asInterface(data.readStrongBinder()), data.readStrongBinder());
-                        reply.writeNoException();
-                        parcel2.writeInt(_result25);
-                        return true;
-                    case 26:
-                        parcel.enforceInterface(DESCRIPTOR);
-                        int _result26 = addAuthToken(data.createByteArray());
-                        reply.writeNoException();
-                        parcel2.writeInt(_result26);
-                        return true;
-                    case 27:
-                        parcel.enforceInterface(DESCRIPTOR);
-                        int _result27 = onUserAdded(data.readInt(), data.readInt());
-                        reply.writeNoException();
-                        parcel2.writeInt(_result27);
-                        return true;
-                    case 28:
-                        parcel.enforceInterface(DESCRIPTOR);
-                        int _result28 = onUserRemoved(data.readInt());
-                        reply.writeNoException();
-                        parcel2.writeInt(_result28);
-                        return true;
-                    case 29:
-                        parcel.enforceInterface(DESCRIPTOR);
-                        IKeystoreCertificateChainCallback _arg09 = IKeystoreCertificateChainCallback.Stub.asInterface(data.readStrongBinder());
-                        String _arg19 = data.readString();
-                        if (data.readInt() != 0) {
-                            _arg1 = KeymasterArguments.CREATOR.createFromParcel(parcel);
-                        }
-                        int _result29 = attestKey(_arg09, _arg19, _arg1);
-                        reply.writeNoException();
-                        parcel2.writeInt(_result29);
-                        return true;
-                    case 30:
-                        parcel.enforceInterface(DESCRIPTOR);
-                        IKeystoreCertificateChainCallback _arg010 = IKeystoreCertificateChainCallback.Stub.asInterface(data.readStrongBinder());
-                        if (data.readInt() != 0) {
-                            _arg1 = KeymasterArguments.CREATOR.createFromParcel(parcel);
-                        }
-                        int _result30 = attestDeviceIds(_arg010, _arg1);
-                        reply.writeNoException();
-                        parcel2.writeInt(_result30);
-                        return true;
-                    case 31:
-                        parcel.enforceInterface(DESCRIPTOR);
-                        int _result31 = onDeviceOffBody();
-                        reply.writeNoException();
-                        parcel2.writeInt(_result31);
-                        return true;
-                    case 32:
-                        parcel.enforceInterface(DESCRIPTOR);
-                        IKeystoreKeyCharacteristicsCallback _arg011 = IKeystoreKeyCharacteristicsCallback.Stub.asInterface(data.readStrongBinder());
-                        String _arg110 = data.readString();
-                        byte[] _arg27 = data.createByteArray();
-                        String _arg34 = data.readString();
-                        byte[] _arg43 = data.createByteArray();
-                        if (data.readInt() != 0) {
-                            _arg52 = KeymasterArguments.CREATOR.createFromParcel(parcel);
-                        } else {
-                            _arg52 = null;
-                        }
-                        int _result32 = importWrappedKey(_arg011, _arg110, _arg27, _arg34, _arg43, _arg52, data.readLong(), data.readLong());
-                        reply.writeNoException();
-                        parcel2.writeInt(_result32);
-                        return true;
-                    case 33:
-                        parcel.enforceInterface(DESCRIPTOR);
-                        int _result33 = presentConfirmationPrompt(data.readStrongBinder(), data.readString(), data.createByteArray(), data.readString(), data.readInt());
-                        reply.writeNoException();
-                        parcel2.writeInt(_result33);
-                        return true;
-                    case 34:
-                        parcel.enforceInterface(DESCRIPTOR);
-                        int _result34 = cancelConfirmationPrompt(data.readStrongBinder());
-                        reply.writeNoException();
-                        parcel2.writeInt(_result34);
-                        return true;
-                    case 35:
-                        parcel.enforceInterface(DESCRIPTOR);
-                        boolean _result35 = isConfirmationPromptSupported();
-                        reply.writeNoException();
-                        parcel2.writeInt(_result35);
-                        return true;
-                    case 36:
-                        parcel.enforceInterface(DESCRIPTOR);
-                        if (data.readInt() != 0) {
-                            _arg0 = true;
-                        }
-                        int _result36 = onKeyguardVisibilityChanged(_arg0, data.readInt());
-                        reply.writeNoException();
-                        parcel2.writeInt(_result36);
-                        return true;
-                    case 37:
-                        parcel.enforceInterface(DESCRIPTOR);
-                        List<String> _arg012 = new ArrayList<>();
-                        int _result37 = listUidsOfAuthBoundKeys(_arg012);
-                        reply.writeNoException();
-                        parcel2.writeInt(_result37);
-                        parcel2.writeStringList(_arg012);
-                        return true;
-                    default:
-                        return super.onTransact(code, data, reply, flags);
-                }
-            } else {
-                parcel2.writeString(DESCRIPTOR);
+            KeymasterArguments _arg1;
+            if (code == 1598968902) {
+                reply.writeString(DESCRIPTOR);
                 return true;
+            }
+            switch (code) {
+                case 1:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg0 = data.readInt();
+                    int _result = getState(_arg0);
+                    reply.writeNoException();
+                    reply.writeInt(_result);
+                    return true;
+                case 2:
+                    data.enforceInterface(DESCRIPTOR);
+                    String _arg02 = data.readString();
+                    byte[] _result2 = get(_arg02, data.readInt());
+                    reply.writeNoException();
+                    reply.writeByteArray(_result2);
+                    return true;
+                case 3:
+                    data.enforceInterface(DESCRIPTOR);
+                    String _arg03 = data.readString();
+                    byte[] _arg12 = data.createByteArray();
+                    int _arg2 = data.readInt();
+                    int _arg3 = data.readInt();
+                    int _result3 = insert(_arg03, _arg12, _arg2, _arg3);
+                    reply.writeNoException();
+                    reply.writeInt(_result3);
+                    return true;
+                case 4:
+                    data.enforceInterface(DESCRIPTOR);
+                    String _arg04 = data.readString();
+                    int _result4 = del(_arg04, data.readInt());
+                    reply.writeNoException();
+                    reply.writeInt(_result4);
+                    return true;
+                case 5:
+                    data.enforceInterface(DESCRIPTOR);
+                    String _arg05 = data.readString();
+                    int _result5 = exist(_arg05, data.readInt());
+                    reply.writeNoException();
+                    reply.writeInt(_result5);
+                    return true;
+                case 6:
+                    data.enforceInterface(DESCRIPTOR);
+                    String _arg06 = data.readString();
+                    String[] _result6 = list(_arg06, data.readInt());
+                    reply.writeNoException();
+                    reply.writeStringArray(_result6);
+                    return true;
+                case 7:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _result7 = reset();
+                    reply.writeNoException();
+                    reply.writeInt(_result7);
+                    return true;
+                case 8:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg07 = data.readInt();
+                    int _result8 = onUserPasswordChanged(_arg07, data.readString());
+                    reply.writeNoException();
+                    reply.writeInt(_result8);
+                    return true;
+                case 9:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg08 = data.readInt();
+                    int _result9 = lock(_arg08);
+                    reply.writeNoException();
+                    reply.writeInt(_result9);
+                    return true;
+                case 10:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg09 = data.readInt();
+                    int _result10 = unlock(_arg09, data.readString());
+                    reply.writeNoException();
+                    reply.writeInt(_result10);
+                    return true;
+                case 11:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg010 = data.readInt();
+                    int _result11 = isEmpty(_arg010);
+                    reply.writeNoException();
+                    reply.writeInt(_result11);
+                    return true;
+                case 12:
+                    data.enforceInterface(DESCRIPTOR);
+                    String _arg011 = data.readString();
+                    String _result12 = grant(_arg011, data.readInt());
+                    reply.writeNoException();
+                    reply.writeString(_result12);
+                    return true;
+                case 13:
+                    data.enforceInterface(DESCRIPTOR);
+                    String _arg012 = data.readString();
+                    int _result13 = ungrant(_arg012, data.readInt());
+                    reply.writeNoException();
+                    reply.writeInt(_result13);
+                    return true;
+                case 14:
+                    data.enforceInterface(DESCRIPTOR);
+                    String _arg013 = data.readString();
+                    long _result14 = getmtime(_arg013, data.readInt());
+                    reply.writeNoException();
+                    reply.writeLong(_result14);
+                    return true;
+                case 15:
+                    data.enforceInterface(DESCRIPTOR);
+                    String _arg014 = data.readString();
+                    int _result15 = is_hardware_backed(_arg014);
+                    reply.writeNoException();
+                    reply.writeInt(_result15);
+                    return true;
+                case 16:
+                    data.enforceInterface(DESCRIPTOR);
+                    long _arg015 = data.readLong();
+                    int _result16 = clear_uid(_arg015);
+                    reply.writeNoException();
+                    reply.writeInt(_result16);
+                    return true;
+                case 17:
+                    data.enforceInterface(DESCRIPTOR);
+                    IKeystoreResponseCallback _arg016 = IKeystoreResponseCallback.Stub.asInterface(data.readStrongBinder());
+                    byte[] _arg13 = data.createByteArray();
+                    int _arg22 = data.readInt();
+                    int _result17 = addRngEntropy(_arg016, _arg13, _arg22);
+                    reply.writeNoException();
+                    reply.writeInt(_result17);
+                    return true;
+                case 18:
+                    data.enforceInterface(DESCRIPTOR);
+                    IKeystoreKeyCharacteristicsCallback _arg017 = IKeystoreKeyCharacteristicsCallback.Stub.asInterface(data.readStrongBinder());
+                    String _arg14 = data.readString();
+                    KeymasterArguments _arg23 = data.readInt() != 0 ? KeymasterArguments.CREATOR.createFromParcel(data) : null;
+                    byte[] _arg32 = data.createByteArray();
+                    int _arg4 = data.readInt();
+                    int _arg5 = data.readInt();
+                    int _result18 = generateKey(_arg017, _arg14, _arg23, _arg32, _arg4, _arg5);
+                    reply.writeNoException();
+                    reply.writeInt(_result18);
+                    return true;
+                case 19:
+                    data.enforceInterface(DESCRIPTOR);
+                    IKeystoreKeyCharacteristicsCallback _arg018 = IKeystoreKeyCharacteristicsCallback.Stub.asInterface(data.readStrongBinder());
+                    String _arg15 = data.readString();
+                    KeymasterBlob _arg24 = data.readInt() != 0 ? KeymasterBlob.CREATOR.createFromParcel(data) : null;
+                    KeymasterBlob _arg33 = data.readInt() != 0 ? KeymasterBlob.CREATOR.createFromParcel(data) : null;
+                    int _arg42 = data.readInt();
+                    int _result19 = getKeyCharacteristics(_arg018, _arg15, _arg24, _arg33, _arg42);
+                    reply.writeNoException();
+                    reply.writeInt(_result19);
+                    return true;
+                case 20:
+                    data.enforceInterface(DESCRIPTOR);
+                    IKeystoreKeyCharacteristicsCallback _arg019 = IKeystoreKeyCharacteristicsCallback.Stub.asInterface(data.readStrongBinder());
+                    String _arg16 = data.readString();
+                    KeymasterArguments _arg25 = data.readInt() != 0 ? KeymasterArguments.CREATOR.createFromParcel(data) : null;
+                    int _arg34 = data.readInt();
+                    byte[] _arg43 = data.createByteArray();
+                    int _arg52 = data.readInt();
+                    int _arg6 = data.readInt();
+                    int _result20 = importKey(_arg019, _arg16, _arg25, _arg34, _arg43, _arg52, _arg6);
+                    reply.writeNoException();
+                    reply.writeInt(_result20);
+                    return true;
+                case 21:
+                    data.enforceInterface(DESCRIPTOR);
+                    IKeystoreExportKeyCallback _arg020 = IKeystoreExportKeyCallback.Stub.asInterface(data.readStrongBinder());
+                    String _arg17 = data.readString();
+                    int _arg26 = data.readInt();
+                    KeymasterBlob _arg35 = data.readInt() != 0 ? KeymasterBlob.CREATOR.createFromParcel(data) : null;
+                    KeymasterBlob _arg44 = data.readInt() != 0 ? KeymasterBlob.CREATOR.createFromParcel(data) : null;
+                    int _arg53 = data.readInt();
+                    int _result21 = exportKey(_arg020, _arg17, _arg26, _arg35, _arg44, _arg53);
+                    reply.writeNoException();
+                    reply.writeInt(_result21);
+                    return true;
+                case 22:
+                    data.enforceInterface(DESCRIPTOR);
+                    IKeystoreOperationResultCallback _arg021 = IKeystoreOperationResultCallback.Stub.asInterface(data.readStrongBinder());
+                    IBinder _arg18 = data.readStrongBinder();
+                    String _arg27 = data.readString();
+                    int _arg36 = data.readInt();
+                    boolean _arg45 = data.readInt() != 0;
+                    KeymasterArguments _arg54 = data.readInt() != 0 ? KeymasterArguments.CREATOR.createFromParcel(data) : null;
+                    byte[] _arg62 = data.createByteArray();
+                    int _arg7 = data.readInt();
+                    int _result22 = begin(_arg021, _arg18, _arg27, _arg36, _arg45, _arg54, _arg62, _arg7);
+                    reply.writeNoException();
+                    reply.writeInt(_result22);
+                    return true;
+                case 23:
+                    data.enforceInterface(DESCRIPTOR);
+                    IKeystoreOperationResultCallback _arg022 = IKeystoreOperationResultCallback.Stub.asInterface(data.readStrongBinder());
+                    IBinder _arg19 = data.readStrongBinder();
+                    _arg1 = data.readInt() != 0 ? KeymasterArguments.CREATOR.createFromParcel(data) : null;
+                    byte[] _arg37 = data.createByteArray();
+                    int _result23 = update(_arg022, _arg19, _arg1, _arg37);
+                    reply.writeNoException();
+                    reply.writeInt(_result23);
+                    return true;
+                case 24:
+                    data.enforceInterface(DESCRIPTOR);
+                    IKeystoreOperationResultCallback _arg023 = IKeystoreOperationResultCallback.Stub.asInterface(data.readStrongBinder());
+                    IBinder _arg110 = data.readStrongBinder();
+                    KeymasterArguments _arg28 = data.readInt() != 0 ? KeymasterArguments.CREATOR.createFromParcel(data) : null;
+                    byte[] _arg38 = data.createByteArray();
+                    byte[] _arg46 = data.createByteArray();
+                    int _result24 = finish(_arg023, _arg110, _arg28, _arg38, _arg46);
+                    reply.writeNoException();
+                    reply.writeInt(_result24);
+                    return true;
+                case 25:
+                    data.enforceInterface(DESCRIPTOR);
+                    IKeystoreResponseCallback _arg024 = IKeystoreResponseCallback.Stub.asInterface(data.readStrongBinder());
+                    int _result25 = abort(_arg024, data.readStrongBinder());
+                    reply.writeNoException();
+                    reply.writeInt(_result25);
+                    return true;
+                case 26:
+                    data.enforceInterface(DESCRIPTOR);
+                    byte[] _arg025 = data.createByteArray();
+                    int _result26 = addAuthToken(_arg025);
+                    reply.writeNoException();
+                    reply.writeInt(_result26);
+                    return true;
+                case 27:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg026 = data.readInt();
+                    int _result27 = onUserAdded(_arg026, data.readInt());
+                    reply.writeNoException();
+                    reply.writeInt(_result27);
+                    return true;
+                case 28:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg027 = data.readInt();
+                    int _result28 = onUserRemoved(_arg027);
+                    reply.writeNoException();
+                    reply.writeInt(_result28);
+                    return true;
+                case 29:
+                    data.enforceInterface(DESCRIPTOR);
+                    IKeystoreCertificateChainCallback _arg028 = IKeystoreCertificateChainCallback.Stub.asInterface(data.readStrongBinder());
+                    String _arg111 = data.readString();
+                    _arg1 = data.readInt() != 0 ? KeymasterArguments.CREATOR.createFromParcel(data) : null;
+                    int _result29 = attestKey(_arg028, _arg111, _arg1);
+                    reply.writeNoException();
+                    reply.writeInt(_result29);
+                    return true;
+                case 30:
+                    data.enforceInterface(DESCRIPTOR);
+                    IKeystoreCertificateChainCallback _arg029 = IKeystoreCertificateChainCallback.Stub.asInterface(data.readStrongBinder());
+                    _arg1 = data.readInt() != 0 ? KeymasterArguments.CREATOR.createFromParcel(data) : null;
+                    int _result30 = attestDeviceIds(_arg029, _arg1);
+                    reply.writeNoException();
+                    reply.writeInt(_result30);
+                    return true;
+                case 31:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _result31 = onDeviceOffBody();
+                    reply.writeNoException();
+                    reply.writeInt(_result31);
+                    return true;
+                case 32:
+                    data.enforceInterface(DESCRIPTOR);
+                    IKeystoreKeyCharacteristicsCallback _arg030 = IKeystoreKeyCharacteristicsCallback.Stub.asInterface(data.readStrongBinder());
+                    String _arg112 = data.readString();
+                    byte[] _arg29 = data.createByteArray();
+                    String _arg39 = data.readString();
+                    byte[] _arg47 = data.createByteArray();
+                    KeymasterArguments _arg55 = data.readInt() != 0 ? KeymasterArguments.CREATOR.createFromParcel(data) : null;
+                    long _arg63 = data.readLong();
+                    long _arg72 = data.readLong();
+                    int _result32 = importWrappedKey(_arg030, _arg112, _arg29, _arg39, _arg47, _arg55, _arg63, _arg72);
+                    reply.writeNoException();
+                    reply.writeInt(_result32);
+                    return true;
+                case 33:
+                    data.enforceInterface(DESCRIPTOR);
+                    IBinder _arg031 = data.readStrongBinder();
+                    String _arg113 = data.readString();
+                    byte[] _arg210 = data.createByteArray();
+                    String _arg310 = data.readString();
+                    int _arg48 = data.readInt();
+                    int _result33 = presentConfirmationPrompt(_arg031, _arg113, _arg210, _arg310, _arg48);
+                    reply.writeNoException();
+                    reply.writeInt(_result33);
+                    return true;
+                case 34:
+                    data.enforceInterface(DESCRIPTOR);
+                    IBinder _arg032 = data.readStrongBinder();
+                    int _result34 = cancelConfirmationPrompt(_arg032);
+                    reply.writeNoException();
+                    reply.writeInt(_result34);
+                    return true;
+                case 35:
+                    data.enforceInterface(DESCRIPTOR);
+                    boolean isConfirmationPromptSupported = isConfirmationPromptSupported();
+                    reply.writeNoException();
+                    reply.writeInt(isConfirmationPromptSupported ? 1 : 0);
+                    return true;
+                case 36:
+                    data.enforceInterface(DESCRIPTOR);
+                    boolean _arg033 = data.readInt() != 0;
+                    int _result35 = onKeyguardVisibilityChanged(_arg033, data.readInt());
+                    reply.writeNoException();
+                    reply.writeInt(_result35);
+                    return true;
+                case 37:
+                    data.enforceInterface(DESCRIPTOR);
+                    List<String> _arg034 = new ArrayList<>();
+                    int _result36 = listUidsOfAuthBoundKeys(_arg034);
+                    reply.writeNoException();
+                    reply.writeInt(_result36);
+                    reply.writeStringList(_arg034);
+                    return true;
+                default:
+                    return super.onTransact(code, data, reply, flags);
             }
         }
 
+        /* loaded from: classes3.dex */
         private static class Proxy implements IKeystoreService {
             public static IKeystoreService sDefaultImpl;
             private IBinder mRemote;
@@ -730,6 +764,7 @@ public interface IKeystoreService extends IInterface {
                 this.mRemote = remote;
             }
 
+            @Override // android.p007os.IInterface
             public IBinder asBinder() {
                 return this.mRemote;
             }
@@ -738,19 +773,19 @@ public interface IKeystoreService extends IInterface {
                 return Stub.DESCRIPTOR;
             }
 
+            @Override // android.security.keystore.IKeystoreService
             public int getState(int userId) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeInt(userId);
-                    if (!this.mRemote.transact(1, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(1, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().getState(userId);
                     }
                     _reply.readException();
                     int _result = _reply.readInt();
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -758,6 +793,7 @@ public interface IKeystoreService extends IInterface {
                 }
             }
 
+            @Override // android.security.keystore.IKeystoreService
             public byte[] get(String name, int uid) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -765,13 +801,12 @@ public interface IKeystoreService extends IInterface {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeString(name);
                     _data.writeInt(uid);
-                    if (!this.mRemote.transact(2, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(2, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().get(name, uid);
                     }
                     _reply.readException();
                     byte[] _result = _reply.createByteArray();
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -779,6 +814,7 @@ public interface IKeystoreService extends IInterface {
                 }
             }
 
+            @Override // android.security.keystore.IKeystoreService
             public int insert(String name, byte[] item, int uid, int flags) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -788,13 +824,12 @@ public interface IKeystoreService extends IInterface {
                     _data.writeByteArray(item);
                     _data.writeInt(uid);
                     _data.writeInt(flags);
-                    if (!this.mRemote.transact(3, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(3, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().insert(name, item, uid, flags);
                     }
                     _reply.readException();
                     int _result = _reply.readInt();
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -802,6 +837,7 @@ public interface IKeystoreService extends IInterface {
                 }
             }
 
+            @Override // android.security.keystore.IKeystoreService
             public int del(String name, int uid) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -809,13 +845,12 @@ public interface IKeystoreService extends IInterface {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeString(name);
                     _data.writeInt(uid);
-                    if (!this.mRemote.transact(4, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(4, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().del(name, uid);
                     }
                     _reply.readException();
                     int _result = _reply.readInt();
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -823,6 +858,7 @@ public interface IKeystoreService extends IInterface {
                 }
             }
 
+            @Override // android.security.keystore.IKeystoreService
             public int exist(String name, int uid) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -830,13 +866,12 @@ public interface IKeystoreService extends IInterface {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeString(name);
                     _data.writeInt(uid);
-                    if (!this.mRemote.transact(5, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(5, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().exist(name, uid);
                     }
                     _reply.readException();
                     int _result = _reply.readInt();
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -844,6 +879,7 @@ public interface IKeystoreService extends IInterface {
                 }
             }
 
+            @Override // android.security.keystore.IKeystoreService
             public String[] list(String namePrefix, int uid) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -851,13 +887,12 @@ public interface IKeystoreService extends IInterface {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeString(namePrefix);
                     _data.writeInt(uid);
-                    if (!this.mRemote.transact(6, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(6, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().list(namePrefix, uid);
                     }
                     _reply.readException();
                     String[] _result = _reply.createStringArray();
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -865,18 +900,18 @@ public interface IKeystoreService extends IInterface {
                 }
             }
 
+            @Override // android.security.keystore.IKeystoreService
             public int reset() throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    if (!this.mRemote.transact(7, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(7, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().reset();
                     }
                     _reply.readException();
                     int _result = _reply.readInt();
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -884,6 +919,7 @@ public interface IKeystoreService extends IInterface {
                 }
             }
 
+            @Override // android.security.keystore.IKeystoreService
             public int onUserPasswordChanged(int userId, String newPassword) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -891,13 +927,12 @@ public interface IKeystoreService extends IInterface {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeInt(userId);
                     _data.writeString(newPassword);
-                    if (!this.mRemote.transact(8, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(8, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().onUserPasswordChanged(userId, newPassword);
                     }
                     _reply.readException();
                     int _result = _reply.readInt();
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -905,19 +940,19 @@ public interface IKeystoreService extends IInterface {
                 }
             }
 
+            @Override // android.security.keystore.IKeystoreService
             public int lock(int userId) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeInt(userId);
-                    if (!this.mRemote.transact(9, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(9, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().lock(userId);
                     }
                     _reply.readException();
                     int _result = _reply.readInt();
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -925,6 +960,7 @@ public interface IKeystoreService extends IInterface {
                 }
             }
 
+            @Override // android.security.keystore.IKeystoreService
             public int unlock(int userId, String userPassword) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -932,13 +968,12 @@ public interface IKeystoreService extends IInterface {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeInt(userId);
                     _data.writeString(userPassword);
-                    if (!this.mRemote.transact(10, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(10, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().unlock(userId, userPassword);
                     }
                     _reply.readException();
                     int _result = _reply.readInt();
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -946,19 +981,19 @@ public interface IKeystoreService extends IInterface {
                 }
             }
 
+            @Override // android.security.keystore.IKeystoreService
             public int isEmpty(int userId) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeInt(userId);
-                    if (!this.mRemote.transact(11, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(11, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().isEmpty(userId);
                     }
                     _reply.readException();
                     int _result = _reply.readInt();
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -966,6 +1001,7 @@ public interface IKeystoreService extends IInterface {
                 }
             }
 
+            @Override // android.security.keystore.IKeystoreService
             public String grant(String name, int granteeUid) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -973,13 +1009,12 @@ public interface IKeystoreService extends IInterface {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeString(name);
                     _data.writeInt(granteeUid);
-                    if (!this.mRemote.transact(12, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(12, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().grant(name, granteeUid);
                     }
                     _reply.readException();
                     String _result = _reply.readString();
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -987,6 +1022,7 @@ public interface IKeystoreService extends IInterface {
                 }
             }
 
+            @Override // android.security.keystore.IKeystoreService
             public int ungrant(String name, int granteeUid) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -994,13 +1030,12 @@ public interface IKeystoreService extends IInterface {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeString(name);
                     _data.writeInt(granteeUid);
-                    if (!this.mRemote.transact(13, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(13, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().ungrant(name, granteeUid);
                     }
                     _reply.readException();
                     int _result = _reply.readInt();
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -1008,6 +1043,7 @@ public interface IKeystoreService extends IInterface {
                 }
             }
 
+            @Override // android.security.keystore.IKeystoreService
             public long getmtime(String name, int uid) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -1015,13 +1051,12 @@ public interface IKeystoreService extends IInterface {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeString(name);
                     _data.writeInt(uid);
-                    if (!this.mRemote.transact(14, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(14, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().getmtime(name, uid);
                     }
                     _reply.readException();
                     long _result = _reply.readLong();
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -1029,19 +1064,19 @@ public interface IKeystoreService extends IInterface {
                 }
             }
 
+            @Override // android.security.keystore.IKeystoreService
             public int is_hardware_backed(String string) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeString(string);
-                    if (!this.mRemote.transact(15, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(15, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().is_hardware_backed(string);
                     }
                     _reply.readException();
                     int _result = _reply.readInt();
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -1049,19 +1084,19 @@ public interface IKeystoreService extends IInterface {
                 }
             }
 
+            @Override // android.security.keystore.IKeystoreService
             public int clear_uid(long uid) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeLong(uid);
-                    if (!this.mRemote.transact(16, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(16, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().clear_uid(uid);
                     }
                     _reply.readException();
                     int _result = _reply.readInt();
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -1069,6 +1104,7 @@ public interface IKeystoreService extends IInterface {
                 }
             }
 
+            @Override // android.security.keystore.IKeystoreService
             public int addRngEntropy(IKeystoreResponseCallback cb, byte[] data, int flags) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -1077,13 +1113,12 @@ public interface IKeystoreService extends IInterface {
                     _data.writeStrongBinder(cb != null ? cb.asBinder() : null);
                     _data.writeByteArray(data);
                     _data.writeInt(flags);
-                    if (!this.mRemote.transact(17, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(17, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().addRngEntropy(cb, data, flags);
                     }
                     _reply.readException();
                     int _result = _reply.readInt();
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -1091,80 +1126,69 @@ public interface IKeystoreService extends IInterface {
                 }
             }
 
+            @Override // android.security.keystore.IKeystoreService
             public int generateKey(IKeystoreKeyCharacteristicsCallback cb, String alias, KeymasterArguments arguments, byte[] entropy, int uid, int flags) throws RemoteException {
-                KeymasterArguments keymasterArguments = arguments;
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeStrongBinder(cb != null ? cb.asBinder() : null);
+                } catch (Throwable th) {
+                    th = th;
+                }
+                try {
+                    _data.writeString(alias);
+                    if (arguments != null) {
+                        _data.writeInt(1);
+                        arguments.writeToParcel(_data, 0);
+                    } else {
+                        _data.writeInt(0);
+                    }
                     try {
-                        _data.writeString(alias);
-                        if (keymasterArguments != null) {
-                            _data.writeInt(1);
-                            keymasterArguments.writeToParcel(_data, 0);
-                        } else {
-                            _data.writeInt(0);
-                        }
-                    } catch (Throwable th) {
-                        th = th;
-                        byte[] bArr = entropy;
-                        int i = uid;
-                        int i2 = flags;
+                        _data.writeByteArray(entropy);
+                    } catch (Throwable th2) {
+                        th = th2;
                         _reply.recycle();
                         _data.recycle();
                         throw th;
                     }
                     try {
-                        _data.writeByteArray(entropy);
-                        try {
-                            _data.writeInt(uid);
-                        } catch (Throwable th2) {
-                            th = th2;
-                            int i22 = flags;
-                            _reply.recycle();
-                            _data.recycle();
-                            throw th;
-                        }
-                        try {
-                            _data.writeInt(flags);
-                            if (this.mRemote.transact(18, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
-                                _reply.readException();
-                                int _result = _reply.readInt();
-                                _reply.recycle();
-                                _data.recycle();
-                                return _result;
-                            }
+                        _data.writeInt(uid);
+                    } catch (Throwable th3) {
+                        th = th3;
+                        _reply.recycle();
+                        _data.recycle();
+                        throw th;
+                    }
+                    try {
+                        _data.writeInt(flags);
+                        boolean _status = this.mRemote.transact(18, _data, _reply, 0);
+                        if (!_status && Stub.getDefaultImpl() != null) {
                             int generateKey = Stub.getDefaultImpl().generateKey(cb, alias, arguments, entropy, uid, flags);
                             _reply.recycle();
                             _data.recycle();
                             return generateKey;
-                        } catch (Throwable th3) {
-                            th = th3;
-                            _reply.recycle();
-                            _data.recycle();
-                            throw th;
                         }
+                        _reply.readException();
+                        int _result = _reply.readInt();
+                        _reply.recycle();
+                        _data.recycle();
+                        return _result;
                     } catch (Throwable th4) {
                         th = th4;
-                        int i3 = uid;
-                        int i222 = flags;
                         _reply.recycle();
                         _data.recycle();
                         throw th;
                     }
                 } catch (Throwable th5) {
                     th = th5;
-                    String str = alias;
-                    byte[] bArr2 = entropy;
-                    int i32 = uid;
-                    int i2222 = flags;
                     _reply.recycle();
                     _data.recycle();
                     throw th;
                 }
             }
 
+            @Override // android.security.keystore.IKeystoreService
             public int getKeyCharacteristics(IKeystoreKeyCharacteristicsCallback cb, String alias, KeymasterBlob clientId, KeymasterBlob appData, int uid) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -1185,13 +1209,12 @@ public interface IKeystoreService extends IInterface {
                         _data.writeInt(0);
                     }
                     _data.writeInt(uid);
-                    if (!this.mRemote.transact(19, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(19, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().getKeyCharacteristics(cb, alias, clientId, appData, uid);
                     }
                     _reply.readException();
                     int _result = _reply.readInt();
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -1199,194 +1222,173 @@ public interface IKeystoreService extends IInterface {
                 }
             }
 
+            @Override // android.security.keystore.IKeystoreService
             public int importKey(IKeystoreKeyCharacteristicsCallback cb, String alias, KeymasterArguments arguments, int format, byte[] keyData, int uid, int flags) throws RemoteException {
-                KeymasterArguments keymasterArguments = arguments;
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeStrongBinder(cb != null ? cb.asBinder() : null);
-                    try {
-                        _data.writeString(alias);
-                        if (keymasterArguments != null) {
-                            _data.writeInt(1);
-                            keymasterArguments.writeToParcel(_data, 0);
-                        } else {
-                            _data.writeInt(0);
-                        }
-                    } catch (Throwable th) {
-                        th = th;
-                        int i = format;
-                        byte[] bArr = keyData;
+                } catch (Throwable th) {
+                    th = th;
+                }
+                try {
+                    _data.writeString(alias);
+                    if (arguments != null) {
+                        _data.writeInt(1);
+                        arguments.writeToParcel(_data, 0);
+                    } else {
+                        _data.writeInt(0);
+                    }
+                } catch (Throwable th2) {
+                    th = th2;
+                    _reply.recycle();
+                    _data.recycle();
+                    throw th;
+                }
+                try {
+                    _data.writeInt(format);
+                } catch (Throwable th3) {
+                    th = th3;
+                    _reply.recycle();
+                    _data.recycle();
+                    throw th;
+                }
+                try {
+                    _data.writeByteArray(keyData);
+                    _data.writeInt(uid);
+                    _data.writeInt(flags);
+                    boolean _status = this.mRemote.transact(20, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        int importKey = Stub.getDefaultImpl().importKey(cb, alias, arguments, format, keyData, uid, flags);
                         _reply.recycle();
                         _data.recycle();
-                        throw th;
+                        return importKey;
                     }
-                    try {
-                        _data.writeInt(format);
-                        try {
-                            _data.writeByteArray(keyData);
-                            _data.writeInt(uid);
-                            _data.writeInt(flags);
-                            if (this.mRemote.transact(20, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
-                                _reply.readException();
-                                int _result = _reply.readInt();
-                                _reply.recycle();
-                                _data.recycle();
-                                return _result;
-                            }
-                            int importKey = Stub.getDefaultImpl().importKey(cb, alias, arguments, format, keyData, uid, flags);
-                            _reply.recycle();
-                            _data.recycle();
-                            return importKey;
-                        } catch (Throwable th2) {
-                            th = th2;
-                            _reply.recycle();
-                            _data.recycle();
-                            throw th;
-                        }
-                    } catch (Throwable th3) {
-                        th = th3;
-                        byte[] bArr2 = keyData;
-                        _reply.recycle();
-                        _data.recycle();
-                        throw th;
-                    }
+                    _reply.readException();
+                    int _result = _reply.readInt();
+                    _reply.recycle();
+                    _data.recycle();
+                    return _result;
                 } catch (Throwable th4) {
                     th = th4;
-                    String str = alias;
-                    int i2 = format;
-                    byte[] bArr22 = keyData;
                     _reply.recycle();
                     _data.recycle();
                     throw th;
                 }
             }
 
+            @Override // android.security.keystore.IKeystoreService
             public int exportKey(IKeystoreExportKeyCallback cb, String alias, int format, KeymasterBlob clientId, KeymasterBlob appData, int uid) throws RemoteException {
-                KeymasterBlob keymasterBlob = clientId;
-                KeymasterBlob keymasterBlob2 = appData;
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeStrongBinder(cb != null ? cb.asBinder() : null);
-                    try {
-                        _data.writeString(alias);
-                    } catch (Throwable th) {
-                        th = th;
-                        int i = format;
-                        int i2 = uid;
-                        _reply.recycle();
-                        _data.recycle();
-                        throw th;
+                } catch (Throwable th) {
+                    th = th;
+                }
+                try {
+                    _data.writeString(alias);
+                } catch (Throwable th2) {
+                    th = th2;
+                    _reply.recycle();
+                    _data.recycle();
+                    throw th;
+                }
+                try {
+                    _data.writeInt(format);
+                    if (clientId != null) {
+                        _data.writeInt(1);
+                        clientId.writeToParcel(_data, 0);
+                    } else {
+                        _data.writeInt(0);
                     }
-                    try {
-                        _data.writeInt(format);
-                        if (keymasterBlob != null) {
-                            _data.writeInt(1);
-                            keymasterBlob.writeToParcel(_data, 0);
-                        } else {
-                            _data.writeInt(0);
-                        }
-                        if (keymasterBlob2 != null) {
-                            _data.writeInt(1);
-                            keymasterBlob2.writeToParcel(_data, 0);
-                        } else {
-                            _data.writeInt(0);
-                        }
-                    } catch (Throwable th2) {
-                        th = th2;
-                        int i22 = uid;
-                        _reply.recycle();
-                        _data.recycle();
-                        throw th;
+                    if (appData != null) {
+                        _data.writeInt(1);
+                        appData.writeToParcel(_data, 0);
+                    } else {
+                        _data.writeInt(0);
                     }
-                    try {
-                        _data.writeInt(uid);
-                        if (this.mRemote.transact(21, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
-                            _reply.readException();
-                            int _result = _reply.readInt();
-                            _reply.recycle();
-                            _data.recycle();
-                            return _result;
-                        }
+                } catch (Throwable th3) {
+                    th = th3;
+                    _reply.recycle();
+                    _data.recycle();
+                    throw th;
+                }
+                try {
+                    _data.writeInt(uid);
+                    boolean _status = this.mRemote.transact(21, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         int exportKey = Stub.getDefaultImpl().exportKey(cb, alias, format, clientId, appData, uid);
                         _reply.recycle();
                         _data.recycle();
                         return exportKey;
-                    } catch (Throwable th3) {
-                        th = th3;
-                        _reply.recycle();
-                        _data.recycle();
-                        throw th;
                     }
+                    _reply.readException();
+                    int _result = _reply.readInt();
+                    _reply.recycle();
+                    _data.recycle();
+                    return _result;
                 } catch (Throwable th4) {
                     th = th4;
-                    String str = alias;
-                    int i3 = format;
-                    int i222 = uid;
                     _reply.recycle();
                     _data.recycle();
                     throw th;
                 }
             }
 
+            @Override // android.security.keystore.IKeystoreService
             public int begin(IKeystoreOperationResultCallback cb, IBinder appToken, String alias, int purpose, boolean pruneable, KeymasterArguments params, byte[] entropy, int uid) throws RemoteException {
-                KeymasterArguments keymasterArguments = params;
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeStrongBinder(cb != null ? cb.asBinder() : null);
-                    try {
-                        _data.writeStrongBinder(appToken);
-                        try {
-                            _data.writeString(alias);
-                            _data.writeInt(purpose);
-                            _data.writeInt(pruneable ? 1 : 0);
-                            if (keymasterArguments != null) {
-                                _data.writeInt(1);
-                                keymasterArguments.writeToParcel(_data, 0);
-                            } else {
-                                _data.writeInt(0);
-                            }
-                            _data.writeByteArray(entropy);
-                            _data.writeInt(uid);
-                            if (this.mRemote.transact(22, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
-                                _reply.readException();
-                                int _result = _reply.readInt();
-                                _reply.recycle();
-                                _data.recycle();
-                                return _result;
-                            }
-                            int begin = Stub.getDefaultImpl().begin(cb, appToken, alias, purpose, pruneable, params, entropy, uid);
-                            _reply.recycle();
-                            _data.recycle();
-                            return begin;
-                        } catch (Throwable th) {
-                            th = th;
-                            _reply.recycle();
-                            _data.recycle();
-                            throw th;
-                        }
-                    } catch (Throwable th2) {
-                        th = th2;
-                        String str = alias;
+                } catch (Throwable th) {
+                    th = th;
+                }
+                try {
+                    _data.writeStrongBinder(appToken);
+                } catch (Throwable th2) {
+                    th = th2;
+                    _reply.recycle();
+                    _data.recycle();
+                    throw th;
+                }
+                try {
+                    _data.writeString(alias);
+                    _data.writeInt(purpose);
+                    _data.writeInt(pruneable ? 1 : 0);
+                    if (params != null) {
+                        _data.writeInt(1);
+                        params.writeToParcel(_data, 0);
+                    } else {
+                        _data.writeInt(0);
+                    }
+                    _data.writeByteArray(entropy);
+                    _data.writeInt(uid);
+                    boolean _status = this.mRemote.transact(22, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        int begin = Stub.getDefaultImpl().begin(cb, appToken, alias, purpose, pruneable, params, entropy, uid);
                         _reply.recycle();
                         _data.recycle();
-                        throw th;
+                        return begin;
                     }
+                    _reply.readException();
+                    int _result = _reply.readInt();
+                    _reply.recycle();
+                    _data.recycle();
+                    return _result;
                 } catch (Throwable th3) {
                     th = th3;
-                    IBinder iBinder = appToken;
-                    String str2 = alias;
                     _reply.recycle();
                     _data.recycle();
                     throw th;
                 }
             }
 
+            @Override // android.security.keystore.IKeystoreService
             public int update(IKeystoreOperationResultCallback cb, IBinder token, KeymasterArguments params, byte[] input) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -1401,13 +1403,12 @@ public interface IKeystoreService extends IInterface {
                         _data.writeInt(0);
                     }
                     _data.writeByteArray(input);
-                    if (!this.mRemote.transact(23, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(23, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().update(cb, token, params, input);
                     }
                     _reply.readException();
                     int _result = _reply.readInt();
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -1415,6 +1416,7 @@ public interface IKeystoreService extends IInterface {
                 }
             }
 
+            @Override // android.security.keystore.IKeystoreService
             public int finish(IKeystoreOperationResultCallback cb, IBinder token, KeymasterArguments params, byte[] signature, byte[] entropy) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -1430,13 +1432,12 @@ public interface IKeystoreService extends IInterface {
                     }
                     _data.writeByteArray(signature);
                     _data.writeByteArray(entropy);
-                    if (!this.mRemote.transact(24, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(24, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().finish(cb, token, params, signature, entropy);
                     }
                     _reply.readException();
                     int _result = _reply.readInt();
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -1444,6 +1445,7 @@ public interface IKeystoreService extends IInterface {
                 }
             }
 
+            @Override // android.security.keystore.IKeystoreService
             public int abort(IKeystoreResponseCallback cb, IBinder token) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -1451,13 +1453,12 @@ public interface IKeystoreService extends IInterface {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeStrongBinder(cb != null ? cb.asBinder() : null);
                     _data.writeStrongBinder(token);
-                    if (!this.mRemote.transact(25, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(25, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().abort(cb, token);
                     }
                     _reply.readException();
                     int _result = _reply.readInt();
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -1465,19 +1466,19 @@ public interface IKeystoreService extends IInterface {
                 }
             }
 
+            @Override // android.security.keystore.IKeystoreService
             public int addAuthToken(byte[] authToken) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeByteArray(authToken);
-                    if (!this.mRemote.transact(26, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(26, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().addAuthToken(authToken);
                     }
                     _reply.readException();
                     int _result = _reply.readInt();
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -1485,6 +1486,7 @@ public interface IKeystoreService extends IInterface {
                 }
             }
 
+            @Override // android.security.keystore.IKeystoreService
             public int onUserAdded(int userId, int parentId) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -1492,13 +1494,12 @@ public interface IKeystoreService extends IInterface {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeInt(userId);
                     _data.writeInt(parentId);
-                    if (!this.mRemote.transact(27, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(27, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().onUserAdded(userId, parentId);
                     }
                     _reply.readException();
                     int _result = _reply.readInt();
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -1506,19 +1507,19 @@ public interface IKeystoreService extends IInterface {
                 }
             }
 
+            @Override // android.security.keystore.IKeystoreService
             public int onUserRemoved(int userId) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeInt(userId);
-                    if (!this.mRemote.transact(28, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(28, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().onUserRemoved(userId);
                     }
                     _reply.readException();
                     int _result = _reply.readInt();
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -1526,6 +1527,7 @@ public interface IKeystoreService extends IInterface {
                 }
             }
 
+            @Override // android.security.keystore.IKeystoreService
             public int attestKey(IKeystoreCertificateChainCallback cb, String alias, KeymasterArguments params) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -1539,13 +1541,12 @@ public interface IKeystoreService extends IInterface {
                     } else {
                         _data.writeInt(0);
                     }
-                    if (!this.mRemote.transact(29, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(29, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().attestKey(cb, alias, params);
                     }
                     _reply.readException();
                     int _result = _reply.readInt();
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -1553,6 +1554,7 @@ public interface IKeystoreService extends IInterface {
                 }
             }
 
+            @Override // android.security.keystore.IKeystoreService
             public int attestDeviceIds(IKeystoreCertificateChainCallback cb, KeymasterArguments params) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -1565,13 +1567,12 @@ public interface IKeystoreService extends IInterface {
                     } else {
                         _data.writeInt(0);
                     }
-                    if (!this.mRemote.transact(30, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(30, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().attestDeviceIds(cb, params);
                     }
                     _reply.readException();
                     int _result = _reply.readInt();
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -1579,18 +1580,18 @@ public interface IKeystoreService extends IInterface {
                 }
             }
 
+            @Override // android.security.keystore.IKeystoreService
             public int onDeviceOffBody() throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    if (!this.mRemote.transact(31, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(31, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().onDeviceOffBody();
                     }
                     _reply.readException();
                     int _result = _reply.readInt();
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -1598,8 +1599,8 @@ public interface IKeystoreService extends IInterface {
                 }
             }
 
+            @Override // android.security.keystore.IKeystoreService
             public int importWrappedKey(IKeystoreKeyCharacteristicsCallback cb, String wrappedKeyAlias, byte[] wrappedKey, String wrappingKeyAlias, byte[] maskingKey, KeymasterArguments arguments, long rootSid, long fingerprintSid) throws RemoteException {
-                KeymasterArguments keymasterArguments = arguments;
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
@@ -1609,21 +1610,20 @@ public interface IKeystoreService extends IInterface {
                     _data.writeByteArray(wrappedKey);
                     _data.writeString(wrappingKeyAlias);
                     _data.writeByteArray(maskingKey);
-                    if (keymasterArguments != null) {
+                    if (arguments != null) {
                         _data.writeInt(1);
-                        keymasterArguments.writeToParcel(_data, 0);
+                        arguments.writeToParcel(_data, 0);
                     } else {
                         _data.writeInt(0);
                     }
                     _data.writeLong(rootSid);
                     _data.writeLong(fingerprintSid);
-                    if (!this.mRemote.transact(32, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(32, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().importWrappedKey(cb, wrappedKeyAlias, wrappedKey, wrappingKeyAlias, maskingKey, arguments, rootSid, fingerprintSid);
                     }
                     _reply.readException();
                     int _result = _reply.readInt();
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -1631,6 +1631,7 @@ public interface IKeystoreService extends IInterface {
                 }
             }
 
+            @Override // android.security.keystore.IKeystoreService
             public int presentConfirmationPrompt(IBinder listener, String promptText, byte[] extraData, String locale, int uiOptionsAsFlags) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -1641,13 +1642,12 @@ public interface IKeystoreService extends IInterface {
                     _data.writeByteArray(extraData);
                     _data.writeString(locale);
                     _data.writeInt(uiOptionsAsFlags);
-                    if (!this.mRemote.transact(33, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(33, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().presentConfirmationPrompt(listener, promptText, extraData, locale, uiOptionsAsFlags);
                     }
                     _reply.readException();
                     int _result = _reply.readInt();
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -1655,19 +1655,19 @@ public interface IKeystoreService extends IInterface {
                 }
             }
 
+            @Override // android.security.keystore.IKeystoreService
             public int cancelConfirmationPrompt(IBinder listener) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeStrongBinder(listener);
-                    if (!this.mRemote.transact(34, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(34, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().cancelConfirmationPrompt(listener);
                     }
                     _reply.readException();
                     int _result = _reply.readInt();
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -1675,43 +1675,39 @@ public interface IKeystoreService extends IInterface {
                 }
             }
 
+            @Override // android.security.keystore.IKeystoreService
             public boolean isConfirmationPromptSupported() throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    boolean z = false;
-                    if (!this.mRemote.transact(35, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(35, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().isConfirmationPromptSupported();
                     }
                     _reply.readException();
-                    if (_reply.readInt() != 0) {
-                        z = true;
-                    }
-                    boolean _status = z;
-                    _reply.recycle();
-                    _data.recycle();
-                    return _status;
+                    boolean _status2 = _reply.readInt() != 0;
+                    return _status2;
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.security.keystore.IKeystoreService
             public int onKeyguardVisibilityChanged(boolean isShowing, int userId) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    _data.writeInt(isShowing);
+                    _data.writeInt(isShowing ? 1 : 0);
                     _data.writeInt(userId);
-                    if (!this.mRemote.transact(36, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(36, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().onKeyguardVisibilityChanged(isShowing, userId);
                     }
                     _reply.readException();
                     int _result = _reply.readInt();
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -1719,19 +1715,19 @@ public interface IKeystoreService extends IInterface {
                 }
             }
 
+            @Override // android.security.keystore.IKeystoreService
             public int listUidsOfAuthBoundKeys(List<String> uids) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    if (!this.mRemote.transact(37, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(37, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().listUidsOfAuthBoundKeys(uids);
                     }
                     _reply.readException();
                     int _result = _reply.readInt();
                     _reply.readStringList(uids);
-                    _reply.recycle();
-                    _data.recycle();
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -1741,11 +1737,11 @@ public interface IKeystoreService extends IInterface {
         }
 
         public static boolean setDefaultImpl(IKeystoreService impl) {
-            if (Proxy.sDefaultImpl != null || impl == null) {
-                return false;
+            if (Proxy.sDefaultImpl == null && impl != null) {
+                Proxy.sDefaultImpl = impl;
+                return true;
             }
-            Proxy.sDefaultImpl = impl;
-            return true;
+            return false;
         }
 
         public static IKeystoreService getDefaultImpl() {

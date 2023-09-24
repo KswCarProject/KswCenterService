@@ -3,12 +3,13 @@ package com.android.internal.util;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
-import android.os.Build;
-import android.os.UserHandle;
+import android.p007os.Build;
+import android.p007os.UserHandle;
 import android.provider.Settings;
 import android.telecom.PhoneAccount;
-import com.android.internal.R;
+import com.android.internal.C3132R;
 
+/* loaded from: classes4.dex */
 public class EmergencyAffordanceManager {
     private static final String EMERGENCY_CALL_NUMBER_SETTING = "emergency_affordance_number";
     public static final boolean ENABLED = true;
@@ -25,11 +26,11 @@ public class EmergencyAffordanceManager {
 
     private static Uri getPhoneUri(Context context) {
         String override;
-        String number = context.getResources().getString(R.string.config_emergency_call_number);
+        String number = context.getResources().getString(C3132R.string.config_emergency_call_number);
         if (Build.IS_DEBUGGABLE && (override = Settings.Global.getString(context.getContentResolver(), EMERGENCY_CALL_NUMBER_SETTING)) != null) {
             number = override;
         }
-        return Uri.fromParts(PhoneAccount.SCHEME_TEL, number, (String) null);
+        return Uri.fromParts(PhoneAccount.SCHEME_TEL, number, null);
     }
 
     private static void performEmergencyCall(Context context) {

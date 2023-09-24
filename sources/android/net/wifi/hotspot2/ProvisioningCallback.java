@@ -3,6 +3,7 @@ package android.net.wifi.hotspot2;
 import android.annotation.SystemApi;
 
 @SystemApi
+/* loaded from: classes3.dex */
 public abstract class ProvisioningCallback {
     public static final int OSU_FAILURE_ADD_PASSPOINT_CONFIGURATION = 22;
     public static final int OSU_FAILURE_AP_CONNECTION = 1;

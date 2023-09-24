@@ -1,5 +1,6 @@
 package com.android.internal.telephony;
 
+/* loaded from: classes4.dex */
 public class SmsConstants {
     public static final int ENCODING_16BIT = 3;
     public static final int ENCODING_7BIT = 1;
@@ -14,6 +15,7 @@ public class SmsConstants {
     public static final int MAX_USER_DATA_SEPTETS = 160;
     public static final int MAX_USER_DATA_SEPTETS_WITH_HEADER = 153;
 
+    /* loaded from: classes4.dex */
     public enum MessageClass {
         UNKNOWN,
         CLASS_0,

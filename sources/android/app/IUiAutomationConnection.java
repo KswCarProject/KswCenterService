@@ -3,16 +3,17 @@ package android.app;
 import android.accessibilityservice.IAccessibilityServiceClient;
 import android.graphics.Bitmap;
 import android.graphics.Rect;
-import android.os.Binder;
-import android.os.IBinder;
-import android.os.IInterface;
-import android.os.Parcel;
-import android.os.ParcelFileDescriptor;
-import android.os.RemoteException;
+import android.p007os.Binder;
+import android.p007os.IBinder;
+import android.p007os.IInterface;
+import android.p007os.Parcel;
+import android.p007os.ParcelFileDescriptor;
+import android.p007os.RemoteException;
 import android.view.InputEvent;
 import android.view.WindowAnimationFrameStats;
 import android.view.WindowContentFrameStats;
 
+/* loaded from: classes.dex */
 public interface IUiAutomationConnection extends IInterface {
     void adoptShellPermissionIdentity(int i, String[] strArr) throws RemoteException;
 
@@ -46,66 +47,85 @@ public interface IUiAutomationConnection extends IInterface {
 
     Bitmap takeScreenshot(Rect rect, int i) throws RemoteException;
 
+    /* loaded from: classes.dex */
     public static class Default implements IUiAutomationConnection {
+        @Override // android.app.IUiAutomationConnection
         public void connect(IAccessibilityServiceClient client, int flags) throws RemoteException {
         }
 
+        @Override // android.app.IUiAutomationConnection
         public void disconnect() throws RemoteException {
         }
 
+        @Override // android.app.IUiAutomationConnection
         public boolean injectInputEvent(InputEvent event, boolean sync) throws RemoteException {
             return false;
         }
 
+        @Override // android.app.IUiAutomationConnection
         public void syncInputTransactions() throws RemoteException {
         }
 
+        @Override // android.app.IUiAutomationConnection
         public boolean setRotation(int rotation) throws RemoteException {
             return false;
         }
 
+        @Override // android.app.IUiAutomationConnection
         public Bitmap takeScreenshot(Rect crop, int rotation) throws RemoteException {
             return null;
         }
 
+        @Override // android.app.IUiAutomationConnection
         public boolean clearWindowContentFrameStats(int windowId) throws RemoteException {
             return false;
         }
 
+        @Override // android.app.IUiAutomationConnection
         public WindowContentFrameStats getWindowContentFrameStats(int windowId) throws RemoteException {
             return null;
         }
 
+        @Override // android.app.IUiAutomationConnection
         public void clearWindowAnimationFrameStats() throws RemoteException {
         }
 
+        @Override // android.app.IUiAutomationConnection
         public WindowAnimationFrameStats getWindowAnimationFrameStats() throws RemoteException {
             return null;
         }
 
+        @Override // android.app.IUiAutomationConnection
         public void executeShellCommand(String command, ParcelFileDescriptor sink, ParcelFileDescriptor source) throws RemoteException {
         }
 
+        @Override // android.app.IUiAutomationConnection
         public void grantRuntimePermission(String packageName, String permission, int userId) throws RemoteException {
         }
 
+        @Override // android.app.IUiAutomationConnection
         public void revokeRuntimePermission(String packageName, String permission, int userId) throws RemoteException {
         }
 
+        @Override // android.app.IUiAutomationConnection
         public void adoptShellPermissionIdentity(int uid, String[] permissions) throws RemoteException {
         }
 
+        @Override // android.app.IUiAutomationConnection
         public void dropShellPermissionIdentity() throws RemoteException {
         }
 
+        @Override // android.app.IUiAutomationConnection
         public void shutdown() throws RemoteException {
         }
 
+        @Override // android.p007os.IInterface
         public IBinder asBinder() {
             return null;
         }
     }
 
+    /* loaded from: classes.dex */
     public static abstract class Stub extends Binder implements IUiAutomationConnection {
         private static final String DESCRIPTOR = "android.app.IUiAutomationConnection";
         static final int TRANSACTION_adoptShellPermissionIdentity = 14;
@@ -134,12 +154,13 @@ public interface IUiAutomationConnection extends IInterface {
                 return null;
             }
             IInterface iin = obj.queryLocalInterface(DESCRIPTOR);
-            if (iin == null || !(iin instanceof IUiAutomationConnection)) {
-                return new Proxy(obj);
+            if (iin != null && (iin instanceof IUiAutomationConnection)) {
+                return (IUiAutomationConnection) iin;
             }
-            return (IUiAutomationConnection) iin;
+            return new Proxy(obj);
         }
 
+        @Override // android.p007os.IInterface
         public IBinder asBinder() {
             return this;
         }
@@ -183,213 +204,149 @@ public interface IUiAutomationConnection extends IInterface {
             }
         }
 
+        @Override // android.p007os.Binder
         public String getTransactionName(int transactionCode) {
             return getDefaultTransactionName(transactionCode);
         }
 
-        /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r3v7, resolved type: android.graphics.Rect} */
-        /* JADX WARNING: type inference failed for: r3v0 */
-        /* JADX WARNING: type inference failed for: r3v2, types: [android.view.InputEvent] */
-        /* JADX WARNING: type inference failed for: r3v14, types: [android.os.ParcelFileDescriptor] */
-        /* JADX WARNING: type inference failed for: r3v21 */
-        /* JADX WARNING: type inference failed for: r3v22 */
-        /* JADX WARNING: type inference failed for: r3v23 */
-        /* JADX WARNING: Multi-variable type inference failed */
-        /* Code decompiled incorrectly, please refer to instructions dump. */
-        public boolean onTransact(int r7, android.os.Parcel r8, android.os.Parcel r9, int r10) throws android.os.RemoteException {
-            /*
-                r6 = this;
-                java.lang.String r0 = "android.app.IUiAutomationConnection"
-                r1 = 1598968902(0x5f4e5446, float:1.4867585E19)
-                r2 = 1
-                if (r7 == r1) goto L_0x016a
-                r1 = 0
-                r3 = 0
-                switch(r7) {
-                    case 1: goto L_0x0154;
-                    case 2: goto L_0x014a;
-                    case 3: goto L_0x0124;
-                    case 4: goto L_0x011a;
-                    case 5: goto L_0x0108;
-                    case 6: goto L_0x00dd;
-                    case 7: goto L_0x00cb;
-                    case 8: goto L_0x00b0;
-                    case 9: goto L_0x00a6;
-                    case 10: goto L_0x008f;
-                    case 11: goto L_0x0061;
-                    case 12: goto L_0x004b;
-                    case 13: goto L_0x0035;
-                    case 14: goto L_0x0023;
-                    case 15: goto L_0x0019;
-                    case 16: goto L_0x0012;
-                    default: goto L_0x000d;
-                }
-            L_0x000d:
-                boolean r1 = super.onTransact(r7, r8, r9, r10)
-                return r1
-            L_0x0012:
-                r8.enforceInterface(r0)
-                r6.shutdown()
-                return r2
-            L_0x0019:
-                r8.enforceInterface(r0)
-                r6.dropShellPermissionIdentity()
-                r9.writeNoException()
-                return r2
-            L_0x0023:
-                r8.enforceInterface(r0)
-                int r1 = r8.readInt()
-                java.lang.String[] r3 = r8.createStringArray()
-                r6.adoptShellPermissionIdentity(r1, r3)
-                r9.writeNoException()
-                return r2
-            L_0x0035:
-                r8.enforceInterface(r0)
-                java.lang.String r1 = r8.readString()
-                java.lang.String r3 = r8.readString()
-                int r4 = r8.readInt()
-                r6.revokeRuntimePermission(r1, r3, r4)
-                r9.writeNoException()
-                return r2
-            L_0x004b:
-                r8.enforceInterface(r0)
-                java.lang.String r1 = r8.readString()
-                java.lang.String r3 = r8.readString()
-                int r4 = r8.readInt()
-                r6.grantRuntimePermission(r1, r3, r4)
-                r9.writeNoException()
-                return r2
-            L_0x0061:
-                r8.enforceInterface(r0)
-                java.lang.String r1 = r8.readString()
-                int r4 = r8.readInt()
-                if (r4 == 0) goto L_0x0077
-                android.os.Parcelable$Creator<android.os.ParcelFileDescriptor> r4 = android.os.ParcelFileDescriptor.CREATOR
-                java.lang.Object r4 = r4.createFromParcel(r8)
-                android.os.ParcelFileDescriptor r4 = (android.os.ParcelFileDescriptor) r4
-                goto L_0x0078
-            L_0x0077:
-                r4 = r3
-            L_0x0078:
-                int r5 = r8.readInt()
-                if (r5 == 0) goto L_0x0087
-                android.os.Parcelable$Creator<android.os.ParcelFileDescriptor> r3 = android.os.ParcelFileDescriptor.CREATOR
-                java.lang.Object r3 = r3.createFromParcel(r8)
-                android.os.ParcelFileDescriptor r3 = (android.os.ParcelFileDescriptor) r3
-                goto L_0x0088
-            L_0x0087:
-            L_0x0088:
-                r6.executeShellCommand(r1, r4, r3)
-                r9.writeNoException()
-                return r2
-            L_0x008f:
-                r8.enforceInterface(r0)
-                android.view.WindowAnimationFrameStats r3 = r6.getWindowAnimationFrameStats()
-                r9.writeNoException()
-                if (r3 == 0) goto L_0x00a2
-                r9.writeInt(r2)
-                r3.writeToParcel(r9, r2)
-                goto L_0x00a5
-            L_0x00a2:
-                r9.writeInt(r1)
-            L_0x00a5:
-                return r2
-            L_0x00a6:
-                r8.enforceInterface(r0)
-                r6.clearWindowAnimationFrameStats()
-                r9.writeNoException()
-                return r2
-            L_0x00b0:
-                r8.enforceInterface(r0)
-                int r3 = r8.readInt()
-                android.view.WindowContentFrameStats r4 = r6.getWindowContentFrameStats(r3)
-                r9.writeNoException()
-                if (r4 == 0) goto L_0x00c7
-                r9.writeInt(r2)
-                r4.writeToParcel(r9, r2)
-                goto L_0x00ca
-            L_0x00c7:
-                r9.writeInt(r1)
-            L_0x00ca:
-                return r2
-            L_0x00cb:
-                r8.enforceInterface(r0)
-                int r1 = r8.readInt()
-                boolean r3 = r6.clearWindowContentFrameStats(r1)
-                r9.writeNoException()
-                r9.writeInt(r3)
-                return r2
-            L_0x00dd:
-                r8.enforceInterface(r0)
-                int r4 = r8.readInt()
-                if (r4 == 0) goto L_0x00ef
-                android.os.Parcelable$Creator<android.graphics.Rect> r3 = android.graphics.Rect.CREATOR
-                java.lang.Object r3 = r3.createFromParcel(r8)
-                android.graphics.Rect r3 = (android.graphics.Rect) r3
-                goto L_0x00f0
-            L_0x00ef:
-            L_0x00f0:
-                int r4 = r8.readInt()
-                android.graphics.Bitmap r5 = r6.takeScreenshot(r3, r4)
-                r9.writeNoException()
-                if (r5 == 0) goto L_0x0104
-                r9.writeInt(r2)
-                r5.writeToParcel(r9, r2)
-                goto L_0x0107
-            L_0x0104:
-                r9.writeInt(r1)
-            L_0x0107:
-                return r2
-            L_0x0108:
-                r8.enforceInterface(r0)
-                int r1 = r8.readInt()
-                boolean r3 = r6.setRotation(r1)
-                r9.writeNoException()
-                r9.writeInt(r3)
-                return r2
-            L_0x011a:
-                r8.enforceInterface(r0)
-                r6.syncInputTransactions()
-                r9.writeNoException()
-                return r2
-            L_0x0124:
-                r8.enforceInterface(r0)
-                int r4 = r8.readInt()
-                if (r4 == 0) goto L_0x0136
-                android.os.Parcelable$Creator<android.view.InputEvent> r3 = android.view.InputEvent.CREATOR
-                java.lang.Object r3 = r3.createFromParcel(r8)
-                android.view.InputEvent r3 = (android.view.InputEvent) r3
-                goto L_0x0137
-            L_0x0136:
-            L_0x0137:
-                int r4 = r8.readInt()
-                if (r4 == 0) goto L_0x013f
-                r1 = r2
-            L_0x013f:
-                boolean r4 = r6.injectInputEvent(r3, r1)
-                r9.writeNoException()
-                r9.writeInt(r4)
-                return r2
-            L_0x014a:
-                r8.enforceInterface(r0)
-                r6.disconnect()
-                r9.writeNoException()
-                return r2
-            L_0x0154:
-                r8.enforceInterface(r0)
-                android.os.IBinder r1 = r8.readStrongBinder()
-                android.accessibilityservice.IAccessibilityServiceClient r1 = android.accessibilityservice.IAccessibilityServiceClient.Stub.asInterface(r1)
-                int r3 = r8.readInt()
-                r6.connect(r1, r3)
-                r9.writeNoException()
-                return r2
-            L_0x016a:
-                r9.writeString(r0)
-                return r2
-            */
-            throw new UnsupportedOperationException("Method not decompiled: android.app.IUiAutomationConnection.Stub.onTransact(int, android.os.Parcel, android.os.Parcel, int):boolean");
+        @Override // android.p007os.Binder
+        public boolean onTransact(int code, Parcel data, Parcel reply, int flags) throws RemoteException {
+            ParcelFileDescriptor _arg1;
+            if (code == 1598968902) {
+                reply.writeString(DESCRIPTOR);
+                return true;
+            }
+            switch (code) {
+                case 1:
+                    data.enforceInterface(DESCRIPTOR);
+                    IAccessibilityServiceClient _arg0 = IAccessibilityServiceClient.Stub.asInterface(data.readStrongBinder());
+                    int _arg12 = data.readInt();
+                    connect(_arg0, _arg12);
+                    reply.writeNoException();
+                    return true;
+                case 2:
+                    data.enforceInterface(DESCRIPTOR);
+                    disconnect();
+                    reply.writeNoException();
+                    return true;
+                case 3:
+                    data.enforceInterface(DESCRIPTOR);
+                    InputEvent _arg02 = data.readInt() != 0 ? InputEvent.CREATOR.createFromParcel(data) : null;
+                    boolean _arg13 = data.readInt() != 0;
+                    boolean injectInputEvent = injectInputEvent(_arg02, _arg13);
+                    reply.writeNoException();
+                    reply.writeInt(injectInputEvent ? 1 : 0);
+                    return true;
+                case 4:
+                    data.enforceInterface(DESCRIPTOR);
+                    syncInputTransactions();
+                    reply.writeNoException();
+                    return true;
+                case 5:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg03 = data.readInt();
+                    boolean rotation = setRotation(_arg03);
+                    reply.writeNoException();
+                    reply.writeInt(rotation ? 1 : 0);
+                    return true;
+                case 6:
+                    data.enforceInterface(DESCRIPTOR);
+                    Rect _arg04 = data.readInt() != 0 ? Rect.CREATOR.createFromParcel(data) : null;
+                    int _arg14 = data.readInt();
+                    Bitmap _result = takeScreenshot(_arg04, _arg14);
+                    reply.writeNoException();
+                    if (_result != null) {
+                        reply.writeInt(1);
+                        _result.writeToParcel(reply, 1);
+                    } else {
+                        reply.writeInt(0);
+                    }
+                    return true;
+                case 7:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg05 = data.readInt();
+                    boolean clearWindowContentFrameStats = clearWindowContentFrameStats(_arg05);
+                    reply.writeNoException();
+                    reply.writeInt(clearWindowContentFrameStats ? 1 : 0);
+                    return true;
+                case 8:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg06 = data.readInt();
+                    WindowContentFrameStats _result2 = getWindowContentFrameStats(_arg06);
+                    reply.writeNoException();
+                    if (_result2 != null) {
+                        reply.writeInt(1);
+                        _result2.writeToParcel(reply, 1);
+                    } else {
+                        reply.writeInt(0);
+                    }
+                    return true;
+                case 9:
+                    data.enforceInterface(DESCRIPTOR);
+                    clearWindowAnimationFrameStats();
+                    reply.writeNoException();
+                    return true;
+                case 10:
+                    data.enforceInterface(DESCRIPTOR);
+                    WindowAnimationFrameStats _result3 = getWindowAnimationFrameStats();
+                    reply.writeNoException();
+                    if (_result3 != null) {
+                        reply.writeInt(1);
+                        _result3.writeToParcel(reply, 1);
+                    } else {
+                        reply.writeInt(0);
+                    }
+                    return true;
+                case 11:
+                    data.enforceInterface(DESCRIPTOR);
+                    String _arg07 = data.readString();
+                    if (data.readInt() != 0) {
+                        _arg1 = ParcelFileDescriptor.CREATOR.createFromParcel(data);
+                    } else {
+                        _arg1 = null;
+                    }
+                    ParcelFileDescriptor _arg2 = data.readInt() != 0 ? ParcelFileDescriptor.CREATOR.createFromParcel(data) : null;
+                    executeShellCommand(_arg07, _arg1, _arg2);
+                    reply.writeNoException();
+                    return true;
+                case 12:
+                    data.enforceInterface(DESCRIPTOR);
+                    String _arg08 = data.readString();
+                    String _arg15 = data.readString();
+                    int _arg22 = data.readInt();
+                    grantRuntimePermission(_arg08, _arg15, _arg22);
+                    reply.writeNoException();
+                    return true;
+                case 13:
+                    data.enforceInterface(DESCRIPTOR);
+                    String _arg09 = data.readString();
+                    String _arg16 = data.readString();
+                    int _arg23 = data.readInt();
+                    revokeRuntimePermission(_arg09, _arg16, _arg23);
+                    reply.writeNoException();
+                    return true;
+                case 14:
+                    data.enforceInterface(DESCRIPTOR);
+                    int _arg010 = data.readInt();
+                    String[] _arg17 = data.createStringArray();
+                    adoptShellPermissionIdentity(_arg010, _arg17);
+                    reply.writeNoException();
+                    return true;
+                case 15:
+                    data.enforceInterface(DESCRIPTOR);
+                    dropShellPermissionIdentity();
+                    reply.writeNoException();
+                    return true;
+                case 16:
+                    data.enforceInterface(DESCRIPTOR);
+                    shutdown();
+                    return true;
+                default:
+                    return super.onTransact(code, data, reply, flags);
+            }
         }
 
+        /* loaded from: classes.dex */
         private static class Proxy implements IUiAutomationConnection {
             public static IUiAutomationConnection sDefaultImpl;
             private IBinder mRemote;
@@ -398,6 +355,7 @@ public interface IUiAutomationConnection extends IInterface {
                 this.mRemote = remote;
             }
 
+            @Override // android.p007os.IInterface
             public IBinder asBinder() {
                 return this.mRemote;
             }
@@ -406,6 +364,7 @@ public interface IUiAutomationConnection extends IInterface {
                 return Stub.DESCRIPTOR;
             }
 
+            @Override // android.app.IUiAutomationConnection
             public void connect(IAccessibilityServiceClient client, int flags) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -413,59 +372,55 @@ public interface IUiAutomationConnection extends IInterface {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeStrongBinder(client != null ? client.asBinder() : null);
                     _data.writeInt(flags);
-                    if (this.mRemote.transact(1, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(1, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().connect(client, flags);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().connect(client, flags);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.app.IUiAutomationConnection
             public void disconnect() throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    if (this.mRemote.transact(2, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(2, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().disconnect();
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().disconnect();
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.app.IUiAutomationConnection
             public boolean injectInputEvent(InputEvent event, boolean sync) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    boolean _result = true;
                     if (event != null) {
                         _data.writeInt(1);
                         event.writeToParcel(_data, 0);
                     } else {
                         _data.writeInt(0);
                     }
-                    _data.writeInt(sync);
-                    if (!this.mRemote.transact(3, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    _data.writeInt(sync ? 1 : 0);
+                    boolean _status = this.mRemote.transact(3, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().injectInputEvent(event, sync);
                     }
                     _reply.readException();
-                    if (_reply.readInt() == 0) {
-                        _result = false;
-                    }
-                    _reply.recycle();
-                    _data.recycle();
+                    boolean _result = _reply.readInt() != 0;
                     return _result;
                 } finally {
                     _reply.recycle();
@@ -473,48 +428,45 @@ public interface IUiAutomationConnection extends IInterface {
                 }
             }
 
+            @Override // android.app.IUiAutomationConnection
             public void syncInputTransactions() throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    if (this.mRemote.transact(4, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(4, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().syncInputTransactions();
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().syncInputTransactions();
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.app.IUiAutomationConnection
             public boolean setRotation(int rotation) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeInt(rotation);
-                    boolean z = false;
-                    if (!this.mRemote.transact(5, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(5, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().setRotation(rotation);
                     }
                     _reply.readException();
-                    if (_reply.readInt() != 0) {
-                        z = true;
-                    }
-                    boolean _status = z;
-                    _reply.recycle();
-                    _data.recycle();
-                    return _status;
+                    boolean _status2 = _reply.readInt() != 0;
+                    return _status2;
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.app.IUiAutomationConnection
             public Bitmap takeScreenshot(Rect crop, int rotation) throws RemoteException {
                 Bitmap _result;
                 Parcel _data = Parcel.obtain();
@@ -528,7 +480,8 @@ public interface IUiAutomationConnection extends IInterface {
                         _data.writeInt(0);
                     }
                     _data.writeInt(rotation);
-                    if (!this.mRemote.transact(6, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(6, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().takeScreenshot(crop, rotation);
                     }
                     _reply.readException();
@@ -537,40 +490,34 @@ public interface IUiAutomationConnection extends IInterface {
                     } else {
                         _result = null;
                     }
-                    Bitmap _result2 = _result;
-                    _reply.recycle();
-                    _data.recycle();
-                    return _result2;
+                    return _result;
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.app.IUiAutomationConnection
             public boolean clearWindowContentFrameStats(int windowId) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeInt(windowId);
-                    boolean z = false;
-                    if (!this.mRemote.transact(7, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(7, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().clearWindowContentFrameStats(windowId);
                     }
                     _reply.readException();
-                    if (_reply.readInt() != 0) {
-                        z = true;
-                    }
-                    boolean _status = z;
-                    _reply.recycle();
-                    _data.recycle();
-                    return _status;
+                    boolean _status2 = _reply.readInt() != 0;
+                    return _status2;
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.app.IUiAutomationConnection
             public WindowContentFrameStats getWindowContentFrameStats(int windowId) throws RemoteException {
                 WindowContentFrameStats _result;
                 Parcel _data = Parcel.obtain();
@@ -578,7 +525,8 @@ public interface IUiAutomationConnection extends IInterface {
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeInt(windowId);
-                    if (!this.mRemote.transact(8, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(8, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().getWindowContentFrameStats(windowId);
                     }
                     _reply.readException();
@@ -587,41 +535,40 @@ public interface IUiAutomationConnection extends IInterface {
                     } else {
                         _result = null;
                     }
-                    WindowContentFrameStats _result2 = _result;
-                    _reply.recycle();
-                    _data.recycle();
-                    return _result2;
+                    return _result;
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.app.IUiAutomationConnection
             public void clearWindowAnimationFrameStats() throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    if (this.mRemote.transact(9, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(9, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().clearWindowAnimationFrameStats();
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().clearWindowAnimationFrameStats();
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.app.IUiAutomationConnection
             public WindowAnimationFrameStats getWindowAnimationFrameStats() throws RemoteException {
                 WindowAnimationFrameStats _result;
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    if (!this.mRemote.transact(10, _data, _reply, 0) && Stub.getDefaultImpl() != null) {
+                    boolean _status = this.mRemote.transact(10, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         return Stub.getDefaultImpl().getWindowAnimationFrameStats();
                     }
                     _reply.readException();
@@ -630,16 +577,14 @@ public interface IUiAutomationConnection extends IInterface {
                     } else {
                         _result = null;
                     }
-                    WindowAnimationFrameStats _result2 = _result;
-                    _reply.recycle();
-                    _data.recycle();
-                    return _result2;
+                    return _result;
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.app.IUiAutomationConnection
             public void executeShellCommand(String command, ParcelFileDescriptor sink, ParcelFileDescriptor source) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -658,19 +603,19 @@ public interface IUiAutomationConnection extends IInterface {
                     } else {
                         _data.writeInt(0);
                     }
-                    if (this.mRemote.transact(11, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(11, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().executeShellCommand(command, sink, source);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().executeShellCommand(command, sink, source);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.app.IUiAutomationConnection
             public void grantRuntimePermission(String packageName, String permission, int userId) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -679,19 +624,19 @@ public interface IUiAutomationConnection extends IInterface {
                     _data.writeString(packageName);
                     _data.writeString(permission);
                     _data.writeInt(userId);
-                    if (this.mRemote.transact(12, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(12, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().grantRuntimePermission(packageName, permission, userId);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().grantRuntimePermission(packageName, permission, userId);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.app.IUiAutomationConnection
             public void revokeRuntimePermission(String packageName, String permission, int userId) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -700,19 +645,19 @@ public interface IUiAutomationConnection extends IInterface {
                     _data.writeString(packageName);
                     _data.writeString(permission);
                     _data.writeInt(userId);
-                    if (this.mRemote.transact(13, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(13, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().revokeRuntimePermission(packageName, permission, userId);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().revokeRuntimePermission(packageName, permission, userId);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.app.IUiAutomationConnection
             public void adoptShellPermissionIdentity(int uid, String[] permissions) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
@@ -720,44 +665,43 @@ public interface IUiAutomationConnection extends IInterface {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
                     _data.writeInt(uid);
                     _data.writeStringArray(permissions);
-                    if (this.mRemote.transact(14, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(14, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().adoptShellPermissionIdentity(uid, permissions);
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().adoptShellPermissionIdentity(uid, permissions);
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.app.IUiAutomationConnection
             public void dropShellPermissionIdentity() throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    if (this.mRemote.transact(15, _data, _reply, 0) || Stub.getDefaultImpl() == null) {
+                    boolean _status = this.mRemote.transact(15, _data, _reply, 0);
+                    if (!_status && Stub.getDefaultImpl() != null) {
+                        Stub.getDefaultImpl().dropShellPermissionIdentity();
+                    } else {
                         _reply.readException();
-                        _reply.recycle();
-                        _data.recycle();
-                        return;
                     }
-                    Stub.getDefaultImpl().dropShellPermissionIdentity();
                 } finally {
                     _reply.recycle();
                     _data.recycle();
                 }
             }
 
+            @Override // android.app.IUiAutomationConnection
             public void shutdown() throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 try {
                     _data.writeInterfaceToken(Stub.DESCRIPTOR);
-                    if (this.mRemote.transact(16, _data, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
-                        _data.recycle();
-                    } else {
+                    boolean _status = this.mRemote.transact(16, _data, null, 1);
+                    if (!_status && Stub.getDefaultImpl() != null) {
                         Stub.getDefaultImpl().shutdown();
                     }
                 } finally {
@@ -767,11 +711,11 @@ public interface IUiAutomationConnection extends IInterface {
         }
 
         public static boolean setDefaultImpl(IUiAutomationConnection impl) {
-            if (Proxy.sDefaultImpl != null || impl == null) {
-                return false;
+            if (Proxy.sDefaultImpl == null && impl != null) {
+                Proxy.sDefaultImpl = impl;
+                return true;
             }
-            Proxy.sDefaultImpl = impl;
-            return true;
+            return false;
         }
 
         public static IUiAutomationConnection getDefaultImpl() {

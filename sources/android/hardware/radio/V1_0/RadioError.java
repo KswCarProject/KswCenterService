@@ -3,6 +3,7 @@ package android.hardware.radio.V1_0;
 import android.security.keystore.KeyProperties;
 import java.util.ArrayList;
 
+/* loaded from: classes.dex */
 public final class RadioError {
     public static final int ABORTED = 65;
     public static final int CANCELLED = 7;
@@ -682,7 +683,7 @@ public final class RadioError {
             flipped |= 525;
         }
         if (o != flipped) {
-            list.add("0x" + Integer.toHexString((~((int) flipped)) & o));
+            list.add("0x" + Integer.toHexString((~flipped) & o));
         }
         return String.join(" | ", list);
     }

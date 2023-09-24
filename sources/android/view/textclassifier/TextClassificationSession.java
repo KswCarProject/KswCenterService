@@ -5,20 +5,23 @@ import android.view.textclassifier.TextLinks;
 import android.view.textclassifier.TextSelection;
 import com.android.internal.util.Preconditions;
 
+/* loaded from: classes4.dex */
 final class TextClassificationSession implements TextClassifier {
     private static final String LOG_TAG = "TextClassificationSession";
     private final TextClassificationContext mClassificationContext;
     private final TextClassifier mDelegate;
     private boolean mDestroyed;
-    private final SelectionEventHelper mEventHelper = new SelectionEventHelper(this.mSessionId, this.mClassificationContext);
+    private final SelectionEventHelper mEventHelper;
     private final TextClassificationSessionId mSessionId = new TextClassificationSessionId();
 
     TextClassificationSession(TextClassificationContext context, TextClassifier delegate) {
         this.mClassificationContext = (TextClassificationContext) Preconditions.checkNotNull(context);
         this.mDelegate = (TextClassifier) Preconditions.checkNotNull(delegate);
+        this.mEventHelper = new SelectionEventHelper(this.mSessionId, this.mClassificationContext);
         initializeRemoteSession();
     }
 
+    @Override // android.view.textclassifier.TextClassifier
     public TextSelection suggestSelection(TextSelection.Request request) {
         checkDestroyed();
         return this.mDelegate.suggestSelection(request);
@@ -30,41 +33,47 @@ final class TextClassificationSession implements TextClassifier {
         }
     }
 
+    @Override // android.view.textclassifier.TextClassifier
     public TextClassification classifyText(TextClassification.Request request) {
         checkDestroyed();
         return this.mDelegate.classifyText(request);
     }
 
+    @Override // android.view.textclassifier.TextClassifier
     public TextLinks generateLinks(TextLinks.Request request) {
         checkDestroyed();
         return this.mDelegate.generateLinks(request);
     }
 
+    @Override // android.view.textclassifier.TextClassifier
     public void onSelectionEvent(SelectionEvent event) {
         try {
             if (this.mEventHelper.sanitizeEvent(event)) {
                 this.mDelegate.onSelectionEvent(event);
             }
         } catch (Exception e) {
-            Log.e(LOG_TAG, "Error reporting text classifier selection event", e);
+            Log.m39e(LOG_TAG, "Error reporting text classifier selection event", e);
         }
     }
 
+    @Override // android.view.textclassifier.TextClassifier
     public void onTextClassifierEvent(TextClassifierEvent event) {
         try {
             event.mHiddenTempSessionId = this.mSessionId;
             this.mDelegate.onTextClassifierEvent(event);
         } catch (Exception e) {
-            Log.e(LOG_TAG, "Error reporting text classifier event", e);
+            Log.m39e(LOG_TAG, "Error reporting text classifier event", e);
         }
     }
 
+    @Override // android.view.textclassifier.TextClassifier
     public void destroy() {
         this.mEventHelper.endSession();
         this.mDelegate.destroy();
         this.mDestroyed = true;
     }
 
+    @Override // android.view.textclassifier.TextClassifier
     public boolean isDestroyed() {
         return this.mDestroyed;
     }
@@ -75,6 +84,7 @@ final class TextClassificationSession implements TextClassifier {
         }
     }
 
+    /* loaded from: classes4.dex */
     private static final class SelectionEventHelper {
         private final TextClassificationContext mContext;
         private int mInvocationMethod = 0;
@@ -88,51 +98,46 @@ final class TextClassificationSession implements TextClassifier {
             this.mContext = (TextClassificationContext) Preconditions.checkNotNull(context);
         }
 
-        /* access modifiers changed from: package-private */
-        public boolean sanitizeEvent(SelectionEvent event) {
+        boolean sanitizeEvent(SelectionEvent event) {
             updateInvocationMethod(event);
             modifyAutoSelectionEventType(event);
-            boolean z = false;
-            if (event.getEventType() == 1 || this.mStartEvent != null) {
-                long now = System.currentTimeMillis();
-                switch (event.getEventType()) {
-                    case 1:
-                        if (event.getAbsoluteEnd() == event.getAbsoluteStart() + 1) {
-                            z = true;
-                        }
-                        Preconditions.checkArgument(z);
-                        event.setSessionId(this.mSessionId);
-                        this.mStartEvent = event;
-                        break;
-                    case 2:
-                        if (this.mPrevEvent != null && this.mPrevEvent.getAbsoluteStart() == event.getAbsoluteStart() && this.mPrevEvent.getAbsoluteEnd() == event.getAbsoluteEnd()) {
-                            return false;
-                        }
-                    case 3:
-                    case 4:
-                    case 5:
-                        this.mSmartEvent = event;
-                        break;
-                }
-                event.setEventTime(now);
-                if (this.mStartEvent != null) {
-                    event.setSessionId(this.mStartEvent.getSessionId()).setDurationSinceSessionStart(now - this.mStartEvent.getEventTime()).setStart(event.getAbsoluteStart() - this.mStartEvent.getAbsoluteStart()).setEnd(event.getAbsoluteEnd() - this.mStartEvent.getAbsoluteStart());
-                }
-                if (this.mSmartEvent != null) {
-                    event.setResultId(this.mSmartEvent.getResultId()).setSmartStart(this.mSmartEvent.getAbsoluteStart() - this.mStartEvent.getAbsoluteStart()).setSmartEnd(this.mSmartEvent.getAbsoluteEnd() - this.mStartEvent.getAbsoluteStart());
-                }
-                if (this.mPrevEvent != null) {
-                    event.setDurationSincePreviousEvent(now - this.mPrevEvent.getEventTime()).setEventIndex(this.mPrevEvent.getEventIndex() + 1);
-                }
-                this.mPrevEvent = event;
-                return true;
+            if (event.getEventType() != 1 && this.mStartEvent == null) {
+                Log.m40d(TextClassificationSession.LOG_TAG, "Selection session not yet started. Ignoring event");
+                return false;
             }
-            Log.d(TextClassificationSession.LOG_TAG, "Selection session not yet started. Ignoring event");
-            return false;
+            long now = System.currentTimeMillis();
+            switch (event.getEventType()) {
+                case 1:
+                    Preconditions.checkArgument(event.getAbsoluteEnd() == event.getAbsoluteStart() + 1);
+                    event.setSessionId(this.mSessionId);
+                    this.mStartEvent = event;
+                    break;
+                case 2:
+                    if (this.mPrevEvent != null && this.mPrevEvent.getAbsoluteStart() == event.getAbsoluteStart() && this.mPrevEvent.getAbsoluteEnd() == event.getAbsoluteEnd()) {
+                        return false;
+                    }
+                    break;
+                case 3:
+                case 4:
+                case 5:
+                    this.mSmartEvent = event;
+                    break;
+            }
+            event.setEventTime(now);
+            if (this.mStartEvent != null) {
+                event.setSessionId(this.mStartEvent.getSessionId()).setDurationSinceSessionStart(now - this.mStartEvent.getEventTime()).setStart(event.getAbsoluteStart() - this.mStartEvent.getAbsoluteStart()).setEnd(event.getAbsoluteEnd() - this.mStartEvent.getAbsoluteStart());
+            }
+            if (this.mSmartEvent != null) {
+                event.setResultId(this.mSmartEvent.getResultId()).setSmartStart(this.mSmartEvent.getAbsoluteStart() - this.mStartEvent.getAbsoluteStart()).setSmartEnd(this.mSmartEvent.getAbsoluteEnd() - this.mStartEvent.getAbsoluteStart());
+            }
+            if (this.mPrevEvent != null) {
+                event.setDurationSincePreviousEvent(now - this.mPrevEvent.getEventTime()).setEventIndex(this.mPrevEvent.getEventIndex() + 1);
+            }
+            this.mPrevEvent = event;
+            return true;
         }
 
-        /* access modifiers changed from: package-private */
-        public void endSession() {
+        void endSession() {
             this.mPrevEvent = null;
             this.mSmartEvent = null;
             this.mStartEvent = null;
@@ -152,16 +157,17 @@ final class TextClassificationSession implements TextClassifier {
                 case 3:
                 case 4:
                 case 5:
-                    if (!SelectionSessionLogger.isPlatformLocalTextClassifierSmartSelection(event.getResultId())) {
-                        event.setEventType(5);
-                        return;
-                    } else if (event.getAbsoluteEnd() - event.getAbsoluteStart() > 1) {
-                        event.setEventType(4);
-                        return;
-                    } else {
-                        event.setEventType(3);
-                        return;
+                    if (SelectionSessionLogger.isPlatformLocalTextClassifierSmartSelection(event.getResultId())) {
+                        if (event.getAbsoluteEnd() - event.getAbsoluteStart() > 1) {
+                            event.setEventType(4);
+                            return;
+                        } else {
+                            event.setEventType(3);
+                            return;
+                        }
                     }
+                    event.setEventType(5);
+                    return;
                 default:
                     return;
             }

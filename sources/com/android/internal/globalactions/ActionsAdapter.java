@@ -8,6 +8,7 @@ import android.widget.BaseAdapter;
 import java.util.List;
 import java.util.function.BooleanSupplier;
 
+/* loaded from: classes4.dex */
 public class ActionsAdapter extends BaseAdapter {
     private final Context mContext;
     private final BooleanSupplier mDeviceProvisioned;
@@ -21,6 +22,7 @@ public class ActionsAdapter extends BaseAdapter {
         this.mKeyguardShowing = keyguardShowing;
     }
 
+    @Override // android.widget.Adapter
     public int getCount() {
         boolean keyguardShowing = this.mKeyguardShowing.getAsBoolean();
         boolean deviceProvisioned = this.mDeviceProvisioned.getAsBoolean();
@@ -34,14 +36,17 @@ public class ActionsAdapter extends BaseAdapter {
         return count;
     }
 
+    @Override // android.widget.BaseAdapter, android.widget.ListAdapter
     public boolean isEnabled(int position) {
         return getItem(position).isEnabled();
     }
 
+    @Override // android.widget.BaseAdapter, android.widget.ListAdapter
     public boolean areAllItemsEnabled() {
         return false;
     }
 
+    @Override // android.widget.Adapter
     public Action getItem(int position) {
         boolean keyguardShowing = this.mKeyguardShowing.getAsBoolean();
         boolean deviceProvisioned = this.mDeviceProvisioned.getAsBoolean();
@@ -58,11 +63,14 @@ public class ActionsAdapter extends BaseAdapter {
         throw new IllegalArgumentException("position " + position + " out of range of showable actions, filtered count=" + getCount() + ", keyguardshowing=" + keyguardShowing + ", provisioned=" + deviceProvisioned);
     }
 
+    @Override // android.widget.Adapter
     public long getItemId(int position) {
-        return (long) position;
+        return position;
     }
 
+    @Override // android.widget.Adapter
     public View getView(int position, View convertView, ViewGroup parent) {
-        return getItem(position).create(this.mContext, convertView, parent, LayoutInflater.from(this.mContext));
+        Action action = getItem(position);
+        return action.create(this.mContext, convertView, parent, LayoutInflater.from(this.mContext));
     }
 }
