@@ -865,9 +865,10 @@ public final class C3580R {
         public static final int update_mcu = 2131427425;
         public static final int update_mcu_success = 2131427426;
         public static final int update_success = 2131427427;
-        public static final int wifi_firmware_update = 2131427428;
-        public static final int wifi_firmware_update_message = 2131427429;
-        public static final int yes_update = 2131427430;
+        public static final int update_version_error = 2131427428;
+        public static final int wifi_firmware_update = 2131427429;
+        public static final int wifi_firmware_update_message = 2131427430;
+        public static final int yes_update = 2131427431;
     }
 
     /* renamed from: com.wits.pms.R$style */

@@ -15,6 +15,7 @@ public class FactorySettings {
     private static volatile FactorySettings factorySettings;
     public static SaveRunnable saveRunnable;
     public int AMP_Type;
+    public int APK360;
     public int APK_Install;
     public int AUX_Type;
     public int AppsIcon_Select;
@@ -80,6 +81,7 @@ public class FactorySettings {
     public String DVRApk_PackageName = "";
     public String Reverse_time = "";
     public int Android_Bt_Switch = 1;
+    public int Front_left = 0;
     public int txz_oil = 1;
     public int txz_speed = 120;
     public int speed_play_switch = 1;
@@ -424,6 +426,14 @@ public class FactorySettings {
         this.EQ_app = eq_app;
     }
 
+    public int getFront_left() {
+        return this.Front_left;
+    }
+
+    public void setFront_left(int value) {
+        this.Front_left = value;
+    }
+
     public int getGlobalweather_app() {
         return this.globalweather_app;
     }
@@ -454,6 +464,14 @@ public class FactorySettings {
 
     public void setOriginalRadar(int value) {
         this.OriginalRadar = value;
+    }
+
+    public int getAPK360() {
+        return this.APK360;
+    }
+
+    public void setAPK360(int value) {
+        this.APK360 = value;
     }
 
     public int getSupport_TXZ_Voice_Wakeup() {

@@ -1013,7 +1013,6 @@ public class KswSettings {
                 } catch (Settings.SettingNotFoundException e2) {
                     break;
                 }
-                break;
             case 23:
                 int index = Integer.parseInt(getDataListFromJsonKey(LANGUAGE_ID).get(intValue));
                 if (index >= 0) {
@@ -1040,6 +1039,7 @@ public class KswSettings {
                             add(new Locale("el"));
                             add(new Locale("th"));
                             add(new Locale("hr"));
+                            add(new Locale("cs"));
                         }
                     };
                     Log.m68i(TAG, "Change Language@" + locales.get(index).getLanguage() + " @index=" + index);
@@ -1182,7 +1182,7 @@ public class KswSettings {
                 break;
             case ':':
                 Log.m72d(TAG, "handleConfig mic_gain_m600  intValue = " + intValue);
-                if (Integer.parseInt(Build.VERSION.RELEASE) > 10 && Build.DISPLAY.contains("M600")) {
+                if (Integer.parseInt(Build.VERSION.RELEASE) > 10 && (Build.DISPLAY.contains("M600") || Build.DISPLAY.contains("M700"))) {
                     Log.m72d(TAG, "handleConfig mic_gain_m600 set");
                     SystemProperties.set("persist.mic.gain", intValue + "");
                     SystemProperties.set("persist.micgain.change", "0");

@@ -47,7 +47,7 @@ public class McuService extends Service implements McuSender {
     public void onCreate() {
         String serial;
         try {
-            if (Integer.parseInt(Build.VERSION.RELEASE) > 10 && Build.DISPLAY.contains("M600")) {
+            if (Integer.parseInt(Build.VERSION.RELEASE) > 10 && (Build.DISPLAY.contains("M600") || Build.DISPLAY.contains("M700"))) {
                 serial = "/dev/ttyHS1";
             } else if (version.contains("8937")) {
                 serial = "/dev/ttyHSL1";

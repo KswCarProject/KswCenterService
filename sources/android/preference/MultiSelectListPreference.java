@@ -21,7 +21,7 @@ public class MultiSelectListPreference extends DialogPreference {
     private boolean mPreferenceChanged;
     private Set<String> mValues;
 
-    /* JADX WARN: Type inference failed for: r0v2, types: [byte, boolean] */
+    /* JADX WARN: Type inference failed for: r0v2, types: [boolean, byte] */
     static /* synthetic */ boolean access$076(MultiSelectListPreference x0, int x1) {
         ?? r0 = (byte) ((x0.mPreferenceChanged ? 1 : 0) | x1);
         x0.mPreferenceChanged = r0;

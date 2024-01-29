@@ -91,6 +91,7 @@ public class CenterControlImpl extends ICmdListener.Stub implements CenterContro
     private int beforeMuteVolume;
     private Thread benzDialSenderThread;
     private AlertDialog installAppDialog;
+    private boolean isSendZlinkCarBroadCast;
     private ActivityManager mActivityManager;
     private final AudioManager mAudioManager;
     private Context mContext;
@@ -108,6 +109,7 @@ public class CenterControlImpl extends ICmdListener.Stub implements CenterContro
     private boolean flgReleaseMicInConnected = true;
     private boolean flgZlinkConnected = false;
     private int cpCallStatus = 0;
+    private boolean isLinkHicar = false;
     int originMode = -1;
     boolean iszlinkCall = false;
     private final Runnable volumeUpBySystemRun = new Runnable() { // from class: com.wits.pms.core.CenterControlImpl.3
@@ -908,8 +910,8 @@ public class CenterControlImpl extends ICmdListener.Stub implements CenterContro
     }
 
     /* JADX WARN: Can't fix incorrect switch cases order, some code will duplicate */
-    /* JADX WARN: Code restructure failed: missing block: B:222:0x0486, code lost:
-        if (r0.equals("CMD_MIC_START") != false) goto L230;
+    /* JADX WARN: Code restructure failed: missing block: B:246:0x0546, code lost:
+        if (r0.equals("CMD_MIC_START") != false) goto L254;
      */
     /* JADX WARN: Code restructure failed: missing block: B:35:0x0086, code lost:
         if (r0.equals("ENTER") != false) goto L8;
@@ -1059,11 +1061,20 @@ public class CenterControlImpl extends ICmdListener.Stub implements CenterContro
                         SystemProperties.set(ZlinkMessage.ZLINK_CARPLAY_WRIED_CONNECT, "1");
                         closeBluetooth();
                     }
+                    if ((phoneMode != null && phoneMode.equals("hicar_wireless")) || phoneMode.equals("hicar_wired")) {
+                        this.isLinkHicar = true;
+                    }
                     if (phoneMode != null && (phoneMode.equals("auto_wired") || phoneMode.equals("auto_wireless"))) {
                         SystemProperties.set(ZlinkMessage.ZLINK_ANDROID_AUTO_CONNECT, "1");
                     }
                     if (phoneMode != null && (phoneMode.equals("android_mirror_wired") || phoneMode.equals("android_mirror_wireless"))) {
                         SystemProperties.set(ZlinkMessage.ZLINK_ANDROID_MIRROR_CONNECT, "1");
+                    }
+                    if (phoneMode != null && phoneMode.equals("hicar_wired")) {
+                        SystemProperties.set(ZlinkMessage.ZLINK_HICAR_WIRED_CONNECT, "1");
+                    }
+                    if (phoneMode != null && phoneMode.equals("hicar_wireless")) {
+                        SystemProperties.set(ZlinkMessage.ZLINK_HICAR_WIRELESS_CONNECT, "1");
                     }
                     try {
                         int oldStatus2 = PowerManagerApp.getSettingsInt("Support_TXZ");
@@ -1084,7 +1095,7 @@ public class CenterControlImpl extends ICmdListener.Stub implements CenterContro
                     if (phoneMode2 != null && phoneMode2.equals("carplay_wireless")) {
                         SystemProperties.set(ZlinkMessage.ZLINK_CONNECT, "0");
                         openBluetooth(false);
-                        if (Build.VERSION.RELEASE.equals("11") && Build.DISPLAY.contains("M600")) {
+                        if (Build.VERSION.RELEASE.equals("11") && (Build.DISPLAY.contains("M600") || Build.DISPLAY.contains("M700"))) {
                             closeWifiHotspot();
                         }
                     }
@@ -1103,6 +1114,12 @@ public class CenterControlImpl extends ICmdListener.Stub implements CenterContro
                     if (phoneMode2 != null && (phoneMode2.equals("android_mirror_wired") || phoneMode2.equals("android_mirror_wireless"))) {
                         SystemProperties.set(ZlinkMessage.ZLINK_ANDROID_MIRROR_CONNECT, "0");
                     }
+                    if (phoneMode2 != null && phoneMode2.equals("hicar_wired")) {
+                        SystemProperties.set(ZlinkMessage.ZLINK_HICAR_WIRED_CONNECT, "0");
+                    }
+                    if (phoneMode2 != null && phoneMode2.equals("hicar_wireless")) {
+                        SystemProperties.set(ZlinkMessage.ZLINK_HICAR_WIRELESS_CONNECT, "0");
+                    }
                     try {
                         int oldStatus3 = PowerManagerApp.getSettingsInt("Support_TXZ");
                         if (oldStatus3 != 0 && PowerManagerApp.getStatusInt("systemMode") == 1) {
@@ -1113,8 +1130,21 @@ public class CenterControlImpl extends ICmdListener.Stub implements CenterContro
                         e3.printStackTrace();
                     }
                     this.zlinkCalling = false;
+                    SystemProperties.set(ZlinkMessage.ZLINK_CALL, "0");
+                    Settings.System.putInt(this.mContext.getContentResolver(), "isZlinkCalling", 0);
+                    this.isLinkHicar = false;
                     return;
                 case 3:
+                    SystemProperties.set(ZlinkMessage.ZLINK_CONNECT, "0");
+                    SystemProperties.set(ZlinkMessage.ZLINK_AIRPLAY_CONNECT, "0");
+                    SystemProperties.set(ZlinkMessage.ZLINK_AIRPLAY_WIRED_CONNECT, "0");
+                    SystemProperties.set(ZlinkMessage.ZLINK_CARPLAY_WRIED_CONNECT, "0");
+                    SystemProperties.set(ZlinkMessage.ZLINK_ANDROID_AUTO_CONNECT, "0");
+                    SystemProperties.set(ZlinkMessage.ZLINK_ANDROID_MIRROR_CONNECT, "0");
+                    SystemProperties.set(ZlinkMessage.ZLINK_HICAR_WIRED_CONNECT, "0");
+                    SystemProperties.set(ZlinkMessage.ZLINK_HICAR_WIRELESS_CONNECT, "0");
+                    SystemProperties.set(ZlinkMessage.ZLINK_CALL, "0");
+                    Settings.System.putInt(this.mContext.getContentResolver(), "isZlinkCalling", 0);
                     Log.m72d(TAG, "handle  ENTER");
                     return;
                 case 4:
@@ -1412,6 +1442,11 @@ public class CenterControlImpl extends ICmdListener.Stub implements CenterContro
     }
 
     public void setTxzQuickQuit(boolean on) {
+        int camera360AppIsForeground = Settings.System.getInt(this.mContext.getContentResolver(), "camera360AppIsForeground", 0);
+        Log.m68i(TAG, "setTxzQuickQuit camera360AppIsForeground: " + camera360AppIsForeground);
+        if (camera360AppIsForeground > 0) {
+            return;
+        }
         Bundle bundle = new Bundle();
         bundle.putString("status", on ? "reverse.enter" : "reverse.quit");
         TxzMessage txzMessage = new TxzMessage(2010, "system.status", bundle);
@@ -1467,6 +1502,13 @@ public class CenterControlImpl extends ICmdListener.Stub implements CenterContro
             startAction(intent);
         } catch (Exception e) {
         }
+    }
+
+    public void openVideoFirst(boolean isAcc) {
+        Intent intent = this.mContext.getPackageManager().getLaunchIntentForPackage("com.wits.ksw.video");
+        intent.setFlags(270532608);
+        intent.putExtra("isAcc", isAcc);
+        this.mContext.startActivity(intent);
     }
 
     public void openGallery() {
@@ -1564,6 +1606,25 @@ public class CenterControlImpl extends ICmdListener.Stub implements CenterContro
     public void kuWoMusicPause() {
         if (KswSettings.getSettings().getSettingsString("currentMediaPkg").contains("kwmusiccar")) {
             KeyUtils.pressKey(127);
+        }
+    }
+
+    public void handleZlinkBackCar(boolean isStart) {
+        Log.m72d(TAG, "handleZlinkBackCar isStart: " + isStart);
+        if (isStart) {
+            Bundle bundle = new Bundle();
+            bundle.putBoolean("muteMedia", true);
+            bundle.putString("command", "REQ_SPEC_FUNC_CMD");
+            this.isSendZlinkCarBroadCast = true;
+            new ZlinkMessage(ZlinkMessage.ZLINK_BACKCAR_START_ACTION, "REQ_SPEC_FUNC_CMD", bundle).sendBroadCast(this.mContext);
+        } else if (this.isSendZlinkCarBroadCast) {
+            int camera360AppIsForeground = Settings.System.getInt(this.mContext.getContentResolver(), "camera360AppIsForeground", 0);
+            Log.m68i(TAG, "handleZlinkBackCar camera360AppIsForeground: " + camera360AppIsForeground);
+            if (camera360AppIsForeground > 0) {
+                return;
+            }
+            this.isSendZlinkCarBroadCast = false;
+            new ZlinkMessage(ZlinkMessage.ZLINK_BACKCAR_STOP_ACTION).sendBroadCast(this.mContext);
         }
     }
 
@@ -1668,6 +1729,10 @@ public class CenterControlImpl extends ICmdListener.Stub implements CenterContro
         } else if (callStatus.equals("2")) {
             zlinkCallOff();
         }
+    }
+
+    public boolean getHicarStatus() {
+        return this.isLinkHicar;
     }
 
     public void zlinkHandleAutoCall() {
@@ -2125,8 +2190,7 @@ public class CenterControlImpl extends ICmdListener.Stub implements CenterContro
         WitsCommand.sendCommand(3, 110, "");
     }
 
-    /* JADX WARN: Can't fix incorrect switch cases order, some code will duplicate */
-    /* JADX WARN: Type inference failed for: r2v24, types: [com.wits.pms.core.CenterControlImpl$5] */
+    /* JADX WARN: Type inference failed for: r2v26, types: [com.wits.pms.core.CenterControlImpl$5] */
     @Override // com.wits.pms.ICmdListener
     public boolean handleCommand(String jsonMsg) throws RemoteException {
         WitsCommand witsCommand = WitsCommand.getWitsCommandFormJson(jsonMsg);
@@ -2337,6 +2401,14 @@ public class CenterControlImpl extends ICmdListener.Stub implements CenterContro
                                         KswMcuSender.getSender().sendMessage(104, new byte[]{10, 0});
                                         KswMcuSender.getSender().sendMessage(KswMessage.obtainKswMcuMsg(11));
                                         return true;
+                                    case 614:
+                                        KswMcuSender.getSender().sendMessage(105, new byte[]{21, 1});
+                                        Log.m68i(TAG, "Task#18097 -- handleCommand: STS_360_START");
+                                        break;
+                                    case 615:
+                                        KswMcuSender.getSender().sendMessage(105, new byte[]{21, 0});
+                                        Log.m68i(TAG, "Task#18097 -- handleCommand: STS_360_STOP");
+                                        break;
                                 }
                         }
                 }
@@ -2371,7 +2443,7 @@ public class CenterControlImpl extends ICmdListener.Stub implements CenterContro
                                 Log.m72d(TAG, "handleCommand: ota updated,just need reboot");
                                 return true;
                             }
-                            if (Integer.parseInt(Build.VERSION.RELEASE) > 10 && Build.DISPLAY.contains("M600")) {
+                            if (Integer.parseInt(Build.VERSION.RELEASE) > 10 && (Build.DISPLAY.contains("M600") || Build.DISPLAY.contains("M700"))) {
                                 ABNetOTAUpdate.checkFile(this.mContext);
                             } else {
                                 NetOTAUpdate.checkFile(this.mContext);

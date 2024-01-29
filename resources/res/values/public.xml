@@ -805,9 +805,10 @@
     <public type="string" name="update_mcu" id="0x7f0b0061" />
     <public type="string" name="update_mcu_success" id="0x7f0b0062" />
     <public type="string" name="update_success" id="0x7f0b0063" />
-    <public type="string" name="wifi_firmware_update" id="0x7f0b0064" />
-    <public type="string" name="wifi_firmware_update_message" id="0x7f0b0065" />
-    <public type="string" name="yes_update" id="0x7f0b0066" />
+    <public type="string" name="update_version_error" id="0x7f0b0064" />
+    <public type="string" name="wifi_firmware_update" id="0x7f0b0065" />
+    <public type="string" name="wifi_firmware_update_message" id="0x7f0b0066" />
+    <public type="string" name="yes_update" id="0x7f0b0067" />
     <public type="style" name="AlertDialog.AppCompat" id="0x7f0c0000" />
     <public type="style" name="AlertDialog.AppCompat.Light" id="0x7f0c0001" />
     <public type="style" name="AlertDialogCustom" id="0x7f0c0002" />

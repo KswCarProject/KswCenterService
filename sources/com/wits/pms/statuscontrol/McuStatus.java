@@ -111,6 +111,33 @@ public class McuStatus {
         if (this.carData.carDoor != mcuStatus.carData.carDoor) {
             keys.add("carDoor");
         }
+        if (this.carData.carWheelAngle != mcuStatus.carData.carWheelAngle) {
+            keys.add("carWheelAngle");
+        }
+        if (this.carData.frontRadarDataL != mcuStatus.carData.frontRadarDataL) {
+            keys.add("frontRadarDataL");
+        }
+        if (this.carData.frontRadarDataLM != mcuStatus.carData.frontRadarDataLM) {
+            keys.add("frontRadarDataLM");
+        }
+        if (this.carData.frontRadarDataRM != mcuStatus.carData.frontRadarDataRM) {
+            keys.add("frontRadarDataRM");
+        }
+        if (this.carData.frontRadarDataR != mcuStatus.carData.frontRadarDataR) {
+            keys.add("frontRadarDataR");
+        }
+        if (this.carData.backRadarDataL != mcuStatus.carData.backRadarDataL) {
+            keys.add("backRadarDataL");
+        }
+        if (this.carData.backRadarDataLM != mcuStatus.carData.backRadarDataLM) {
+            keys.add("backRadarDataLM");
+        }
+        if (this.carData.backRadarDataRM != mcuStatus.carData.backRadarDataRM) {
+            keys.add("backRadarDataRM");
+        }
+        if (this.carData.backRadarDataR != mcuStatus.carData.backRadarDataR) {
+            keys.add("backRadarDataR");
+        }
         if (!this.acData.getJson().equals(mcuStatus.acData.getJson())) {
             keys.add("acData");
         }
@@ -638,10 +665,19 @@ public class McuStatus {
         public static final int RLIGHT_ON = 16;
         public float airTemperature;
         public float averSpeed;
+        public int backRadarDataL;
+        public int backRadarDataLM;
+        public int backRadarDataR;
+        public int backRadarDataRM;
         public int carDoor;
         public int carGear;
+        public int carWheelAngle;
         public int distanceUnitType;
         public int engineTurnS;
+        public int frontRadarDataL;
+        public int frontRadarDataLM;
+        public int frontRadarDataR;
+        public int frontRadarDataRM;
         public boolean handbrake;
         public int mileage;
         public int oilSum;
@@ -696,6 +732,78 @@ public class McuStatus {
 
         public void setCarDoor(int carDoor) {
             this.carDoor = carDoor;
+        }
+
+        public int getCarWheelAngle() {
+            return this.carWheelAngle;
+        }
+
+        public void setCarWheelAngle(int carWheelAngle) {
+            this.carWheelAngle = carWheelAngle;
+        }
+
+        public int getFrontRadarDataL() {
+            return this.frontRadarDataL;
+        }
+
+        public void setFrontRadarDataL(int frontRadarDataL) {
+            this.frontRadarDataL = frontRadarDataL;
+        }
+
+        public int getFrontRadarDataLM() {
+            return this.frontRadarDataLM;
+        }
+
+        public void setFrontRadarDataLM(int frontRadarDataLM) {
+            this.frontRadarDataLM = frontRadarDataLM;
+        }
+
+        public int getFrontRadarDataRM() {
+            return this.frontRadarDataRM;
+        }
+
+        public void setFrontRadarDataRM(int frontRadarDataRM) {
+            this.frontRadarDataRM = frontRadarDataRM;
+        }
+
+        public int getFrontRadarDataR() {
+            return this.frontRadarDataR;
+        }
+
+        public void setFrontRadarDataR(int frontRadarDataR) {
+            this.frontRadarDataR = frontRadarDataR;
+        }
+
+        public int getBackRadarDataL() {
+            return this.backRadarDataL;
+        }
+
+        public void setBackRadarDataL(int backRadarDataL) {
+            this.backRadarDataL = backRadarDataL;
+        }
+
+        public int getBackRadarDataLM() {
+            return this.backRadarDataLM;
+        }
+
+        public void setBackRadarDataLM(int backRadarDataLM) {
+            this.backRadarDataLM = backRadarDataLM;
+        }
+
+        public int getBackRadarDataRM() {
+            return this.backRadarDataRM;
+        }
+
+        public void setBackRadarDataRM(int backRadarDataRM) {
+            this.backRadarDataRM = backRadarDataRM;
+        }
+
+        public int getBackRadarDataR() {
+            return this.backRadarDataR;
+        }
+
+        public void setBackRadarDataR(int backRadarDataR) {
+            this.backRadarDataR = backRadarDataR;
         }
 
         public boolean isHandbrake() {

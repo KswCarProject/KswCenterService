@@ -3,13 +3,13 @@ Built-By: Generated-by-ADT
 Created-By: Android Gradle 3.2.1
 
 Name: AndroidManifest.xml
-SHA-256-Digest: yflGO+8WaANG8ut3MkOpOk2GrlAxBZrpHQDg0w1BlYg=
+SHA-256-Digest: 5XfA6qcS8ppbrmglOIIb98qUK+TTzpxPX19sROgJ9uU=
 
 Name: classes.dex
 SHA-256-Digest: mdvGz76p8psKlvKJre/PJtIo2wN1L5zsgzdHNrPKWTo=
 
 Name: classes2.dex
-SHA-256-Digest: CPrOrQq/6Z9axK4LQcFMA9aYvX6AdFql6yMQbW6AbZI=
+SHA-256-Digest: gJ8ZhPzsyQs065gIFVgXJp86oDlETsdnLHUhGVLc/KU=
 
 Name: classes3.dex
 SHA-256-Digest: bkOuJzeU5uFOXhWVh/BqPjh0SGZhGN3kpOvUaqf+Wzg=
@@ -1231,5 +1231,5 @@ Name: res/mipmap-xxxhdpi-v4/ic_launcher_round.png
 SHA-256-Digest: W6zZehtB5EE8YJLNvYP2URKpEk6CPPqjohnGXidhZHs=
 
 Name: resources.arsc
-SHA-256-Digest: LFL+KC6DCjnKTN49O7xCctdTF9PnAHFtqrzfGvF6op8=
+SHA-256-Digest: u2o6rhLr7B5wNgmk4ZfCoRXtGB/uIBSJEK1AEI14yEo=
 

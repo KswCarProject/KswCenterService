@@ -27,7 +27,7 @@ public class SplashFlasher {
                         Log.m68i("SplashFlasher", "Checking imagefv.elf try to flash");
                         flashLogo(file.getAbsolutePath());
                     }
-                } else if (Integer.parseInt(Build.VERSION.RELEASE) > 11 && Build.DISPLAY.contains("M600")) {
+                } else if (Integer.parseInt(Build.VERSION.RELEASE) > 11 && (Build.DISPLAY.contains("M600") || Build.DISPLAY.contains("M700"))) {
                     File file2 = new File(subFile + "/imagefv.bmp");
                     if (file2.exists() && file2.getName().equals("imagefv.bmp")) {
                         Log.m68i("SplashFlasher", "Checking imagefv.bmp try to flash");
@@ -52,7 +52,7 @@ public class SplashFlasher {
         if (clearBootanimation.exists() && clearBootanimation.getName().equals("bootanimation_clear.zip")) {
             Log.m68i("SplashFlasher", "Checking bootanimation_clear.zip try to clear");
             File cacheBootanimation = new File("/cache/bootanimation.zip");
-            if (Integer.parseInt(Build.VERSION.RELEASE) > 10 && Build.DISPLAY.contains("M600")) {
+            if (Integer.parseInt(Build.VERSION.RELEASE) > 10 && (Build.DISPLAY.contains("M600") || Build.DISPLAY.contains("M700"))) {
                 vendorBootanimation = new File("/mnt/vendor/persist/OEM/bootanimation.zip");
             } else {
                 vendorBootanimation = new File("/mnt/vendor/persist/bootanimation.zip");
@@ -104,7 +104,7 @@ public class SplashFlasher {
     }
 
     public static void flashLogo(String absolutePath) {
-        if (Integer.parseInt(Build.VERSION.RELEASE) > 10 && Build.DISPLAY.contains("M600")) {
+        if (Integer.parseInt(Build.VERSION.RELEASE) > 10 && (Build.DISPLAY.contains("M600") || Build.DISPLAY.contains("M700"))) {
             if (absolutePath.contains("splash")) {
                 return;
             }

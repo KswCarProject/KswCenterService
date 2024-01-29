@@ -53,6 +53,7 @@
     <string name="update_mcu">MCU being updated!</string>
     <string name="update_mcu_success">MCU updated success!</string>
     <string name="update_success">Update Success!</string>
+    <string name="update_version_error">Target Version is less then Current!</string>
     <string name="wifi_firmware_update">Wifi Firmware UPDATE</string>
     <string name="wifi_firmware_update_message">Wifi Firmware updated.Do you want to reboot now for take effect?</string>
     <string name="yes_update">YES</string>

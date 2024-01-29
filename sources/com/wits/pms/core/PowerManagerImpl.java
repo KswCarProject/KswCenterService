@@ -313,6 +313,15 @@ public class PowerManagerImpl extends IPowerManagerAppService.Stub {
         saveField("signalDouble", Integer.valueOf(mcuStatus.carData.signalDouble), false);
         saveField("signalRight", Integer.valueOf(mcuStatus.carData.signalRight), false);
         saveField("carDoor", Integer.valueOf(mcuStatus.carData.carDoor), false);
+        saveField("carWheelAngle", Integer.valueOf(mcuStatus.carData.carWheelAngle), false);
+        saveField("frontRadarDataL", Integer.valueOf(mcuStatus.carData.frontRadarDataL), false);
+        saveField("frontRadarDataLM", Integer.valueOf(mcuStatus.carData.frontRadarDataLM), false);
+        saveField("frontRadarDataRM", Integer.valueOf(mcuStatus.carData.frontRadarDataRM), false);
+        saveField("frontRadarDataR", Integer.valueOf(mcuStatus.carData.frontRadarDataR), false);
+        saveField("backRadarDataL", Integer.valueOf(mcuStatus.carData.backRadarDataL), false);
+        saveField("backRadarDataLM", Integer.valueOf(mcuStatus.carData.backRadarDataLM), false);
+        saveField("backRadarDataRM", Integer.valueOf(mcuStatus.carData.backRadarDataRM), false);
+        saveField("backRadarDataR", Integer.valueOf(mcuStatus.carData.backRadarDataR), false);
         saveField("mcuVerison", mcuStatus.mcuVerison, false);
         saveField("systemMode", Integer.valueOf(mcuStatus.systemMode), false);
     }

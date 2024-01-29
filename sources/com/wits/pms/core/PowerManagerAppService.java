@@ -47,6 +47,7 @@ import com.wits.pms.mcu.custom.utils.TpUpdate;
 import com.wits.pms.mcu.custom.utils.WitsAutoLog;
 import com.wits.pms.mirror.ServiceManager;
 import com.wits.pms.mirror.SystemProperties;
+import com.wits.pms.statuscontrol.PowerManagerApp;
 import com.wits.pms.statuscontrol.WitsCommand;
 import com.wits.pms.utils.McuUpdater;
 import com.wits.pms.utils.Utils;
@@ -71,9 +72,11 @@ public class PowerManagerAppService extends Service {
     private PowerManagerImpl mPmasBinder;
     private SilentPackageInstaller mSilentPackageInstaller;
     private ProgressBar progressBar;
+    private int start360ErrorCount;
     boolean startBt;
     private List<String> updateApks;
     private int count = 0;
+    private boolean IS_HAVE_OPEN_360_APP = false;
     private Runnable checkAndroidverison = new Runnable() { // from class: com.wits.pms.core.PowerManagerAppService.2
         @Override // java.lang.Runnable
         public void run() {
@@ -253,6 +256,37 @@ public class PowerManagerAppService extends Service {
         boot();
     }
 
+    private void start360App() {
+        if (this.start360ErrorCount > 3) {
+            return;
+        }
+        try {
+            if (!Utils.isAppPakExist(this, "com.ivicar.avm")) {
+                PowerManagerApp.setBooleanStatus("show_360_on_boot", false);
+                return;
+            }
+            Log.m68i(TAG, "start360APP");
+            int groupValue = PowerManagerApp.getSettingsInt("RearCamType");
+            boolean isClose360OnStart = PowerManagerApp.getSettingsInt("close_360_on_boot") == 1;
+            String str = TAG;
+            Log.m68i(str, "start360APP:" + groupValue + ";" + isClose360OnStart);
+            if (groupValue != 3) {
+                PowerManagerApp.setBooleanStatus("show_360_on_boot", false);
+                return;
+            }
+            PowerManagerApp.setBooleanStatus("show_360_on_boot", isClose360OnStart ? false : true);
+            if (!isClose360OnStart) {
+                PowerManagerApp.setBooleanStatus("googleDisableBoot", true);
+                Utils.setApplicationEnabledSetting(this, 3);
+            }
+        } catch (Exception e) {
+            String str2 = TAG;
+            Log.m68i(str2, "start360APP error:" + e.getMessage());
+            this.start360ErrorCount = this.start360ErrorCount + 1;
+            start360App();
+        }
+    }
+
     private void kswMaxVol() {
         AudioManager audioManager = (AudioManager) getSystemService("audio");
         audioManager.setStreamVolume(3, 15, 8);
@@ -263,6 +297,10 @@ public class PowerManagerAppService extends Service {
 
     @RequiresApi(api = 24)
     private void boot() {
+        if (!this.IS_HAVE_OPEN_360_APP) {
+            this.IS_HAVE_OPEN_360_APP = true;
+            start360App();
+        }
         KswSettings.init(this);
         if (SilentPackageInstaller.isUsed) {
             this.mSilentPackageInstaller = new SilentPackageInstaller(this);
@@ -296,7 +334,7 @@ public class PowerManagerAppService extends Service {
             }
             this.mHandler.postDelayed(this.updateAPKRun, TimedRemoteCaller.DEFAULT_CALL_TIMEOUT_MILLIS);
         }
-        if (Integer.parseInt(Build.VERSION.RELEASE) > 10 && Build.DISPLAY.contains("M600")) {
+        if (Integer.parseInt(Build.VERSION.RELEASE) > 10 && (Build.DISPLAY.contains("M600") || Build.DISPLAY.contains("M700"))) {
             this.mHandler.postDelayed(this.kswDefaultLauncherRunnable, 1000L);
         } else {
             this.mHandler.postDelayed(this.checkAndroidverison, 500L);
@@ -323,7 +361,7 @@ public class PowerManagerAppService extends Service {
                     String str = PowerManagerAppService.TAG;
                     Log.m72d(str, "OTA CHECK PATH: " + path);
                     if (!TextUtils.isEmpty(path)) {
-                        if (Integer.parseInt(Build.VERSION.RELEASE) > 10 && Build.DISPLAY.contains("M600")) {
+                        if (Integer.parseInt(Build.VERSION.RELEASE) > 10 && (Build.DISPLAY.contains("M600") || Build.DISPLAY.contains("M700"))) {
                             ABOTAUpdate.checkFile(PowerManagerAppService.this, path);
                         } else {
                             OTAUpdate.checkFile(PowerManagerAppService.this, path);

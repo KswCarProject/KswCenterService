@@ -32,6 +32,8 @@ public class ZlinkMessage {
     public static final String ZLINK_CARPLAY_WRIED_CONNECT = "vendor.wits.carplayWried.connected";
     public static final String ZLINK_CONNECT = "vendor.wits.zlink.connected";
     public static final String ZLINK_ENTER_CARPLAY = "persist.sys.zlink.autod.disa";
+    public static final String ZLINK_HICAR_WIRED_CONNECT = "vendor.wits.hicarWired.connected";
+    public static final String ZLINK_HICAR_WIRELESS_CONNECT = "vendor.wits.hicarWireless.connected";
     public static final String ZLINK_MIC_VOL = "persist.sys.zlink..mic.vol";
     public static final String ZLINK_NORMAL_ACTION = "com.zjinnova.zlink";
     public static final String ZLINK_PATH_KEYCFG = "persist.sys.zlink.path.keycfg";

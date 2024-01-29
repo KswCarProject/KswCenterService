@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manifest xmlns:android="http://schemas.android.com/apk/res/android" android:sharedUserId="android.uid.system" android:versionCode="1" android:versionName="1.0_230802" android:compileSdkVersion="28" android:compileSdkVersionCodename="9" coreApp="true" package="com.wits.pms" platformBuildVersionCode="1" platformBuildVersionName="1.0_230802">
+<manifest xmlns:android="http://schemas.android.com/apk/res/android" android:sharedUserId="android.uid.system" android:versionCode="1" android:versionName="1.0_231205" android:compileSdkVersion="28" android:compileSdkVersionCodename="9" coreApp="true" package="com.wits.pms" platformBuildVersionCode="1" platformBuildVersionName="1.0_231205">
     <uses-sdk android:minSdkVersion="26" android:targetSdkVersion="28"/>
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE"/>
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>

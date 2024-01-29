@@ -2,6 +2,7 @@ package com.wits.pms.utils;
 
 import android.app.backup.FullBackup;
 import android.content.Context;
+import android.content.p002pm.ApplicationInfo;
 import android.content.p002pm.PackageInfo;
 import android.content.p002pm.PackageManager;
 import android.location.LocationManager;
@@ -218,5 +219,34 @@ public class Utils {
         int d1 = n / 16;
         int d2 = n % 16;
         return "0x" + hexArray[d1] + hexArray[d2];
+    }
+
+    public static void setApplicationEnabledSetting(Context context, int newState) {
+        PackageManager mPm = context.getPackageManager();
+        mPm.setApplicationEnabledSetting("com.google.android.apps.googleassistant", newState, 0);
+        mPm.setApplicationEnabledSetting("com.google.android.ims", newState, 0);
+        mPm.setApplicationEnabledSetting("com.android.vending", newState, 0);
+        mPm.setApplicationEnabledSetting("com.google.android.apps.maps", newState, 0);
+        mPm.setApplicationEnabledSetting("com.google.android.partnersetup", newState, 0);
+        mPm.setApplicationEnabledSetting("com.google.android.gms", newState, 0);
+        mPm.setApplicationEnabledSetting("com.google.android.inputmethod.latin", newState, 0);
+        mPm.setApplicationEnabledSetting("com.google.android.googlequicksearchbox", newState, 0);
+        mPm.setApplicationEnabledSetting("com.google.android.onetimeinitializer", newState, 0);
+    }
+
+    public static boolean isAppPakExist(Context context, String packageName) {
+        boolean isExist = false;
+        PackageManager pm = context.getPackageManager();
+        ApplicationInfo applicationInfo = null;
+        try {
+            applicationInfo = pm.getApplicationInfo(packageName, 0);
+        } catch (PackageManager.NameNotFoundException e) {
+            Log.m68i(TAG, "isAppPakExist: app not installed, packageName" + packageName);
+        }
+        if (applicationInfo != null) {
+            isExist = true;
+        }
+        Log.m68i(TAG, "isAppPakExist: isExist = " + isExist);
+        return isExist;
     }
 }

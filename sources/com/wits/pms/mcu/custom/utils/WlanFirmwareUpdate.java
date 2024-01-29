@@ -5,7 +5,9 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.p007os.PowerManager;
 import android.util.Log;
+import com.android.internal.telephony.TelephonyProperties;
 import com.wits.pms.C3580R;
+import com.wits.pms.mirror.SystemProperties;
 import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileInputStream;
@@ -24,7 +26,8 @@ public class WlanFirmwareUpdate {
         String srcVersion = getFirmwareVersion(srcFilePath);
         String destVersion = getFirmwareVersion(destFilePath);
         Log.m72d(TAG, "srcVersion=" + srcVersion + ",destVersion=" + destVersion);
-        if (srcVersion != null && srcVersion.equals("WLAN.HL.3.2.4-01022") && srcVersion != null && !destVersion.equals("WLAN.HL.3.2.4-01022")) {
+        String baseband = SystemProperties.get(TelephonyProperties.PROPERTY_BASEBAND_VERSION);
+        if (baseband != null && !baseband.isEmpty() && !baseband.startsWith("M700") && srcVersion != null && srcVersion.equals("WLAN.HL.3.2.4-01022") && srcVersion != null && !destVersion.equals("WLAN.HL.3.2.4-01022")) {
             Log.m72d(TAG, "wifi firmware update...");
             boolean result = copyFirmware(srcFilePath, destFilePath);
             if (result) {

@@ -26,7 +26,7 @@ public class UsbUtil {
             if (forceSlaveMode && hostMode == 1) {
                 return;
             }
-            if (Build.DISPLAY.contains("M600") || Build.DISPLAY.contains("M501B")) {
+            if (Build.DISPLAY.contains("M600") || Build.DISPLAY.contains("M700") || Build.DISPLAY.contains("M501B")) {
                 if (("" + hostMode).equals(SysConfigUtil.getArg(USB_CHANGE_PATH))) {
                     if (("" + hostMode).equals(SysConfigUtil.getArg(USB_IO_PATH))) {
                         return;
@@ -37,7 +37,7 @@ public class UsbUtil {
                     return;
                 }
             }
-            if (Build.DISPLAY.contains("M600") || Build.DISPLAY.contains("M501B")) {
+            if (Build.DISPLAY.contains("M600") || Build.DISPLAY.contains("M700") || Build.DISPLAY.contains("M501B")) {
                 SysConfigUtil.writeArg(hostMode + "", USB_IO_PATH);
             }
             SysConfigUtil.writeArg(hostMode + "", USB_CHANGE_PATH, new SysConfigUtil.WriteListener() { // from class: com.wits.pms.utils.UsbUtil.1

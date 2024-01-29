@@ -20,9 +20,10 @@ import java.util.zip.ZipFile;
 
 /* loaded from: classes2.dex */
 public class FileUtil {
-    public static final String OTAFileName_R = "Ksw-R-M600_OS_v";
-    public static final String OTAFileName_S = "Ksw-S-M600_OS_v";
-    public static final String OTAFileName_T = "Ksw-T-M600_OS_v";
+    public static final String MODEL = Build.DISPLAY.substring(6, 10);
+    public static final String OTAFileName_R = "Ksw-R-" + MODEL + "_OS_v";
+    public static final String OTAFileName_S = "Ksw-S-" + MODEL + "_OS_v";
+    public static final String OTAFileName_T = "Ksw-T-" + MODEL + "_OS_v";
     public static final String TAG = "FileUtil";
 
     public static boolean checkOtaFile(String fileName) {
@@ -42,6 +43,7 @@ public class FileUtil {
             ZipFile zip = new ZipFile(src, Charset.forName("GBK"));
             ZipEntry zipEntry = zip.getEntry(entry);
             if (zipEntry == null) {
+                zip.close();
                 return false;
             }
             InputStream in = zip.getInputStream(zipEntry);
@@ -57,6 +59,7 @@ public class FileUtil {
                 } else {
                     in.close();
                     out.close();
+                    zip.close();
                     return true;
                 }
             }
@@ -110,6 +113,15 @@ public class FileUtil {
                 if (temp.length > 2 && third.length >= 3) {
                     temp[0] = "offset=" + third[1];
                     temp[1] = "size=" + third[2];
+                }
+            }
+        }
+        String[] four = properties[4].split(SettingsStringUtil.DELIMITER);
+        for (String build : four) {
+            if (build.contains("KQ1")) {
+                String[] five = build.split("/");
+                if (temp.length > 3 && five.length >= 1) {
+                    temp[2] = "version=" + five[0];
                 }
             }
         }

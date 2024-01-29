@@ -7,5 +7,5 @@ public final class BuildConfig {
     public static final boolean DEBUG = Boolean.parseBoolean("true");
     public static final String FLAVOR = "";
     public static final int VERSION_CODE = 1;
-    public static final String VERSION_NAME = "1.0_230802";
+    public static final String VERSION_NAME = "1.0_231205";
 }

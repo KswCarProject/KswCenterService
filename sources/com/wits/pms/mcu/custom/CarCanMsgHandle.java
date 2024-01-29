@@ -105,52 +105,100 @@ public class CarCanMsgHandle {
         int currentVol;
         int subCmd = datas[0];
         boolean fIDriveSndBroadcastMsg = false;
-        if (subCmd != 17 && subCmd == 23) {
-            if (SystemStatusControl.getStatus().topApp.contains(ZlinkMessage.ZLINK_NORMAL_ACTION)) {
-                if (datas[2] == 0) {
-                    fIDriveSndBroadcastMsg = true;
-                    byte b = datas[1];
-                    if (b == 12) {
-                        CenterControlImpl.getImpl().iDriveZlinkMsg(4);
-                    } else if (b != 14) {
-                        if (b != 17) {
-                            switch (b) {
+        if (subCmd != 17) {
+            if (subCmd == 23) {
+                if (SystemStatusControl.getStatus().topApp.contains(ZlinkMessage.ZLINK_NORMAL_ACTION)) {
+                    if (datas[2] == 0) {
+                        fIDriveSndBroadcastMsg = true;
+                        byte b = datas[1];
+                        if (b == 12) {
+                            CenterControlImpl.getImpl().iDriveZlinkMsg(4);
+                        } else if (b != 14) {
+                            if (b != 17) {
+                                switch (b) {
+                                    case 1:
+                                        CenterControlImpl.getImpl().iDriveZlinkMsg(19);
+                                        break;
+                                    case 2:
+                                        CenterControlImpl.getImpl().iDriveZlinkMsg(20);
+                                        break;
+                                    case 3:
+                                        CenterControlImpl.getImpl().iDriveZlinkMsg(21);
+                                        break;
+                                    case 4:
+                                        CenterControlImpl.getImpl().iDriveZlinkMsg(22);
+                                        break;
+                                    case 5:
+                                        CenterControlImpl.getImpl().iDriveZlinkMsg(CenterControlImpl.getImpl().getHicarStatus() ? 23 : 66);
+                                        break;
+                                    case 6:
+                                    case 7:
+                                        break;
+                                    default:
+                                        switch (b) {
+                                            case 23:
+                                                CenterControlImpl.getImpl().iDriveZlinkMsg(88);
+                                                break;
+                                            case 24:
+                                                CenterControlImpl.getImpl().iDriveZlinkMsg(87);
+                                                break;
+                                            case 25:
+                                                CenterControlImpl.getImpl().iDriveZlinkMsg(85);
+                                                break;
+                                            default:
+                                                switch (b) {
+                                                    case 30:
+                                                        CenterControlImpl.getImpl().iDriveZlinkMsg(5);
+                                                        break;
+                                                    case 31:
+                                                        CenterControlImpl.getImpl().iDriveZlinkMsg(6);
+                                                        break;
+                                                    default:
+                                                        fIDriveSndBroadcastMsg = false;
+                                                        break;
+                                                }
+                                        }
+                                }
+                            } else {
+                                switch (CenterControlImpl.getImpl().getCpCallStatus()) {
+                                    case 1:
+                                        CenterControlImpl.getImpl().iDriveZlinkMsg(5);
+                                        break;
+                                    case 2:
+                                        CenterControlImpl.getImpl().iDriveZlinkMsg(6);
+                                        break;
+                                }
+                            }
+                        } else {
+                            CenterControlImpl.getImpl().iDriveZlinkMsg(1504);
+                        }
+                    } else if (datas[2] == 1) {
+                        fIDriveSndBroadcastMsg = true;
+                        byte b2 = datas[1];
+                        if (b2 != 12 && b2 != 14 && b2 != 17) {
+                            switch (b2) {
                                 case 1:
-                                    CenterControlImpl.getImpl().iDriveZlinkMsg(19);
-                                    break;
                                 case 2:
-                                    CenterControlImpl.getImpl().iDriveZlinkMsg(20);
-                                    break;
                                 case 3:
-                                    CenterControlImpl.getImpl().iDriveZlinkMsg(1);
-                                    break;
                                 case 4:
-                                    CenterControlImpl.getImpl().iDriveZlinkMsg(2);
-                                    break;
                                 case 5:
-                                    CenterControlImpl.getImpl().iDriveZlinkMsg(66);
                                     break;
                                 case 6:
+                                    CenterControlImpl.getImpl().iDriveZlinkMsg(CenterControlImpl.getImpl().getHicarStatus() ? 22 : 1502);
+                                    break;
                                 case 7:
+                                    CenterControlImpl.getImpl().iDriveZlinkMsg(CenterControlImpl.getImpl().getHicarStatus() ? 21 : 1501);
                                     break;
                                 default:
-                                    switch (b) {
+                                    switch (b2) {
                                         case 23:
-                                            CenterControlImpl.getImpl().iDriveZlinkMsg(88);
-                                            break;
                                         case 24:
-                                            CenterControlImpl.getImpl().iDriveZlinkMsg(87);
-                                            break;
                                         case 25:
-                                            CenterControlImpl.getImpl().iDriveZlinkMsg(85);
                                             break;
                                         default:
-                                            switch (b) {
+                                            switch (b2) {
                                                 case 30:
-                                                    CenterControlImpl.getImpl().iDriveZlinkMsg(5);
-                                                    break;
                                                 case 31:
-                                                    CenterControlImpl.getImpl().iDriveZlinkMsg(6);
                                                     break;
                                                 default:
                                                     fIDriveSndBroadcastMsg = false;
@@ -158,123 +206,77 @@ public class CarCanMsgHandle {
                                             }
                                     }
                             }
-                        } else {
-                            switch (CenterControlImpl.getImpl().getCpCallStatus()) {
-                                case 1:
-                                    CenterControlImpl.getImpl().iDriveZlinkMsg(5);
-                                    break;
-                                case 2:
-                                    CenterControlImpl.getImpl().iDriveZlinkMsg(6);
-                                    break;
-                            }
-                        }
-                    } else {
-                        CenterControlImpl.getImpl().iDriveZlinkMsg(1504);
-                    }
-                } else if (datas[2] == 1) {
-                    fIDriveSndBroadcastMsg = true;
-                    byte b2 = datas[1];
-                    if (b2 != 12 && b2 != 14 && b2 != 17) {
-                        switch (b2) {
-                            case 1:
-                            case 2:
-                            case 3:
-                            case 4:
-                            case 5:
-                                break;
-                            case 6:
-                                CenterControlImpl.getImpl().iDriveZlinkMsg(1502);
-                                break;
-                            case 7:
-                                CenterControlImpl.getImpl().iDriveZlinkMsg(1501);
-                                break;
-                            default:
-                                switch (b2) {
-                                    case 23:
-                                    case 24:
-                                    case 25:
-                                        break;
-                                    default:
-                                        switch (b2) {
-                                            case 30:
-                                            case 31:
-                                                break;
-                                            default:
-                                                fIDriveSndBroadcastMsg = false;
-                                                break;
-                                        }
-                                }
                         }
                     }
                 }
-            }
-            if (!fIDriveSndBroadcastMsg && datas[2] == 1 && (opType = datas[1]) != 11) {
-                if (opType == 14) {
-                    CenterControlImpl.getImpl().openNavi();
-                    return;
-                }
-                if (opType == 21 || opType == 22) {
-                    try {
-                        if (CenterControlImpl.getImpl().isBTCallingorTalking()) {
-                            currentVol = KswSettings.getSettings().getSettingsInt("Android_phone_vol");
-                        } else {
-                            currentVol = KswSettings.getSettings().getSettingsInt("Android_media_vol");
-                        }
-                        if (KswSettings.getSettings().getSettingsInt("AMP_Type", 0) == 1 && currentVol >= 0 && currentVol <= 40) {
-                            if (currentVol < 40 && opType == 21 && currentVol >= 0) {
-                                currentVol++;
-                            }
-                            if (currentVol > 0 && opType == 22 && currentVol <= 40) {
-                                currentVol--;
-                            }
-                            if (CenterControlImpl.getImpl().isBTCallingorTalking()) {
-                                KswSettings.getSettings().setInt("Android_phone_vol", currentVol);
-                                return;
-                            } else {
-                                KswSettings.getSettings().setInt("Android_media_vol", currentVol);
-                                return;
-                            }
-                        }
-                        return;
-                    } catch (Exception e) {
-                    }
-                }
-                int mPageIndex = Settings.System.getInt(this.context.getContentResolver(), "mPageIndex", 0);
-                if (opType <= 7 && opType >= 1) {
-                    if (!SystemStatusControl.getStatus().topApp.contains(AutoKitCallBackImpl.AutoKitPkgName)) {
-                        if (mPageIndex != 1 && SystemStatusControl.getStatus().topApp.contains("com.autonavi.amapauto")) {
-                            return;
-                        }
-                    } else {
+                if (!fIDriveSndBroadcastMsg && datas[2] == 1 && (opType = datas[1]) != 11) {
+                    if (opType == 14) {
+                        CenterControlImpl.getImpl().openNavi();
                         return;
                     }
-                }
-                if (opType == 32) {
-                    WitsCommand.sendCommand(7, 101, "");
-                } else if (opType == 33) {
-                    WitsCommand.sendCommand(7, 102, "");
-                } else if (opType == 17 && "true".equals(SystemProperties.get("persist.sys.hicar_connect"))) {
-                    WitsCommand.sendCommand(7, 113, "");
-                } else {
-                    if (opType == 17) {
+                    if (opType == 21 || opType == 22) {
                         try {
-                            if (KswSettings.getSettings().getSettingsInt("BT_Type") == 1) {
-                                CenterControlImpl.getImpl().openCarBt();
-                                return;
+                            if (CenterControlImpl.getImpl().isBTCallingorTalking()) {
+                                currentVol = KswSettings.getSettings().getSettingsInt("Android_phone_vol");
+                            } else {
+                                currentVol = KswSettings.getSettings().getSettingsInt("Android_media_vol");
                             }
-                        } catch (Settings.SettingNotFoundException e2) {
-                            e2.printStackTrace();
+                            if (KswSettings.getSettings().getSettingsInt("AMP_Type", 0) == 1 && currentVol >= 0 && currentVol <= 40) {
+                                if (currentVol < 40 && opType == 21 && currentVol >= 0) {
+                                    currentVol++;
+                                }
+                                if (currentVol > 0 && opType == 22 && currentVol <= 40) {
+                                    currentVol--;
+                                }
+                                if (CenterControlImpl.getImpl().isBTCallingorTalking()) {
+                                    KswSettings.getSettings().setInt("Android_phone_vol", currentVol);
+                                    return;
+                                } else {
+                                    KswSettings.getSettings().setInt("Android_media_vol", currentVol);
+                                    return;
+                                }
+                            }
+                            return;
+                        } catch (Exception e) {
                         }
                     }
-                    if (this.mhandler != null) {
-                        boolean hasMsg = this.mhandler.hasMessages(1);
-                        if (hasMsg) {
+                    int mPageIndex = Settings.System.getInt(this.context.getContentResolver(), "mPageIndex", 0);
+                    if (opType <= 7 && opType >= 1) {
+                        if (!SystemStatusControl.getStatus().topApp.contains(AutoKitCallBackImpl.AutoKitPkgName)) {
+                            if (mPageIndex != 1 && SystemStatusControl.getStatus().topApp.contains("com.autonavi.amapauto")) {
+                                return;
+                            }
+                        } else {
                             return;
                         }
-                        Message message = this.mhandler.obtainMessage();
-                        message.what = 1;
-                        message.arg1 = opType;
-                        this.mhandler.sendMessageDelayed(message, 150L);
+                    }
+                    if (opType == 32) {
+                        WitsCommand.sendCommand(7, 101, "");
+                    } else if (opType == 33) {
+                        WitsCommand.sendCommand(7, 102, "");
+                    } else if (opType == 17 && "true".equals(SystemProperties.get("persist.sys.hicar_connect"))) {
+                        WitsCommand.sendCommand(7, 113, "");
+                    } else {
+                        if (opType == 17) {
+                            try {
+                                if (KswSettings.getSettings().getSettingsInt("BT_Type") == 1) {
+                                    CenterControlImpl.getImpl().openCarBt();
+                                    return;
+                                }
+                            } catch (Settings.SettingNotFoundException e2) {
+                                e2.printStackTrace();
+                            }
+                        }
+                        if (this.mhandler != null) {
+                            boolean hasMsg = this.mhandler.hasMessages(1);
+                            if (hasMsg) {
+                                return;
+                            }
+                            Message message = this.mhandler.obtainMessage();
+                            message.what = 1;
+                            message.arg1 = opType;
+                            this.mhandler.sendMessageDelayed(message, 150L);
+                        }
                     }
                 }
             }

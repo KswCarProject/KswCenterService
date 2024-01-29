@@ -516,193 +516,219 @@ public class KswMcuListener extends KswMcuReceiver {
                     }
                 }
             } else {
-                byte b4 = data[0];
-                if (b4 == 16) {
-                    systemStatus.ill = data[1] & 255 & 1;
-                    systemStatus.setEpb(data[1] & 255 & 8);
-                    mcuStatus.carData.handbrake = ((data[1] & 255) & 8) != 0;
-                    mcuStatus.carData.safetyBelt = ((data[2] & 255) & 1) != 0;
-                    mcuStatus.carData.carGear = data[2] & 255 & 6;
-                    mcuStatus.carData.signalLeft = data[2] & 255 & 8;
-                    mcuStatus.carData.signalRight = data[2] & 255 & 16;
-                    mcuStatus.carData.signalDouble = data[2] & 255 & 32;
-                    CallBackServiceImpl.getCallBackServiceImpl().handleLRReverse();
-                    SystemStatusControl.getDefault().getPms().updateMcuJsonStatus("mcuJson", new Gson().toJson(mcuStatus));
-                    if (mcuStatus.carData.carGear == 0) {
-                        CenterControlImpl.getImpl().TxzCheckGearAck(0);
-                        return;
-                    } else {
-                        CenterControlImpl.getImpl().TxzCheckGearAck(1);
-                        return;
-                    }
-                } else if (b4 == 18) {
-                    mcuStatus.carData.carDoor = data[1] & 255;
-                } else if (b4 != 28) {
-                    switch (b4) {
-                        case 23:
-                            if (data[2] != 1) {
-                                return;
-                            }
-                            byte b5 = data[1];
-                            if (b5 != 13) {
-                                if (b5 != 20) {
-                                    switch (b5) {
-                                        case 3:
-                                            AutoKitCallBackImpl.getImpl(this.mContext).drapUp();
-                                            break;
-                                        case 4:
-                                            AutoKitCallBackImpl.getImpl(this.mContext).drapDown();
-                                            break;
-                                        case 5:
-                                            AutoKitCallBackImpl.getImpl(this.mContext).enter();
-                                            break;
-                                        case 6:
-                                            AutoKitCallBackImpl.getImpl(this.mContext).drapRight();
-                                            int mPageIndex = Settings.System.getInt(this.mContext.getContentResolver(), "mPageIndex", 0);
-                                            if (mPageIndex == 1 || !SystemStatusControl.getStatus().topApp.contains("autonavi")) {
-                                                return;
-                                            }
-                                            Intent intent1 = new Intent();
-                                            intent1.setAction("AUTONAVI_STANDARD_BROADCAST_RECV");
-                                            intent1.putExtra("KEY_TYPE", 10027);
-                                            intent1.putExtra("EXTRA_TYPE", 1);
-                                            intent1.putExtra("EXTRA_OPERA", 0);
-                                            this.mContext.sendBroadcast(intent1);
-                                            break;
-                                        case 7:
-                                            AutoKitCallBackImpl.getImpl(this.mContext).drapLeft();
-                                            int index = Settings.System.getInt(this.mContext.getContentResolver(), "mPageIndex", 0);
-                                            if (index == 1 || !SystemStatusControl.getStatus().topApp.contains("autonavi")) {
-                                                return;
-                                            }
-                                            Intent intent2 = new Intent();
-                                            intent2.setAction("AUTONAVI_STANDARD_BROADCAST_RECV");
-                                            intent2.putExtra("KEY_TYPE", 10027);
-                                            intent2.putExtra("EXTRA_TYPE", 1);
-                                            intent2.putExtra("EXTRA_OPERA", 1);
-                                            this.mContext.sendBroadcast(intent2);
-                                            break;
-                                            break;
-                                        default:
-                                            switch (b5) {
-                                                case 30:
-                                                    if (SystemProperties.get(ZlinkMessage.ZLINK_CONNECT).equals("1") || SystemProperties.get(ZlinkMessage.ZLINK_CARPLAY_WRIED_CONNECT).equals("1")) {
-                                                        if (!SystemStatusControl.getStatus().topApp.contains(ZlinkMessage.ZLINK_NORMAL_ACTION)) {
-                                                            CenterControlImpl.getImpl().zlinkHandleCall();
-                                                            break;
-                                                        }
-                                                    } else if (SystemProperties.get(ZlinkMessage.ZLINK_ANDROID_AUTO_CONNECT).equals("1") || SystemProperties.get(ZlinkMessage.ZLINK_ANDROID_MIRROR_CONNECT).equals("1")) {
-                                                        CenterControlImpl.getImpl().zlinkHandleAutoCall();
-                                                        break;
-                                                    } else if (SystemProperties.get(AutoKitMessage.AUTOBOX_CONNECT).equals("1")) {
-                                                        AutoKitCallBackImpl.getImpl(this.mContext).acceptPhone();
-                                                        break;
-                                                    } else if ("true".equals(SystemProperties.get("persist.sys.hicar_connect"))) {
-                                                        WitsCommand.sendCommand(7, 111);
-                                                        break;
-                                                    } else {
-                                                        CenterControlImpl.getImpl().acceptPhone();
-                                                        break;
-                                                    }
-                                                    break;
-                                                case 31:
-                                                    if (SystemProperties.get(ZlinkMessage.ZLINK_CONNECT).equals("1") || SystemProperties.get(ZlinkMessage.ZLINK_CARPLAY_WRIED_CONNECT).equals("1")) {
-                                                        if (!SystemStatusControl.getStatus().topApp.contains(ZlinkMessage.ZLINK_NORMAL_ACTION)) {
-                                                            CenterControlImpl.getImpl().zlinkHandleCall();
-                                                            break;
-                                                        }
-                                                    } else if (SystemProperties.get(ZlinkMessage.ZLINK_ANDROID_AUTO_CONNECT).equals("1") || SystemProperties.get(ZlinkMessage.ZLINK_ANDROID_MIRROR_CONNECT).equals("1")) {
-                                                        CenterControlImpl.getImpl().zlinkHandleAutoCall();
-                                                        break;
-                                                    } else if (SystemProperties.get(AutoKitMessage.AUTOBOX_CONNECT).equals("1")) {
-                                                        AutoKitCallBackImpl.getImpl(this.mContext).rejectPhone();
-                                                        break;
-                                                    } else if ("true".equals(SystemProperties.get("persist.sys.hicar_connect"))) {
-                                                        WitsCommand.sendCommand(7, 112);
-                                                        break;
-                                                    } else {
-                                                        CenterControlImpl.getImpl().handUpPhone();
-                                                        break;
-                                                    }
-                                                    break;
-                                            }
-                                    }
-                                }
-                            } else {
-                                CenterControlImpl.getImpl().openSettings();
-                                break;
-                            }
-                            break;
-                        case 24:
-                            byte[] timeArrays = new byte[7];
-                            System.arraycopy(data, 1, timeArrays, 0, timeArrays.length);
-                            if (timeArrays[6] != 0) {
-                            }
-                            TimeSetting.setTime(this.mContext, timeArrays[0] & 255, timeArrays[1], timeArrays[2], timeArrays[3], timeArrays[4], timeArrays[5]);
-                            break;
-                        case 25:
-                            mcuStatus.carData.mileage = ((data[1] & 255) << 8) + (data[2] & 255);
-                            mcuStatus.carData.oilWear = (((data[3] & 255) << 8) + (data[4] & 255)) / 10.0f;
-                            mcuStatus.carData.averSpeed = (((data[5] & 255) << 8) + (data[6] & 255)) / 10.0f;
-                            mcuStatus.carData.speed = ((data[7] & 255) << 8) + (data[8] & 255);
-                            mcuStatus.carData.engineTurnS = ((data[9] & 255) << 8) + (data[10] & 255);
-                            mcuStatus.carData.oilSum = ((data[11] & 255) << 8) + (data[12] & 255);
-                            if ((data[13] & 128) > 0) {
-                                int temp = (~(((data[13] & 255) * 256) + (data[14] & 255))) + 1;
-                                mcuStatus.carData.airTemperature = (float) ((65535 & temp) * (-0.1d));
-                            } else {
-                                int temp2 = ((data[13] & 255) * 256) + (data[14] & 255);
-                                mcuStatus.carData.airTemperature = (float) ((65535 & temp2) * 0.1d);
-                            }
-                            mcuStatus.carData.distanceUnitType = data[15] & 8;
-                            mcuStatus.carData.oilUnitType = data[15] & 2;
-                            mcuStatus.carData.oilUnitType += data[15] & 255 & 1;
-                            SystemStatusControl.getDefault().getPms().updateMcuJsonStatus("mcuJson", new Gson().toJson(mcuStatus));
+                switch (data[0]) {
+                    case 16:
+                        systemStatus.ill = data[1] & 255 & 1;
+                        systemStatus.setEpb(data[1] & 255 & 8);
+                        mcuStatus.carData.handbrake = ((data[1] & 255) & 8) != 0;
+                        mcuStatus.carData.safetyBelt = ((data[2] & 255) & 1) != 0;
+                        mcuStatus.carData.carGear = data[2] & 255 & 6;
+                        mcuStatus.carData.signalLeft = data[2] & 255 & 8;
+                        mcuStatus.carData.signalRight = data[2] & 255 & 16;
+                        mcuStatus.carData.signalDouble = data[2] & 255 & 32;
+                        CallBackServiceImpl.getCallBackServiceImpl().handleLRReverse();
+                        SystemStatusControl.getDefault().getPms().updateMcuJsonStatus("mcuJson", new Gson().toJson(mcuStatus));
+                        if (mcuStatus.carData.carGear == 0) {
+                            CenterControlImpl.getImpl().TxzCheckGearAck(0);
                             return;
-                        case 26:
-                            if (data[1] == 2) {
-                                CenterControlImpl.getImpl().stopMedia();
-                                try {
-                                    if (Settings.System.getInt(this.mContext.getContentResolver(), "CarDisplay") == 0 && Settings.System.getInt(this.mContext.getContentResolver(), "OEM_FM", 0) == 0) {
-                                        Intent intent = new Intent(this.mContext, ClockActivity.class);
-                                        intent.setFlags(268435456);
-                                        this.mContext.startActivity(intent);
-                                    }
-                                } catch (Settings.SettingNotFoundException e4) {
-                                    e4.printStackTrace();
+                        } else {
+                            CenterControlImpl.getImpl().TxzCheckGearAck(1);
+                            return;
+                        }
+                    case 18:
+                        mcuStatus.carData.carDoor = data[1] & 255;
+                        SystemStatusControl.getDefault().getPms().updateMcuJsonStatus("mcuJson", new Gson().toJson(mcuStatus));
+                        break;
+                    case 19:
+                        mcuStatus.carData.carWheelAngle = ((data[1] & 255) * 256) + (data[2] & 255);
+                        SystemStatusControl.getDefault().getPms().updateMcuJsonStatus("mcuJson", new Gson().toJson(mcuStatus));
+                        Log.m68i(TAG, "Task#18097 -- onMcuMessage: carWheelAngle = " + mcuStatus.carData.carWheelAngle);
+                        break;
+                    case 20:
+                        mcuStatus.carData.frontRadarDataL = data[1] & 255;
+                        mcuStatus.carData.frontRadarDataLM = data[2] & 255;
+                        mcuStatus.carData.frontRadarDataRM = data[3] & 255;
+                        mcuStatus.carData.frontRadarDataR = data[4] & 255;
+                        SystemStatusControl.getDefault().getPms().updateMcuJsonStatus("mcuJson", new Gson().toJson(mcuStatus));
+                        Log.m68i(TAG, "Task#18097 -- onMcuMessage: frontRadarData = " + mcuStatus.carData.frontRadarDataL + "/" + mcuStatus.carData.frontRadarDataLM + "/" + mcuStatus.carData.frontRadarDataRM + "/" + mcuStatus.carData.frontRadarDataR);
+                        break;
+                    case 21:
+                        mcuStatus.carData.backRadarDataL = data[1] & 255;
+                        mcuStatus.carData.backRadarDataLM = data[2] & 255;
+                        mcuStatus.carData.backRadarDataRM = data[3] & 255;
+                        mcuStatus.carData.backRadarDataR = data[4] & 255;
+                        SystemStatusControl.getDefault().getPms().updateMcuJsonStatus("mcuJson", new Gson().toJson(mcuStatus));
+                        Log.m68i(TAG, "Task#18097 -- onMcuMessage: backRadarData = " + mcuStatus.carData.backRadarDataL + "/" + mcuStatus.carData.backRadarDataLM + "/" + mcuStatus.carData.backRadarDataRM + "/" + mcuStatus.carData.backRadarDataR);
+                        break;
+                    case 23:
+                        if (data[2] != 1) {
+                            return;
+                        }
+                        byte b4 = data[1];
+                        if (b4 != 13) {
+                            if (b4 != 20) {
+                                switch (b4) {
+                                    case 3:
+                                        AutoKitCallBackImpl.getImpl(this.mContext).drapUp();
+                                        break;
+                                    case 4:
+                                        AutoKitCallBackImpl.getImpl(this.mContext).drapDown();
+                                        break;
+                                    case 5:
+                                        AutoKitCallBackImpl.getImpl(this.mContext).enter();
+                                        break;
+                                    case 6:
+                                        AutoKitCallBackImpl.getImpl(this.mContext).drapRight();
+                                        int mPageIndex = Settings.System.getInt(this.mContext.getContentResolver(), "mPageIndex", 0);
+                                        if (mPageIndex == 1 || !SystemStatusControl.getStatus().topApp.contains("autonavi")) {
+                                            return;
+                                        }
+                                        Intent intent1 = new Intent();
+                                        intent1.setAction("AUTONAVI_STANDARD_BROADCAST_RECV");
+                                        intent1.putExtra("KEY_TYPE", 10027);
+                                        intent1.putExtra("EXTRA_TYPE", 1);
+                                        intent1.putExtra("EXTRA_OPERA", 0);
+                                        this.mContext.sendBroadcast(intent1);
+                                        break;
+                                        break;
+                                    case 7:
+                                        AutoKitCallBackImpl.getImpl(this.mContext).drapLeft();
+                                        int index = Settings.System.getInt(this.mContext.getContentResolver(), "mPageIndex", 0);
+                                        if (index == 1 || !SystemStatusControl.getStatus().topApp.contains("autonavi")) {
+                                            return;
+                                        }
+                                        Intent intent2 = new Intent();
+                                        intent2.setAction("AUTONAVI_STANDARD_BROADCAST_RECV");
+                                        intent2.putExtra("KEY_TYPE", 10027);
+                                        intent2.putExtra("EXTRA_TYPE", 1);
+                                        intent2.putExtra("EXTRA_OPERA", 1);
+                                        this.mContext.sendBroadcast(intent2);
+                                        break;
+                                        break;
+                                    default:
+                                        switch (b4) {
+                                            case 30:
+                                                if (SystemProperties.get(ZlinkMessage.ZLINK_CONNECT).equals("1") || SystemProperties.get(ZlinkMessage.ZLINK_CARPLAY_WRIED_CONNECT).equals("1")) {
+                                                    if (!SystemStatusControl.getStatus().topApp.contains(ZlinkMessage.ZLINK_NORMAL_ACTION)) {
+                                                        CenterControlImpl.getImpl().zlinkHandleCall();
+                                                        break;
+                                                    }
+                                                } else if (SystemProperties.get(ZlinkMessage.ZLINK_ANDROID_AUTO_CONNECT).equals("1") || SystemProperties.get(ZlinkMessage.ZLINK_ANDROID_MIRROR_CONNECT).equals("1")) {
+                                                    CenterControlImpl.getImpl().zlinkHandleAutoCall();
+                                                    break;
+                                                } else if (SystemProperties.get(AutoKitMessage.AUTOBOX_CONNECT).equals("1")) {
+                                                    AutoKitCallBackImpl.getImpl(this.mContext).acceptPhone();
+                                                    break;
+                                                } else if ("true".equals(SystemProperties.get("persist.sys.hicar_connect"))) {
+                                                    WitsCommand.sendCommand(7, 111);
+                                                    break;
+                                                } else {
+                                                    CenterControlImpl.getImpl().acceptPhone();
+                                                    break;
+                                                }
+                                                break;
+                                            case 31:
+                                                if (SystemProperties.get(ZlinkMessage.ZLINK_CONNECT).equals("1") || SystemProperties.get(ZlinkMessage.ZLINK_CARPLAY_WRIED_CONNECT).equals("1")) {
+                                                    if (!SystemStatusControl.getStatus().topApp.contains(ZlinkMessage.ZLINK_NORMAL_ACTION)) {
+                                                        CenterControlImpl.getImpl().zlinkHandleCall();
+                                                        break;
+                                                    }
+                                                } else if (SystemProperties.get(ZlinkMessage.ZLINK_ANDROID_AUTO_CONNECT).equals("1") || SystemProperties.get(ZlinkMessage.ZLINK_ANDROID_MIRROR_CONNECT).equals("1")) {
+                                                    CenterControlImpl.getImpl().zlinkHandleAutoCall();
+                                                    break;
+                                                } else if (SystemProperties.get(AutoKitMessage.AUTOBOX_CONNECT).equals("1")) {
+                                                    AutoKitCallBackImpl.getImpl(this.mContext).rejectPhone();
+                                                    break;
+                                                } else if ("true".equals(SystemProperties.get("persist.sys.hicar_connect"))) {
+                                                    WitsCommand.sendCommand(7, 112);
+                                                    break;
+                                                } else {
+                                                    CenterControlImpl.getImpl().handUpPhone();
+                                                    break;
+                                                }
+                                                break;
+                                        }
                                 }
                             }
-                            mcuStatus.systemMode = data[1];
-                            if (mcuStatus.systemMode == 1) {
-                                try {
-                                    int callStatus = PowerManagerApp.getStatusInt("callStatus");
-                                    if (callStatus != 7) {
-                                        r11 = false;
-                                    }
-                                    BtPhoneStatus.isCalling(callStatus);
-                                } catch (RemoteException e5) {
-                                }
-                                if (SystemProperties.get("persist.sys.hicar_connect").equals("true")) {
-                                    CenterControlImpl.getImpl().stopHicarMusic(false);
-                                    break;
-                                }
-                            }
+                        } else {
+                            CenterControlImpl.getImpl().openSettings();
                             break;
-                    }
-                } else {
-                    mcuStatus.acData.isOpen = (data[1] & 128) != 0;
-                    mcuStatus.acData.AC_Switch = (data[1] & BluetoothHidDevice.SUBCLASS1_KEYBOARD) != 0;
-                    mcuStatus.acData.loop = (data[1] & HebrewProber.SPACE) != 0 ? 1 : 0;
-                    mcuStatus.acData.loop = (data[1] & WifiScanner.PnoSettings.PnoNetwork.FLAG_SAME_NETWORK) != 0 ? 2 : mcuStatus.acData.loop;
-                    mcuStatus.acData.frontMistSwitch = (data[1] & 8) != 0;
-                    mcuStatus.acData.backMistSwitch = (data[1] & 2) != 0;
-                    mcuStatus.acData.sync = (data[1] & 1) != 0;
-                    mcuStatus.acData.mode = data[2];
-                    mcuStatus.acData.setLeftTmp((int) data[3]);
-                    mcuStatus.acData.setRightTmp((int) data[4]);
-                    mcuStatus.acData.eco = (data[5] & HebrewProber.SPACE) != 0;
-                    mcuStatus.acData.autoSwitch = (data[5] & WifiScanner.PnoSettings.PnoNetwork.FLAG_SAME_NETWORK) != 0;
-                    mcuStatus.acData.speed = (data[5] & MidiConstants.STATUS_CHANNEL_MASK) * 0.5f;
+                        }
+                        break;
+                    case 24:
+                        byte[] timeArrays = new byte[7];
+                        System.arraycopy(data, 1, timeArrays, 0, timeArrays.length);
+                        if (timeArrays[6] != 0) {
+                        }
+                        TimeSetting.setTime(this.mContext, timeArrays[0] & 255, timeArrays[1], timeArrays[2], timeArrays[3], timeArrays[4], timeArrays[5]);
+                        break;
+                    case 25:
+                        mcuStatus.carData.mileage = ((data[1] & 255) << 8) + (data[2] & 255);
+                        mcuStatus.carData.oilWear = (((data[3] & 255) << 8) + (data[4] & 255)) / 10.0f;
+                        mcuStatus.carData.averSpeed = (((data[5] & 255) << 8) + (data[6] & 255)) / 10.0f;
+                        mcuStatus.carData.speed = ((data[7] & 255) << 8) + (data[8] & 255);
+                        mcuStatus.carData.engineTurnS = ((data[9] & 255) << 8) + (data[10] & 255);
+                        mcuStatus.carData.oilSum = ((data[11] & 255) << 8) + (data[12] & 255);
+                        if ((data[13] & 128) > 0) {
+                            int temp = (~(((data[13] & 255) * 256) + (data[14] & 255))) + 1;
+                            mcuStatus.carData.airTemperature = (float) ((65535 & temp) * (-0.1d));
+                        } else {
+                            int temp2 = ((data[13] & 255) * 256) + (data[14] & 255);
+                            mcuStatus.carData.airTemperature = (float) ((65535 & temp2) * 0.1d);
+                        }
+                        mcuStatus.carData.distanceUnitType = data[15] & 8;
+                        mcuStatus.carData.oilUnitType = data[15] & 2;
+                        mcuStatus.carData.oilUnitType += data[15] & 255 & 1;
+                        SystemStatusControl.getDefault().getPms().updateMcuJsonStatus("mcuJson", new Gson().toJson(mcuStatus));
+                        return;
+                    case 26:
+                        if (data[1] == 2) {
+                            CenterControlImpl.getImpl().stopMedia();
+                            try {
+                                if (Settings.System.getInt(this.mContext.getContentResolver(), "CarDisplay") == 0 && Settings.System.getInt(this.mContext.getContentResolver(), "OEM_FM", 0) == 0) {
+                                    Intent intent = new Intent(this.mContext, ClockActivity.class);
+                                    intent.setFlags(268435456);
+                                    this.mContext.startActivity(intent);
+                                }
+                            } catch (Settings.SettingNotFoundException e4) {
+                                e4.printStackTrace();
+                            }
+                        }
+                        mcuStatus.systemMode = data[1];
+                        if (mcuStatus.systemMode == 1) {
+                            try {
+                                int callStatus = PowerManagerApp.getStatusInt("callStatus");
+                                if (callStatus != 7) {
+                                    r11 = false;
+                                }
+                                BtPhoneStatus.isCalling(callStatus);
+                            } catch (RemoteException e5) {
+                            }
+                            if (SystemProperties.get("persist.sys.hicar_connect").equals("true")) {
+                                CenterControlImpl.getImpl().stopHicarMusic(false);
+                            }
+                            CenterControlImpl.getImpl().handleZlinkBackCar(false);
+                            break;
+                        } else if (mcuStatus.systemMode == 2) {
+                            CenterControlImpl.getImpl().handleZlinkBackCar(true);
+                            break;
+                        }
+                        break;
+                    case 28:
+                        mcuStatus.acData.isOpen = (data[1] & 128) != 0;
+                        mcuStatus.acData.AC_Switch = (data[1] & BluetoothHidDevice.SUBCLASS1_KEYBOARD) != 0;
+                        mcuStatus.acData.loop = (data[1] & HebrewProber.SPACE) != 0 ? 1 : 0;
+                        mcuStatus.acData.loop = (data[1] & WifiScanner.PnoSettings.PnoNetwork.FLAG_SAME_NETWORK) != 0 ? 2 : mcuStatus.acData.loop;
+                        mcuStatus.acData.frontMistSwitch = (data[1] & 8) != 0;
+                        mcuStatus.acData.backMistSwitch = (data[1] & 2) != 0;
+                        mcuStatus.acData.sync = (data[1] & 1) != 0;
+                        mcuStatus.acData.mode = data[2];
+                        mcuStatus.acData.setLeftTmp((int) data[3]);
+                        mcuStatus.acData.setRightTmp((int) data[4]);
+                        mcuStatus.acData.eco = (data[5] & HebrewProber.SPACE) != 0;
+                        mcuStatus.acData.autoSwitch = (data[5] & WifiScanner.PnoSettings.PnoNetwork.FLAG_SAME_NETWORK) != 0;
+                        mcuStatus.acData.speed = (15 & data[5]) * 0.5f;
+                        break;
                 }
             }
         } else if (data.length >= 9) {
@@ -712,8 +738,9 @@ public class KswMcuListener extends KswMcuReceiver {
     }
 
     public static /* synthetic */ void lambda$onMcuMessage$0(KswMcuListener kswMcuListener, SystemStatus systemStatus, byte[] data, boolean isDelay) {
+        int i;
+        int i2;
         systemStatus.lastMode = data[1];
-        int i = 0;
         switch (data[1]) {
             case 0:
             case 14:
@@ -729,18 +756,21 @@ public class KswMcuListener extends KswMcuReceiver {
                 if (Build.DEVICE.contains("8937")) {
                     try {
                         Log.m72d(TAG, "memory music 8917 delay 02");
-                        while (true) {
-                            int i2 = i;
-                            if (i2 < 20) {
-                                Thread.sleep(500L);
-                                if (!SystemStatusControl.getStatus().topApp.equals("com.wits.ksw")) {
-                                    i = i2 + 1;
-                                }
-                            }
+                        for (i = 0; i < 20; i = i + 1) {
+                            Thread.sleep(500L);
+                            i = SystemStatusControl.getStatus().topApp.equals("com.wits.ksw") ? 0 : i + 1;
                         }
                     } catch (InterruptedException e2) {
                         e2.printStackTrace();
                     }
+                }
+                try {
+                    if (PowerManagerApp.getStatusBoolean("show_360_on_boot")) {
+                        PowerManagerApp.setBooleanStatus("show_360_on_boot", false);
+                        return;
+                    }
+                } catch (RemoteException e3) {
+                    e3.printStackTrace();
                 }
                 String musicPkg = Settings.System.getString(kswMcuListener.mContext.getContentResolver(), "KEY_THIRD_APP_MUSIC_PKG");
                 Settings.System.getString(kswMcuListener.mContext.getContentResolver(), "KEY_THIRD_APP_MUSIC_CLS");
@@ -759,24 +789,27 @@ public class KswMcuListener extends KswMcuReceiver {
                 if (Build.DEVICE.contains("8937")) {
                     try {
                         Log.m72d(TAG, "memory music 8917 delay  02");
-                        while (true) {
-                            int i3 = i;
-                            if (i3 < 20) {
-                                Thread.sleep(500L);
-                                if (!SystemStatusControl.getStatus().topApp.equals("com.wits.ksw")) {
-                                    i = i3 + 1;
-                                }
-                            }
+                        for (i2 = 0; i2 < 20; i2 = i2 + 1) {
+                            Thread.sleep(500L);
+                            i2 = SystemStatusControl.getStatus().topApp.equals("com.wits.ksw") ? 0 : i2 + 1;
                         }
-                    } catch (InterruptedException e3) {
-                        e3.printStackTrace();
+                    } catch (InterruptedException e4) {
+                        e4.printStackTrace();
                     }
+                }
+                try {
+                    if (PowerManagerApp.getStatusBoolean("show_360_on_boot")) {
+                        PowerManagerApp.setBooleanStatus("show_360_on_boot", false);
+                        return;
+                    }
+                } catch (RemoteException e5) {
+                    e5.printStackTrace();
                 }
                 String videoPkg = Settings.System.getString(kswMcuListener.mContext.getContentResolver(), "KEY_THIRD_APP_VIDEO_PKG");
                 Settings.System.getString(kswMcuListener.mContext.getContentResolver(), "KEY_THIRD_APP_VIDEO_CLS");
                 Log.m72d(TAG, "memory video videoPkg = " + videoPkg);
                 if (TextUtils.isEmpty(videoPkg)) {
-                    CenterControlImpl.getImpl().openVideo(true);
+                    CenterControlImpl.getImpl().openVideoFirst(true);
                     return;
                 } else if (videoPkg.equals("cls.local.video")) {
                     CenterControlImpl.getImpl().openVideo(true);
@@ -791,6 +824,13 @@ public class KswMcuListener extends KswMcuReceiver {
                     return;
                 } else if (SystemStatusControl.getStatus().topApp != null && !SystemStatusControl.getStatus().topApp.equals("com.wits.ksw.bt")) {
                     Log.m72d(TAG, "memory bt");
+                    try {
+                        if (PowerManagerApp.getStatusBoolean("show_360_on_boot")) {
+                            PowerManagerApp.setBooleanStatus("show_360_on_boot", false);
+                            return;
+                        }
+                    } catch (RemoteException e6) {
+                    }
                     CenterControlImpl.getImpl().openBluetooth(true);
                     return;
                 } else {
@@ -811,7 +851,7 @@ public class KswMcuListener extends KswMcuReceiver {
                         return;
                     }
                     return;
-                } catch (Settings.SettingNotFoundException e4) {
+                } catch (Settings.SettingNotFoundException e7) {
                     return;
                 }
             case 6:

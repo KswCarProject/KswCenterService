@@ -13,7 +13,6 @@ import android.p007os.Handler;
 import android.p007os.Message;
 import android.provider.Settings;
 import android.util.Log;
-import android.util.TimedRemoteCaller;
 import com.wits.pms.mirror.SystemProperties;
 import com.wits.pms.statuscontrol.WitsCommand;
 import java.io.File;
@@ -49,7 +48,7 @@ public class SilentPackageInstaller {
     private int mInstalledCount = 0;
 
     static {
-        isUsed = Integer.parseInt(Build.VERSION.RELEASE) > 12 && Build.DISPLAY.contains("M600");
+        isUsed = Integer.parseInt(Build.VERSION.RELEASE) > 12 && (Build.DISPLAY.contains("M600") || Build.DISPLAY.contains("M700"));
     }
 
     public SilentPackageInstaller(Context context) {
@@ -89,7 +88,7 @@ public class SilentPackageInstaller {
         if (SystemProperties.get(INSTALL_COMPLETE).equals("true")) {
             return;
         }
-        long delayDefault = this.mInstalledNum == 0 ? TimedRemoteCaller.DEFAULT_CALL_TIMEOUT_MILLIS : 2000L;
+        long delayDefault = this.mInstalledNum == 0 ? 8000L : 2000L;
         this.mHandler.postDelayed(new Runnable() { // from class: com.wits.pms.core.SilentPackageInstaller.2
             @Override // java.lang.Runnable
             public void run() {

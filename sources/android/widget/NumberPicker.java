@@ -150,14 +150,14 @@ public class NumberPicker extends LinearLayout {
         void onValueChange(NumberPicker numberPicker, int i, int i2);
     }
 
-    /* JADX WARN: Type inference failed for: r0v2, types: [byte, boolean] */
+    /* JADX WARN: Type inference failed for: r0v2, types: [boolean, byte] */
     static /* synthetic */ boolean access$1280(NumberPicker x0, int x1) {
         ?? r0 = (byte) ((x0.mIncrementVirtualButtonPressed ? 1 : 0) ^ x1);
         x0.mIncrementVirtualButtonPressed = r0;
         return r0;
     }
 
-    /* JADX WARN: Type inference failed for: r0v2, types: [byte, boolean] */
+    /* JADX WARN: Type inference failed for: r0v2, types: [boolean, byte] */
     static /* synthetic */ boolean access$1680(NumberPicker x0, int x1) {
         ?? r0 = (byte) ((x0.mDecrementVirtualButtonPressed ? 1 : 0) ^ x1);
         x0.mDecrementVirtualButtonPressed = r0;

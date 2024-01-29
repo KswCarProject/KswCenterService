@@ -68,7 +68,7 @@ public class CenterCallBackImpl {
                         String unused = CenterCallBackImpl.mPreMediaPkgName = pkgName;
                     }
                 } else if (pkgName.equals("com.google.android.apps.maps") || pkgName.equals("com.sygic.aura")) {
-                    if (Build.DISPLAY.contains("M600") && Integer.parseInt(Build.VERSION.RELEASE) > 10) {
+                    if ((Build.DISPLAY.contains("M600") || Build.DISPLAY.contains("M700")) && Integer.parseInt(Build.VERSION.RELEASE) > 10) {
                         try {
                             Utils.updateLocationEnabled(CenterCallBackImpl.mContext, false, UserHandle.myUserId(), 1);
                             Thread.sleep(50L);

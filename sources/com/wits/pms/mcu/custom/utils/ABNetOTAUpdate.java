@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.p007os.Build;
 import android.p007os.Handler;
 import android.p007os.Looper;
 import android.p007os.Message;
@@ -31,6 +32,7 @@ public class ABNetOTAUpdate {
     private static final int MSG_UPDATE_PROGRESS = 1;
     private static final int MSG_UPDATE_RETRY = 5;
     private static final int MSG_UPDATE_SUCCESS = 3;
+    private static final int MSG_UPDATE_VERSION_ERROR = 6;
     private static AlertDialog alertDialog1 = null;
     private static boolean isUpdating = false;
     private static Handler mHandler = null;
@@ -182,6 +184,10 @@ public class ABNetOTAUpdate {
                                 sendEmptyMessage(2);
                                 return;
                             }
+                        case 6:
+                            Toast.makeText(context, (int) C3580R.string.update_version_error, 1).show();
+                            sendEmptyMessage(2);
+                            return;
                         default:
                             return;
                     }
@@ -259,8 +265,16 @@ public class ABNetOTAUpdate {
             long offset = Long.parseLong(first[1]);
             String[] second = meta_properties[1].split("=");
             long size = Long.parseLong(second[1]);
+            String[] third = meta_properties[2].split("=");
+            int version = Integer.parseInt(third[1]);
             String str = TAG;
-            Log.m72d(str, "size = " + size + "  tempFile = " + tempFile.getPath() + "  retryCount = " + retryCount);
+            Log.m72d(str, "update from " + Integer.parseInt(Build.VERSION.RELEASE) + " to " + version);
+            if (version < Integer.parseInt(Build.VERSION.RELEASE)) {
+                mHandler.obtainMessage(6).sendToTarget();
+                return;
+            }
+            String str2 = TAG;
+            Log.m72d(str2, "size = " + size + "  tempFile = " + tempFile.getPath() + "  retryCount = " + retryCount);
             StringBuilder sb = new StringBuilder();
             sb.append("file://");
             sb.append(tempFile.getPath());
@@ -324,6 +338,10 @@ public class ABNetOTAUpdate {
                             sendEmptyMessage(2);
                             return;
                         }
+                    case 6:
+                        Toast.makeText(context, (int) C3580R.string.update_version_error, 1).show();
+                        sendEmptyMessage(2);
+                        return;
                     default:
                         return;
                 }

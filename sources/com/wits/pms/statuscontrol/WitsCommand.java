@@ -118,6 +118,8 @@ public class WitsCommand {
         public static final int SHOW_INSTALL_APP_DIALOG = 126;
         public static final int SHUTDOWN = 201;
         public static final int SOURCE_CHANGE = 107;
+        public static final int STS_360_START = 614;
+        public static final int STS_360_STOP = 615;
         public static final int UPDATE_CONFIG = 200;
         public static final int USB_HOST = 122;
         public static final int USING_NAVI = 608;
